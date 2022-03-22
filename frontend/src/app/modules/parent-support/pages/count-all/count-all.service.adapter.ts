@@ -37,11 +37,12 @@ export class CountAllServiceAdapter {
         let complaintTypeList = [];
         let statusList = [];
         let complaintList = [];
+        let tableList = [];
         [
             complaintTypeList,   // 0
             statusList,   // 1
             complaintList,   // 2
-            this.vm.tableList,   // 3
+            tableList,   // 3
         ] = await Promise.all([
             complaintTypeQuery,   // 0
             statusQuery,   // 1
@@ -52,15 +53,25 @@ export class CountAllServiceAdapter {
         this.vm.initializecomplaintTypeList(complaintTypeList);
         this.vm.initializeStatusList(statusList);
         this.vm.complaintList = complaintList;
+
+        /* Initialize Table List */
+        tableList.sort((a, b) => a.id - b.id);
+        this.vm.initializeTableList(tableList);
+
         this.vm.isLoading = false;
     }  // Ends: initializeData()
 
+    /* Update Table List */
+    async updateTableList() {
+        await new Query().updateObjectList({parent_support_app: 'CountAllParentSupport'}, this.vm.tableList);
+    }  // Ends: updateTableList()
+
     /* Save Table */
-    async saveTable() {
+    async saveTable(operation = "", table = null, idx = null) {
         this.vm.isLoading = true;
 
         let tableDataObject = {};
-        tableDataObject["formatName"] = this.vm.tableFormatTitle;
+        tableDataObject["formatName"] = this.vm.tableFormatTitle.toString().trim();
         tableDataObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
         /* Get Rows */
@@ -84,18 +95,25 @@ export class CountAllServiceAdapter {
         this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableList.length);
         this.vm.tableList.push(response);
 
+        if (operation == "initializeTableDetails") {
+            this.vm.initializeTableDetails();
+        }
+        if (operation == "openTable") {
+            this.vm.htmlRenderer.tableOpenClicked(table, idx);
+        }
+
         this.vm.isTableUpdated = false;
         this.vm.isLoading = false;
         alert("Table saved successfully.");
     }  // Ends: saveTable()
 
     /* Update Table */
-    async updatetable(operation = "") {
+    async updatetable(operation = "", table = null, idx = null) {
         this.vm.isLoading = true;
 
         let tableDataObject = {};
         tableDataObject["id"] = this.vm.tableActiveId;
-        tableDataObject["formatName"] = this.vm.tableFormatTitle;
+        tableDataObject["formatName"] = this.vm.tableFormatTitle.toString().trim();
         tableDataObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
         /* Get Rows */
@@ -122,7 +140,11 @@ export class CountAllServiceAdapter {
         if (operation == "createNew") {
             this.vm.initializeTableDetails();
         }
+        if (table) {
+            this.vm.htmlRenderer.tableOpenClicked(table, idx);
+        }
 
+        this.vm.isTableUpdated = false;
         this.vm.isLoading = false;
         alert("Table updated successfully.");
     }  // Ends: updatetable()
@@ -131,20 +153,30 @@ export class CountAllServiceAdapter {
     async deleteTable() {
         this.vm.isLoading = true;
 
-        let confirmation = window.confirm("Do you really want to delete this table?");
-        if (!confirmation) {
-            this.vm.isLoading = false;
-            return;
-        }
-
         let tableData = {
             id: this.vm.tableActiveId,
         };
+
         new Query().filter(tableData).deleteObjectList({parent_support_app: 'CountAllParentSupport'});
 
-        alert("Table deleted successfully.");
         this.vm.tableList.splice(this.vm.tableActiveIdx, 1);
         this.vm.initializeTableDetails();
         this.vm.isLoading = false;
     }  // Ends: deleteTable()
+
+    /* Restore Old Table */
+    async restoreOldtable(tableActiveId, tableActiveIdx, table = null, idx = null) {
+        Promise.all([
+            new Query().filter({id: tableActiveId}).getObject({parent_support_app: 'CountAllParentSupport'}),   // 0
+        ]).then(
+            (value) => {
+                this.vm.tableList[tableActiveIdx] = value[0];
+                if (table) {
+                    this.vm.htmlRenderer.tableOpenClicked(table, idx);
+                } else {
+                    this.vm.initializeTableDetails();
+                }
+            }
+        );
+    }  // Ends: restoreOldtable()
 }

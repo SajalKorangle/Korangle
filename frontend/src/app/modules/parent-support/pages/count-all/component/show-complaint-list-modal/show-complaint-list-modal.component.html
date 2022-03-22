@@ -1,0 +1,37 @@
+<mat-dialog-content class="show-complaint-list-modal-container">
+    <!-- Starts: Header -->
+    <div class="header">
+        <div class="title">Count All >> Filtered complaint List</div>
+        <div><i class="material-icons close-btn" (click)="closeClicked()">highlight_off</i></div>
+    </div>
+    <br />
+    <!-- Ends: Header -->
+
+    <div>
+        <div class="column-detail text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-bottom: 2rem;">
+            <div class="complaint-name">
+                complaint Name
+            </div>
+            <div class="complaint-class">
+                Class
+            </div>
+            <div class="complaint-section">
+                Section
+            </div>
+        </div>
+
+        <ng-container *ngFor="let complaint of complaintList">
+            <div class="column-detail" style="font-size: 12px;">
+                <div class="complaint-name">
+                    {{ complaint.name }}
+                </div>
+                <div class="complaint-class">
+                    {{ complaint.className }}
+                </div>
+                <div class="complaint-section">
+                    {{ complaint.sectionName }}
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</mat-dialog-content>

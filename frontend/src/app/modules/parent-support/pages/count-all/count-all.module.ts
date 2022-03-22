@@ -7,6 +7,7 @@ import { LocalComponentsModule } from '@modules/parent-support/component/local-c
 import { LocalComponentsModule as LocalComponentsModulee } from '@modules/parent-support/pages/count-all/component/local-components.module';
 import { FilterModalComponent } from '@modules/parent-support/pages/count-all/component/filter-modal/filter-modal.component';
 import { FormatTableModalComponent } from '@modules/parent-support/pages/count-all/component/format-table-modal/format-table-modal.component';
+import { ShowComplaintListModalComponent } from '@modules/parent-support/pages/count-all/component/show-complaint-list-modal/show-complaint-list-modal.component';
 import { DeleteTableModalComponent } from '@modules/parent-support/component/delete-table-modal/delete-table-modal.component';
 
 @NgModule({
@@ -16,6 +17,6 @@ import { DeleteTableModalComponent } from '@modules/parent-support/component/del
     exports: [],
     providers: [],
     bootstrap: [CountAllComponent],
-    entryComponents: [FilterModalComponent, FormatTableModalComponent, DeleteTableModalComponent],
+    entryComponents: [FilterModalComponent, FormatTableModalComponent, ShowComplaintListModalComponent, DeleteTableModalComponent],
 })
 export class CountAllModule { }

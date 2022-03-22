@@ -1,5 +1,5 @@
-<div *ngIf="!isLoading" class="card-content" [ngStyle]="{'min-height': (rowFilters.length > 0 || columnFilters.length > 0) ? '75vh' : '90vh'}">
-    <b>Define custom rows and columns or choose from saved tables</b>
+<div *ngIf="!isLoading" class="card-content" [ngStyle]="{'min-height': (rowFilters.length > 0 || columnFilters.length > 0) ? '80vh' : '90vh'}">
+    <b>Define custom rows and columns or choose from saved tables.</b>
     <!-- Starts: Print && Download Buttons Section (Mobile Browser) -->
     <ng-container *ngIf="!htmlRenderer.checkMobile() && htmlRenderer.isMobile() && (rowFilters.length > 0 || columnFilters.length > 0)">
         <button
@@ -14,7 +14,7 @@
             Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
         </button>
     </ng-container>
-    <!--  Ends: Print && Download Buttons Section -->
+    <!--  Ends: Print && Download Buttons Section (Mobile Browser) -->
 
     <br /><br /><b>Table Format</b><br />
     <!--Starts: Generated Tables List -->
@@ -25,7 +25,7 @@
                     Create New Table
                 </mat-option>
                 <ng-container *ngFor="let table of tableList; let idx = index">
-                    <mat-option (click)="htmlRenderer.tableOpenClicked(table, idx)" style="width: 100%">
+                    <mat-option (click)="openTableClicked(table, idx)" style="width: 100%">
                         {{ table.formatName }}
                     </mat-option>
                 </ng-container>
@@ -59,19 +59,22 @@
                     Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
                 </button>
             </ng-container>
-            <!--  Ends: Print && Download Buttons Section -->
+            <!--  Ends: Print && Download Buttons Section (Desktop) -->
         </div>
     </div>
     <!-- Ends: Generated Tables List -->
 
     <!--Starts: Change Table Name -->
-    <div class="change-table-name" *ngIf="tableFormatTitle">
-        <mat-form-field class="inputField">
-            <input matInput type="text" [(ngModel)]="tableFormatTitle" required />
-        </mat-form-field>
-
+    <div class="change-table-name" *ngIf="tableActiveId">
+        <div>
+            <mat-form-field>
+                <input matInput type="text" [(ngModel)]="tableFormatTitle" required />
+            </mat-form-field>
+            <span *ngIf="(!htmlRenderer.isMobile() && !htmlRenderer.checkMobile()) && !htmlRenderer.checkTableName()" style="color: red">Table name must be unique.</span>
+        </div>
         <i (click)="openDeleteTableModal()" matTooltip="Delete table" tooltip-position="left" class="material-icons delete-icon"> delete_forever </i>
     </div>
+    <span *ngIf="(htmlRenderer.isMobile() || htmlRenderer.checkMobile()) && !htmlRenderer.checkTableName()" style="color: red">Table name must be unique.</span>
     <br />
     <!--Ends: Change Table Name -->
 
@@ -85,7 +88,7 @@
                         <th class="minWidth"></th>
                         <th *ngFor="let filter of columnFilters" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth" cdkDragLockAxis="x" cdkDrag>
                             <span (click)="whereToAdd = 'col'; openChangeDialog(filter)" style="cursor: pointer">
-                                {{filter.name}} (<span>{{filter.totalCount}}</span>)
+                                {{filter.name}} (<span>{{ htmlRenderer.getFilterTotalCount(filter) }}</span>)
                             </span>
                             <i class="material-icons menu-icon" style="float: right; margin-right: 10px;" cdkDragHandle>menu</i>
                         </th>
@@ -100,16 +103,18 @@
 
                 <!-- Starts: Table Body -->
                 <tbody cdkDropList class="example-list" (cdkDropListDropped)="dropRow($event)">
-                    <tr class="example-box" *ngFor="let filter of rowFilters" cdkDragLockAxis="y" cdkDrag>
+                    <tr class="example-box" *ngFor="let rowFilter of rowFilters" cdkDragLockAxis="y" cdkDrag>
                         <th class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
                             <i class="material-icons menu-icon" style="float: left" cdkDragHandle>menu</i>
-                            <span (click)="whereToAdd = 'row'; openChangeDialog(filter)" style="cursor: pointer">
-                                {{filter.name}} (<span>{{filter.totalCount}}</span>)
+                            <span (click)="whereToAdd = 'row'; openChangeDialog(rowFilter)" style="cursor: pointer">
+                                {{ rowFilter.name }} (<span>{{ htmlRenderer.getFilterTotalCount(rowFilter) }}</span>)
                             </span>
                         </th>
-                        <td class="minWidth" *ngFor="let ans of filter.answer">
-                            {{ans}}
-                        </td>
+                        <ng-container *ngFor="let columnFilter of columnFilters; let idx = index">
+                            <td class="minWidth" style="cursor: pointer" (click)="openShowComplaintListDialog(rowFilter, columnFilter)">
+                                {{ htmlRenderer.getIntersectionCount(rowFilter, columnFilter) }}
+                            </td>
+                        </ng-container>
                         <td class="minWidth">-</td>
                     </tr>
                     <tr class="last-child">
@@ -130,7 +135,7 @@
 </div>
 
 <ng-container *ngIf="!isLoading">
-    <div *ngIf="!htmlRenderer.isMobile()" style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
+    <div *ngIf="!htmlRenderer.isMobile() || !htmlRenderer.checkMobile()" style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
 
     <!-- Starts: Save Button -->
     <ng-container *ngIf="!isTableEditing">
@@ -151,6 +156,7 @@
             (click)="updateChangesClicked()"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
             style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
+            [disabled]="!htmlRenderer.checkTableName()"
         >
             Update Changes
         </button>

@@ -13,6 +13,7 @@ import { CountAllServiceAdapter } from './count-all.service.adapter';
 import { CountAllHtmlRenderer } from './count-all.html.renderer';
 import { FilterModalComponent } from '@modules/parent-support/pages/count-all/component/filter-modal/filter-modal.component';
 import { FormatTableModalComponent } from '@modules/parent-support/pages/count-all/component/format-table-modal/format-table-modal.component';
+import { ShowComplaintListModalComponent } from '@modules/parent-support/pages/count-all/component/show-complaint-list-modal/show-complaint-list-modal.component';
 import { DeleteTableModalComponent } from '@modules/parent-support/component/delete-table-modal/delete-table-modal.component';
 
 @Component({
@@ -26,16 +27,33 @@ export class CountAllComponent implements OnInit {
     isLoading: boolean = false;
     NULL_CONSTANT = null;
 
+    nullComplaintType = {
+        id: null,
+        defaultText: '',
+        name: 'Not Selected',
+        parentSchoolComplaintStatusDefault: null,
+        parentSchool: null,
+        selected: false,
+    };
+
+    nullStatus = {
+        id: null,
+        name: 'Not Applicable',
+        parentSchool: null,
+        selected: false,
+    };
+
     isTableEditing: boolean = false;
     isTableUpdated: boolean = false;
     tableActiveId: number = 0;
     tableActiveIdx: number = 0;
+
     tableFormatTitle: string = "";     // Table Name
     whereToAdd: string = "";    // Row  or  Column
     rowFilters: any = [];    // Row List
     columnFilters: any = [];    // Column List
-    tableList: any = [];
 
+    tableList: any = [];
     complaintTypeList: any = [];
     statusList: any = [];
     complaintList: any = [];
@@ -62,18 +80,8 @@ export class CountAllComponent implements OnInit {
 
     /* Initialize Complaint Type List */
     initializecomplaintTypeList(complaintTypeList) {
-
-        let nullComplaintType = {
-            id: null,
-            defaultText: '',
-            name: 'Not Selected',
-            parentSchoolComplaintStatusDefault: null,
-            parentSchool: null,
-            selected: false,
-        };
-
         this.complaintTypeList = [];
-        this.complaintTypeList.push(nullComplaintType);
+        this.complaintTypeList.push(this.nullComplaintType);
 
         complaintTypeList.forEach((complaintType) => {
             complaintType["selected"] = false;
@@ -84,15 +92,8 @@ export class CountAllComponent implements OnInit {
 
     /* Initialize Status List */
     initializeStatusList(statusList) {
-        let nullStatus = {
-            id: null,
-            name: 'Not Applicable',
-            parentSchool: null,
-            selected: false,
-        };
-
         this.statusList = [];
-        this.statusList.push(nullStatus);
+        this.statusList.push(this.nullStatus);
 
         statusList.forEach((status) => {
             status["selected"] = false;
@@ -100,39 +101,41 @@ export class CountAllComponent implements OnInit {
         });
     }  // Ends: initializeStatusList()
 
+    updateTableData(tableRows, tableCols) {
+
+    }
+
+    /* Initialize Table List */
+    initializeTableList(tableList) {
+        for (let idx = 0; idx < tableList.length; idx++) {
+            let table = tableList[idx];
+            let tableRows = [];
+            let tableCols = [];
+
+            Object.entries(table["cols"]).forEach(([key, value]) => {
+                tableCols.push(value);
+            });
+
+            Object.entries(table["rows"]).forEach(([key, value]) => {
+                tableRows.push(value);
+            });
+            this.updateTableData(tableRows, tableCols);
+        }
+
+        this.tableList = tableList;
+        this.serviceAdapter.updateTableList();
+    }  // Ends: initializeTableList()
+
     /* Initialize Table Details */
     initializeTableDetails() {
         this.isTableUpdated = false;
         this.isTableEditing = false;
-        this.tableActiveId = 0;
-        this.tableActiveIdx = 0;
+        this.tableActiveId = null;
+        this.tableActiveIdx = null;
         this.tableFormatTitle = "";
         this.columnFilters = [];
         this.rowFilters = [];
     }  // Ends: initializeTableDetails()
-
-    /* Update Row Data After Column Drag */
-    updateRowFiltersAfterColumnDrag(): void {
-        for (let i = 0; i < this.rowFilters.length; i++) {
-            // initializing the result.
-            for (let j = 0; j < this.columnFilters.length; j++) {
-                this.rowFilters[i]["answer"][j] = 0;
-            }
-
-            // Logic:  first check complaint with row, and then with column.
-            this.complaintList.forEach((complaint) => {
-                let check = this.checkFilters(complaint, this.rowFilters[i]);
-                if (check) {
-                    for (let j = 0; j < this.columnFilters.length; j++) {
-                        check = this.checkFilters(complaint, this.columnFilters[j]);
-                        if (check) {
-                            this.rowFilters[i]["answer"][j] += 1;
-                        }
-                    }
-                }
-            });
-        }
-    }  // Ends: updateRowFiltersAfterColumnDrag()
 
     /* Will be Called After Dragging of a Row */
     dropRow(event: CdkDragDrop<string[]>): void {
@@ -144,7 +147,6 @@ export class CountAllComponent implements OnInit {
     dropColumn(event: CdkDragDrop<string[]>): void {
         this.isTableUpdated = true;
         moveItemInArray(this.columnFilters, event.previousIndex, event.currentIndex);
-        this.updateRowFiltersAfterColumnDrag();
     }  // Ends: dropColumn()
 
     /* Check Applied set of Filters on a Student */
@@ -184,88 +186,21 @@ export class CountAllComponent implements OnInit {
         return check;
     }  // Ends: checkFilters()
 
-    /* Get Table Date From Newly Added Row */
-    getTableDataRow(filtersData): any {
-
-        // initializing the result.
-        let totalCount = 0;
-        let answer = [];
-        for (let i = 0; i < this.columnFilters.length; i++) {
-            answer.push(0);
-        }
-
-        // Logic:  first check complaint with row, and then with column.
+    /* Get Filtered Complaint List */
+    getFilteredComplaintList(rowFilter, columnFilter) {
+        let filteredComplaintList = [];
         this.complaintList.forEach((complaint) => {
-            let check = this.checkFilters(complaint, filtersData);
+            let check = this.checkFilters(complaint, rowFilter);
             if (check) {
-                totalCount += 1;
-                for (let i = 0; i < this.columnFilters.length; i++) {
-                    let columnFilterData = this.columnFilters[i];
-                    check = this.checkFilters(complaint, columnFilterData);
-                    if (check) {
-                        answer[i] += 1;
-                    }
+                check = this.checkFilters(complaint, columnFilter);
+                if (check) {
+                    filteredComplaintList.push(complaint);
                 }
             }
-        });  // Ends: Logic
+        });
 
-        let returnData = {};
-        returnData["answer"] = answer;
-        returnData["totalCount"] = totalCount;
-        return returnData;
-    }  // Ends: getTableDataRow()
-
-    /* Get Table Date From Newly Added Column */
-    getTableDataColumn(filtersData): any {
-
-        // initializing the result.
-        let totalCount = 0;
-        for (let i = 0; i < this.rowFilters.length; i++) {
-            this.rowFilters[i].answer.push(0);
-        }
-
-        // Logic:  first check complaint with column, and then with row.
-        this.complaintList.forEach((complaint) => {
-            let check = this.checkFilters(complaint, filtersData);
-            if (check) {
-                totalCount += 1;
-                for (let i = 0; i < this.rowFilters.length; i++) {
-                    let rowFilterData = this.rowFilters[i];
-                    check = this.checkFilters(complaint, rowFilterData);
-                    if (check) {
-                        this.rowFilters[i].answer[this.rowFilters[i].answer.length - 1] += 1;
-                    }
-                }
-            }
-        });   // Ends: Logic
-        return totalCount;
-    }  // Ends: getTableDataColumn()
-
-    /* Get Updated Table Date */
-    getUpdatedTableDataColumn(filtersData, index): any {
-
-        // initializing the result.
-        let totalCount = 0;
-        for (let i = 0; i < this.rowFilters.length; i++) {
-            this.rowFilters[i].answer[index] = 0;
-        }
-
-        // Logic:  first check complaint with column, and then with row.
-        this.complaintList.forEach((complaint) => {
-            let check = this.checkFilters(complaint, filtersData);
-            if (check) {
-                totalCount += 1;
-                for (let i = 0; i < this.rowFilters.length; i++) {
-                    let rowFilterData = this.rowFilters[i];
-                    check = this.checkFilters(complaint, rowFilterData);
-                    if (check) {
-                        this.rowFilters[i].answer[index] += 1;
-                    }
-                }
-            }
-        });   // Ends: Logic
-        return totalCount;
-    }  // Ends: getUpdatedTableDataColumn()
+        return filteredComplaintList;
+    }  // Ends: getFilteredStudentList()
 
     /* Open Filter Modal */
     openDialog(): void {
@@ -283,13 +218,8 @@ export class CountAllComponent implements OnInit {
                 let filter = data.filtersData;
 
                 if (this.whereToAdd == 'row') {    /* Add Row Filter */
-                    let returnData = this.getTableDataRow(filter);
-                    filter["answer"] = returnData["answer"];
-                    filter["totalCount"] = returnData["totalCount"];
                     this.rowFilters.push(filter);
                 } else {    /* Add Column Filter */
-                    let totalCount = this.getTableDataColumn(filter);
-                    filter["totalCount"] = totalCount;
                     this.columnFilters.push(filter);
                 }
             }
@@ -322,10 +252,6 @@ export class CountAllComponent implements OnInit {
                                 break;
                             }
                         }
-
-                        let returnData = this.getTableDataRow(filtersData);
-                        filtersData["answer"] = returnData.answer;
-                        filtersData["totalCount"] = returnData.totalCount;
                         this.rowFilters[index] = filtersData;
                     } else if (this.whereToAdd === 'col') {    /* Update Column */
                         let index = 0;
@@ -335,7 +261,6 @@ export class CountAllComponent implements OnInit {
                                 break;
                             }
                         }
-                        filtersData["totalCount"] = this.getUpdatedTableDataColumn(filtersData, index);
                         this.columnFilters[index] = filtersData;
                     }
                 } else if (filtersData["operation"] == "delete") {    /* Delete Filter */
@@ -358,9 +283,6 @@ export class CountAllComponent implements OnInit {
                             }
                         }
                         this.columnFilters.splice(index, 1);
-                        for (let i = 0; i < this.rowFilters.length; i++) {
-                            this.rowFilters[i]["answer"].splice(index, 1);
-                        }
                     }
                 }
             }
@@ -371,7 +293,8 @@ export class CountAllComponent implements OnInit {
     openSaveFormatDialog(): void {
         const dialogRef = this.dialog.open(FormatTableModalComponent, {
             data: {
-                formatName: this.tableFormatTitle,
+                formatName: "",
+                tableList: this.tableList,
             }
         });
 
@@ -384,8 +307,28 @@ export class CountAllComponent implements OnInit {
         });
     }  // Ends: openSaveFormatDialog()
 
+    /* Open Table Format Name Dialog */
+    openShowComplaintListDialog(rowFilter, columnFilter): void {
+        const dialogRef = this.dialog.open(ShowComplaintListModalComponent, {
+            data: {
+                complaintList: this.getFilteredComplaintList(rowFilter, columnFilter),
+            }
+        });
+    }  // Ends: openShowComplaintListDialog()
+
     /* Update Table */
     updateChangesClicked(): void {
+
+        if (!this.tableFormatTitle.toString().trim()) {
+            alert("Please enter the table name.");
+            return;
+        }
+
+        if (!this.htmlRenderer.checkTableName()) {
+            alert("Table name must be unique.");
+            return;
+        }
+
         this.isTableUpdated = false;
         this.serviceAdapter.updatetable();
     }  // Ends: updateChangesClicked()
@@ -395,6 +338,7 @@ export class CountAllComponent implements OnInit {
         const dialogRef = this.dialog.open(FormatTableModalComponent, {
             data: {
                 formatName: "",
+                tableList: this.tableList,
             }
         });
 
@@ -407,48 +351,14 @@ export class CountAllComponent implements OnInit {
         });
     }  // Ends: saveAsClicked()
 
-    /* Open Delete Table Dialog */
-    openDeleteTableModal(): void {
-        const dialogRef = this.dialog.open(DeleteTableModalComponent, {
-            data: {
-                formatName: this.tableFormatTitle,
-            }
-        });
-
-        // OnClosing of Modal.
-        dialogRef.afterClosed().subscribe((data) => {
-            if (data && data["operation"] && data["operation"] == "Delete") {
-                this.deleteTable();
-            }
-        });
-    }  // Ends: openDeleteTableModal()
-
-    /* Delete Table */
-    deleteTable() {
-        this.serviceAdapter.deleteTable();
-    }  // Ends: deleteTable()
-
-    /* Create New Table */
-    addNewTableClicked() {
-        if(this.isTableUpdated) {
-            let conformation = confirm("Do you want to update your changes?");
-            if (conformation) {
-                let operation = "createNew";
-                this.serviceAdapter.updatetable(operation);
-            } else {
-                this.initializeTableDetails();
-            }
-        } else {
-            this.initializeTableDetails();
-        }
-    }  // Ends: addNewTableClicked()
-
     /* Get header Values */
     getHeaderValues(): any {
         let headerValues = [];
         headerValues.push('');
         this.columnFilters.forEach((columnFilter)=> {
-            headerValues.push(columnFilter.name);
+            let filterTotalCount = this.htmlRenderer.getFilterTotalCount(columnFilter);
+            let filterName = columnFilter.name + " (" + filterTotalCount + ")";
+            headerValues.push(filterName);
         });
         return headerValues;
     }  // Ends: getHeaderValues()
@@ -456,9 +366,13 @@ export class CountAllComponent implements OnInit {
     /* Get Filter Information */
     getFilterInfo(filter: any): any {
         let filterInfo = [];
-        filterInfo.push(filter.name);
-        filter.answer.forEach((ans: number) => {
-            filterInfo.push(ans);
+
+        let filterTotalCount = this.htmlRenderer.getFilterTotalCount(filter);
+        let filterName = filter.name + " (" + filterTotalCount + ")";
+        filterInfo.push(filterName);
+
+        this.columnFilters.forEach((columnFilter) => {
+           filterInfo.push(this.htmlRenderer.getIntersectionCount(filter, columnFilter));
         });
         return filterInfo;
     }  // Ends: getFilterInfo()
@@ -470,7 +384,7 @@ export class CountAllComponent implements OnInit {
         this.rowFilters.forEach((rowFilter) => {
             template.push(this.getFilterInfo(rowFilter));
         });
-        let fileName: string = this.tableFormatTitle + ".csv";
+        let fileName: string = this.tableFormatTitle.toString().trim() + ".csv";
         this.excelService.downloadFile(template, fileName);
     }  // Ends: downloadList()
 
@@ -491,4 +405,108 @@ export class CountAllComponent implements OnInit {
         };
         this.printService.navigateToPrintRoute(PRINT_COUNT_ALL_TABLE_PARENT_SUPPORT, { user: this.user, value });
     }  // Ends: printTable()
+
+    /* Open Delete Table Dialog */
+    openDeleteTableModal(): void {
+        const dialogRef = this.dialog.open(DeleteTableModalComponent, {
+            data: {
+                formatName: this.tableFormatTitle,
+            }
+        });
+
+        // OnClosing of Modal.
+        dialogRef.afterClosed().subscribe((data) => {
+            if (data && data["operation"] && data["operation"] == "Delete") {
+                this.deleteTable();
+            }
+        });
+    }  // Ends: openDeleteTableModal()
+
+    /* Delete Table */
+    deleteTable() {
+        this.serviceAdapter.deleteTable();
+        alert("Table deleted successfully.");
+    }  // Ends: deleteTable()
+
+    /* Create New Table */
+    addNewTableClicked() {
+        if (!this.isTableEditing && (this.rowFilters.length + this.columnFilters.length) > 0) {
+            let conformation = confirm("Do you want to save the current table?");
+            if (conformation) {
+                const dialogRef = this.dialog.open(FormatTableModalComponent, {
+                    data: {
+                        formatName: "",
+                        tableList: this.tableList,
+                    }
+                });
+
+                // OnClosing of Modal.
+                dialogRef.afterClosed().subscribe((data) => {
+                    if (data && data.name) {
+                        this.tableFormatTitle = data.name;
+                        this.serviceAdapter.saveTable("initializeTableDetails");
+                    }
+                });
+            } else {
+                this.initializeTableDetails();
+            }
+            this.isTableUpdated = false;
+            return;
+        }
+
+        if (this.isTableUpdated) {
+            let conformation = confirm("Do you want to update your changes?");
+            if (conformation) {
+                let operation = "createNew";
+                this.isTableUpdated = false;
+                this.serviceAdapter.updatetable(operation);
+            } else {
+                this.isTableUpdated = false;
+                this.serviceAdapter.restoreOldtable(this.tableActiveId, this.tableActiveIdx);
+            }
+        } else {
+            this.initializeTableDetails();
+        }
+    }  // Ends: addNewTableClicked()
+
+    /* Open Clicked Table */
+    openTableClicked(table, idx) {
+
+        if (!this.isTableEditing && (this.rowFilters.length + this.columnFilters.length) > 0) {
+            let conformation = confirm("Do you want to save the current table?");
+            if (conformation) {
+                const dialogRef = this.dialog.open(FormatTableModalComponent, {
+                    data: {
+                        formatName: "",
+                        tableList: this.tableList,
+                    }
+                });
+
+                // OnClosing of Modal.
+                dialogRef.afterClosed().subscribe((data) => {
+                    if (data && data.name) {
+                        this.tableFormatTitle = data.name;
+                        this.serviceAdapter.saveTable("openTable", table, idx);
+                    }
+                });
+            } else {
+                this.htmlRenderer.tableOpenClicked(table, idx);
+            }
+            this.isTableUpdated = false;
+            return;
+        }
+
+        if (this.isTableUpdated) {
+            let conformation = confirm("Do you want to update your changes?");
+            if (conformation) {
+                let operation = "";
+                this.serviceAdapter.updatetable(operation, table, idx);
+            } else {
+                this.serviceAdapter.restoreOldtable(this.tableActiveId, this.tableActiveIdx, table, idx);
+            }
+        } else {
+            this.htmlRenderer.tableOpenClicked(table, idx);
+        }
+        this.isTableUpdated = false;
+    }  // Ends: openTableClicked()
 }
