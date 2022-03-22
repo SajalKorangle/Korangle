@@ -7,8 +7,9 @@
     <!-- Starts: Format Name -->
     <br /><b>Format Name - </b>
     <mat-form-field class="inputField" style="margin-left: 10%;">
-        <input matInput type="text" [(ngModel)]="name" required />
+        <input matInput type="text" [ngModel]="name" (ngModelChange)="name = $event; checkTableName()" required />
     </mat-form-field>
+    <p *ngIf="!isUnique" style="color: red;">Table name should be unique.</p>
     <!-- Ends: Format Name -->
 </mat-dialog-content>
 
@@ -31,6 +32,7 @@
             matTooltip="Apply Filters"
             tooltip-position="left"
             (click) = "saveClick()"
+            [disabled]="!name.toString().trim() || !isUnique"
         >
             Save
         </button>

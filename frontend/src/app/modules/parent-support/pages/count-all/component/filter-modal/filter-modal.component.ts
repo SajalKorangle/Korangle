@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { isMobile } from '@classes/common';
 
 @Component({
     selector: 'app-filter-modal',
@@ -12,10 +13,8 @@ export class FilterModalComponent implements OnInit {
     filter: any;
 
     name: string;
-
+    isNameProvided: boolean = true;
     isEditing: boolean;
-
-    checkBox: boolean;
 
     /* Details of Start Date */
     startDateType: string = "Select Start Date";
@@ -45,9 +44,7 @@ export class FilterModalComponent implements OnInit {
 
             /* Initialize complaint type list */
             if (this.filter["complaintTypeList"]) {
-
                 this.complaintTypeList.forEach((complaintType) => {
-
                     let idx = this.filter["complaintTypeList"].indexOf(complaintType.id);
                     if (idx != -1) {
                         complaintType["selected"] = true;
@@ -57,9 +54,7 @@ export class FilterModalComponent implements OnInit {
 
             /* Initialize status list */
             if (this.filter["statusList"]) {
-
                 this.statusList.forEach((status) => {
-
                     let idx = this.filter["statusList"].indexOf(status.id);
                     if (idx != -1) {
                         status["selected"] = true;
@@ -69,7 +64,6 @@ export class FilterModalComponent implements OnInit {
 
             /* Initialize Date Information */
             if (this.filter["startDateType"]) {
-
                 this.startDateType = this.filter["startDateType"];
                 switch (this.startDateType) {
                     case "From Days Ago":
@@ -104,6 +98,11 @@ export class FilterModalComponent implements OnInit {
         }
         return true;
     }  // Ends: isMobile()
+
+    /* For mobile-application */
+    checkMobile(): boolean {
+        return isMobile();
+    }
 
     /* Make input-date non-typeable */
     handleOnKeyDown(event: any) {
@@ -158,13 +157,13 @@ export class FilterModalComponent implements OnInit {
 
     /* Apply Button Clicked */
     applyClick(): void {
-        if (!this.name) {
+        if (!this.name.toString().trim()) {
             alert("Please enter the name.");
             return;
         }
 
         let filtersData = {};
-        filtersData["name"] = this.name;
+        filtersData["name"] = this.name.toString().trim();
 
         /* Selected Complaint Types */
         let complaintTypeList = [];
