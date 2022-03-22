@@ -219,31 +219,16 @@
             Delete
         </button>
 
-        <ng-container *ngIf="name.toString().trim()">
-            <button
-                type="button"
-                class="btn btn-warning"
-                style="padding: 7px 17px;"
-                matTooltip="Apply Filters"
-                tooltip-position="left"
-                (click) = "applyClick()"
-            >
-                Apply
-            </button>
-        </ng-container>
-
-        <ng-container *ngIf="!name.toString().trim()">
-            <button
-                type="button"
-                class="btn btn-warning"
-                style="padding: 7px 17px;"
-                matTooltip="Apply Filters"
-                tooltip-position="left"
-                disabled
-            >
-                Apply
-            </button>
-        </ng-container>
+        <button
+            type="button"
+            class="btn btn-warning"
+            style="padding: 7px 17px;"
+            matTooltip="Apply Filters"
+            tooltip-position="left"
+            (click) = "applyClick()"
+        >
+            Apply
+        </button>
     </div>
     <!-- Ends: Bottom Buttons -->
 </mat-dialog-content>

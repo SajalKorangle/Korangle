@@ -1,7 +1,7 @@
-<div *ngIf="!isLoading" class="card-content" [ngStyle]="{'min-height': (rowFilters.length > 0 || columnFilters.length > 0) ? '80vh' : '90vh'}">
+<div *ngIf="!isLoading" class="card-content" [ngStyle]="{'min-height': (rowFilterList.length > 0 || columnFilterList.length > 0) ? '80vh' : '90vh'}">
     <b>Define custom rows and columns or choose from saved tables</b>
     <!-- Starts: Print && Download Buttons Section (Mobile Browser) -->
-    <ng-container *ngIf="!htmlRenderer.checkMobile() && htmlRenderer.isMobile() && (rowFilters.length > 0 || columnFilters.length > 0)">
+    <ng-container *ngIf="!htmlRenderer.checkMobile() && htmlRenderer.isMobile() && (rowFilterList.length > 0 || columnFilterList.length > 0)">
         <button
             type="button"
             id="download"
@@ -14,7 +14,7 @@
             Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
         </button>
     </ng-container>
-    <!--  Ends: Print && Download Buttons Section -->
+    <!--  Ends: Print && Download Buttons Section (Mobile Browser) -->
 
     <br /><br /><b>Table Format</b><br />
     <!--Starts: Generated Tables List -->
@@ -34,7 +34,7 @@
 
         <div class="print-download-button">
             <!-- Starts: Print && Download Buttons Section (Desktop) -->
-            <ng-container *ngIf="!htmlRenderer.checkMobile() && !htmlRenderer.isMobile() && (rowFilters.length > 0 || columnFilters.length > 0)">
+            <ng-container *ngIf="!htmlRenderer.checkMobile() && !htmlRenderer.isMobile() && (rowFilterList.length > 0 || columnFilterList.length > 0)">
                 <button
                     id="print-list"
                     type="button"
@@ -59,7 +59,7 @@
                     Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
                 </button>
             </ng-container>
-            <!--  Ends: Print && Download Buttons Section -->
+            <!--  Ends: Print && Download Buttons Section (Desktop) -->
         </div>
     </div>
     <!-- Ends: Generated Tables List -->
@@ -87,7 +87,7 @@
                 <thead>
                     <tr cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="dropColumn($event)">
                         <th class="minWidth"></th>
-                        <th *ngFor="let filter of columnFilters" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth" cdkDragLockAxis="x" cdkDrag>
+                        <th *ngFor="let filter of columnFilterList" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth" cdkDragLockAxis="x" cdkDrag>
                             <span (click)="whereToAdd = 'col'; openChangeDialog(filter)" style="cursor: pointer">
                                 {{ filter.name }} (<span>{{ htmlRenderer.getFilterTotalCount(filter) }}</span>)
                             </span>
@@ -104,14 +104,14 @@
 
                 <!-- Starts: Table Body -->
                 <tbody cdkDropList class="example-list" (cdkDropListDropped)="dropRow($event)">
-                    <tr class="example-box" *ngFor="let rowFilter of rowFilters" cdkDragLockAxis="y" cdkDrag>
+                    <tr class="example-box" *ngFor="let rowFilter of rowFilterList" cdkDragLockAxis="y" cdkDrag>
                         <th class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
                             <i class="material-icons menu-icon" style="float: left" cdkDragHandle>menu</i>
                             <span (click)="whereToAdd = 'row'; openChangeDialog(rowFilter)" style="cursor: pointer">
                                 {{ rowFilter.name }} (<span>{{ htmlRenderer.getFilterTotalCount(rowFilter) }}</span>)
                             </span>
                         </th>
-                        <ng-container *ngFor="let columnFilter of columnFilters; let idx = index">
+                        <ng-container *ngFor="let columnFilter of columnFilterList; let idx = index">
                             <td class="minWidth" style="cursor: pointer" (click)="openShowStudentListDialog(rowFilter, columnFilter)">
                                 {{ htmlRenderer.getIntersectionCount(rowFilter, columnFilter) }}
                             </td>
@@ -124,7 +124,7 @@
                                 + Row
                             </span>
                         </th>
-                        <td class="minWidth" *ngFor="let filter of columnFilters">-</td>
+                        <td class="minWidth" *ngFor="let filter of columnFilterList">-</td>
                         <td class="minWidth">-</td>
                     </tr>
                 </tbody>
@@ -140,7 +140,7 @@
 
     <!-- Starts: Save Button -->
     <ng-container *ngIf="!isTableEditing">
-        <button *ngIf="rowFilters.length > 0 || columnFilters.length > 0"
+        <button *ngIf="rowFilterList.length > 0 || columnFilterList.length > 0"
             type="button"
             (click)="openSaveFormatDialog()"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
@@ -153,25 +153,15 @@
 
     <!-- Starts: Update Changes  &&  Save As Buttons Section -->
     <ng-container *ngIf="isTableEditing">
-        <ng-container *ngIf="!htmlRenderer.checkTableName()">
-            <button type="button"
-                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
-                disabled
-            >
-                Update Changes
-            </button>
-        </ng-container>
 
-        <ng-container *ngIf="htmlRenderer.checkTableName()">
-            <button type="button"
-                (click)="updateChangesClicked()"
-                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
-            >
-                Update Changes
-            </button>
-        </ng-container>
+        <button type="button"
+            (click)="updateChangesClicked()"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
+            [disabled]="!htmlRenderer.checkTableName()"
+        >
+            Update Changes
+        </button>
 
         <button type="button"
             (click)="saveAsClicked()"

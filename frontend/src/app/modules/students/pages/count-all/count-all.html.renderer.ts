@@ -29,8 +29,8 @@ export class CountAllHtmlRenderer {
             tableCols.push(value);
         });
 
-        this.vm.columnFilters = tableCols;
-        this.vm.rowFilters = tableRows;
+        this.vm.columnFilterList = tableCols;
+        this.vm.rowFilterList = tableRows;
     }  // Ends: tableOpenClicked()
 
     /* Get total count of a filter */

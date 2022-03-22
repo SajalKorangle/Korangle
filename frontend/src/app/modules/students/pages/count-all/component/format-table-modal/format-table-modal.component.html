@@ -25,31 +25,17 @@
             Cancel
         </button>
 
-        <ng-container *ngIf="name.toString().trim() && isUnique">
-            <button
-                type="button"
-                class="btn btn-warning"
-                style="padding: 7px 17px;"
-                matTooltip="Save Table"
-                tooltip-position="left"
-                (click) = "saveClick()"
-            >
-                Save
-            </button>
-        </ng-container>
-
-        <ng-container *ngIf="!name.toString().trim() || !isUnique">
-            <button
-                type="button"
-                class="btn btn-warning"
-                style="padding: 7px 17px;"
-                matTooltip="Save Table"
-                tooltip-position="left"
-                disabled
-            >
-                Save
-            </button>
-        </ng-container>
+        <button
+            type="button"
+            class="btn btn-warning"
+            style="padding: 7px 17px;"
+            matTooltip="Save Table"
+            tooltip-position="left"
+            (click) = "saveClick()"
+            [disabled]="!name.toString().trim() || !isUnique"
+        >
+            Save
+        </button>
     </div>
 </ng-container>
 <!-- Ends: Bottom Buttons -->
