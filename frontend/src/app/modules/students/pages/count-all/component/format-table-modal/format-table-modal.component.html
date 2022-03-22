@@ -25,7 +25,7 @@
             Cancel
         </button>
 
-        <ng-container *ngIf="name && isUnique">
+        <ng-container *ngIf="name.toString().trim() && isUnique">
             <button
                 type="button"
                 class="btn btn-warning"
@@ -38,7 +38,7 @@
             </button>
         </ng-container>
 
-        <ng-container *ngIf="!name || !isUnique">
+        <ng-container *ngIf="!name.toString().trim() || !isUnique">
             <button
                 type="button"
                 class="btn btn-warning"

@@ -219,7 +219,7 @@
             Delete
         </button>
 
-        <ng-container *ngIf="name">
+        <ng-container *ngIf="name.toString().trim()">
             <button
                 type="button"
                 class="btn btn-warning"
@@ -232,7 +232,7 @@
             </button>
         </ng-container>
 
-        <ng-container *ngIf="!name">
+        <ng-container *ngIf="!name.toString().trim()">
             <button
                 type="button"
                 class="btn btn-warning"

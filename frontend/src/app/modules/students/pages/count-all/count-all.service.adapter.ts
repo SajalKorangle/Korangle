@@ -173,7 +173,7 @@ export class CountAllServiceAdapter {
     async saveTable(operation = "", table = null, idx = null) {
         this.vm.isLoading = true;
         let tableDataObject = {};
-        tableDataObject["formatName"] = this.vm.tableFormatTitle;
+        tableDataObject["formatName"] = this.vm.tableFormatTitle.toString().trim();
         tableDataObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
         /* Get Rows */
@@ -214,7 +214,7 @@ export class CountAllServiceAdapter {
         this.vm.isLoading = true;
         let tableDataObject = {};
         tableDataObject["id"] = this.vm.tableActiveId;
-        tableDataObject["formatName"] = this.vm.tableFormatTitle;
+        tableDataObject["formatName"] = this.vm.tableFormatTitle.toString().trim();
         tableDataObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
         /* Get Rows */

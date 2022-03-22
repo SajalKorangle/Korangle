@@ -253,7 +253,7 @@ export class FilterModalComponent implements OnInit {
 
     /* Apply Button Clicked */
     applyClick(): void {
-        if (!this.name) {
+        if (!this.name.toString().trim()) {
             this.isNameProvided = false;
             alert("Please enter the name.");
             return;
@@ -292,7 +292,7 @@ export class FilterModalComponent implements OnInit {
         /* Ends: Class-Section */
 
         /* Name */
-        filtersData["name"] = this.name;
+        filtersData["name"] = this.name.toString().trim();
 
         /* Age */
         let age = [];

@@ -26,7 +26,7 @@ export class FormatTableModalComponent implements OnInit {
         let tempUniqueCount = 0;
 
         for (let idx = 0; idx < this.tableList.length; idx++) {
-            if (this.tableList[idx].formatName == this.name) {
+            if (this.tableList[idx].formatName.toString().trim() == this.name.toString().trim()) {
                 tempUniqueCount++;
                 break;
             }
@@ -46,7 +46,7 @@ export class FormatTableModalComponent implements OnInit {
 
     /* Save Button Clicked */
     saveClick(): void {
-        if (!this.name) {
+        if (!this.name.toString().trim()) {
             alert("Please enter the name.");
             return;
         }
@@ -57,6 +57,6 @@ export class FormatTableModalComponent implements OnInit {
             return;
         }
 
-        this.dialogRef.close({name: this.name});
+        this.dialogRef.close({name: this.name.toString().trim()});
     }  // Ends: saveClick()
 }

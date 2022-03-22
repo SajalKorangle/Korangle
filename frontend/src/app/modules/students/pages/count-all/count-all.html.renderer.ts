@@ -67,7 +67,7 @@ export class CountAllHtmlRenderer {
         let tempUniqueCount = 0;
 
         for (let idx = 0; idx < this.vm.tableList.length; idx++) {
-            if (this.vm.tableList[idx].formatName == this.vm.tableFormatTitle && idx != this.vm.tableActiveIdx) {
+            if (this.vm.tableList[idx].formatName.toString().trim() == this.vm.tableFormatTitle.toString().trim() && idx != this.vm.tableActiveIdx) {
                 tempUniqueCount++;
             }
         }
