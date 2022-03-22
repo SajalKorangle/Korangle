@@ -1,5 +1,5 @@
 <div *ngIf="!isLoading" class="card-content" [ngStyle]="{'min-height': (rowFilterList.length > 0 || columnFilterList.length > 0) ? '80vh' : '90vh'}">
-    <b>Define custom rows and columns or choose from saved tables</b>
+    <b>Define custom rows and columns or choose from saved tables.</b>
     <!-- Starts: Print && Download Buttons Section (Mobile Browser) -->
     <ng-container *ngIf="!htmlRenderer.checkMobile() && htmlRenderer.isMobile() && (rowFilterList.length > 0 || columnFilterList.length > 0)">
         <button
