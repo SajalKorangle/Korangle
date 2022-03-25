@@ -20,7 +20,7 @@
     padding: 5px;
 }
 
-.seach-btn {
+.search-btn {
     flex-basis: 7%;
     border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
     border-top-right-radius: 2px;
@@ -165,7 +165,7 @@ thead tr th {
     line-height: 14px;
 }
 
-.bottom-seach-btn {
+.bottom-search-btn {
     flex-basis: 8%;
     border-radius: 5px !important;
     text-transform: capitalize !important;
@@ -229,7 +229,7 @@ thead tr th {
        flex-basis: 90%;
    }
 
-   .seach-btn {
+   .search-btn {
        flex-basis: 10%;
    }
 

@@ -20,14 +20,13 @@ export class RaiseComplaintComponent implements OnInit {
 
     pageName = "list-of-complaints";
 
-    seachString: string = "";
+    searchString: string = "";
 
     complaintTitle: string = "";
     complaintStudentName: string = "Select Student";
     complaintStudent: any = {};
     complaintComment: string = "";
     complaintList: any = [];
-    searchedComplaintList: any = [];
 
     complaintTypeName: string = "Select Complaint Type";
     complaintTypeDefaultText: string = "";
@@ -137,7 +136,6 @@ export class RaiseComplaintComponent implements OnInit {
                 this.serviceAdapter.getStatusCompalintType(this.complaintList[i]["parentSchoolComplaintType"].id, i);
             }
         }
-        this.searchedComplaintList = this.complaintList;
     }  // Ends: initializeComplaintList()
 
     /* Initialize Student Full Profile List */
@@ -257,35 +255,26 @@ export class RaiseComplaintComponent implements OnInit {
         return this.nullEmployee;
     }  // Ends: getEmployee()
 
-    /* Debouncing */
-    debounce(func, timeout = 300) {
-        let timer;
-        return (...args) => {
-        clearTimeout(timer);
-            timer = setTimeout(() => { func.apply(this, args); }, timeout);
-         };
-    }  // Ends: debounce()
-
     /* Get Searched Complaint List */
     getSearchedComplaintList() {
-        this.searchedComplaintList = [];
-        let seachString = this.seachString.trim();
+        let searchedComplaintList = [];
+        let searchString = this.searchString.trim();
 
         this.complaintList.forEach((complaint) => {
-            if (complaint.parentStudent.name.toLowerCase().includes(seachString.toLowerCase())) { /* Check for student name */
-                this.searchedComplaintList.push(complaint);
-            } else if (complaint.title.toLowerCase().includes(seachString.toLowerCase())) { /* Check for complaint title */
-                this.searchedComplaintList.push(complaint);
+            if (complaint.parentStudent.name.toLowerCase().includes(searchString.toLowerCase())) { /* Check for student name */
+                searchedComplaintList.push(complaint);
+            } else if (complaint.title.toLowerCase().includes(searchString.toLowerCase())) { /* Check for complaint title */
+                searchedComplaintList.push(complaint);
             } else if (
                 complaint.parentSchoolComplaintType["name"] &&
-                complaint.parentSchoolComplaintType.name.toLowerCase().includes(seachString.toLowerCase())
+                complaint.parentSchoolComplaintType.name.toLowerCase().includes(searchString.toLowerCase())
             ) { /* Check for complaint type */
-                this.searchedComplaintList.push(complaint);
+                searchedComplaintList.push(complaint);
             }
         });
-    }  // Ends: getSearchedComplaintList()
 
-    seachChanged = this.debounce(() => this.getSearchedComplaintList());
+        return searchedComplaintList;
+    }  // Ends: getSearchedComplaintList()
 
     /* Send Complaint */
     sendComplaint() {

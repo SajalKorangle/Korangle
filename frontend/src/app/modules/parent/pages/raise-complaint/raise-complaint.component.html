@@ -2,8 +2,8 @@
 <div *ngIf="!isLoading && pageName == 'list-of-complaints'" class="card-content">
     <!-- Starts: Search Bar -->
     <div class="search-bar">
-        <input class="search-field" type="search" placeholder="Search by student name, complaint type, title" [ngModel]="seachString" (ngModelChange)="seachString = $event; seachChanged()">
-        <button class="seach-btn"><i class="material-icons search-icon">search</i></button>
+        <input class="search-field" type="search" placeholder="Search by student name, complaint type, title" [(ngModel)]="searchString">
+        <button class="search-btn"><i class="material-icons search-icon">search</i></button>
     </div>
     <br />
     <br />
@@ -35,7 +35,7 @@
 
                 <!-- Starts: Table Body -->
                 <tbody>
-                    <ng-container *ngFor="let complaint of searchedComplaintList; let idx = index">
+                    <ng-container *ngFor="let complaint of getSearchedComplaintList(); let idx = index">
                         <tr>
                             <td>{{ complaint.parentStudent.name }}</td>
                             <td>{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
@@ -233,7 +233,7 @@
                 <input class="bottom-search-field" type="search" placeholder="Type Response/ Updates here" [(ngModel)]="commentMessage">
                 <button
                     type="button"
-                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-search-btn"
                     style="padding: 12px 15px"
                     matTooltip="Send Comment"
                     tooltip-position="left"
@@ -302,7 +302,7 @@
                     <!-- Ends: Renotify Button -->
                     <button
                         type="button"
-                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-search-btn"
                         style="padding: 10px 15px"
                         matTooltip="Send Comment"
                         tooltip-position="left"
@@ -425,7 +425,7 @@
                 <input class="bottom-search-field" type="search" placeholder="Type Query here" [(ngModel)]="commentMessage">
                 <button
                     type="button"
-                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-search-btn"
                     style="padding: 12px 15px"
                     matTooltip="Send Comment"
                     tooltip-position="left"
@@ -450,7 +450,7 @@
                 <div style="display: flex; justify-content: center; align-items: center;">
                     <button
                         type="button"
-                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-search-btn"
                         style="padding: 10px 25px"
                         matTooltip="Send Comment"
                         tooltip-position="left"
