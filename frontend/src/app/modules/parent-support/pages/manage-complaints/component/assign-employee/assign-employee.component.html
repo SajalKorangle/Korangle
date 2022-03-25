@@ -14,7 +14,7 @@
 
         <!-- Starts: Search Bar -->
         <div class="search-bar">
-            <input class="search-field" type="search" placeholder="Search employee name" [ngModel]="addressToSearchString" (ngModelChange)="addressToSearchString = $event; searchChanged()">
+            <input class="search-field" type="search" placeholder="Search employee name" [ngModel]="addressToSearchString" (ngModelChange)="addressToSearchString = $event; searchEmployee()">
             <button class="search-btn"><i class="material-icons search-icon">search</i></button>
         </div>
         <!-- Ends: Search Bar -->
@@ -86,7 +86,7 @@
         type="button"
         class="btn cancel-btn"
         style="padding: 5.5px 15.5px;"
-        [ngStyle]="setCancelBtnStyle()"
+        [ngStyle]="getCancelBtnStyle()"
         (click)="closeClicked()"
     >
         Cancel

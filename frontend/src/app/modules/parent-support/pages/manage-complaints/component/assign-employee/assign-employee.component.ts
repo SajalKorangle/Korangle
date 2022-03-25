@@ -66,7 +66,7 @@ export class AssignEmployeeComponent implements OnInit {
     }  // Ends: closeClicked()
 
     /* Map Bootstarp Color Name to Hex-Color Code */
-    setCancelBtnStyle() {
+    getCancelBtnStyle() {
         let color = "white";
         if (this.user.activeSchool.secondaryThemeColor == "primary") {
             color = "#1976D2";
@@ -89,7 +89,7 @@ export class AssignEmployeeComponent implements OnInit {
         };
 
         return style;
-    }  // Ends: setCancelBtnStyle()
+    }  // Ends: getCancelBtnStyle()
 
     /* Get Searched Employee List */
     searchEmployee() {
@@ -104,17 +104,6 @@ export class AssignEmployeeComponent implements OnInit {
             }
         });
     }  // Ends: searchEmployee()
-
-    /* Debouncing */
-    debounce(func, timeout = 300) {
-        let timer;
-        return (...args) => {
-        clearTimeout(timer);
-            timer = setTimeout(() => { func.apply(this, args); }, timeout);
-         };
-    }  // Ends: debounce()
-
-    searchChanged = this.debounce(() => this.searchEmployee());
 
     /* Check Existence of Employee */
     checkEmployeeExist(employeeId) {
