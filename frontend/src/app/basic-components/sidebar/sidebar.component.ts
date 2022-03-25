@@ -129,7 +129,7 @@ export class SidebarComponent implements OnInit {
 
     async logout() {
 
-        /*const deleteResponsePromise = new Query()
+        const deleteResponsePromise = new Query()
             .filter({ token: this.user.jwt })
             .deleteObjectList({ authentication_app: 'DeviceList' });
 
@@ -138,7 +138,7 @@ export class SidebarComponent implements OnInit {
             deleteResponse,
         ] = await Promise.all([
             deleteResponsePromise,
-        ]);*/
+        ]);
 
         unregisterForNotification({
             jwt: this.user.jwt,

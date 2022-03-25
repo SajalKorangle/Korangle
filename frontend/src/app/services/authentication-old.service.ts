@@ -7,14 +7,14 @@ import { environment } from '../../environments/environment';
 
 import { DataStorage } from '../classes/data-storage';
 
+import { checkTokenRevokedStatus } from '@services/revokedTokenHandling';
+
 @Injectable()
 export class AuthenticationOldService {
     private getUserDetailsUrl = environment.DJANGO_SERVER + Constants.api_version + '/school/get-user-details/';
     private loginUserDetailsUrl = environment.DJANGO_SERVER + Constants.api_version + '/school/login-user-details/';
 
     private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-    private user;
 
     constructor(private http: HttpClient) {}
 
@@ -54,17 +54,10 @@ export class AuthenticationOldService {
             .toPromise()
             .then(
                 (response) => {
-                    /* Starts: Checking if failure is due to revoked token ( access denied), if true then logging out user  */
-                    this.user = DataStorage.getInstance().getUser();
-                    if (response['token_revoked']) {
-                        localStorage.removeItem('schoolJWT');
-                        this.user.jwt = '';
-                        this.user.isAuthenticated = false;
-                        this.user.emptyUserDetails();
-                        alert(response['fail']);
-                        return null;
+                    //  Handling revoked rokens here
+                    if(checkTokenRevokedStatus(response)){
+                        return null; 
                     }
-                    /* Ends: Checking if failure is due to revoked token ( access denied)  */
                     return (<any>response).data;
                 },
                 (error) => {

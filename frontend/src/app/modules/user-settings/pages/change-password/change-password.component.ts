@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 import { UserOldService } from '../../../../services/modules/user/user-old.service';
+import { Query } from '@services/generic/query';
 import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
@@ -15,6 +16,8 @@ export class ChangePasswordComponent {
     oldPassword: any;
     newPassword: any;
     confirmPassword: any;
+
+    signOutFromAll: boolean = false;
 
     isLoading = false;
 
@@ -53,10 +56,25 @@ export class ChangePasswordComponent {
                 this.oldPassword = null;
                 this.newPassword = null;
                 this.confirmPassword = null;
+                this.signOutFromAllDevices();
             },
             (error) => {
                 this.isLoading = false;
             }
         );
     }
+
+    // Starts: Function to sign out user from all other devices
+    async signOutFromAllDevices(){
+        if(this.signOutFromAll){
+            const token = localStorage.getItem('schoolJWT');
+            
+            const deleteResponsePromise = new Query()
+                .filter({ parentUser: this.user.id })
+                .exclude({ token: token })
+                .deleteObjectList({ authentication_app: 'DeviceList' });
+        }
+        this.signOutFromAll = false;
+    }
+    // Ends: Function to sign out user from all other devices
 }

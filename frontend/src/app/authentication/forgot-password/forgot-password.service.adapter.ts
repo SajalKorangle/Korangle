@@ -1,5 +1,6 @@
 import { ForgotPasswordComponent } from './forgot-password.component';
 import { load } from 'recaptcha-v3';
+import { Query } from '@services/generic/query';
 
 export class ForgotPasswordServiceAdapter {
     vm: ForgotPasswordComponent;
@@ -65,6 +66,7 @@ export class ForgotPasswordServiceAdapter {
                         this.vm.isLoading = false;
                         this.vm.showFrontPageProgressBar.emit('false');
                         alert('Password changed successfully');
+                        this.signOutFromAllDevices();               //    Signing out user from all devices
                         this.vm.changePage.emit('login');
                     } else if (otpResponse.status === 'failure') {
                         this.vm.isLoading = false;
@@ -77,5 +79,22 @@ export class ForgotPasswordServiceAdapter {
                     this.vm.showFrontPageProgressBar.emit('false');
                 }
             );
+    }
+
+    async signOutFromAllDevices(){
+        if(this.vm.signOutFromAll){
+            /*const deleteResponsePromise = new Query()
+                .filter({ mobile: this.vm.mobileNumber })
+                .deleteObjectList({ authentication_app: 'DeviceList' });
+                let deleteResponse = -1;
+                [
+                    deleteResponse,
+                ] = await Promise.all([
+                    deleteResponsePromise,
+                ]);
+
+                console.log(deleteResponse);
+                */
+        }
     }
 }
