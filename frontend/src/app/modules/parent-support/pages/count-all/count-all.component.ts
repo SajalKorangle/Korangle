@@ -49,6 +49,7 @@ export class CountAllComponent implements OnInit {
     tableActiveIdx: number = 0;
 
     tableFormatTitle: string = "";     // Table Name
+    oldTableFormatTitle: string = "";     // Old Table Name
     whereToAdd: string = "";    // Row  or  Column
     rowFilterList: any = [];    // Row List
     columnFilterList: any = [];    // Column List
@@ -175,7 +176,7 @@ export class CountAllComponent implements OnInit {
         });
 
         return filteredComplaintList;
-    }  // Ends: getFilteredStudentList()
+    }  // Ends: getFilteredComplaintList()
 
     /* Open Filter Modal */
     openDialog(): void {

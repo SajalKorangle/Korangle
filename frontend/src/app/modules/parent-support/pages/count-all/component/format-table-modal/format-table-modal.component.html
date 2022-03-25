@@ -20,7 +20,7 @@
             type="button"
             class="btn cancel-btn"
             style="padding: 7px 17px;"
-            matTooltip="Delete Filters"
+            matTooltip="Cancel"
             tooltip-position="left"
             (click) = "cancelClick()"
         >
@@ -29,7 +29,7 @@
         <button
             type="button"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }} save-btn"
-            matTooltip="Apply Filters"
+            matTooltip="Save"
             tooltip-position="left"
             (click) = "saveClick()"
             [disabled]="!name.toString().trim() || !isUnique"

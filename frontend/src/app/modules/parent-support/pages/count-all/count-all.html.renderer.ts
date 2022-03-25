@@ -17,7 +17,8 @@ export class CountAllHtmlRenderer {
         this.vm.isTableEditing = true;
         this.vm.tableActiveId = table["id"];
         this.vm.tableActiveIdx = idx;
-        this.vm.tableFormatTitle = table.formatName;
+        this.vm.tableFormatTitle = table.formatName.toString().trim();
+        this.vm.oldTableFormatTitle = table.formatName.toString().trim();
         let tableRows = [];
         let tableCols = [];
 

@@ -16,6 +16,7 @@ export class ShowComplaintListModalComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data,
     ) {
         this.complaintList = data.complaintList;
+        console.log("List: ", this.complaintList);
     }
 
     ngOnInit() {
