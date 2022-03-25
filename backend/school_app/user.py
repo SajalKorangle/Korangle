@@ -191,7 +191,7 @@ class AuthenticationHandler():
             user = User.objects.filter(username=username)
 
             # Saving device login 
-            newJWTEntry = DeviceList(token = response.data['token'], user_id = user[0], device_name = device_name)
+            newJWTEntry = DeviceList(token = response.data['token'], parentUser = user[0], device_name = device_name, mobile=int(user[0].username))
             newJWTEntry.save()
 
             response.data.update(get_user_details(user[0]))

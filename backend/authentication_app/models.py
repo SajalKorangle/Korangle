@@ -20,11 +20,12 @@ class DeviceList(models.Model):
     token = models.TextField(null=True, verbose_name='token')
     last_active = models.DateTimeField(auto_now_add=True, blank=True, verbose_name='last active')
     login_date = models.DateTimeField(auto_now_add=True, blank=True, verbose_name='login date')
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    parentUser = models.ForeignKey(User, on_delete=models.CASCADE)
     device_name = models.TextField(null=True, verbose_name='device name')
+    mobile = models.BigIntegerField(null=False, default=0)
 
     class Permissions(BasePermission):
-        RelationsToUser = ['user_id__id']
+        RelationsToUser = ['parentUser__id']
 
     class Meta:
         db_table = 'device_list'

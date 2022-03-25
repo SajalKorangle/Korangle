@@ -4,8 +4,6 @@ from sqlalchemy import true
 from authentication_app.models import DeviceList
 import datetime
 
-from common.common_functions import get_error_response
-
 class DeviceWhitelistCheck:
 
     def __init__(self, get_response):
@@ -26,7 +24,7 @@ class DeviceWhitelistCheck:
                 response = self.get_response(request)
             else :
                 #return get_error_response("yoo!")
-                return JsonResponse({'token_revoked':True, 'fail':'Permission Denied, login again to access the account', 'response':get_error_response('Permission Denied, login again to access the account')})
+                return JsonResponse({'token_revoked':True, 'message':'Permission Denied, login again to access the account'})
                 #return HttpResponseForbidden()
                 #return JsonResponse({'response': { 'status':'fail', 'message':"Permission Denied, login again to access the account"}})
         else :
