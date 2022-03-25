@@ -56,7 +56,7 @@ export class CountAllServiceAdapter {
 
         /* Initialize Table List */
         tableList.sort((a, b) => a.id - b.id);
-        this.vm.initializeTableList(tableList);
+        this.vm.tableList = tableList;
 
         this.vm.isLoading = false;
     }  // Ends: initializeData()

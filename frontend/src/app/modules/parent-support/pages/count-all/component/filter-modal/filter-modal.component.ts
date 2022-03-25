@@ -12,8 +12,7 @@ export class FilterModalComponent implements OnInit {
     user: any;
     filter: any;
 
-    name: string;
-    isNameProvided: boolean = true;
+    name: string = "";
     isEditing: boolean;
 
     /* Details of Start Date */

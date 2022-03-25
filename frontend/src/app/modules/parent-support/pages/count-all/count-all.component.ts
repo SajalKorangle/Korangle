@@ -101,31 +101,6 @@ export class CountAllComponent implements OnInit {
         });
     }  // Ends: initializeStatusList()
 
-    updateTableData(tableRows, tableCols) {
-
-    }
-
-    /* Initialize Table List */
-    initializeTableList(tableList) {
-        for (let idx = 0; idx < tableList.length; idx++) {
-            let table = tableList[idx];
-            let tableRows = [];
-            let tableCols = [];
-
-            Object.entries(table["cols"]).forEach(([key, value]) => {
-                tableCols.push(value);
-            });
-
-            Object.entries(table["rows"]).forEach(([key, value]) => {
-                tableRows.push(value);
-            });
-            this.updateTableData(tableRows, tableCols);
-        }
-
-        this.tableList = tableList;
-        this.serviceAdapter.updateTableList();
-    }  // Ends: initializeTableList()
-
     /* Initialize Table Details */
     initializeTableDetails() {
         this.isTableUpdated = false;
