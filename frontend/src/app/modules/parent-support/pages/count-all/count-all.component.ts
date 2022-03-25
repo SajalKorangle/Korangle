@@ -50,8 +50,8 @@ export class CountAllComponent implements OnInit {
 
     tableFormatTitle: string = "";     // Table Name
     whereToAdd: string = "";    // Row  or  Column
-    rowFilters: any = [];    // Row List
-    columnFilters: any = [];    // Column List
+    rowFilterList: any = [];    // Row List
+    columnFilterList: any = [];    // Column List
 
     tableList: any = [];
     complaintTypeList: any = [];
@@ -133,20 +133,20 @@ export class CountAllComponent implements OnInit {
         this.tableActiveId = null;
         this.tableActiveIdx = null;
         this.tableFormatTitle = "";
-        this.columnFilters = [];
-        this.rowFilters = [];
+        this.columnFilterList = [];
+        this.rowFilterList = [];
     }  // Ends: initializeTableDetails()
 
     /* Will be Called After Dragging of a Row */
     dropRow(event: CdkDragDrop<string[]>): void {
         this.isTableUpdated = true;
-        moveItemInArray(this.rowFilters, event.previousIndex, event.currentIndex);
+        moveItemInArray(this.rowFilterList, event.previousIndex, event.currentIndex);
     }  // Ends: dropRow()
 
     /* Will be Called After Dragging of a Column */
     dropColumn(event: CdkDragDrop<string[]>): void {
         this.isTableUpdated = true;
-        moveItemInArray(this.columnFilters, event.previousIndex, event.currentIndex);
+        moveItemInArray(this.columnFilterList, event.previousIndex, event.currentIndex);
     }  // Ends: dropColumn()
 
     /* Check Applied set of Filters on a Student */
@@ -218,9 +218,9 @@ export class CountAllComponent implements OnInit {
                 let filter = data.filtersData;
 
                 if (this.whereToAdd == 'row') {    /* Add Row Filter */
-                    this.rowFilters.push(filter);
+                    this.rowFilterList.push(filter);
                 } else {    /* Add Column Filter */
-                    this.columnFilters.push(filter);
+                    this.columnFilterList.push(filter);
                 }
             }
         });
@@ -246,43 +246,43 @@ export class CountAllComponent implements OnInit {
                     delete filtersData["operation"];
                     if (this.whereToAdd == 'row') {    /* Update Row */
                         let index = 0;
-                        for (let i = 0; i < this.rowFilters.length; i++) {
-                            if (this.rowFilters[i]["name"] == filter["name"]) {
+                        for (let i = 0; i < this.rowFilterList.length; i++) {
+                            if (this.rowFilterList[i]["name"] == filter["name"]) {
                                 index = i;
                                 break;
                             }
                         }
-                        this.rowFilters[index] = filtersData;
+                        this.rowFilterList[index] = filtersData;
                     } else if (this.whereToAdd === 'col') {    /* Update Column */
                         let index = 0;
-                        for (let i = 0; i < this.columnFilters.length; i++) {
-                            if (this.columnFilters[i]["name"] == filter["name"]) {
+                        for (let i = 0; i < this.columnFilterList.length; i++) {
+                            if (this.columnFilterList[i]["name"] == filter["name"]) {
                                 index = i;
                                 break;
                             }
                         }
-                        this.columnFilters[index] = filtersData;
+                        this.columnFilterList[index] = filtersData;
                     }
                 } else if (filtersData["operation"] == "delete") {    /* Delete Filter */
                     delete filtersData["operation"];
                     if (this.whereToAdd == 'row') {    /* Delete Row */
                         let index = 0;
-                        for (let i = 0; i < this.rowFilters.length; i++) {
-                            if (this.rowFilters[i]["name"] == filter["name"]) {
+                        for (let i = 0; i < this.rowFilterList.length; i++) {
+                            if (this.rowFilterList[i]["name"] == filter["name"]) {
                                 index = i;
                                 break;
                             }
                         }
-                        this.rowFilters.splice(index, 1);
+                        this.rowFilterList.splice(index, 1);
                     } else if (this.whereToAdd === 'col') {    /* Delete Column */
                         let index = 0;
-                        for (let i = 0; i < this.columnFilters.length; i++) {
-                            if (this.columnFilters[i]["name"] == filter["name"]) {
+                        for (let i = 0; i < this.columnFilterList.length; i++) {
+                            if (this.columnFilterList[i]["name"] == filter["name"]) {
                                 index = i;
                                 break;
                             }
                         }
-                        this.columnFilters.splice(index, 1);
+                        this.columnFilterList.splice(index, 1);
                     }
                 }
             }
@@ -355,7 +355,7 @@ export class CountAllComponent implements OnInit {
     getHeaderValues(): any {
         let headerValues = [];
         headerValues.push('');
-        this.columnFilters.forEach((columnFilter)=> {
+        this.columnFilterList.forEach((columnFilter)=> {
             let filterTotalCount = this.htmlRenderer.getFilterTotalCount(columnFilter);
             let filterName = columnFilter.name + " (" + filterTotalCount + ")";
             headerValues.push(filterName);
@@ -371,7 +371,7 @@ export class CountAllComponent implements OnInit {
         let filterName = filter.name + " (" + filterTotalCount + ")";
         filterInfo.push(filterName);
 
-        this.columnFilters.forEach((columnFilter) => {
+        this.columnFilterList.forEach((columnFilter) => {
            filterInfo.push(this.htmlRenderer.getIntersectionCount(filter, columnFilter));
         });
         return filterInfo;
@@ -381,7 +381,7 @@ export class CountAllComponent implements OnInit {
     downloadList(): void {
         let template: any;
         template = [this.getHeaderValues()];
-        this.rowFilters.forEach((rowFilter) => {
+        this.rowFilterList.forEach((rowFilter) => {
             template.push(this.getFilterInfo(rowFilter));
         });
         let fileName: string = this.tableFormatTitle.toString().trim() + ".csv";
@@ -392,7 +392,7 @@ export class CountAllComponent implements OnInit {
     printTable(): void {
         // alert('Functionality needs to be implemented once again');
         let template: any = [];
-        this.rowFilters.forEach((rowFilter) => {
+        this.rowFilterList.forEach((rowFilter) => {
             template.push(this.getFilterInfo(rowFilter));
         });
 
@@ -430,7 +430,7 @@ export class CountAllComponent implements OnInit {
 
     /* Create New Table */
     addNewTableClicked() {
-        if (!this.isTableEditing && (this.rowFilters.length + this.columnFilters.length) > 0) {
+        if (!this.isTableEditing && (this.rowFilterList.length + this.columnFilterList.length) > 0) {
             let conformation = confirm("Do you want to save the current table?");
             if (conformation) {
                 const dialogRef = this.dialog.open(FormatTableModalComponent, {
@@ -472,7 +472,7 @@ export class CountAllComponent implements OnInit {
     /* Open Clicked Table */
     openTableClicked(table, idx) {
 
-        if (!this.isTableEditing && (this.rowFilters.length + this.columnFilters.length) > 0) {
+        if (!this.isTableEditing && (this.rowFilterList.length + this.columnFilterList.length) > 0) {
             let conformation = confirm("Do you want to save the current table?");
             if (conformation) {
                 const dialogRef = this.dialog.open(FormatTableModalComponent, {

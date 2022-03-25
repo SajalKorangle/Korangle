@@ -76,7 +76,7 @@ export class CountAllServiceAdapter {
 
         /* Get Rows */
         let rows = {};
-        this.vm.rowFilters.forEach((rowFilter, index) => {
+        this.vm.rowFilterList.forEach((rowFilter, index) => {
             let name = "row" + index;
             rows[name] = rowFilter;
         });
@@ -84,7 +84,7 @@ export class CountAllServiceAdapter {
 
         /* Get Columns */
         let cols = {};
-        this.vm.columnFilters.forEach((colFilter, index) => {
+        this.vm.columnFilterList.forEach((colFilter, index) => {
             let name = "col" + index;
             cols[name] = colFilter;
         });
@@ -118,7 +118,7 @@ export class CountAllServiceAdapter {
 
         /* Get Rows */
         let rows = {};
-        this.vm.rowFilters.forEach((rowFilter, index) => {
+        this.vm.rowFilterList.forEach((rowFilter, index) => {
             let name = "row" + index;
             rows[name] = rowFilter;
         });
@@ -126,7 +126,7 @@ export class CountAllServiceAdapter {
 
         /* Get Columns */
         let cols = {};
-        this.vm.columnFilters.forEach((colFilter, index) => {
+        this.vm.columnFilterList.forEach((colFilter, index) => {
             let name = "col" + index;
             cols[name] = colFilter;
         });
