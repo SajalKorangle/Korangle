@@ -12,7 +12,7 @@ export class ManageComplaintTypeHtmlRenderer {
     }  // Ends: initializeRenderer()
 
     /* Set Cancel Button Style */
-    setCancelBtnStyle() {
+    getCancelBtnStyle() {
         let color = "white";
         if (this.vm.user.activeSchool.secondaryThemeColor == "primary") {
             color = "#1976D2";
@@ -35,12 +35,22 @@ export class ManageComplaintTypeHtmlRenderer {
         };
 
         return style;
-    }  // Ends: setCancelBtnStyle()
+    }  // Ends: getCancelBtnStyle()
 
     checkUniqueness() {
         let answer = true;
         this.vm.statusList.forEach((status) => {
             if (status.name.toString().trim() == this.vm.addStatusName.toString().trim()) {
+                answer = false;
+            }
+        });
+        return answer;
+    }
+
+    checkTypeNameUniqueness() {
+        let answer = true;
+        this.vm.complaintTypeList.forEach((complaintType) => {
+            if (complaintType.name.toString().trim() == this.vm.typeName.toString().trim() && complaintType.id != this.vm.editingComplaintTypeId) {
                 answer = false;
             }
         });

@@ -70,7 +70,7 @@ export class AddStatusModalComponent implements OnInit {
     }  // Ends: deleteClick()
 
     /* Map Bootstarp Color Name to Hex-Color Code */
-    setCancelBtnStyle() {
+    getCancelBtnStyle() {
         let color = "white";
         if (this.user.activeSchool.secondaryThemeColor == "primary") {
             color = "#1976D2";
@@ -93,5 +93,5 @@ export class AddStatusModalComponent implements OnInit {
         };
 
         return style;
-    }  // Ends: setCancelBtnStyle()
+    }  // Ends: getCancelBtnStyle()
 }

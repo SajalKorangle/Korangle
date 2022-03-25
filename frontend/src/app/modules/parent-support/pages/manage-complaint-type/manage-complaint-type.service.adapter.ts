@@ -219,24 +219,26 @@ export class ManageComplaintTypeServiceAdapter {
         /* Update Complaint Type */
         await new Query().updateObject({parent_support_app: 'SchoolComplaintType'}, complaintTypeObject);
 
-        this.vm.applicableStatusList.sort((a,b) => a.id - b.id);
-        this.vm.applicableStatusTempList.sort((a,b) => a.id - b.id);
-
-        /* Get Create-ApplicableStatusList  &&  Delete-ApplicableStatusList */
+        /* Starts: Get Newly-Assigned-ApplicableStatusList  &&  Deleted-ApplicableStatusList */
         let deleteStatusComplaintList = [];
         let createStatusComplaintList = [];
+
+        this.vm.applicableStatusList.sort((a,b) => a.id - b.id);   //  Assigned statusList.
+        this.vm.applicableStatusTempList.sort((a,b) => a.id - b.id);   //  Previously assigned statusList.
+
         let n = this.vm.applicableStatusList.length, i = 0;
         let m = this.vm.applicableStatusTempList.length, j = 0;
 
+            /* Starts: Algoritham - Merge 2 arrays */
         while (i < n && j < m) {
             if (this.vm.applicableStatusList[i].id != this.vm.applicableStatusTempList[j].id) {
-                if (this.vm.applicableStatusList[i].id > this.vm.applicableStatusTempList[j].id) {
+                if (this.vm.applicableStatusList[i].id > this.vm.applicableStatusTempList[j].id) {   //  If current status is not in the Assigned statusList, delete it.
                     let statusComplaintTypeObject = {};
                     statusComplaintTypeObject["parentSchoolComplaintStatus"] = this.vm.applicableStatusTempList[j].id;
                     statusComplaintTypeObject["parentSchoolComplaintType"] = complaintTypeObject.id;
                     deleteStatusComplaintList.push(statusComplaintTypeObject);
                     j++;
-                } else {
+                } else {   //  If current status is not in the Previously Assigned statusList, create it.
                     let statusComplaintTypeObject = {};
                     statusComplaintTypeObject["parentSchoolComplaintStatus"] = this.vm.applicableStatusList[i].id;
                     statusComplaintTypeObject["parentSchoolComplaintType"] = complaintTypeObject.id;
@@ -264,19 +266,23 @@ export class ManageComplaintTypeServiceAdapter {
             deleteStatusComplaintList.push(statusComplaintTypeObject);
             j++;
         }
+            /* Ends: Algoritham - Merge 2 arrays */
 
-
-        /* Add Status-ComplaintType */
+            /* Add Status-ComplaintType */
         if (createStatusComplaintList.length) {
             this.addStatusComplaintType(createStatusComplaintList);
         }
 
-        /* Delete Status-ComplaintType */
+            /* Delete Status-ComplaintType */
         if (deleteStatusComplaintList.length) {
             this.deleteStatusComplaintType(deleteStatusComplaintList);
         }
+        /* Ends: Get Newly-Assigned-ApplicableStatusList  &&  Deleted-ApplicableStatusList */
 
-        let selectedEmployeeList = [];
+
+        /* Starts: Get Create-AddressToEmployeeList  &&  Delete-AddressToEmployeeList */
+
+        let selectedEmployeeList = [];   //  Assigned Employee.
         this.vm.selectedEmployeeList.forEach((employee) => {
             if (employee.selected) {
                 selectedEmployeeList.push(employee);
@@ -284,23 +290,23 @@ export class ManageComplaintTypeServiceAdapter {
         });
 
         selectedEmployeeList.sort((a,b) => a.id - b.id);
-        this.vm.applicableEmployeeList.sort((a,b) => a.id - b.id);
+        this.vm.applicableEmployeeList.sort((a,b) => a.id - b.id);   //  Previously assigned Employee.
 
-        /* Get Create-AddressToEmployeeList  &&  Delete-AddressToEmployeeList */
         let deleteEmployeeComplaintList = [];
         let createEmployeeComplaintList = [];
         n = selectedEmployeeList.length, i = 0;
         m = this.vm.applicableEmployeeList.length, j = 0;
 
+            /* Starts: Algoritham - Merge 2 arrays */
         while (i < n && j < m) {
             if (selectedEmployeeList[i].id != this.vm.applicableEmployeeList[j].id) {
-                if (selectedEmployeeList[i].id > this.vm.applicableEmployeeList[j].id) {
+                if (selectedEmployeeList[i].id > this.vm.applicableEmployeeList[j].id) {   //  If current employee is not in the Assigned employeeList, delete it.
                     let employeeComplaintTypeObject = {};
                     employeeComplaintTypeObject["parentEmployee"] = this.vm.applicableEmployeeList[j].id;
                     employeeComplaintTypeObject["parentSchoolComplaintType"] = complaintTypeObject.id;
                     deleteEmployeeComplaintList.push(employeeComplaintTypeObject);
                     j++;
-                } else {
+                } else {   //  If current employee is not in the Previously Assigned employeeList, create it.
                     let employeeComplaintTypeObject = {};
                     employeeComplaintTypeObject["parentEmployee"] = selectedEmployeeList[i].id;
                     employeeComplaintTypeObject["parentSchoolComplaintType"] = complaintTypeObject.id;
@@ -328,16 +334,18 @@ export class ManageComplaintTypeServiceAdapter {
             deleteEmployeeComplaintList.push(employeeComplaintTypeObject);
             j++;
         }
+            /* Ends: Algoritham - Merge 2 arrays */
 
-        /* Add Employee-ComplaintType */
+            /* Add Employee-ComplaintType */
         if (createEmployeeComplaintList.length) {
             this.addEmployeeComplaintType(createEmployeeComplaintList);
         }
 
-        /* Delete Employee-ComplaintType */
+            /* Delete Employee-ComplaintType */
         if (deleteEmployeeComplaintList.length) {
             this.deleteEmployeeComplaintType(deleteEmployeeComplaintList);
         }
+        /* Ends: Get Create-AddressToEmployeeList  &&  Delete-AddressToEmployeeList */
 
         this.vm.complaintTypeList[this.vm.editingCompalaintTypeIndex]["addressEmployeeList"] = selectedEmployeeList;
         this.vm.initializeComplaintTypeDetails();

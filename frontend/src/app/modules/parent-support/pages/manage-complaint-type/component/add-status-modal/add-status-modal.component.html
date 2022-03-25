@@ -25,33 +25,21 @@
 <hr style="border-top: 1px solid #C4C4C4"/>
 <!-- Starts: Bottom Buttons -->
 <div class="bottom-btns">
-    <ng-container *ngIf="!statusName.toString().trim() || !checkUniqueness()">
-        <button
-            type="button"
-            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-            style="padding: 7px 17px;"
-            disabled
-        >
-            Save
-        </button>
-    </ng-container>
-
-    <ng-container *ngIf="statusName.toString().trim() && checkUniqueness()">
-        <button
-            type="button"
-            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-            style="padding: 7px 17px;"
-            (click)="saveClicked()"
-        >
-            Save
-        </button>
-    </ng-container>
+    <button
+        type="button"
+        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+        style="padding: 7px 17px;"
+        (click)="saveClicked()"
+        [disabled]="!statusName.toString().trim() || !checkUniqueness()"
+    >
+        Save
+    </button>
 
     <button
         type="button"
         class="btn cancel-btn"
         style="padding: 5.5px 15.5px;"
-        [ngStyle]="setCancelBtnStyle()"
+        [ngStyle]="getCancelBtnStyle()"
         (click)="closeClicked()"
     >
         Cancel

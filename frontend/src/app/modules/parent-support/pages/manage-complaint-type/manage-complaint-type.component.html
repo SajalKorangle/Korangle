@@ -127,6 +127,7 @@
             <input matInput placeholder="Type Name" type="text" [(ngModel)]="typeName" style="opacity: 0.6; font-weight: 400; font-size: 14px; line-height: 16px;" />
         </mat-form-field>
     </div>
+    <div *ngIf="!htmlRenderer.checkTypeNameUniqueness()" style="color: red; font-size: 14px;">Complaint Type name must be unique.</div>
     <br />
     <!-- Ends: Complaint Type Name -->
 
@@ -289,7 +290,7 @@
         <button
             type="button"
             class="btn cancel-btn"
-            [ngStyle]="htmlRenderer.setCancelBtnStyle()"
+            [ngStyle]="htmlRenderer.getCancelBtnStyle()"
             (click)="cancelClicked()"
         >
             Cancel

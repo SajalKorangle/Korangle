@@ -76,6 +76,9 @@ export class ManageComplaintTypeComponent implements OnInit {
         this.addressToSearchString = "";
         this.addStatusName = "";
         this.defaultStatus = "Not Selected";
+        this.defaultStatusId = null;
+        this.editingCompalaintTypeIndex = null;
+        this.editingComplaintTypeId = null;
         this.applicableStatusList = [];
         this.applicableStatusTempList = [];
         this.selectedEmployeeList = [];
@@ -290,8 +293,13 @@ export class ManageComplaintTypeComponent implements OnInit {
     saveClicked() {
 
         /* Check Type Name */
-        if (!this.typeName) {
+        if (!this.typeName.toString().trim()) {
             alert("Please enter complaint type name.");
+            return;
+        }
+
+        if (!this.htmlRenderer.checkTypeNameUniqueness()) {
+            alert("Complaint type name must be unique.");
             return;
         }
 
