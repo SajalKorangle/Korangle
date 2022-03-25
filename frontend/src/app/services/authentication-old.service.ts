@@ -55,8 +55,8 @@ export class AuthenticationOldService {
             .then(
                 (response) => {
                     //  Handling revoked rokens here
-                    if(checkTokenRevokedStatus(response)){
-                        return null; 
+                    if ( checkTokenRevokedStatus(response)) {
+                        return null;
                     }
                     return (<any>response).data;
                 },

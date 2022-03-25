@@ -37,12 +37,12 @@ export class RestApiGateway {
     }
 
     public returnResponse(response: any, url: any = null, prompt: string = null): any {
-        
+
         //  Handling revoked rokens here
-        if(checkTokenRevokedStatus(response)){
-            return null; 
+        if ( checkTokenRevokedStatus(response)) {
+            return null;
         }
-        
+
         if ('success' in response) {
             return response['success'];
         } else if ('fail' in response) {

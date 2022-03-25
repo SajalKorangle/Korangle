@@ -36,12 +36,12 @@ export class RestApiGateway {
     }
 
     public returnResponse(response: any, url: any = null, prompt: string = null): any {
-        
+
         //  Handling revoked rokens here
-        if(checkTokenRevokedStatus(response)){
-            return null; 
+        if ( checkTokenRevokedStatus(response)) {
+            return null;
         }
-        
+
         const jsonResponse = response.response;
         if (jsonResponse.status === 'success') {
             if (jsonResponse.data) return jsonResponse.data;

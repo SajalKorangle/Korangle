@@ -65,10 +65,10 @@ export class ChangePasswordComponent {
     }
 
     // Starts: Function to sign out user from all other devices
-    async signOutFromAllDevices(){
-        if(this.signOutFromAll){
+    async signOutFromAllDevices() {
+        if (this.signOutFromAll) {
             const token = localStorage.getItem('schoolJWT');
-            
+
             const deleteResponsePromise = new Query()
                 .filter({ parentUser: this.user.id })
                 .exclude({ token: token })

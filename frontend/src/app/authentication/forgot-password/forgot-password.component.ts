@@ -7,7 +7,6 @@ import { ForgotPasswordServiceAdapter } from './forgot-password.service.adapter'
 import { AuthenticationService } from '@services/modules/authentication/authentication.service';
 import { UserService } from '@services/modules/user/user.service';
 import { VALIDATORS_REGX } from '@classes/regx-validators';
-import { Query } from '@services/generic/query';
 
 @Component({
     selector: 'app-forgot-password',
@@ -35,8 +34,6 @@ export class ForgotPasswordComponent implements OnInit {
     validators = VALIDATORS_REGX;
 
     isLoading = false;
-
-    signOutFromAll = false;
 
     serviceAdapter: ForgotPasswordServiceAdapter;
 

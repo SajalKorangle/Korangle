@@ -1,7 +1,7 @@
 import { DataStorage } from '../classes/data-storage';
 
 /* Starts: Checking if the token is revoked ( access denied), if true then logging out user  */
-export function checkTokenRevokedStatus(response){
+export function checkTokenRevokedStatus(response) {
     var user = DataStorage.getInstance().getUser();
     if (response['token_revoked'] && user.checkAuthentication()) {
         localStorage.removeItem('schoolJWT');
