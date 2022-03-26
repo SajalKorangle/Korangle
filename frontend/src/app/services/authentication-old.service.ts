@@ -19,22 +19,34 @@ export class AuthenticationOldService {
     constructor(private http: HttpClient) {}
 
     loginUserDetails(username: any, password: any): Promise<any> {
+
         /* Starts: Getting device name */
         const agent = window.navigator.userAgent.toLowerCase();
         var device_name = '';
+        var suffix = '';
+
+        if ( navigator.userAgent === 'Mobile' ) {
+            suffix = 'app';
+        }
+        else{
+            suffix = 'web';
+        }
+
         if (agent.match('android')) {
-            device_name = 'android-web';
+            device_name = 'android-';
         }
         else if (agent.match('windows')) {
-            device_name = 'windows-web';
+            device_name = 'windows-';
         }
         else if (agent.match('mac')) {
-            device_name = 'mac-web';
+            device_name = 'mac-';
         }
         else {
-            device_name = 'other-web';
+            device_name = 'other-';
         }
+        device_name = device_name + suffix;
         /* Ends: Getting device name */
+
         const body = { username: username, password: password, device_name: device_name };
         this.headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http
