@@ -129,16 +129,11 @@ export class SidebarComponent implements OnInit {
 
     async logout() {
 
+        // Starts: Removing device's token ( current logn instance ) from Device List
         const deleteResponsePromise = new Query()
             .filter({ token: this.user.jwt })
             .deleteObjectList({ authentication_app: 'DeviceList' });
-
-        let deleteResponse = -1;
-        [
-            deleteResponse,
-        ] = await Promise.all([
-            deleteResponsePromise,
-        ]);
+        // Ends: Removing device's token ( current logn instance ) from Device List
 
         unregisterForNotification({
             jwt: this.user.jwt,
