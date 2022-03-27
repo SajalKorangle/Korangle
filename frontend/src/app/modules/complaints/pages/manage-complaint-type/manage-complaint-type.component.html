@@ -225,9 +225,9 @@
             <mat-form-field>
                 <input matInput placeholder="Status Name" type="text" [(ngModel)]="addStatusName" style="opacity: 0.6; font-weight: 400; font-size: 14px; line-height: 16px;" />
             </mat-form-field>
-            <span *ngIf="!htmlRenderer.isMobile() && addStatusName && !htmlRenderer.checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</span>
-            <div *ngIf="htmlRenderer.isMobile() && addStatusName && !htmlRenderer.checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</div>
-            <br *ngIf="htmlRenderer.isMobile()"/>
+            <span *ngIf="!htmlRenderer.isMobileBrowser() && !htmlRenderer.isMobileApplication() && addStatusName && !htmlRenderer.checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</span>
+            <div *ngIf="(htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()) && addStatusName && !htmlRenderer.checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</div>
+            <br *ngIf="htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()"/>
 
             <ng-container *ngIf="!addStatusName.toString().trim() || !htmlRenderer.checkUniqueness()">
                 <button

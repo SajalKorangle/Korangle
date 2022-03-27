@@ -1,4 +1,5 @@
 import { AddComplaintComponent } from './add-complaint.component';
+import { isMobile } from '@classes/common';
 
 export class AddComplaintHtmlRenderer {
 
@@ -12,11 +13,16 @@ export class AddComplaintHtmlRenderer {
         this.vm = vm;
     }  // Ends: initializeRenderer()
 
-     /* For mobile-browser */
-    isMobile(): boolean {
+    /* For mobile-browser */
+    isMobileBrowser(): boolean {
         if (window.innerWidth > 991) {
             return false;
         }
         return true;
-    }  // Ends: isMobile()
+    }  // Ends: isMobileBrowser()
+
+    /* For mobile-application */
+    isMobileApplication(): boolean {
+        return isMobile();
+    }  // Ends: isMobileApplication()
 }
