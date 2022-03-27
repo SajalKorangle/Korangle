@@ -283,7 +283,7 @@ def notify_employee_on_complaint(sender, instance, created, **kwargs):
             createNotification(content, user, parentSchool)
 
 
-class CountAllParentSupport(models.Model):
+class CountAllComplaints(models.Model):
 
     # Table Name
     formatName = models.CharField(max_length = 100)

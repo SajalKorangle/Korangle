@@ -31,7 +31,7 @@ export class CountAllServiceAdapter {
 
         const countAllTableQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
-            .getObjectList({ complaints_app: 'CountAllParentSupport' });
+            .getObjectList({ complaints_app: 'CountAllComplaints' });
 
 
         let complaintTypeList = [];
@@ -63,7 +63,7 @@ export class CountAllServiceAdapter {
 
     /* Update Table List */
     async updateTableList() {
-        await new Query().updateObjectList({complaints_app: 'CountAllParentSupport'}, this.vm.tableList);
+        await new Query().updateObjectList({complaints_app: 'CountAllComplaints'}, this.vm.tableList);
     }  // Ends: updateTableList()
 
     /* Save Table */
@@ -91,7 +91,7 @@ export class CountAllServiceAdapter {
         tableDataObject["cols"] = cols;
 
         /* Create An Object */
-        const response = await new Query().createObject({complaints_app: 'CountAllParentSupport'}, tableDataObject);
+        const response = await new Query().createObject({complaints_app: 'CountAllComplaints'}, tableDataObject);
         this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableList.length);
         this.vm.tableList.push(response);
 
@@ -138,7 +138,7 @@ export class CountAllServiceAdapter {
         tableDataObject["cols"] = cols;
 
         /* Update An Object */
-        const response = await new Query().updateObject({complaints_app: 'CountAllParentSupport'}, tableDataObject);
+        const response = await new Query().updateObject({complaints_app: 'CountAllComplaints'}, tableDataObject);
         this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableActiveIdx);
         this.vm.tableList[this.vm.tableActiveIdx] = response;
 
@@ -162,7 +162,7 @@ export class CountAllServiceAdapter {
             id: this.vm.tableActiveId,
         };
 
-        new Query().filter(tableData).deleteObjectList({complaints_app: 'CountAllParentSupport'});
+        new Query().filter(tableData).deleteObjectList({complaints_app: 'CountAllComplaints'});
 
         this.vm.tableList.splice(this.vm.tableActiveIdx, 1);
         this.vm.initializeTableDetails();
@@ -172,7 +172,7 @@ export class CountAllServiceAdapter {
     /* Restore Old Table */
     async restoreOldtable(tableActiveId, tableActiveIdx, table = null, idx = null) {
         Promise.all([
-            new Query().filter({id: tableActiveId}).getObject({complaints_app: 'CountAllParentSupport'}),   // 0
+            new Query().filter({id: tableActiveId}).getObject({complaints_app: 'CountAllComplaints'}),   // 0
         ]).then(
             (value) => {
                 this.vm.tableList[tableActiveIdx] = value[0];
