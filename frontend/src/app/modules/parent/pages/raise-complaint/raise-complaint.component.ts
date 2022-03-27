@@ -210,6 +210,16 @@ export class RaiseComplaintComponent implements OnInit {
         return this.nullStudent;
     }  // Ends: getParentStudent()
 
+    /* Get Index of a Complaint */
+    getComplaintIdx(complaintId) {
+        for (let i = 0; i < this.complaintList.length; i++) {
+            if (this.complaintList[i].id == complaintId) {
+                return i;
+            }
+        }
+        return -1;
+    }  // Ends: getParentStudent()
+
     /* Get Parent Complaint */
     getParentComplaintType(parentSchoolComplaintType) {
 
@@ -255,27 +265,6 @@ export class RaiseComplaintComponent implements OnInit {
         return this.nullEmployee;
     }  // Ends: getEmployee()
 
-    /* Get Searched Complaint List */
-    getSearchedComplaintList() {
-        let searchedComplaintList = [];
-        let searchString = this.searchString.trim();
-
-        this.complaintList.forEach((complaint) => {
-            if (complaint.parentStudent.name.toLowerCase().includes(searchString.toLowerCase())) { /* Check for student name */
-                searchedComplaintList.push(complaint);
-            } else if (complaint.title.toLowerCase().includes(searchString.toLowerCase())) { /* Check for complaint title */
-                searchedComplaintList.push(complaint);
-            } else if (
-                complaint.parentSchoolComplaintType["name"] &&
-                complaint.parentSchoolComplaintType.name.toLowerCase().includes(searchString.toLowerCase())
-            ) { /* Check for complaint type */
-                searchedComplaintList.push(complaint);
-            }
-        });
-
-        return searchedComplaintList;
-    }  // Ends: getSearchedComplaintList()
-
     /* Send Complaint */
     sendComplaint() {
 
@@ -305,19 +294,18 @@ export class RaiseComplaintComponent implements OnInit {
 
     /* Update Complaint */
     updateComplaintClicked() {
-        if (!this.commentMessage) {
+        if (!this.commentMessage.toString().trim()) {
             alert("Please enter your query.");
         }
         this.serviceAdapter.addComplaintComment();
     }  // Ends: updateComplaintClicked()
 
     /* Open Complaint */
-    openComplaint(complaint, idx) {
+    openComplaint(complaint) {
         this.commentList = complaint.commentList;
         this.defaultStatus = complaint.parentSchoolComplaintStatus;
         this.defaultStatusTitle = complaint.parentSchoolComplaintStatus.name;
         this.openedComplaint = complaint;
-        this.openedComplaintIdx = idx;
         this.pageName = "open-complaint";
 
         if (!this.defaultStatusTitle) {
@@ -326,7 +314,7 @@ export class RaiseComplaintComponent implements OnInit {
     }  // Ends: openComplaint()
 
     /* Delete Complaint */
-    deleteComplaint(complaint, idx) {
+    deleteComplaint(complaint) {
         const dialogRef = this.dialog.open(DeleteModalComponent, {
             data: {
                 formatName: complaint.title,
@@ -337,8 +325,7 @@ export class RaiseComplaintComponent implements OnInit {
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data["operation"] && data["operation"] == "Delete") {
                 this.serviceAdapter.deleteComplaint(complaint.id);
-                this.complaintList.splice(idx, 1);
-                this.getSearchedComplaintList();
+                this.complaintList.splice(this.getComplaintIdx(complaint.id), 1);
                 this.initializeComplaintData();
                 this.pageName = "list-of-complaints";
             }

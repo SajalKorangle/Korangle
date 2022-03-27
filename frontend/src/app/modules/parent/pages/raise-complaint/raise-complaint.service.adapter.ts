@@ -228,18 +228,6 @@ export class RaiseComplaintServiceAdapter {
 
         const complaint = await new Query().createObject({parent_support_app: 'Complaint'}, complaintObject);
 
-        let employeeComplaintList = [];
-        employeeComplaintTypeList.forEach((employeeComplaintType) => {
-            let employeeComplaint = {};
-
-            employeeComplaint["parentEmployee"] = employeeComplaintType["parentEmployee"];
-            employeeComplaint["parentComplaint"] = complaint.id;
-            employeeComplaintList.push(employeeComplaint);
-        });
-        if (employeeComplaintList.length) {
-            this.assignEmployeeComplaint(employeeComplaintList);
-        }
-
         if (this.vm.commentMessage) {
             let commentObject = {};
             commentObject["parentEmployee"] = this.vm.NULL_CONSTANT;
@@ -277,6 +265,8 @@ export class RaiseComplaintServiceAdapter {
     async refreshComplaint() {
 
         this.vm.isLoading = true;
+
+        let complaintIdx = this.vm.getComplaintIdx(this.vm.openedComplaint["id"]);
 
         let refreshedComplaint = {};
         const complaint = await new Query().filter({id: this.vm.openedComplaint["id"]}).getObject({parent_support_app: 'Complaint'});
@@ -327,9 +317,9 @@ export class RaiseComplaintServiceAdapter {
         /* Ends: refresh applicable-statusList */
 
         this.vm.openedComplaint = refreshedComplaint;
-        this.vm.complaintList[this.vm.openedComplaintIdx] = refreshedComplaint;
+        this.vm.complaintList[complaintIdx] = refreshedComplaint;
         this.vm.pageName = "list-of-complaints";
-        this.vm.openComplaint(this.vm.openedComplaint, this.vm.openedComplaintIdx);
+        this.vm.openComplaint(this.vm.openedComplaint);
         this.vm.isLoading = false;
     }  // Ends: refreshComplaint()
 

@@ -5,6 +5,7 @@ import { RaiseComplaintRouting } from "./raise-complaint.routing";
 import { ComponentsModule } from "@components/components.module";
 import { LocalComponentsModule } from '@modules/parent/component/local-components.module';
 import { DeleteModalComponent } from '@modules/parent/component/delete-modal/delete-modal.component';
+import { LocalChildComponentsModule } from './component/local-child-components.module';
 
 @NgModule({
     declarations: [
@@ -14,6 +15,7 @@ import { DeleteModalComponent } from '@modules/parent/component/delete-modal/del
         RaiseComplaintRouting,
         ComponentsModule,
         LocalComponentsModule,
+        LocalChildComponentsModule,
     ],
     exports: [],
     providers: [],
