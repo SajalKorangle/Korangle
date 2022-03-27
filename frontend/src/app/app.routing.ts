@@ -30,7 +30,7 @@ const routes: Routes = [
     },
     {
         path: 'parent_support',
-        loadChildren: 'app/modules/parent-support/parent-support.module#ParentSupportModule',
+        loadChildren: 'app/modules/complaints/complaints.module#ComplaintsModule',
     },
     {
         path: 'activity',
@@ -148,7 +148,7 @@ const routes: Routes = [
             { path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule' },
             { path: 'accounts', loadChildren: 'app/modules/accounts/accounts.module#AccountsModule' },
             { path: 'parent', loadChildren: 'app/modules/parent/parent.module#ParentModule' },
-            { path: 'parent_support', loadChildren: 'app/modules/parent-support/parent-support.module#ParentSupportModule' },
+            { path: 'parent_support', loadChildren: 'app/modules/complaints/complaints.module#ComplaintsModule' },
         ],
     },
 ];

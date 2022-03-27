@@ -7,14 +7,14 @@ import { CommonFunctions } from "../../../../classes/common-functions";
 
 import { ExcelService } from '../../../../excel/excel-service';
 import { PrintService } from '../../../../print/print-service';
-import { PRINT_COUNT_ALL_TABLE_PARENT_SUPPORT } from '../../../../print/print-routes.constants';
+import { PRINT_COUNT_ALL_TABLE_COMPLAINTS } from '../../../../print/print-routes.constants';
 
 import { CountAllServiceAdapter } from './count-all.service.adapter';
 import { CountAllHtmlRenderer } from './count-all.html.renderer';
-import { FilterModalComponent } from '@modules/parent-support/pages/count-all/component/filter-modal/filter-modal.component';
-import { FormatTableModalComponent } from '@modules/parent-support/pages/count-all/component/format-table-modal/format-table-modal.component';
-import { ShowComplaintListModalComponent } from '@modules/parent-support/pages/count-all/component/show-complaint-list-modal/show-complaint-list-modal.component';
-import { DeleteTableModalComponent } from '@modules/parent-support/component/delete-table-modal/delete-table-modal.component';
+import { FilterModalComponent } from '@modules/complaints/pages/count-all/component/filter-modal/filter-modal.component';
+import { FormatTableModalComponent } from '@modules/complaints/pages/count-all/component/format-table-modal/format-table-modal.component';
+import { ShowComplaintListModalComponent } from '@modules/complaints/pages/count-all/component/show-complaint-list-modal/show-complaint-list-modal.component';
+import { DeleteTableModalComponent } from '@modules/complaints/component/delete-table-modal/delete-table-modal.component';
 
 @Component({
     selector: 'app-count-all',
@@ -379,7 +379,7 @@ export class CountAllComponent implements OnInit {
             columnData: headerInfo,
             tableName: this.tableFormatTitle,
         };
-        this.printService.navigateToPrintRoute(PRINT_COUNT_ALL_TABLE_PARENT_SUPPORT, { user: this.user, value });
+        this.printService.navigateToPrintRoute(PRINT_COUNT_ALL_TABLE_COMPLAINTS, { user: this.user, value });
     }  // Ends: printTable()
 
     /* Open Delete Table Dialog */

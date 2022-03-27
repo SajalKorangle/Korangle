@@ -3,11 +3,11 @@ import { Component, OnInit, AfterViewChecked, ChangeDetectorRef } from '@angular
 import { PrintService } from '../../../../print/print-service';
 
 @Component({
-    selector: 'app-print-count-all-table-parent-support',
-    templateUrl: './print-count-all-table-parent-support.component.html',
-    styleUrls: ['./print-count-all-table-parent-support.component.css']
+    selector: 'app-print-count-all-table-complaints',
+    templateUrl: './print-count-all-table-complaints.component.html',
+    styleUrls: ['./print-count-all-table-complaints.component.css']
 })
-export class PrintCountAllTableParentSupportComponent implements OnInit {
+export class PrintCountAllTableComplaintsComponent implements OnInit {
 
     rowData: any = [];
     columnData: any = [];

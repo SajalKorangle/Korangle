@@ -4,7 +4,7 @@ import { DataStorage } from '../../classes/data-storage';
 @Component({
     template: '<router-outlet></router-outlet>',
 })
-export class ParentSupportComponent implements OnInit {
+export class ComplaintsComponent implements OnInit {
     user: any;
 
     constructor() {}

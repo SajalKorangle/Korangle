@@ -70,4 +70,4 @@ import '@modules/grade/pages/grade-student/grade-student.permissions';
 import '@modules/attendance/pages/record-attendance/record-attendance.permissions';
 
 // Parent Support
-import '@modules/parent-support/pages/manage-complaints/manage-complaints.permissions';
+import '@modules/complaints/pages/manage-complaints/manage-complaints.permissions';

@@ -3,10 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 import { MatDialog } from '@angular/material';
 
-import { AssignEmployeeComponent } from '@modules/parent-support/pages/manage-complaints/component/assign-employee/assign-employee.component';
+import { AssignEmployeeComponent } from '@modules/complaints/pages/manage-complaints/component/assign-employee/assign-employee.component';
 import { ManageComplaintsServiceAdapter } from './manage-complaints.service.adapter';
 import { ManageComplaintsHtmlRenderer } from './manage-complaints.html.renderer';
-import { DeleteTableModalComponent } from '@modules/parent-support/component/delete-table-modal/delete-table-modal.component';
+import { DeleteTableModalComponent } from '@modules/complaints/component/delete-table-modal/delete-table-modal.component';
 
 import { CommonFunctions } from "../../../../classes/common-functions";
 

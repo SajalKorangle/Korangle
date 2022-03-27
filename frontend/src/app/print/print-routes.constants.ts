@@ -52,4 +52,4 @@ export const PRINT_TRANSACTIONS = 'print-transactions';
 export const PRINT_LEDGER = 'print-ledger';
 
 // Parent Support
-export const PRINT_COUNT_ALL_TABLE_PARENT_SUPPORT = 'print-count-all-table-parent-support';
+export const PRINT_COUNT_ALL_TABLE_COMPLAINTS = 'print-count-all-table-complaints';
