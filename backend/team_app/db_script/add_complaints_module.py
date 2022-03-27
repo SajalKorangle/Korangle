@@ -1,10 +1,10 @@
-def add_parentSupport_module(apps, schema_editor):
+def add_complaints_module(apps, schema_editor):
 
     Module = apps.get_model('team_app', 'Module')
     Task = apps.get_model('team_app', 'Task')
     EmployeePermission = apps.get_model('employee_app', 'EmployeePermission')
 
-    module_object = Module(path = 'parent_support', title = 'Parent Support', icon = 'question_answer', orderNumber = 5, parentBoard = None)
+    module_object = Module(path = 'complaints', title = 'Complaints', icon = 'question_answer', orderNumber = 5, parentBoard = None)
     module_object.save()
 
     manage_complaint_type = Task(path = 'manage_complaint_type', parentModule = module_object, title = 'Manage Complaint Type', orderNumber = 1, parentBoard = None)

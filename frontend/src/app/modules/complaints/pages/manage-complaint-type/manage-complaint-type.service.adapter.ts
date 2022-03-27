@@ -18,11 +18,11 @@ export class ManageComplaintTypeServiceAdapter {
 
         const complaintTypeQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
-            .getObjectList({ parent_support_app: 'SchoolComplaintType' });
+            .getObjectList({ complaints_app: 'SchoolComplaintType' });
 
         const statusQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
-            .getObjectList({ parent_support_app: 'SchoolComplaintStatus' });
+            .getObjectList({ complaints_app: 'SchoolComplaintStatus' });
 
         const employeeQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
@@ -53,7 +53,7 @@ export class ManageComplaintTypeServiceAdapter {
 
         const employeeComplaintTypeQuery = new Query()
             .filter({ parentSchoolComplaintType: complaintTypeId })
-            .getObjectList({ parent_support_app: 'EmployeeComplaintType' });
+            .getObjectList({ complaints_app: 'EmployeeComplaintType' });
 
         let employeeComplaintTypeList = [];
         [
@@ -73,7 +73,7 @@ export class ManageComplaintTypeServiceAdapter {
         statusObject["name"] = this.vm.addStatusName.toString().trim();
         statusObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
-        const response = await new Query().createObject({parent_support_app: 'SchoolComplaintStatus'}, statusObject);
+        const response = await new Query().createObject({complaints_app: 'SchoolComplaintStatus'}, statusObject);
         response["selected"] = false;
         this.vm.statusList.push(response);
 
@@ -86,7 +86,7 @@ export class ManageComplaintTypeServiceAdapter {
     async updateStatus(statusObject) {
         this.vm.isLoading = true;
 
-        await new Query().updateObject({parent_support_app: 'SchoolComplaintStatus'}, statusObject);
+        await new Query().updateObject({complaints_app: 'SchoolComplaintStatus'}, statusObject);
 
         this.vm.isLoading = false;
         alert("Status updated successfully.");
@@ -101,7 +101,7 @@ export class ManageComplaintTypeServiceAdapter {
             id: status.id,
         };
 
-        await new Query().filter(statusData).deleteObjectList({parent_support_app: 'SchoolComplaintStatus'});
+        await new Query().filter(statusData).deleteObjectList({complaints_app: 'SchoolComplaintStatus'});
 
         this.vm.statusList.splice(idx, 1);
         alert("Status deleted successfully.");
@@ -110,7 +110,7 @@ export class ManageComplaintTypeServiceAdapter {
 
     /* Add Status-ComplaintType */
     async addStatusComplaintType(statusComplaintTypeList) {
-        const response = await new Query().createObjectList({parent_support_app: 'StatusComplaintType'}, statusComplaintTypeList);
+        const response = await new Query().createObjectList({complaints_app: 'StatusComplaintType'}, statusComplaintTypeList);
     }  // Ends: addStatusComplaintType()
 
     /* Delete Status-ComplaintType */
@@ -129,12 +129,12 @@ export class ManageComplaintTypeServiceAdapter {
             parentSchoolComplaintType__in: deleteComplaintTypeId,
         };
 
-        await new Query().filter(deleteData).deleteObjectList({parent_support_app: 'StatusComplaintType'});
+        await new Query().filter(deleteData).deleteObjectList({complaints_app: 'StatusComplaintType'});
     }  // Ends: deleteStatusComplaintType()
 
     /* Add Employee-ComplaintType */
     async addEmployeeComplaintType(employeeComplaintTypeList) {
-        const response = await new Query().createObjectList({parent_support_app: 'EmployeeComplaintType'}, employeeComplaintTypeList);
+        const response = await new Query().createObjectList({complaints_app: 'EmployeeComplaintType'}, employeeComplaintTypeList);
     }  // Ends: addEmployeeComplaintType()
 
     /* Delete Employee-ComplaintType */
@@ -153,7 +153,7 @@ export class ManageComplaintTypeServiceAdapter {
             parentSchoolComplaintType__in: deleteComplaintTypeId,
         };
 
-        await new Query().filter(deleteData).deleteObjectList({parent_support_app: 'EmployeeComplaintType'});
+        await new Query().filter(deleteData).deleteObjectList({complaints_app: 'EmployeeComplaintType'});
     }  // Ends: deleteEmployeeComplaintType()
 
     /* Add ComplaintType */
@@ -167,7 +167,7 @@ export class ManageComplaintTypeServiceAdapter {
         complaintTypeObject["parentSchoolComplaintStatusDefault"] = this.vm.defaultStatusId;
         complaintTypeObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
-        const response = await new Query().createObject({parent_support_app: 'SchoolComplaintType'}, complaintTypeObject);
+        const response = await new Query().createObject({complaints_app: 'SchoolComplaintType'}, complaintTypeObject);
         response["parentSchoolComplaintStatusDefault"] = this.vm.getStatusFromId(this.vm.defaultStatusId);
         this.vm.complaintTypeList.push(response);
 
@@ -217,7 +217,7 @@ export class ManageComplaintTypeServiceAdapter {
         this.vm.isLoading = true;
 
         /* Update Complaint Type */
-        await new Query().updateObject({parent_support_app: 'SchoolComplaintType'}, complaintTypeObject);
+        await new Query().updateObject({complaints_app: 'SchoolComplaintType'}, complaintTypeObject);
 
         /* Starts: Get Newly-Assigned-ApplicableStatusList  &&  Deleted-ApplicableStatusList */
         let deleteStatusComplaintList = [];
@@ -363,7 +363,7 @@ export class ManageComplaintTypeServiceAdapter {
             id: complaintTypeObject.id,
         };
 
-        await new Query().filter(deleteCompalintType).deleteObjectList({ parent_support_app: 'SchoolComplaintType' });
+        await new Query().filter(deleteCompalintType).deleteObjectList({ complaints_app: 'SchoolComplaintType' });
         this.vm.complaintTypeList.splice(idx, 1);
         this.vm.isLoading = false;
         alert("Complaint type deleted successfully.");
@@ -377,7 +377,7 @@ export class ManageComplaintTypeServiceAdapter {
 
         const statusComplaintTypeQuery = new Query()
             .filter({ parentSchoolComplaintType: this.vm.editingComplaintTypeId })
-            .getObjectList({ parent_support_app: 'StatusComplaintType' });
+            .getObjectList({ complaints_app: 'StatusComplaintType' });
 
         let statusComplaintTypeList = [];
         [

@@ -27,7 +27,7 @@ export class AddComplaintServiceAdapter {
 
         const complaintTypeQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
-            .getObjectList({ parent_support_app: 'SchoolComplaintType' });
+            .getObjectList({ complaints_app: 'SchoolComplaintType' });
 
         const studentQuery = new Query()
             .filter(student_full_profile_request_filter)
@@ -55,7 +55,7 @@ export class AddComplaintServiceAdapter {
     }  // Ends: initializeData()
 
     async assignEmployeeComplaint(employeeComplaintList) {
-        const response = await new Query().createObjectList({parent_support_app: 'EmployeeComplaint'}, employeeComplaintList);
+        const response = await new Query().createObjectList({complaints_app: 'EmployeeComplaint'}, employeeComplaintList);
     }
 
     /* Add Complaint */
@@ -80,7 +80,7 @@ export class AddComplaintServiceAdapter {
         /* Ends: Prepare Complaint Object */
 
         /* Starts: Add it to database */
-        const complaint = await new Query().createObject({parent_support_app: 'Complaint'}, complaintObject);
+        const complaint = await new Query().createObject({complaints_app: 'Complaint'}, complaintObject);
         /* Ends: Add it to database */
 
         /* Starts: Create && Add Comment Object */
@@ -91,7 +91,7 @@ export class AddComplaintServiceAdapter {
             commentObject["message"] = this.vm.comment;
             commentObject["parentComplaint"] = complaint.id;
 
-            const comment = await new Query().createObject({parent_support_app: 'Comment'}, commentObject);
+            const comment = await new Query().createObject({complaints_app: 'Comment'}, commentObject);
         }
         /* Ends: Create && Add Comment Object */
 

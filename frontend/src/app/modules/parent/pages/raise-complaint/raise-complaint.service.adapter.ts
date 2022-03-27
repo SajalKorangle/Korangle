@@ -39,12 +39,12 @@ export class RaiseComplaintServiceAdapter {
 
         const complaintTypeQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
-            .getObjectList({ parent_support_app: 'SchoolComplaintType' });
+            .getObjectList({ complaints_app: 'SchoolComplaintType' });
 
         const complaintQuery = new Query()
             .filter(complaint_filter)
             .orderBy("-dateSent")
-            .getObjectList({ parent_support_app: 'Complaint' });
+            .getObjectList({ complaints_app: 'Complaint' });
 
         const studentQuery = new Query()
             .filter(student_full_profile_request_filter)
@@ -56,7 +56,7 @@ export class RaiseComplaintServiceAdapter {
 
         const statusQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
-            .getObjectList({ parent_support_app: 'SchoolComplaintStatus' });
+            .getObjectList({ complaints_app: 'SchoolComplaintStatus' });
 
         const employeeQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
@@ -97,7 +97,7 @@ export class RaiseComplaintServiceAdapter {
 
         const commentComplaintQuery = new Query()
             .filter({ parentComplaint: parentComplaint })
-            .getObjectList({ parent_support_app: 'Comment' });
+            .getObjectList({ complaints_app: 'Comment' });
 
         let commentComplaintList = [];
         [
@@ -124,7 +124,7 @@ export class RaiseComplaintServiceAdapter {
 
         const statusComplaintTypeQuery = new Query()
             .filter({ parentSchoolComplaintType: parentSchoolComplaintType })
-            .getObjectList({ parent_support_app: 'StatusComplaintType' });
+            .getObjectList({ complaints_app: 'StatusComplaintType' });
 
         let statusComplaintTypeList = [];
         [
@@ -157,7 +157,7 @@ export class RaiseComplaintServiceAdapter {
         complaintObject["parentSchoolComplaintStatus"] = this.vm.defaultStatus.id;
         complaintObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
-        const complaint = await new Query().updateObject({parent_support_app: 'Complaint'}, complaintObject);
+        const complaint = await new Query().updateObject({complaints_app: 'Complaint'}, complaintObject);
 
         this.vm.openedComplaint["parentSchoolComplaintStatus"] = this.vm.defaultStatus;
         alert("Status updated successfully.");
@@ -174,7 +174,7 @@ export class RaiseComplaintServiceAdapter {
         commentObject["message"] = this.vm.commentMessage;
         commentObject["parentComplaint"] = this.vm.openedComplaint.id;
 
-        const comment = await new Query().createObject({parent_support_app: 'Comment'}, commentObject);
+        const comment = await new Query().createObject({complaints_app: 'Comment'}, commentObject);
 
         comment["parentEmployee"] = this.vm.getEmployee(comment["parentEmployee"]);
         comment["parentStudent"] = this.vm.getParentStudent(comment["parentStudent"]);
@@ -187,7 +187,7 @@ export class RaiseComplaintServiceAdapter {
 
     /* Assigned a Complaint to Employees */
     async assignEmployeeComplaint(employeeComplaintList) {
-        const response = await new Query().createObjectList({parent_support_app: 'EmployeeComplaint'}, employeeComplaintList);
+        const response = await new Query().createObjectList({complaints_app: 'EmployeeComplaint'}, employeeComplaintList);
     }  // Ends: assignEmployeeComplaint()
 
     /* Send Complaint */
@@ -200,7 +200,7 @@ export class RaiseComplaintServiceAdapter {
 
             const employeeComplaintTypeQuery = new Query()
                 .filter({ parentSchoolComplaintType: this.vm.complaintType["id"] })
-                .getObjectList({ parent_support_app: 'EmployeeComplaintType' });
+                .getObjectList({ complaints_app: 'EmployeeComplaintType' });
 
 
             [
@@ -226,7 +226,7 @@ export class RaiseComplaintServiceAdapter {
         complaintObject["title"] = this.vm.complaintTitle;
         complaintObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
-        const complaint = await new Query().createObject({parent_support_app: 'Complaint'}, complaintObject);
+        const complaint = await new Query().createObject({complaints_app: 'Complaint'}, complaintObject);
 
         if (this.vm.commentMessage) {
             let commentObject = {};
@@ -235,7 +235,7 @@ export class RaiseComplaintServiceAdapter {
             commentObject["message"] = this.vm.commentMessage;
             commentObject["parentComplaint"] = complaint.id;
 
-            const comment = await new Query().createObject({parent_support_app: 'Comment'}, commentObject);
+            const comment = await new Query().createObject({complaints_app: 'Comment'}, commentObject);
         }
 
         this.vm.commentMessage = "";
@@ -256,7 +256,7 @@ export class RaiseComplaintServiceAdapter {
             id: complaintID,
         };
 
-        await new Query().filter(deleteData).deleteObjectList({parent_support_app: 'Complaint'});
+        await new Query().filter(deleteData).deleteObjectList({complaints_app: 'Complaint'});
         alert("Complaint deleted successfully.");
         this.vm.isLoading = false;
     }  // Ends: deleteComplaint()
@@ -269,7 +269,7 @@ export class RaiseComplaintServiceAdapter {
         let complaintIdx = this.vm.getComplaintIdx(this.vm.openedComplaint["id"]);
 
         let refreshedComplaint = {};
-        const complaint = await new Query().filter({id: this.vm.openedComplaint["id"]}).getObject({parent_support_app: 'Complaint'});
+        const complaint = await new Query().filter({id: this.vm.openedComplaint["id"]}).getObject({complaints_app: 'Complaint'});
 
 
         refreshedComplaint["dateSent"] = complaint["dateSent"];
@@ -287,7 +287,7 @@ export class RaiseComplaintServiceAdapter {
         /* Starts: refresh commentList */
         let commentComplaintList = await new Query()
             .filter({ parentComplaint: this.vm.openedComplaint["id"] })
-            .getObjectList({ parent_support_app: 'Comment' });
+            .getObjectList({ complaints_app: 'Comment' });
 
 
         commentComplaintList.forEach((comment) => {
@@ -303,7 +303,7 @@ export class RaiseComplaintServiceAdapter {
         if (refreshedComplaint["parentSchoolComplaintType"]["id"]) {
             let statusComplaintTypeList = await new Query()
                 .filter({ parentSchoolComplaintType: this.vm.openedComplaint["parentSchoolComplaintType"].id })
-                .getObjectList({ parent_support_app: 'StatusComplaintType' });
+                .getObjectList({ complaints_app: 'StatusComplaintType' });
 
 
             let applicableStatusList = [];
@@ -351,7 +351,7 @@ export class RaiseComplaintServiceAdapter {
 
         const employeeComplaintQuery = new Query()
             .filter({ parentComplaint: this.vm.openedComplaint.id })
-            .getObjectList({ parent_support_app: 'EmployeeComplaint' });
+            .getObjectList({ complaints_app: 'EmployeeComplaint' });
 
         let employeeComplaintList = [];
         [

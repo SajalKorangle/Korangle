@@ -34,7 +34,7 @@ export class ManageComplaintsServiceAdapter {
 
         const complaintTypeQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
-            .getObjectList({ parent_support_app: 'SchoolComplaintType' });
+            .getObjectList({ complaints_app: 'SchoolComplaintType' });
 
         const studentQuery = new Query()
             .filter(student_full_profile_request_filter)
@@ -46,7 +46,7 @@ export class ManageComplaintsServiceAdapter {
 
         const statusQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
-            .getObjectList({ parent_support_app: 'SchoolComplaintStatus' });
+            .getObjectList({ complaints_app: 'SchoolComplaintStatus' });
 
         const employeeQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
@@ -98,7 +98,7 @@ export class ManageComplaintsServiceAdapter {
             .filter(complaint_filter)
             .orderBy("-dateSent")
             .paginate(Math.max(0, this.vm.startNumber - 1), this.vm.endNumber)
-            .getObjectList({ parent_support_app: 'Complaint' });
+            .getObjectList({ complaints_app: 'Complaint' });
 
 
         let complaintList = [];
@@ -121,7 +121,7 @@ export class ManageComplaintsServiceAdapter {
         const employeeComplaintQuery = new Query()
             .filter({ parentEmployee: this.vm.user.activeSchool.employeeId })
             .paginate(Math.max(0, this.vm.startNumber - 1), this.vm.endNumber)
-            .getObjectList({ parent_support_app: 'EmployeeComplaint' });
+            .getObjectList({ complaints_app: 'EmployeeComplaint' });
 
         let employeeComplaintList = [];
         [
@@ -145,7 +145,7 @@ export class ManageComplaintsServiceAdapter {
         const complaintQuery = new Query()
             .filter(complaint_filter)
             .orderBy("-dateSent")
-            .getObjectList({ parent_support_app: 'Complaint' });
+            .getObjectList({ complaints_app: 'Complaint' });
 
 
         let complaintList = [];
@@ -164,7 +164,7 @@ export class ManageComplaintsServiceAdapter {
     getParentTask() {
         let moduleList = this.vm.user.activeSchool.moduleList;
         for (let i = 0; i < moduleList.length; i++) {
-            if (moduleList[i].path == "parent_support") {
+            if (moduleList[i].path == "complaints") {
                 let taskList = moduleList[i].taskList;
                 for (let j = 0; j < taskList.length; j++) {
                     if (taskList[j].path == "manage_complaints") {
@@ -184,7 +184,7 @@ export class ManageComplaintsServiceAdapter {
 
         const commentQuery = new Query()
             .filter({ parentComplaint: parentComplaint })
-            .getObjectList({ parent_support_app: 'Comment' });
+            .getObjectList({ complaints_app: 'Comment' });
 
         let commentList = [];
         [
@@ -209,7 +209,7 @@ export class ManageComplaintsServiceAdapter {
 
         const statusComplaintTypeQuery = new Query()
             .filter({ parentSchoolComplaintType: parentSchoolComplaintType })
-            .getObjectList({ parent_support_app: 'StatusComplaintType' });
+            .getObjectList({ complaints_app: 'StatusComplaintType' });
 
         let statusComplaintTypeList = [];
         [
@@ -233,7 +233,7 @@ export class ManageComplaintsServiceAdapter {
 
         const employeeComplaintQuery = new Query()
             .filter({ parentComplaint: complaintId })
-            .getObjectList({ parent_support_app: 'EmployeeComplaint' });
+            .getObjectList({ complaints_app: 'EmployeeComplaint' });
 
         let employeeComplaintList = [];
         [
@@ -258,7 +258,7 @@ export class ManageComplaintsServiceAdapter {
         complaintObject["parentSchoolComplaintStatus"] = this.vm.defaultStatus.id;
         complaintObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
-        const complaint = await new Query().updateObject({parent_support_app: 'Complaint'}, complaintObject);
+        const complaint = await new Query().updateObject({complaints_app: 'Complaint'}, complaintObject);
 
         this.vm.openedComplaint["parentSchoolComplaintStatus"] = this.vm.defaultStatus;
         alert("Status updated successfully.");
@@ -275,7 +275,7 @@ export class ManageComplaintsServiceAdapter {
         commentObject["message"] = this.vm.commentMessage;
         commentObject["parentComplaint"] = this.vm.openedComplaint.id;
 
-        const comment = await new Query().createObject({parent_support_app: 'Comment'}, commentObject);
+        const comment = await new Query().createObject({complaints_app: 'Comment'}, commentObject);
 
         let employeeId = comment["parentEmployee"];
         comment["parentEmployee"] = this.vm.getEmployee(employeeId);
@@ -292,7 +292,7 @@ export class ManageComplaintsServiceAdapter {
             id: complaint.id,
         };
 
-        await new Query().filter(deleteData).deleteObjectList({parent_support_app: 'Complaint'});
+        await new Query().filter(deleteData).deleteObjectList({complaints_app: 'Complaint'});
         this.vm.complaintList.splice(this.vm.openedComplaintIdx, 1);
         alert("Complaint deleted successfully.");
         this.vm.pageName = "showTables";
@@ -368,7 +368,7 @@ export class ManageComplaintsServiceAdapter {
             /* Get Assigned Complaint */
             const employeeComplaintQuery = new Query()
                 .filter({ parentEmployee: this.vm.user.activeSchool.employeeId })
-                .getObjectList({ parent_support_app: 'EmployeeComplaint' });
+                .getObjectList({ complaints_app: 'EmployeeComplaint' });
 
             let employeeComplaintList = [];
             [
@@ -392,7 +392,7 @@ export class ManageComplaintsServiceAdapter {
             .filter(filterData)
             .orderBy(this.vm.sortType)
             .paginate(Math.max(0, this.vm.startNumber - 1), this.vm.endNumber)
-            .getObjectList({ parent_support_app: 'Complaint' });
+            .getObjectList({ complaints_app: 'Complaint' });
 
 
         let complaintList = [];
@@ -417,7 +417,7 @@ export class ManageComplaintsServiceAdapter {
         });
 
 
-        const response = await new Query().createObjectList({parent_support_app: 'EmployeeComplaint'}, employeeComplaintList);
+        const response = await new Query().createObjectList({complaints_app: 'EmployeeComplaint'}, employeeComplaintList);
         alert("Employees assigned successfully.");
         this.vm.initializeEmployeeComplaintList(response, idx);
     }
