@@ -31,7 +31,7 @@ export class ManageComplaintsComponent implements OnInit {
     showFilterOptionComplaintType: boolean = false;
     showFilterOptionStatus: boolean = false;
 
-    seachString: string = "";
+    searchString: string = "";
     sortNewest: boolean = false;
     sortOldest: boolean = true;
     sortType: string = "-dateSent";
@@ -89,6 +89,7 @@ export class ManageComplaintsComponent implements OnInit {
 
     /* Starts Progress Bar */
     startProgressBar() {
+        this.pageName = "showTables";
         this.progress = 1;
         this.progressInterval = setInterval(() => this.setProgressInterval(), 300);  /* 30 seconds full time */
     }  // Ends: startProgressBar()

@@ -1,0 +1,197 @@
+<div class="card-content">
+
+    <!-- Starts: Search Bar -->
+    <div class="search-bar">
+        <input class="search-field" type="search" placeholder="Search by parent name, student name, title" [ngModel]="searchString" (ngModelChange)="searchString = $event; triggerSearchChanged()">
+        <button class="search-btn"><i class="material-icons search-icon">search</i></button>
+    </div>
+    <br />
+    <!-- Ends: Search Bar -->
+
+    <!-- Starts: Progress Bar Section -->
+    <div class="progress-container">
+        <!-- Starts: progress-bar -->
+        <div class="progress-bar">
+            <div id="progress" class="progress" [ngStyle]="{ 'background-color': htmlRenderer.getSecondaryColor(), 'width': progress + '%', 'height': '6px'}"></div>
+        </div>
+        <!-- Ends: progress-bar -->
+
+        <!-- Starts: Done Icon -->
+        <div
+            class="progress-done"
+            matTooltip="Fetch Complaints"
+            tooltip-position="left"
+            [ngStyle]="{ 'background-color': htmlRenderer.getPrimaryColor(), 'color': user.activeSchool.primaryThemeColor}"
+        >
+            <span class="material-icons done-icon" (click)="triggerDoneIconClicked()">done</span>
+        </div>
+        <!-- Ends: Done Icon -->
+    </div>
+    <!-- Ends: Progress Bar Section -->
+
+    <!-- Starts: Complaint List Table -->
+    <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+        <!-- Starts: Table -->
+        <table class="table">
+
+            <!-- Starts: Table Header -->
+            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                <tr>
+                    <th style="min-width: 140px;">Student Name</th>
+                    <th style="min-width: 140px;">Father’s Name</th>
+                    <th style="min-width: 110px;">
+                        <div class="filter-column">
+                            <div>Date Sent</div>
+                            <!-- Starts: Date Sent Sort Type Filter -->
+                            <div style="cursor: pointer;">
+                                <span *ngIf="sortNewest" style="color: black; font-size: 12px;" (click)="triggerSortNewestClicked()" class="material-icons">north</span>
+                                <span *ngIf="sortOldest" style="color: black; font-size: 12px;" (click)="triggerSortOldestClicked()" class="material-icons">south</span>
+                            </div>
+                            <!-- Ends: Date Sent Sort Type Filter -->
+                        </div>
+                    </th>
+                    <th style="min-width: 110px;">
+                        <div class="filter-column">
+                            <div>Type</div>
+                            <!-- Starts: Complaint Type Filter -->
+                            <div style="position: relative;">
+                                <i class="material-icons filter-alt-btn" (click)="showFilterOptionComplaintType = !showFilterOptionComplaintType; showFilterOptionStatus = false;">filter_alt</i>
+                                <div *ngIf="showFilterOptionComplaintType" class="filter-option">
+                                    <cdk-virtual-scroll-viewport itemSize="0" style="height: 100%; width: 100%;">
+                                        <mat-option style="background-color: #F5F5F5">
+                                            <button class="btn" style="padding: 4px 7px" (click)="selectAllComplaintType(); $event.stopPropagation()">
+                                                Select All
+                                            </button>
+                                            <button class="btn" style="padding: 4px 7px" (click)="unselectAllComplaintType(); $event.stopPropagation()">
+                                                Clear All
+                                            </button>
+                                        </mat-option>
+
+                                        <ng-container *ngFor="let complaintType of filterComplaintTypeList">
+                                            <mat-option class="mat-option-complaint-type">
+                                                <mat-checkbox
+                                                    class="checkbox-label"
+                                                    [ngModel]="complaintType.selected"
+                                                    (ngModelChange)="triggerComplaintTypeOptionClicked(complaintType);"
+                                                >
+                                                    {{ complaintType.name ? complaintType.name : "Not Selected" }}
+                                                </mat-checkbox>
+                                            </mat-option>
+                                        </ng-container>
+                                    </cdk-virtual-scroll-viewport>
+                                </div>
+                            </div>
+                            <!-- Ends: Complaint Type Filter -->
+                        </div>
+                    </th>
+                    <th style="min-width: 110px;">
+                        <div class="filter-column">
+                            <div>Status</div>
+                            <!-- Starts: Status Filter -->
+                            <div style="position: relative;">
+                                <i class="material-icons filter-alt-btn" (click)="showFilterOptionStatus = !showFilterOptionStatus; showFilterOptionComplaintType = false;">filter_alt</i>
+                                <div *ngIf="showFilterOptionStatus" class="filter-option">
+                                    <cdk-virtual-scroll-viewport itemSize="0" style="height: 100%; width: 100%;">
+                                        <mat-option style="background-color: #F5F5F5">
+                                            <button class="btn" style="padding: 4px 7px" (click)="selectAllStatus(); $event.stopPropagation()">
+                                                Select All
+                                            </button>
+                                            <button class="btn" style="padding: 4px 7px" (click)="unselectAllStatus(); $event.stopPropagation()">
+                                                Clear All
+                                            </button>
+                                        </mat-option>
+
+                                        <ng-container *ngFor="let status of filterStatusList">
+                                            <mat-option class="mat-option-complaint-type">
+                                                <mat-checkbox
+                                                    class="checkbox-label"
+                                                    [ngModel]="status.selected"
+                                                    (ngModelChange)="triggerStatusOptionClicked(status);"
+                                                >
+                                                    {{ status.name ? status.name : "Not Applicable" }}
+                                                </mat-checkbox>
+                                            </mat-option>
+                                        </ng-container>
+                                    </cdk-virtual-scroll-viewport>
+                                </div>
+                            </div>
+                            <!-- Ends: Status Filter -->
+                        </div>
+                    </th>
+                    <th style="min-width: 125px;">Father’s Contact</th>
+                    <th style="min-width: 100px; text-align: center">Comments</th>
+                    <th *ngIf="userPermission" style="min-width: 150px; text-align: center">Handlers</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <!-- Ends: Table Header -->
+
+            <!-- Starts: Table Body -->
+            <tbody>
+                <ng-container *ngFor="let complaint of searchedComplaintList; let i = index">
+                    <tr>
+                        <td style="min-width: 140px;">{{ complaint.parentStudent.name }}</td>
+                        <td style="min-width: 140px;">{{ complaint.parentStudent.fathersName }}</td>
+                        <td style="min-width: 110px;">{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
+                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "Not Selected" }}</td>
+                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "Not Applicable" }}</td>
+                        <td style="min-width: 125px;">{{ complaint.parentStudent.mobileNumber ? complaint.parentStudent.mobileNumber : "Not Entered" }}</td>
+                        <td style="min-width: 100px; text-align: center">{{ complaint.commentList.length }}</td>
+                        <td *ngIf="userPermission" style="min-width: 150px; text-align: center">
+                            <div
+                                style="text-align: center; word-wrap: break-word;"
+                                *ngIf="complaint.employeeComplaintList.length"
+                            >
+                                {{ htmlRenderer.getAssignedEmployeeName(complaint.employeeComplaintList) }}
+                            </div>
+                            <div
+                                class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                                style="text-align: center; cursor: pointer; text-decoration: underline;"
+                                (click)="triggerOpenAssignEmployeeDialog(complaint, i)"
+                            >
+                                Assign
+                            </div>
+                        </td>
+                        <td
+                            class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                            style="min-width: 50px; text-align: center; cursor: pointer; text-decoration: underline;"
+                            (click)="triggerOpenComplaint(complaint, i)"
+                        >
+                            Open
+                        </td>
+                        <td><i class="material-icons delete-icon" (click)="triggerDeleteComplaint(complaint, i);" style="text-align: center; color: red; cursor: pointer">delete_forever</i></td>
+                    </tr>
+                </ng-container>
+
+                <!-- Starts: Dummy Row -->
+                <tr *ngIf="searchedComplaintList.length <= 4">
+                    <td class="dummyRow" style="min-width: 140px;"></td>
+                    <td class="dummyRow" style="min-width: 140px;"></td>
+                    <td class="dummyRow" style="min-width: 110px;"></td>
+                    <td class="dummyRow" style="min-width: 110px;"></td>
+                    <td class="dummyRow" style="min-width: 110px;"></td>
+                    <td class="dummyRow" style="min-width: 125px;"></td>
+                    <td class="dummyRow" style="min-width: 100px; text-align: center"></td>
+                    <td class="dummyRow" style="min-width: 150px; text-align: center; cursor: default; text-decoration: underline;"></td>
+                    <td class="dummyRow" style="min-width: 150px; text-align: center; cursor: default; text-decoration: underline;"></td>
+                    <td class="dummyRow"></td>
+                </tr>
+                <!-- Ends: Dummy Row -->
+            </tbody>
+            <!-- Ends: Table Body -->
+        </table>
+        <!-- Ends: Table -->
+    </cdk-virtual-scroll-viewport>
+    <!-- Ends: Complaint List Table -->
+</div>
+
+<!-- Starts: Load More -->
+<div style="padding: 0rem 3rem 2rem 3rem;">
+    <ng-container *ngIf="isLoadMore">
+        <div class="load-more text-{{ user.activeSchool.secondaryThemeColor }}" >
+            LOAD MORE (50)
+        </div>
+    </ng-container>
+</div>
+<!-- Ends: Load More -->

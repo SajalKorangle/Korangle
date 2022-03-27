@@ -355,11 +355,11 @@ export class ManageComplaintsServiceAdapter {
         }
 
         /* Search Check */
-        if (this.vm.seachString) {
+        if (this.vm.searchString) {
             let searchList = [];
-            searchList.push({"parentStudent__name__icontains": this.vm.seachString});
-            searchList.push({"parentStudent__fathersName__icontains": this.vm.seachString});
-            searchList.push({"title__icontains": this.vm.seachString});
+            searchList.push({"parentStudent__name__icontains": this.vm.searchString});
+            searchList.push({"parentStudent__fathersName__icontains": this.vm.searchString});
+            searchList.push({"title__icontains": this.vm.searchString});
             filterData["__or__searchList"] = searchList;
         }
 
