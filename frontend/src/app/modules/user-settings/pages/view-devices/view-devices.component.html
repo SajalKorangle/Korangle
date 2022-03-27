@@ -13,37 +13,41 @@
                 
                 <!-- Starts: Devices Table -->
 
-                <table >
-                    <tr>
-                        <th>Device</th>
-                        <th>Last Active</th>
-                        <th>Login Date</th>
-                        <th>
-                            <!-- Starts: Refresh Button -->
-                            <button
-                                type="button"
-                                class="btn btn-{{ user.activeSchool.secondaryThemeColor }} refresh-btn"
-                                (click)="refreshLoginList()"
-                            >
-                                <i class="material-icons">refresh</i>
-                            </button>
-                            <!-- Ends: Refresh Button -->
-                        </th>
-                    </tr>
-                    <tr *ngFor="let instance of loginList ">
-                        <td>{{ instance.device_name }}</td>
-                        <td>{{ instance.last_active }}</td>
-                        <td>{{ instance.login_date }}</td>
-                        <td *ngIf="currID===instance.id">Current Device</td>
-                        <td *ngIf="currID!==instance.id">
-                            <button *ngIf="!instance.loading" class="btn btn-{{ user.activeSchool.primaryThemeColor }} logout-btn" (click)="logoutInstance(instance)">Logout</button>
-                            <!-- Starts: Logout Spinner -->
-                            <div *ngIf="instance.loading" class="loader-container logout-btn-loader-container" align="center">
-                                <div class="loader logout-btn-loader"></div>
-                            </div>
-                            <!-- Ends: Logout Spinner -->
-                        </td>
-                    </tr>
+                <table class="table table-hover">
+                    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                        <tr>
+                            <th>Device</th>
+                            <th>Last Active</th>
+                            <th>Login Date</th>
+                            <th>
+                                <!-- Starts: Refresh Button -->
+                                <button
+                                    type="button"
+                                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} refresh-btn"
+                                    (click)="refreshLoginList()"
+                                >
+                                    <i class="material-icons">refresh</i>
+                                </button>
+                                <!-- Ends: Refresh Button -->
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let instance of loginList ">
+                            <td>{{ instance.device_name }}</td>
+                            <td>{{ instance.last_active }}</td>
+                            <td>{{ instance.login_date }}</td>
+                            <td *ngIf="currID===instance.id">Current Device</td>
+                            <td *ngIf="currID!==instance.id">
+                                <button *ngIf="!instance.loading" class="btn btn-{{ user.activeSchool.primaryThemeColor }} logout-btn" (click)="logoutInstance(instance)">Logout</button>
+                                <!-- Starts: Logout Spinner -->
+                                <div *ngIf="instance.loading" class="loader-container logout-btn-loader-container" align="center">
+                                    <div class="loader logout-btn-loader"></div>
+                                </div>
+                                <!-- Ends: Logout Spinner -->
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
 
                 <!-- Ends: Devices Table -->
