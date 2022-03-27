@@ -28,7 +28,7 @@ export class AuthenticationOldService {
         if ( navigator.userAgent === 'Mobile' ) {
             suffix = 'app';
         }
-        else{
+        else {
             suffix = 'web';
         }
 
