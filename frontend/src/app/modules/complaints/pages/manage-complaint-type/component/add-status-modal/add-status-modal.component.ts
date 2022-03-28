@@ -61,7 +61,7 @@ export class AddStatusModalComponent implements OnInit {
             return;
         }
 
-        this.dialogRef.close({statusName: this.statusName});
+        this.dialogRef.close({statusName: this.statusName.toString().trim()});
     }  // Ends: saveClicked()
 
     /* Delete Status */

@@ -36,6 +36,12 @@
         [studentList]="studentList"
         (changePageName)="pageName = $event"
         (initializeComplaintData)="initializeComplaintData()"
+        (sendComplaint)="
+                        complaintType = $event[0];
+                        complaintTitle = $event[1];
+                        commentMessage = $event[2];
+                        complaintStudent = $event[3];
+                        sendComplaint();"
     ></app-send-complaint>
 </ng-container>
 <!-- Ends: Send Complaint -->

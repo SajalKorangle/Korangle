@@ -39,6 +39,7 @@
 .delete-icon {
     margin-right: 3rem;
     color: red;
+    cursor: pointer;
 }
 
 .refresh-btn {

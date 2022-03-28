@@ -229,25 +229,14 @@
             <div *ngIf="(htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()) && addStatusName && !htmlRenderer.checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</div>
             <br *ngIf="htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()"/>
 
-            <ng-container *ngIf="!addStatusName.toString().trim() || !htmlRenderer.checkUniqueness()">
-                <button
-                    type="button"
-                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} add-status-btn"
-                    matTooltip="Add New Complaint Status"
-                    tooltip-position="left"
-                    disabled
-                >
-                    Add Complaint Status
-                </button>
-            </ng-container>
-
-            <ng-container *ngIf="addStatusName.toString().trim() && htmlRenderer.checkUniqueness()">
+            <ng-container>
                 <button
                     type="button"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }} add-status-btn"
                     matTooltip="Add New Complaint Status"
                     tooltip-position="left"
                     (click)="addStatusClick()"
+                    [disabled]="!addStatusName.toString().trim() || !htmlRenderer.checkUniqueness()"
                 >
                     Add Complaint Status
                 </button>

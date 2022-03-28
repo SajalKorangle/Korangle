@@ -152,7 +152,7 @@
 
             <!-- Starts: Send Query Section -->
             <div class="bottom-section">
-                <input class="bottom-search-field" type="search" placeholder="Type Response/ Updates here" [ngModel]="commentMessage" (ngModelChange)="commentMessage = $event; triggerChangeCommentMessage();">
+                <input class="bottom-search-field" type="search" placeholder="Type Response/ Updates here" [(ngModel)]="commentMessage">
                 <button
                     type="button"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-search-btn"
@@ -192,8 +192,7 @@
                 <textarea
                     placeholder="Type Response/ Updates here"
                     class="bottom-text-field"
-                    [ngModel]="commentMessage"
-                    (ngModelChange)="commentMessage = $event; triggerChangeCommentMessage();"
+                    [(ngModel)]="commentMessage"
                 ></textarea>
                 <br />
 

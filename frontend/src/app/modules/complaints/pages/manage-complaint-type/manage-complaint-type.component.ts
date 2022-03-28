@@ -287,6 +287,7 @@ export class ManageComplaintTypeComponent implements OnInit {
                 this.applicableStatusList.splice(idx, 1);
             }
         }
+        this.applicableStatusList.sort((a, b) => (a.id - b.id));
     }  // Ends: applicableStatusClicked()
 
     /* Save Complaint Type */
