@@ -214,7 +214,12 @@ export class CountAllServiceAdapter {
         this.vm.isLoading = true;
         let tableDataObject = {};
         tableDataObject["id"] = this.vm.tableActiveId;
-        tableDataObject["formatName"] = this.vm.tableFormatTitle.toString().trim();
+
+        if (this.vm.tableFormatTitle.toString().trim()) {
+            tableDataObject["formatName"] = this.vm.tableFormatTitle.toString().trim();
+        } else {
+            tableDataObject["formatName"] = this.vm.oldTableFormatTitle.toString().trim();
+        }
         tableDataObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
         /* Get Rows */

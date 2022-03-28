@@ -36,6 +36,7 @@ export class CountAllComponent implements OnInit {
     tableActiveIdx: number = null;
 
     tableFormatTitle: string = "";     // Table Name
+    oldTableFormatTitle: string = "";     // Old Table Name
     whereToAdd: string = "";    // Row  or  Column
     rowFilterList: any = [];    // Row List
     columnFilterList: any = [];    // Column List
@@ -578,7 +579,7 @@ export class CountAllComponent implements OnInit {
 
     updateChangesClicked(): void {
 
-        if (!this.tableFormatTitle) {
+        if (!this.tableFormatTitle.toString().trim()) {
             alert("Please enter the table name.");
             return;
         }
