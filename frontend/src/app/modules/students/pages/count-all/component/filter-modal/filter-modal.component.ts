@@ -235,6 +235,14 @@ export class FilterModalComponent implements OnInit {
         });
     }  // Ends: getFilteredFilterValues()
 
+    /* Make input-date non-typeable */
+    handleOnKeyDown(event: any) {
+        let keyPressed = event.keyCode;
+        if (keyPressed != 8 && keyPressed != 46) { //check if it is not delete
+            return false; // don't allow to input any value
+        }
+    }  // Ends: handleOnKeyDown()
+
     /* Delete Button Clicked */
     deleteClick(): void {
         let conformation = confirm("Do you really want to delete this?");

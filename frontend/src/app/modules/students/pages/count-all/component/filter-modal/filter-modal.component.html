@@ -50,9 +50,7 @@
             <br *ngIf="checkWidth() || checkMobile()" />
             <span *ngIf="!checkWidth() || !checkMobile()">&nbsp; &nbsp;</span>as on date &nbsp;&nbsp;
             <mat-form-field style="width: 130px">
-                <input matInput type="date" placeholder="Choose a date"
-                    (ngModelChange)="asOnDate = $event"
-                    [ngModel]="asOnDate" />
+                <input matInput type="date" placeholder="Choose a date" (keydown)="handleOnKeyDown($event)" [(ngModel)]="asOnDate" />
             </mat-form-field>
             <!-- Ends: Age -->
 
