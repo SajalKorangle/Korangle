@@ -14,6 +14,7 @@ export class GeneratePayslipServiceAdapter {
     public getEmployeeList(): void {
         let data = {
             parentSchool: this.vm.user.activeSchool.dbId,
+            isNonSalariedEmployee: false,
         };
         this.vm.isInitialLoading = true;
         this.vm.employeeService.getEmployeeMiniProfileList(data, this.vm.user.jwt).then(

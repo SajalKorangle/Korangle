@@ -14,6 +14,7 @@ export class PrintSalarySheetServiceAdapter {
     public getEmployeeList(): void {
         let data = {
             parentSchool: this.vm.user.activeSchool.dbId,
+            isNonSalariedEmployee: false,
         };
         this.vm.employeeService.getEmployeeProfileList(data, this.vm.user.jwt).then(
             (employeeList) => {

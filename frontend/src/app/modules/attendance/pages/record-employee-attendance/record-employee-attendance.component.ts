@@ -50,6 +50,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
         let request_employee_data = {
             parentSchool: this.user.activeSchool.dbId,
+            isNonSalariedEmployee: false,
         };
 
         this.isInitialLoading = true;

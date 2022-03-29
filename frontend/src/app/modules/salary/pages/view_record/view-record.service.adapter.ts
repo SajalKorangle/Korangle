@@ -13,6 +13,7 @@ export class ViewRecordServiceAdapter {
     public getEmployeeList(): void {
         let data = {
             parentSchool: this.vm.user.activeSchool.dbId,
+            isNonSalariedEmployee: false,
         };
         this.vm.isLoading = true;
         Promise.all([
