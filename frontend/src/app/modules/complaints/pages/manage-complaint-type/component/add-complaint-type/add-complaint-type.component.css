@@ -1,0 +1,136 @@
+.card-content {
+    padding: 3rem;
+    min-height: 90vh;
+}
+
+/* Starts: Add New Complaint */
+.add-title {
+    font-size: 12px;
+    line-height: 14px;
+    font-weight: 400;
+    opacity: 0.7;
+}
+
+.flex-box {
+    display: flex;
+    align-items: center;
+}
+
+.field-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 1rem;
+}
+
+.example-viewport {
+    height: 20vh;
+    width: 100%;
+    font-size: 14px;
+}
+
+.defaultText {
+    height: 100px;
+    width: 200px;
+    opacity: 0.6;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    border: 0.4px solid rgba(0, 0, 0, 0.7);
+    box-sizing: border-box;
+    border-radius: 2px;
+}
+
+    /* Starts: Search Bar */
+.search-bar {
+    display: flex;
+    height: 25px;
+    font-size: 14px;
+}
+
+.search-field {
+    flex-basis: 63%;
+    border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    padding: 5px;
+}
+
+.search-btn {
+    flex-basis: 7%;
+    border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    background-color: white;
+}
+
+.search-icon {
+    color: rgba(0, 0, 0, 0.5);
+}
+    /* Ends: Search Bar */
+
+.checkbox-group {
+    display: flex;
+}
+
+.checkbox-subgroup {
+    flex-basis: 30%;
+}
+
+.add-status-btn {
+    padding: 12px 15px;
+    margin-left: 10%;
+    text-transform: capitalize !important;
+}
+
+    /* Starts: Bottom Btns */
+.bottom-btns {
+    float: right;
+}
+
+.bottom-btns .btn {
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.cancel-btn {
+    background-color: white;
+    color: black;
+    margin-left: 12px;
+    padding: 5.5px 15.5px;
+}
+    /* Ends: Bottom Btns */
+
+/* Ends: Add New Complaint */
+
+/* Starts: Media Query - Mobile Phone */
+@media only screen and (max-width: 992px) {
+    .card-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .defaultText {
+        width: 100px;
+    }
+
+    /* Starts: Search Bar */
+    .search-field {
+        flex-basis: 90%;
+    }
+
+    .search-btn {
+        flex-basis: 10%;
+    }
+    /* Ends: Search Bar */
+
+    /* Starts: Add New Complaint Type */
+    .checkbox-subgroup {
+        flex-basis: 50%;
+    }
+
+    .add-status-btn {
+        margin-left: 0%;
+    }
+    /* Ends: Add New Complaint Type */
+}
+/* Ends: Media Query - Mobile Phone */

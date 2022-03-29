@@ -162,8 +162,8 @@ export class ManageComplaintTypeServiceAdapter {
         this.vm.isLoading = true;
 
         let complaintTypeObject = {};
-        complaintTypeObject["name"] = this.vm.typeName;
-        complaintTypeObject["defaultText"] = this.vm.defaultText;
+        complaintTypeObject["name"] = this.vm.typeName.toString().trim();
+        complaintTypeObject["defaultText"] = this.vm.defaultText.toString().trim();
         complaintTypeObject["parentSchoolComplaintStatusDefault"] = this.vm.defaultStatusId;
         complaintTypeObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 

@@ -15,176 +15,24 @@
 <!-- Ends: Show Tables -->
 
 <!-- Starts: Add Complaint Type -->
-<div *ngIf="pageName == 'addCompalintType' && !isLoading" class="card-content" style="min-height: 83vh">
-    <div class="add-title">Add/Edit Complaint Type</div>
-    <br />
-
-    <!-- Starts: Complaint Type Name -->
-    <div class="flex-box">
-        <div class="field-title">Type Name : </div>
-        <mat-form-field>
-            <input matInput placeholder="Type Name" type="text" [(ngModel)]="typeName" style="opacity: 0.6; font-weight: 400; font-size: 14px; line-height: 16px;" />
-        </mat-form-field>
-    </div>
-    <div *ngIf="!htmlRenderer.checkTypeNameUniqueness()" style="color: red; font-size: 14px;">Complaint Type name must be unique.</div>
-    <br />
-    <!-- Ends: Complaint Type Name -->
-
-    <!-- Starts: Default Text -->
-    <div class="flex-box">
-        <div class="field-title">Default Text : </div>
-        <textarea
-            class="defaultText"
-            [(ngModel)]="defaultText"
-        ></textarea>
-    </div>
-    <br />
-    <!-- Ends: Default Text -->
-
-    <!-- Starts: Assign Employees -->
-    <div>
-        <div class="field-title">Address to :</div>
-        <br />
-
-        <!-- Starts: Search Bar -->
-        <div class="search-bar">
-            <input class="search-field" type="search" placeholder="Search employee name" [ngModel]="addressToSearchString" (ngModelChange)="addressToSearchString = $event; seachChanged()">
-            <button class="seach-btn"><i class="material-icons search-icon">search</i></button>
-        </div>
-        <!-- Ends: Search Bar -->
-
-        <!-- Starts: Searched Employee List -->
-        <div *ngIf="searchedEmployeeList.length > 0" class="flex-box">
-            <div style="flex-basis: 70%;">
-                <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
-                    <ng-container *ngFor="let employee of searchedEmployeeList">
-                        <mat-option (click)="initializeEmployeeData(employee)">
-                            {{ employee.name }}
-                        </mat-option>
-                    </ng-container>
-                </cdk-virtual-scroll-viewport>
-            </div>
-        </div>
-        <!-- Ends: Searched Employee List -->
-
-        <!-- Starts: Selected Employee List -->
-        <ng-container *ngFor="let employee of selectedEmployeeList; let idx = index">
-            <br />
-            <mat-checkbox
-                [(ngModel)]="employee.selected"
-                (click)="$event.stopPropagation();"
-            >
-                {{ employee.name }}
-            </mat-checkbox>
-        </ng-container>
-        <!-- Ends: Selected Employee List -->
-    </div>
-    <br />
-    <!-- Ends: Assign Employees -->
-
-    <!-- Starts: Applicable Status List -->
-    <div>
-        <div class="field-title">Applicable Statuses : </div>
-        <div class="checkbox-group">
-            <!-- Starts: Applicable Status List Sub-Group 1 -->
-            <div class="checkbox-subgroup">
-                <ng-container *ngFor="let status of statusList; let idx = index">
-                    <ng-container *ngIf="idx < (statusList.length / 2)">
-                        <br />
-                        <mat-checkbox
-                            [(ngModel)]="status.selected"
-                            (click)="$event.stopPropagation(); applicableStatusClicked(status);"
-                        >
-                            {{ status.name }}
-                        </mat-checkbox>
-                    </ng-container>
-                </ng-container>
-            </div>
-            <!-- Ends: Applicable Status List Sub-Group 1 -->
-
-            <!-- Starts: Applicable Status List Sub-Group 2 -->
-            <div class="checkbox-subgroup">
-                <ng-container *ngFor="let status of statusList; let idx = index">
-                    <ng-container *ngIf="idx >= (statusList.length / 2)">
-                        <br />
-                        <mat-checkbox
-                            [(ngModel)]="status.selected"
-                            (click)="$event.stopPropagation(); applicableStatusClicked(status);"
-                        >
-                            {{ status.name }}
-                        </mat-checkbox>
-                    </ng-container>
-                </ng-container>
-            </div>
-            <!-- Ends: Applicable Status List Sub-Group 2 -->
-        </div>
-
-        <!-- Starts: Add New Status -->
-        <div>
-            <mat-form-field>
-                <input matInput placeholder="Status Name" type="text" [(ngModel)]="addStatusName" style="opacity: 0.6; font-weight: 400; font-size: 14px; line-height: 16px;" />
-            </mat-form-field>
-            <span *ngIf="!htmlRenderer.isMobileBrowser() && !htmlRenderer.isMobileApplication() && addStatusName && !htmlRenderer.checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</span>
-            <div *ngIf="(htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()) && addStatusName && !htmlRenderer.checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</div>
-            <br *ngIf="htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()"/>
-
-            <ng-container>
-                <button
-                    type="button"
-                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} add-status-btn"
-                    matTooltip="Add New Complaint Status"
-                    tooltip-position="left"
-                    (click)="addStatusClick()"
-                    [disabled]="!addStatusName.toString().trim() || !htmlRenderer.checkUniqueness()"
-                >
-                    Add Complaint Status
-                </button>
-            </ng-container>
-        </div>
-        <!-- Ends: Add New Status -->
-    </div>
-    <br />
-    <!-- Ends: Applicable Status List -->
-
-    <!-- Starts: Default Status -->
-    <div class="flex-box">
-        <div class="field-title" style="margin-right: 5%;">Default Status :</div>
-        <mat-form-field>
-            <mat-select placeholder="{{ defaultStatus }}"  style="width: 100%">
-                <ng-container *ngFor="let status of applicableStatusList">
-                    <mat-option (click)="defaultStatus = status.name; defaultStatusId = status.id">
-                        {{ status.name }}
-                    </mat-option>
-                </ng-container>
-            </mat-select>
-        </mat-form-field>
-    </div>
-    <!-- Ends: Default Status -->
-</div>
-<!-- Ends: Add Complaint Type -->
-
 <ng-container *ngIf="pageName == 'addCompalintType' && !isLoading">
-    <div style="border-bottom: 1px solid #C4C4C4"></div>
-    <!-- Starts: Bottom Buttons -->
-    <div class="bottom-btns" style="margin-right: 2rem;">
-        <button
-            type="button"
-            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-            style="padding: 7px 17px;"
-            (click)="saveClicked()"
-        >
-            Save
-        </button>
-        <button
-            type="button"
-            class="btn cancel-btn"
-            [ngStyle]="htmlRenderer.getCancelBtnStyle()"
-            (click)="cancelClicked()"
-        >
-            Cancel
-        </button>
-    </div>
-    <!-- Ends: Bottom Buttons -->
+    <app-add-complaint-type
+        [user]="user"
+        [complaintTypeList]="complaintTypeList"
+        [statusList]="statusList"
+        [employeeList]="employeeList"
+        [typeName]="typeName"
+        [defaultText]="defaultText"
+        [defaultStatus]="defaultStatus"
+        [defaultStatusId]="defaultStatusId"
+        [editingComplaintTypeId]="editingComplaintTypeId"
+        [selectedEmployeeList]="selectedEmployeeList"
+        [applicableEmployeeList]="applicableEmployeeList"
+        [applicableStatusList]="applicableStatusList"
+        (addStatusClick)="addStatusName = $event; addStatusClick()"
+        (saveClicked)="typeName = $event[0]; defaultText = $event[1]; defaultStatusId = $event[2]; editingComplaintTypeId = $event[3]; saveClicked()"
+        (cancelClicked)="cancelClicked()"
+    ></app-add-complaint-type>
 </ng-container>
 
 <!-- Starts: Spinner -->
