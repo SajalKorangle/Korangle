@@ -1,118 +1,17 @@
 <!-- Starts: Show Tables -->
-<div *ngIf="pageName == 'showTables' && !isLoading" class="card-content">
-
-    <!-- Starts: Complaint Type Table -->
-    <ng-container>
-        <div class="table-container">
-            <!-- Starts: Table Title -->
-            <div class="title">Complaint Types</div>
-            <!-- Ends: Table Title -->
-
-            <!-- Starts: Table -->
-            <table class="table">
-
-                <!-- Starts: Table Head -->
-                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                    <tr style="width: 100%">
-                        <th>Sr. no.</th>
-                        <th style="text-align: center">Type Name</th>
-                        <th style="text-align: center">No. of employees</th>
-                        <th style=""></th>
-                        <th style=""></th>
-                    </tr>
-                </thead>
-                <!-- Ends: Table Head -->
-
-                <!-- Starts: Table Body -->
-                <tbody>
-                    <ng-container *ngFor="let complaintType of complaintTypeList; let i = index">
-                        <tr style="width: 100%">
-                            <td>{{ i + 1 }}.</td>
-                            <td style="text-align: center">{{ complaintType.name }}</td>
-                            <td style="text-align: center">{{ complaintType.addressEmployeeList.length }}</td>
-                            <td><i class="material-icons edit-icon" style="cursor: pointer" (click)="editComplaintType(complaintType, i)">edit</i></td>
-                            <td><i class="material-icons delete-icon" style="cursor: pointer" (click)="deleteComplaintType(complaintType, i)">delete_forever</i></td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-                <!-- Ends: Table Body -->
-            </table>
-            <!-- Ends: Table -->
-        </div>
-        <br />
-        <br />
-
-        <!-- Starts: Add New Complaint Type Button -->
-        <button
-            type="button"
-            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-            style="padding: 12px 15px"
-            matTooltip="Add New Type"
-            tooltip-position="left"
-            (click)="pageName='addCompalintType'"
-        >
-            <i class="material-icons">add</i> Add Type
-        </button>
-        <br />
-        <br />
-        <br />
-        <!-- Ends: Add New Complaint Type Button -->
-    </ng-container>
-    <!-- Ends: Complaint Type Table -->
-
-    <!-- Starts: Complaint Status Table -->
-    <ng-container>
-        <div class="table-container">
-            <!-- Starts: Table Title -->
-            <div class="title">Complaint Statuses</div>
-            <!-- Ends: Table Title -->
-
-            <!-- Starts: Table -->
-            <table class="table">
-                <!-- Starts: Table Head -->
-                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                    <tr>
-                        <th>Sr. no.</th>
-                        <th>Name</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <!-- Ends: Table Head -->
-
-                <!-- Starts: Table Body -->
-                <tbody>
-                    <ng-container *ngFor="let status of statusList; let i = index">
-                        <tr>
-                            <td> {{ i + 1 }}.</td>
-                            <td> {{ status.name }} </td>
-                            <td><i class="material-icons edit-icon" style="text-align: center; cursor: pointer" (click)="openChangeStatusDialog(status, i)">edit</i></td>
-                            <td><i class="material-icons delete-icon" style="text-align: center; cursor: pointer" (click)="deleteStatus(status, i)">delete_forever</i></td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-                <!-- Ends: Table Body -->
-            </table>
-            <!-- Ends: Table -->
-        </div>
-        <br />
-        <br />
-
-        <!-- Starts: Add New Status Button -->
-        <button
-            type="button"
-            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-            style="padding: 12px 15px"
-            matTooltip="Add New Status"
-            tooltip-position="left"
-            (click)="openAddStatusDialog()"
-        >
-            <i class="material-icons">add</i> Add Status
-        </button>
-        <!-- Ends: Add New Status Button -->
-    </ng-container>
-    <!-- Ends: Complaint Status Table -->
-</div>
+<ng-container *ngIf="pageName == 'showTables' && !isLoading">
+    <app-show-table
+        [user]="user"
+        [complaintTypeList]="complaintTypeList"
+        [statusList]="statusList"
+        (editComplaintType)="editComplaintType($event[0], $event[1])"
+        (deleteComplaintType)="deleteComplaintType($event[0], $event[1])"
+        (changePageName)="pageName = $event"
+        (openChangeStatusDialog)="openChangeStatusDialog($event[0], $event[1])"
+        (deleteStatus)="deleteStatus($event[0], $event[1])"
+        (openAddStatusDialog)="openAddStatusDialog()"
+    ></app-show-table>
+</ng-container>
 <!-- Ends: Show Tables -->
 
 <!-- Starts: Add Complaint Type -->
