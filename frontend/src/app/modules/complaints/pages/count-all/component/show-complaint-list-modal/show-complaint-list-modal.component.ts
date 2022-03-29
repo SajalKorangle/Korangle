@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataStorage } from '@classes/data-storage';
+import { ShowComplaintListModalHtmlRenderer } from './show-complaint-list-modal.html.renderer';
 
 @Component({
     selector: 'app-show-complaint-list-modal',
@@ -9,18 +10,30 @@ import { DataStorage } from '@classes/data-storage';
 })
 export class ShowComplaintListModalComponent implements OnInit {
     user: any;
+
     complaintList: any = [];
+    statusList: any = [];
+    complaintTypeList: any = [];
+    studentList: any = [];
+
+    htmlRenderer: ShowComplaintListModalHtmlRenderer;
 
     constructor(
         public dialogRef: MatDialogRef<ShowComplaintListModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data,
     ) {
         this.complaintList = data.complaintList;
+        this.statusList = data.statusList;
+        this.complaintTypeList = data.complaintTypeList;
+        this.studentList = data.studentList;
         console.log("List: ", this.complaintList);
     }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
+
+        this.htmlRenderer = new ShowComplaintListModalHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
     }
 
     /* Close Clicked */

@@ -17,6 +17,15 @@ export class CountAllServiceAdapter {
     async initializeData() {
         this.vm.isLoading = true;
 
+        const student_full_profile_request_filter = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
+        const student_section_filter = {
+            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+        };
+
         const complaintTypeQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
             .getObjectList({ complaints_app: 'SchoolComplaintType' });
@@ -33,26 +42,41 @@ export class CountAllServiceAdapter {
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
             .getObjectList({ complaints_app: 'CountAllComplaints' });
 
+        const studentQuery = new Query()
+            .filter(student_full_profile_request_filter)
+            .getObjectList({student_app: 'Student'});
+
+        const studentSectionQuery = new Query()
+            .filter(student_section_filter)
+            .getObjectList({student_app: 'StudentSection'});
+
 
         let complaintTypeList = [];
         let statusList = [];
         let complaintList = [];
         let tableList = [];
+        let studentList = [];
+        let studentSectionList = [];
         [
             complaintTypeList,   // 0
             statusList,   // 1
             complaintList,   // 2
             tableList,   // 3
+            studentList,   // 4
+            studentSectionList,   // 5
         ] = await Promise.all([
             complaintTypeQuery,   // 0
             statusQuery,   // 1
             complaintQuery,   // 2
             countAllTableQuery,   // 3
+            studentQuery,   // 4
+            studentSectionQuery,   // 5
         ]);
 
         this.vm.initializecomplaintTypeList(complaintTypeList);
         this.vm.initializeStatusList(statusList);
         this.vm.complaintList = complaintList;
+        this.vm.initializeStudentFullProfileList(studentList, studentSectionList);
 
         /* Initialize Table List */
         tableList.sort((a, b) => a.id - b.id);

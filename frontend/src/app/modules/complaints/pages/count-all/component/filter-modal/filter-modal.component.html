@@ -10,7 +10,7 @@
 
     <!-- Starts: Time Span Section -->
     <div class="time-span-section">
-        <b>Time Span</b><br /><br *ngIf="!isMobile() && !checkMobile()"/>
+        <b>Time Span</b><br /><br *ngIf="!isMobileBrowser() && !isMobileApplication()"/>
 
         <!-- Starts: Start Date -- Time Span Sub-Section -->
         <div class="time-span-sub-section">
@@ -107,7 +107,7 @@
         <!-- Ends: End Date -- Time Span Sub-Section -->
     </div>
     <br />
-    <br *ngIf="!isMobile() && !checkMobile()"/>
+    <br *ngIf="!isMobileBrowser() && !isMobileApplication()"/>
     <!-- Ends: Time Span Section -->
 
     <!-- Starts: Complaint type  &&  Status Section -->
@@ -166,10 +166,9 @@
             </cdk-virtual-scroll-viewport>
         </div>
         <!-- Ends: Status -->
-
     </div>
     <br />
-    <br *ngIf="!isMobile() && !checkMobile()"/>
+    <br *ngIf="!isMobileBrowser() && !isMobileApplication()"/>
     <!-- Ends: Complaint type  &&  Status Section -->
 
     <!-- Starts: Bottom Buttons -->

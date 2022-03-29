@@ -4,8 +4,8 @@
         <span class="text-{{ user.activeSchool.secondaryThemeColor }} header">Student Name : </span>
         <!-- Starts: Search Bar -->
         <div class="search-bar" style="flex-basis: 50%;">
-            <input class="search-field" type="search" placeholder="Enter Student Name" [ngModel]="seachStudentString" (ngModelChange)="seachStudentString = $event; seachStudentChanged()">
-            <button class="seach-btn" (click)="searchStudent()"><i class="material-icons search-icon">search</i></button>
+            <input class="search-field" type="search" placeholder="Enter Student Name" [ngModel]="searchStudentString" (ngModelChange)="searchStudentString = $event; searchStudentChanged()">
+            <button class="search-btn" (click)="searchStudent()"><i class="material-icons search-icon">search</i></button>
         </div>
         <!-- Ends: Search Bar -->
     </div>
@@ -75,7 +75,7 @@
                 <input class="bottom-search-field" type="search" placeholder="Type Query here" [(ngModel)]="comment">
                 <button
                     type="button"
-                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-search-btn"
                     style="padding: 12px 15px"
                     matTooltip="Send Comment"
                     tooltip-position="left"
@@ -100,7 +100,7 @@
                 <div style="display: flex; justify-content: center; align-items: center;">
                     <button
                         type="button"
-                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-seach-btn"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-search-btn"
                         style="padding: 10px 25px"
                         matTooltip="Send Comment"
                         tooltip-position="left"

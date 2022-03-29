@@ -58,6 +58,7 @@ export class CountAllComponent implements OnInit {
     complaintTypeList: any = [];
     statusList: any = [];
     complaintList: any = [];
+    studentList: any = [];
 
     serviceAdapter: CountAllServiceAdapter;
     htmlRenderer: CountAllHtmlRenderer;
@@ -101,6 +102,27 @@ export class CountAllComponent implements OnInit {
             this.statusList.push(status);
         });
     }  // Ends: initializeStatusList()
+
+    /* Initialize Student Full Profile List */
+    initializeStudentFullProfileList(studentList, studentSectionList) {
+        this.studentList = [];
+        for (let i = 0; i < studentSectionList.length; i++) {
+            for (let j = 0; j < studentList.length; j++) {
+                if (studentSectionList[i].parentStudent === studentList[j].id) {
+
+                    let student_data = {};
+                    let student_object = studentList[j];
+                    let student_section_object = studentSectionList;
+
+                    student_data['name'] = student_object.name;
+                    student_data['dbId'] = student_object.id;
+
+                    this.studentList.push(student_data);
+                    break;
+                }
+            }
+        }
+    }  // Ends: initializeStudentFullProfileList()
 
     /* Initialize Table Details */
     initializeTableDetails() {
@@ -288,6 +310,9 @@ export class CountAllComponent implements OnInit {
         const dialogRef = this.dialog.open(ShowComplaintListModalComponent, {
             data: {
                 complaintList: this.getFilteredComplaintList(rowFilter, columnFilter),
+                statusList: this.statusList,
+                complaintTypeList: this.complaintTypeList,
+                studentList: this.studentList,
             }
         });
     }  // Ends: openShowComplaintListDialog()

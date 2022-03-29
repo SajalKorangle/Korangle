@@ -34,7 +34,7 @@
     padding: 5px;
 }
 
-.seach-btn {
+.search-btn {
     flex-basis: 10%;
     border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
     border-top-right-radius: 2px;
@@ -95,7 +95,7 @@
     line-height: 14px;
 }
 
-.bottom-seach-btn {
+.bottom-search-btn {
     flex-basis: 8%;
     border-radius: 5px !important;
     text-transform: capitalize !important;
@@ -131,7 +131,7 @@
         flex-basis: 90%;
     }
 
-    .seach-btn {
+    .search-btn {
         flex-basis: 10%;
     }
     /* Ends: Common Input Section */

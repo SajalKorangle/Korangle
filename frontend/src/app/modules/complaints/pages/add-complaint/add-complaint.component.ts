@@ -18,7 +18,7 @@ export class AddComplaintComponent implements OnInit {
 
     studentList: any = [];
 
-    seachStudentString: string = "";
+    searchStudentString: string = "";
     searchedStudentList: any = [];
 
     selectedStudent: any = {};
@@ -72,12 +72,12 @@ export class AddComplaintComponent implements OnInit {
     initializeStudentData(student) {
         this.selectedStudent = student;
         this.fatherName = this.selectedStudent.fathersName;
-        this.seachStudentString = this.selectedStudent.name;
+        this.searchStudentString = this.selectedStudent.name;
     }  // Ends: initializeStudentData()
 
     /* Initialize Complaint Data */
     initializeComplaintData() {
-        this.seachStudentString = "";
+        this.searchStudentString = "";
         this.searchedStudentList = [];
         this.selectedStudent = {};
         this.fatherName = "";
@@ -99,33 +99,33 @@ export class AddComplaintComponent implements OnInit {
     /* Get Searched Student List */
     searchStudentList() {
         this.searchedStudentList = [];
-        if (!this.seachStudentString) {
+        if (!this.searchStudentString) {
             return ;
         }
 
         this.studentList.forEach((student) => {
-            if (student.name.toLowerCase().indexOf(this.seachStudentString.toLowerCase()) === 0) {
+            if (student.name.toLowerCase().indexOf(this.searchStudentString.toLowerCase()) === 0) {
                 this.searchedStudentList.push(student);
             }
         });
     }  // Ends: searchStudentList()
 
-    seachStudentChanged = this.debounce(() => this.searchStudentList());
+    searchStudentChanged = this.debounce(() => this.searchStudentList());
 
     /* Send Complaint */
     sendComplaintClicked() {
 
-        if (!this.fatherName) {
+        if (!this.selectedStudent["dbId"]) {
             alert("Please select the student.");
             return;
         }
 
-        if (!this.complaintTitle) {
+        if (!this.complaintTitle.toString().trim()) {
             alert("Please enter the complaint title.");
             return;
         }
 
-        if (!this.comment) {
+        if (!this.comment.toString().trim()) {
             alert("Please enter your query.");
             return;
         }

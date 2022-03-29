@@ -30,19 +30,28 @@
     justify-content: space-between;
 }
 
-.complaint-name {
-    flex-basis: 30%;
+.complaint-title {
+    flex-basis: 22%;
     font-weight: 400;
+    word-wrap: break-word;
 }
 
-.complaint-class {
-    flex-basis: 30%;
+.complaint-student {
+    flex-basis: 22%;
     font-weight: 400;
+    word-wrap: break-word;
 }
 
-.complaint-section {
-    flex-basis: 30%;
+.complaint-complaint-type {
+    flex-basis: 22%;
     font-weight: 400;
+    word-wrap: break-word;
+}
+
+.complaint-status {
+    flex-basis: 22%;
+    font-weight: 400;
+    word-wrap: break-word;
 }
 
 /* Starts: Media Query */
@@ -51,7 +60,6 @@
     .show-complaint-list-modal-container {
         height: 70vh;
         width: 100vw;
-        font-size: 10px;
         margin: 0;
         padding: 0;
     }

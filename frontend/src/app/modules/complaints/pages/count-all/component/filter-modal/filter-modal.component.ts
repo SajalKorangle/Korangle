@@ -90,18 +90,18 @@ export class FilterModalComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
     }
 
-    /* Check for mobile browser */
-    isMobile() {
+    /* For mobile-browser */
+    isMobileBrowser(): boolean {
         if (window.innerWidth > 991) {
             return false;
         }
         return true;
-    }  // Ends: isMobile()
+    }  // Ends: isMobileBrowser()
 
     /* For mobile-application */
-    checkMobile(): boolean {
+    isMobileApplication(): boolean {
         return isMobile();
-    }
+    }  // Ends: isMobileApplication()
 
     /* Make input-date non-typeable */
     handleOnKeyDown(event: any) {

@@ -9,27 +9,33 @@
 
     <div>
         <div class="column-detail text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-bottom: 2rem;">
-            <div class="complaint-name">
-                Complaint Name
+            <div class="complaint-title">
+                Complaint Title
             </div>
-            <div class="complaint-class">
-                Class
+            <div class="complaint-student">
+                Student
             </div>
-            <div class="complaint-section">
-                Section
+            <div class="complaint-complaint-type">
+                Complaint Type
+            </div>
+            <div class="complaint-status">
+                Status
             </div>
         </div>
 
         <ng-container *ngFor="let complaint of complaintList">
             <div class="column-detail" style="font-size: 12px;">
-                <div class="complaint-name">
-                    {{ complaint.name }}
+                <div class="complaint-title">
+                    {{ complaint.title }}
                 </div>
-                <div class="complaint-class">
-                    {{ complaint.className }}
+                <div class="complaint-student">
+                    {{ htmlRenderer.getStudent(complaint.parentStudent) }}
                 </div>
-                <div class="complaint-section">
-                    {{ complaint.sectionName }}
+                <div class="complaint-complaint-type">
+                    {{ htmlRenderer.getComplaintType(complaint.parentSchoolComplaintType) }}
+                </div>
+                <div class="complaint-status">
+                    {{ htmlRenderer.getStatus(complaint.parentSchoolComplaintStatus) }}
                 </div>
             </div>
         </ng-container>
