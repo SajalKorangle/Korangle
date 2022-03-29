@@ -365,17 +365,9 @@ public class MainActivity extends AppCompatActivity {
             // Check that the response is a good one
             if (resultCode == Activity.RESULT_OK) {
                 if (data == null || data.getDataString() == null) { // Getting data from camera
-                    // If there is not data, then we may have taken a photo
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // for android 11 and above
-                        Bitmap photo = (Bitmap) data.getExtras().get("data");
-                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                        photo.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                        String path = MediaStore.Images.Media.insertImage(getContentResolver(), photo, "Title", null);
-                        results = new Uri[]{Uri.parse(path)};
-                    } else { // for android 10 and till Lollipop.
-                        if (mCameraPhotoPath != null) {
-                            results = new Uri[]{Uri.parse(mCameraPhotoPath)};
-                        }
+                    // If there is no data, then we may have taken a photo
+                    if (mCameraPhotoPath != null) {
+                        results = new Uri[]{Uri.parse(mCameraPhotoPath)};
                     }
                 } else { // Getting data from file chooser
                     String dataString = data.getDataString();
