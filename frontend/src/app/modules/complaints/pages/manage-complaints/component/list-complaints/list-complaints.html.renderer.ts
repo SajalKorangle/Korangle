@@ -93,6 +93,7 @@ export class ListComplaintsHtmlRenderer {
         return dateInfo;
     }  // Ends: getDateInfo()
 
+    /* Get Assigned Employee Name List */
     getAssignedEmployeeName(employeeComplaintList) {
         let employeeName = "";
         let length = employeeComplaintList.length;
@@ -105,5 +106,5 @@ export class ListComplaintsHtmlRenderer {
         }
 
         return employeeName;
-    }
+    }  // Ends: getAssignedEmployeeName()
 }

@@ -38,6 +38,7 @@ export class AddComplaintTypeHtmlRenderer {
         return style;
     }  // Ends: getCancelBtnStyle()
 
+    /* Check Status Name Uniqueness */
     checkUniqueness() {
         let answer = true;
         this.vm.statusList.forEach((status) => {
@@ -46,8 +47,9 @@ export class AddComplaintTypeHtmlRenderer {
             }
         });
         return answer;
-    }
+    }  // Ends: checkUniqueness()
 
+    /* Check Complaint Type Name Uniqueness */
     checkTypeNameUniqueness() {
         let answer = true;
         this.vm.complaintTypeList.forEach((complaintType) => {
@@ -56,7 +58,7 @@ export class AddComplaintTypeHtmlRenderer {
             }
         });
         return answer;
-    }
+    }  // Ends: checkTypeNameUniqueness()
 
     /* For mobile-browser */
     isMobileBrowser(): boolean {

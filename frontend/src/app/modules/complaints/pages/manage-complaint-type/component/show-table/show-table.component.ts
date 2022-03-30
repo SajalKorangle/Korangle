@@ -21,43 +21,49 @@ export class ShowTableComponent implements OnInit {
 
     ngOnInit() { }
 
+    /* Edit Complaint Type */
     triggerEditComplaintType(complaintType, idx) {
         let response = [];
         response.push(complaintType);
         response.push(idx);
 
         this.editComplaintType.emit(response);
-    }
+    }   // Ends: triggerEditComplaintType()
 
+    /* Delete Complaint Type */
     triggerDeleteComplaintType(complaintType, idx) {
         let response = [];
         response.push(complaintType);
         response.push(idx);
 
         this.deleteComplaintType.emit(response);
-    }
+    }   // Ends: triggerDeleteComplaintType()
 
+    /* Change Page */
     changePage() {
         this.changePageName.emit("addCompalintType");
-    }
+    }   // Ends: changePage()
 
+    /* Open Change-Status Modal */
     triggerOpenChangeStatusDialog(status, idx) {
         let response = [];
         response.push(status);
         response.push(idx);
 
         this.openChangeStatusDialog.emit(response);
-    }
+    }   // Ends: triggerOpenChangeStatusDialog()
 
+    /* Delete Status */
     triggerDeleteStatus(status, idx) {
         let response = [];
         response.push(status);
         response.push(idx);
 
         this.deleteStatus.emit(response);
-    }
+    }   // Ends: triggerDeleteStatus()
 
+    /* Open Add-Status Modal */
     triggerOpenAddStatusDialog() {
         this.openAddStatusDialog.emit();
-    }
+    }   // Ends: triggerOpenAddStatusDialog()
 }

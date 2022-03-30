@@ -12,6 +12,7 @@ export class ShowComplaintListModalHtmlRenderer {
         this.vm = vm;
     }  // Ends: initializeRenderer()
 
+    /* Get Student Name */
     getStudent(studentId) {
         let studentName = "Not Selected";
 
@@ -21,8 +22,9 @@ export class ShowComplaintListModalHtmlRenderer {
             }
         });
         return studentName;
-    }
+    }  // Ends: getStudent()
 
+    /* Get Complaint Type Name */
     getComplaintType(complaintTypeId) {
         let complaintTypeName = "Not Selected";
 
@@ -32,8 +34,9 @@ export class ShowComplaintListModalHtmlRenderer {
             }
         });
         return complaintTypeName;
-    }
+    }  // Ends: getComplaintType()
 
+    /* Get Status Name */
     getStatus(statusId) {
         let statusName = "Not Selected";
 
@@ -43,5 +46,5 @@ export class ShowComplaintListModalHtmlRenderer {
             }
         });
         return statusName;
-    }
+    }  // Ends: getStatus()
 }

@@ -22,6 +22,7 @@ export class DeleteTableModalComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
     }
 
+    /* Get Cancel Button Style */
     getCancelBtnStyle() {
         let style = {};
 
@@ -46,7 +47,7 @@ export class DeleteTableModalComponent implements OnInit {
         style["color"] = color;
         style["font-weight"] = "500";
         return style;
-    }
+    }  // Ends: getCancelBtnStyle()
 
     /* Cancel Clicked */
     cancelClick(): void {

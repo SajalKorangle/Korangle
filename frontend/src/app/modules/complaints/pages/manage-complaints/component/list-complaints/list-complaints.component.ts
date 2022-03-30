@@ -76,9 +76,10 @@ export class ListComplaintsComponent implements OnInit {
         this.startNewProgressBar.emit();
     }  // Ends: unselectAllStatus()
 
+    /* Search Complaints */
     triggerSearchChanged() {
         this.searchComplaints.emit(this.searchString);
-    }
+    }  // Ends: triggerSearchChanged()
 
     /* Debouncing */
     debounce(func, timeout = 300) {
@@ -91,47 +92,55 @@ export class ListComplaintsComponent implements OnInit {
 
     searchChanged = this.debounce(() => this.triggerSearchChanged());
 
+    /* Done Icon Clicked */
     triggerDoneIconClicked() {
         this.doneIconClicked.emit(this.searchString);
-    }
+    }  // Ends: triggerDoneIconClicked()
 
+    /* Sort Newest */
     triggerSortNewestClicked() {
         this.sortNewestClicked.emit();
-    }
+    }  // Ends: triggerSortNewestClicked()
 
+    /* Sort Oldest */
     triggerSortOldestClicked() {
         this.sortOldestClicked.emit();
-    }
+    }  // Ends: triggerSortOldestClicked()
 
+    /* Complaint Type Option Clicked */
     triggerComplaintTypeOptionClicked(complaintType) {
         this.complaintTypeOptionClicked.emit(complaintType);
-    }
+    }  // Ends: triggerComplaintTypeOptionClicked()
 
+    /* Status Option Clicked */
     triggerStatusOptionClicked(status) {
         this.statusOptionClicked.emit(status);
-    }
+    }  // Ends: triggerStatusOptionClicked()
 
+    /* Open Assign Employee Modal */
     triggerOpenAssignEmployeeDialog(complaint, idx) {
         let response = [];
         response.push(complaint);
         response.push(idx);
 
         this.openAssignEmployeeDialog.emit(response);
-    }
+    }  // Ends: triggerOpenAssignEmployeeDialog()
 
+    /* Open Complaint */
     triggerOpenComplaint(complaint, idx) {
         let response = [];
         response.push(complaint);
         response.push(idx);
 
         this.openComplaint.emit(response);
-    }
+    }  // Ends: triggerOpenComplaint()
 
+    /* Delete Complaint */
     triggerDeleteComplaint(complaint, idx) {
         let response = [];
         response.push(complaint);
         response.push(idx);
 
         this.deleteComplaint.emit(response);
-    }
+    }  // Ends: triggerDeleteComplaint()
 }

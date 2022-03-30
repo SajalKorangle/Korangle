@@ -52,15 +52,18 @@ export class ListComplaintsComponent implements OnInit {
         return searchedComplaintList;
     }  // Ends: getSearchedComplaintList()
 
+    /* Open Complaint */
     triggerOpenComplaint(complaint) {
         this.openComplaint.emit(complaint);
-    }
+    }  // Ends: triggerOpenComplaint()
 
+    /* Delete Complaint */
     triggerDeleteComplaint(complaint) {
         this.deleteComplaint.emit(complaint);
-    }
+    }  // Ends: triggerDeleteComplaint()
 
+    /* Change Page */
     changePage() {
         this.changePageName.emit("send-complaint");
-    }
+    }  // Ends: changePage()
 }

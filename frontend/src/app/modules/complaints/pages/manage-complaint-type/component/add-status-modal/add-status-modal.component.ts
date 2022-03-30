@@ -34,6 +34,7 @@ export class AddStatusModalComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
     }
 
+    /* Check Status Name Uniqueness */
     checkUniqueness() {
         let answer = true;
         this.statusList.forEach((status) => {
@@ -42,7 +43,7 @@ export class AddStatusModalComponent implements OnInit {
             }
         });
         return answer;
-    }
+    }  // Ends: checkUniqueness()
 
     /* Close Modal */
     closeClicked() {

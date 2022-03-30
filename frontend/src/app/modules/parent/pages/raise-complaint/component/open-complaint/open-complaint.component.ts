@@ -36,43 +36,50 @@ export class OpenComplaintComponent implements OnInit {
         this.htmlRenderer.initializeRenderer(this);
     }
 
+    /* Change Page */
     changePage() {
         this.changePageName.emit("list-of-complaints");
-    }
+    }  // Ends: changePage()
 
+    /* Initialize Complaint Data */
     triggerInitializeComplaintData() {
         this.initializeComplaintData.emit();
-    }
+    }  // Ends: triggerInitializeComplaintData()
 
+    /* Update Status */
     triggerUpdateStatus(status) {
         let response = [];
         response.push(this.commentMessage);
         response.push(status);
 
         this.updateStatus.emit(response);
-    }
+    }  // Ends: triggerUpdateStatus()
 
+    /* Delete Complaint */
     triggerDeleteComplaint(complaint) {
         let response = [];
         response.push("");
         response.push(complaint);
 
         this.deleteComplaint.emit(response);
-    }
+    }  // Ends: triggerDeleteComplaint()
 
+    /* Refresh Complaint */
     triggerRefreshClicked() {
         this.refreshComplaint.emit();
-    }
+    }  // Ends: triggerRefreshClicked()
 
+    /* Update Complaint */
     triggerUpdateComplaintClicked() {
         if (!this.commentMessage.toString().trim()) {
             alert("Please enter your query.");
             return;
         }
         this.updateComplaintClicked.emit(this.commentMessage);
-    }
+    }  // Ends: triggerUpdateComplaintClicked()
 
+    /* Renotify Complaint */
     triggerRenotifyClicked() {
         this.renotifyComplaint.emit();
-    }
+    }  // Ends: triggerRenotifyClicked()
 }

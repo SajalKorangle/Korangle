@@ -150,6 +150,7 @@ export class OpenComplaintHtmlRenderer {
         return comment.parentStudent.fathersName;
     }  // Ends: getAuthorComment()
 
+    /* Get Assigned Employee Name List */
     getAssignedEmployeeName(employeeComplaintList) {
         let employeeName = "";
         let length = employeeComplaintList.length;
@@ -162,7 +163,7 @@ export class OpenComplaintHtmlRenderer {
         }
 
         return employeeName;
-    }
+    }  // Ends: getAssignedEmployeeName()
 
     /* For mobile-browser */
     isMobileBrowser(): boolean {

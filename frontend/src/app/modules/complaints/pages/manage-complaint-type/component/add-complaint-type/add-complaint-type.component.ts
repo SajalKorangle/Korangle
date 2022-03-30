@@ -105,6 +105,7 @@ export class AddComplaintTypeComponent implements OnInit {
         this.applicableStatusList.sort((a, b) => (a.id - b.id));
     }  // Ends: applicableStatusClicked()
 
+    /* Add new status */
     triggerAddStatusClick() {
         let response = [];
         response.push(this.typeName.toString().trim());
@@ -116,12 +117,14 @@ export class AddComplaintTypeComponent implements OnInit {
 
         this.addStatusClick.emit(response);
         this.addStatusName = "";
-    }
+    }  // Ends: triggerAddStatusClick()
 
+    /* Cancel Button Clicked */
     triggerCancelClicked() {
         this.cancelClicked.emit();
-    }
+    }  // Ends: triggerCancelClicked()
 
+    /* Save Complaint Type */
     triggerSaveClicked() {
         /* Check Type Name */
         if (!this.typeName.toString().trim()) {
@@ -166,5 +169,5 @@ export class AddComplaintTypeComponent implements OnInit {
         response.push(this.editingComplaintTypeId);
 
         this.saveClicked.emit(response);
-    }
+    }  // Ends: triggerSaveClicked()
 }

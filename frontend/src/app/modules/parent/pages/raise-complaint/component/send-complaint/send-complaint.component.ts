@@ -44,14 +44,17 @@ export class SendComplaintComponent implements OnInit {
         this.htmlRenderer.initializeRenderer(this);
     }
 
+    /* Change Page */
     changePage() {
         this.changePageName.emit("list-of-complaints");
-    }
+    }  // Ends: changePage()
 
+    /* Initialize Complaint Data */
     triggerInitializeComplaintData() {
         this.initializeComplaintData.emit();
-    }
+    }  // Ends: triggerInitializeComplaintData()
 
+    /* Send Complaint */
     triggerSendComplaint() {
 
         if (!this.complaintStudent["dbId"]) {
@@ -76,5 +79,5 @@ export class SendComplaintComponent implements OnInit {
         response.push(this.complaintStudent);
 
         this.sendComplaint.emit(response);
-    }
+    }  // Ends: triggerSendComplaint()
 }
