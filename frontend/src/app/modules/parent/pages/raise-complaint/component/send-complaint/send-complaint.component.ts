@@ -23,6 +23,8 @@ export class SendComplaintComponent implements OnInit {
         parentSchool: null,
     };
 
+    isStudentListLoading: boolean = false;
+
     complaintTypeName: string = "Select Complaint Type";
     complaintTypeDefaultText: string = "";
     complaintType: any = this.nullComplaintType;
@@ -44,6 +46,15 @@ export class SendComplaintComponent implements OnInit {
         this.htmlRenderer.initializeRenderer(this);
     }
 
+    handleDetailsFromParentStudentFilter(value): void { }
+
+    /* Initialize Selected Student Data */
+    initializeStudentData(student) {
+        this.complaintStudent = student;
+        this.complaintStudentName = this.complaintStudent.name;
+        this.complaintStudent["dbId"] = student.id;
+    }  // Ends: initializeStudentData()
+
     /* Change Page */
     changePage() {
         this.changePageName.emit("list-of-complaints");
@@ -62,12 +73,12 @@ export class SendComplaintComponent implements OnInit {
             return;
         }
 
-        if (!this.complaintTitle) {
+        if (!this.complaintTitle.toString().trim()) {
             alert("Please enter the complaint title.");
             return;
         }
 
-        if (!this.commentMessage) {
+        if (!this.commentMessage.toString().trim()) {
             alert("Please enter your query.");
             return;
         }

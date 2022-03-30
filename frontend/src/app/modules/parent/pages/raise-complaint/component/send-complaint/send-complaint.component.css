@@ -3,6 +3,10 @@
     min-height: 90vh;
 }
 
+.search-field-margin {
+    padding: 3rem;
+}
+
 .send-new-common-section {
     display: flex;
     align-items: center;
@@ -64,6 +68,11 @@
 /* Starts: Media Query - Mobile Phone */
 @media only screen and (max-width: 992px) {
     .card-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .search-field-margin {
         padding-left: 1rem;
         padding-right: 1rem;
     }
