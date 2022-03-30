@@ -1,6 +1,10 @@
 .card-content {
-    padding: 4rem;
+    padding: 3rem;
     min-height: 90vh;
+}
+
+.search-field-margin {
+    padding: 3rem;
 }
 
 /* Starts: Commom Input Section */
@@ -110,6 +114,10 @@
 /* Starts: Media Query - Mobile Phone */
 @media only screen and (max-width: 992px) {
     .card-content {
+        padding: 2rem;
+    }
+
+    .search-field-margin {
         padding: 2rem;
     }
 

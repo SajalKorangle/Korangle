@@ -16,47 +16,19 @@ export class AddComplaintServiceAdapter {
 
         this.vm.isLoading = true;
 
-        const student_full_profile_request_filter = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-        };
-
-        const student_section_filter = {
-            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-        };
-
         const complaintTypeQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
             .getObjectList({ complaints_app: 'SchoolComplaintType' });
 
-        const studentQuery = new Query()
-            .filter(student_full_profile_request_filter)
-            .getObjectList({student_app: 'Student'});
 
-        const studentSectionQuery = new Query()
-            .filter(student_section_filter)
-            .getObjectList({student_app: 'StudentSection'});
-
-
-        let studentList = [];
-        let studentSectionList = [];
         [
             this.vm.complaintTypeList,   // 0
-            studentList,   // 1
-            studentSectionList,   // 2
         ] = await Promise.all([
             complaintTypeQuery,   // 0
-            studentQuery,   // 1
-            studentSectionQuery,   // 2
         ]);
 
-        this.vm.initializeStudentFullProfileList(studentList, studentSectionList);
         this.vm.isLoading = false;
     }  // Ends: initializeData()
-
-    async assignEmployeeComplaint(employeeComplaintList) {
-        const response = await new Query().createObjectList({complaints_app: 'EmployeeComplaint'}, employeeComplaintList);
-    }
 
     /* Add Complaint */
     async addComplaint() {
@@ -74,7 +46,7 @@ export class AddComplaintServiceAdapter {
             complaintObject["parentSchoolComplaintStatus"] = this.vm.NULL_CONSTANT;
         }
 
-        complaintObject["parentStudent"] = this.vm.selectedStudent.dbId;
+        complaintObject["parentStudent"] = this.vm.selectedStudent.id;
         complaintObject["title"] = this.vm.complaintTitle;
         complaintObject["parentSchool"] = this.vm.user.activeSchool.dbId;
         /* Ends: Prepare Complaint Object */
@@ -87,7 +59,7 @@ export class AddComplaintServiceAdapter {
         if (this.vm.comment) {
             let commentObject = {};
             commentObject["parentEmployee"] = this.vm.NULL_CONSTANT;
-            commentObject["parentStudent"] = this.vm.selectedStudent.dbId;
+            commentObject["parentStudent"] = this.vm.selectedStudent.id;
             commentObject["message"] = this.vm.comment;
             commentObject["parentComplaint"] = complaint.id;
 

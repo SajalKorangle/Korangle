@@ -16,12 +16,18 @@ export class AddComplaintComponent implements OnInit {
     isLoading: boolean;
     NULL_CONSTANT: any = null;
 
-    studentList: any = [];
+    nullComplaintType: any = {
+        id: null,
+        defaultText: "",
+        name: "Select Complaint Type",
+        parentSchool: null,
+        parentSchoolComplaintStatusDefault: null,
+    };
 
-    searchStudentString: string = "";
-    searchedStudentList: any = [];
+    isStudentListLoading: boolean = false;
 
     selectedStudent: any = {};
+    studentName: string = "";
     fatherName: string = "";
     comment: string = "";
     complaintTitle: string = "";
@@ -45,40 +51,17 @@ export class AddComplaintComponent implements OnInit {
         this.htmlRenderer.initializeRenderer(this);
     }
 
-    /* Initialize Student Full Profile List */
-    initializeStudentFullProfileList(studentList, studentSectionList) {
-        this.studentList = [];
-        for (let i = 0; i < studentSectionList.length; i++) {
-            for (let j = 0; j < studentList.length; j++) {
-                if (studentSectionList[i].parentStudent === studentList[j].id) {
-
-                    let student_data = {};
-                    let student_object = studentList[j];
-                    let student_section_object = studentSectionList;
-
-                    student_data['name'] = student_object.name;
-                    student_data['dbId'] = student_object.id;
-                    student_data['fathersName'] = student_object.fathersName;
-
-                    this.studentList.push(student_data);
-                    break;
-                }
-            }
-        }
-
-    }  // Ends: initializeStudentFullProfileList()
+    handleDetailsFromParentStudentFilter(value): void { }
 
     /* Initialize Selected Student Data */
     initializeStudentData(student) {
         this.selectedStudent = student;
+        this.studentName = this.selectedStudent.name;
         this.fatherName = this.selectedStudent.fathersName;
-        this.searchStudentString = this.selectedStudent.name;
     }  // Ends: initializeStudentData()
 
     /* Initialize Complaint Data */
     initializeComplaintData() {
-        this.searchStudentString = "";
-        this.searchedStudentList = [];
         this.selectedStudent = {};
         this.fatherName = "";
         this.comment = "";
@@ -87,35 +70,10 @@ export class AddComplaintComponent implements OnInit {
         this.complaintType = {};
     }  // Ends: initializeComplaintData()
 
-    /* Debouncing */
-    debounce(func, timeout = 300) {
-        let timer;
-        return (...args) => {
-        clearTimeout(timer);
-            timer = setTimeout(() => { func.apply(this, args); }, timeout);
-         };
-    }  // Ends: debounce()
-
-    /* Get Searched Student List */
-    searchStudentList() {
-        this.searchedStudentList = [];
-        if (!this.searchStudentString) {
-            return ;
-        }
-
-        this.studentList.forEach((student) => {
-            if (student.name.toLowerCase().indexOf(this.searchStudentString.toLowerCase()) === 0) {
-                this.searchedStudentList.push(student);
-            }
-        });
-    }  // Ends: searchStudentList()
-
-    searchStudentChanged = this.debounce(() => this.searchStudentList());
-
     /* Send Complaint */
     sendComplaintClicked() {
 
-        if (!this.selectedStudent["dbId"]) {
+        if (!this.selectedStudent["id"]) {
             alert("Please select the student.");
             return;
         }
@@ -130,7 +88,6 @@ export class AddComplaintComponent implements OnInit {
             return;
         }
 
-        this.searchedStudentList = [];
         this.serviceAdapter.addComplaint();
     }  // Ends: sendComplaintClicked()
 }
