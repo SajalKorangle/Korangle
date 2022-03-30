@@ -36,6 +36,8 @@ export class AddComplaintTypeComponent implements OnInit {
     ngOnInit() {
         this.htmlRenderer = new AddComplaintTypeHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
+
+        this.applicableStatusList.sort((a, b) => (a.id - b.id));
     }
 
     /* Get Searched Employee List */
@@ -104,7 +106,15 @@ export class AddComplaintTypeComponent implements OnInit {
     }  // Ends: applicableStatusClicked()
 
     triggerAddStatusClick() {
-        this.addStatusClick.emit(this.addStatusName);
+        let response = [];
+        response.push(this.typeName.toString().trim());
+        response.push(this.defaultText.toString().trim());
+        response.push(this.defaultStatus);
+        response.push(this.defaultStatusId);
+        response.push(this.editingComplaintTypeId);
+        response.push(this.addStatusName);
+
+        this.addStatusClick.emit(response);
         this.addStatusName = "";
     }
 
@@ -151,6 +161,7 @@ export class AddComplaintTypeComponent implements OnInit {
         let response = [];
         response.push(this.typeName.toString().trim());
         response.push(this.defaultText.toString().trim());
+        response.push(this.defaultStatus);
         response.push(this.defaultStatusId);
         response.push(this.editingComplaintTypeId);
 

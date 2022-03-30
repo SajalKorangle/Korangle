@@ -14,12 +14,11 @@ export class OpenComplaintComponent implements OnInit {
     @Input() defaultStatusTitle;
     @Input() openedComplaint;
     @Input() commentList;
+    @Input() commentMessage;
     @Output() startNewProgressBar = new EventEmitter<any>();
     @Output() updateStatus = new EventEmitter<any>();
     @Output() deleteComplaint = new EventEmitter<any>();
     @Output() sendCommentClicked = new EventEmitter<any>();
-
-    commentMessage: string = "";
 
     htmlRenderer: OpenComplaintHtmlRenderer;
 
@@ -38,11 +37,19 @@ export class OpenComplaintComponent implements OnInit {
     }
 
     triggerUpdateStatus(status) {
-        this.updateStatus.emit(status);
+        let response = [];
+        response.push(this.commentMessage);
+        response.push(status);
+
+        this.updateStatus.emit(response);
     }
 
     triggerDeleteComplaint(complaint) {
-        this.deleteComplaint.emit(complaint);
+        let response = [];
+        response.push("");
+        response.push(complaint);
+
+        this.deleteComplaint.emit(response);
     }
 
     triggerSendCommentClicked() {

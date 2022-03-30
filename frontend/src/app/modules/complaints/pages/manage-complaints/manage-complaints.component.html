@@ -29,9 +29,10 @@
         [defaultStatusTitle]="defaultStatusTitle"
         [openedComplaint]="openedComplaint"
         [commentList]="commentList"
+        [commentMessage]="commentMessage"
         (startNewProgressBar)="startNewProgressBar()"
-        (updateStatus)="updateStatus($event)"
-        (deleteComplaint)="deleteComplaint($event)"
+        (updateStatus)="commentMessage = $event[0]; updateStatus($event[1])"
+        (deleteComplaint)="commentMessage = $event[0]; deleteComplaint($event[1])"
         (sendCommentClicked)="commentMessage = $event; sendCommentClicked();"
     ></app-open-complaint>
 </ng-container>

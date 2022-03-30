@@ -4,9 +4,9 @@
     <div style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
     <!-- Ends: Header -->
 
-    <!-- Starts: Format Name -->
-    <br /><b>Delete Complaint - <span class="text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-left: 2rem;">{{ name }}</span></b>
-    <!-- Ends: Format Name -->
+    <!-- Starts: Name -->
+    <br /><b>Delete - <span class="text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-left: 2rem;">{{ name }}</span></b>
+    <!-- Ends: Name -->
 </mat-dialog-content>
 
 <!-- Starts: Bottom Buttons -->
@@ -25,7 +25,7 @@
         <button
             type="button"
             class="btn btn-danger delete-btn"
-            matTooltip="Delete Complaint"
+            matTooltip="Delete"
             tooltip-position="left"
             (click) = "deleteClick()"
         >

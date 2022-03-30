@@ -15,6 +15,7 @@ export class OpenComplaintComponent implements OnInit {
     @Input() defaultStatusTitle;
     @Input() openedComplaint;
     @Input() commentList;
+    @Input() commentMessage;
     @Output() changePageName = new EventEmitter<string>();
     @Output() initializeComplaintData = new EventEmitter<any>();
     @Output() updateStatus = new EventEmitter<any>();
@@ -22,8 +23,6 @@ export class OpenComplaintComponent implements OnInit {
     @Output() refreshComplaint = new EventEmitter<any>();
     @Output() updateComplaintClicked = new EventEmitter<any>();
     @Output() renotifyComplaint = new EventEmitter<any>();
-
-    commentMessage: string = "";
 
     htmlRenderer: OpenComplaintHtmlRenderer;
 
@@ -46,11 +45,19 @@ export class OpenComplaintComponent implements OnInit {
     }
 
     triggerUpdateStatus(status) {
-        this.updateStatus.emit(status);
+        let response = [];
+        response.push(this.commentMessage);
+        response.push(status);
+
+        this.updateStatus.emit(response);
     }
 
     triggerDeleteComplaint(complaint) {
-        this.deleteComplaint.emit(complaint);
+        let response = [];
+        response.push("");
+        response.push(complaint);
+
+        this.deleteComplaint.emit(response);
     }
 
     triggerRefreshClicked() {

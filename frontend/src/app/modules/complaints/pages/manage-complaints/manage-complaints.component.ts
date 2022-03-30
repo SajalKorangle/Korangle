@@ -183,7 +183,6 @@ export class ManageComplaintsComponent implements OnInit {
 
     /* Check User Permission (Admin / Not Admin) */
     checkUserPermission(employeePermissionObject) {
-        console.log("Permission Object: ", employeePermissionObject);
         this.userPermission = employeePermissionObject.configJSON.includes("admin");
 
         if (this.userPermission) {

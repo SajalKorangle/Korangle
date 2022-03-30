@@ -29,8 +29,8 @@
         [selectedEmployeeList]="selectedEmployeeList"
         [applicableEmployeeList]="applicableEmployeeList"
         [applicableStatusList]="applicableStatusList"
-        (addStatusClick)="addStatusName = $event; addStatusClick()"
-        (saveClicked)="typeName = $event[0]; defaultText = $event[1]; defaultStatusId = $event[2]; editingComplaintTypeId = $event[3]; saveClicked()"
+        (addStatusClick)="typeName = $event[0]; defaultText = $event[1]; defaultStatus = $event[2]; defaultStatusId = $event[3]; editingComplaintTypeId = $event[4]; addStatusName = $event[5]; addStatusClick()"
+        (saveClicked)="typeName = $event[0]; defaultText = $event[1]; defaultStatus = $event[2]; defaultStatusId = $event[3]; editingComplaintTypeId = $event[4]; saveClicked()"
         (cancelClicked)="cancelClicked()"
     ></app-add-complaint-type>
 </ng-container>
