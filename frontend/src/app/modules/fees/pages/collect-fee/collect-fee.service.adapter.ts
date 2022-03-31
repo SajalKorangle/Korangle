@@ -25,7 +25,9 @@ export class CollectFeeServiceAdapter {
         const sessionList = await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {});
         const activeSession = sessionList.find(session => { // active session according to date
             const endDate = new Date(session.endDate);
+            endDate.setHours(23,59,59,999);
             const startDate = new Date(session.startDate);
+            startDate.setHours(0,0,0,0);
             return today >= startDate && today <= endDate;
         });
 
