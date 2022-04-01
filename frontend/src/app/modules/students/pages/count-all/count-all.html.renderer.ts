@@ -14,6 +14,7 @@ export class CountAllHtmlRenderer {
 
     /* Open Existing Table */
     tableOpenClicked(table, idx): void {
+        console.log("Table: ", table);
         this.vm.isTableEditing = true;
         this.vm.tableActiveId = table["id"];
         this.vm.tableActiveIdx = idx;

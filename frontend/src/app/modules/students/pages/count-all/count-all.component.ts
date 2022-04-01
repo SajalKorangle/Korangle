@@ -305,6 +305,7 @@ export class CountAllComponent implements OnInit {
         this.tableActiveId = null;
         this.tableActiveIdx = null;
         this.tableFormatTitle = "";
+        this.oldTableFormatTitle = "";
         this.columnFilterList = [];
         this.rowFilterList = [];
     }  // Ends: initializeTableDetails()
