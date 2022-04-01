@@ -85,7 +85,6 @@ export class AddEmployeeServiceAdapter {
          })
          .getObject({ employee_app: 'EmployeePermission' });
 
-         console.log("loggedInEmployeePermission: ", loggedInEmployeePermission);
 
          if (loggedInEmployeePermission) {
              // Extracting Delegation Permission Dict for Logged in Employee ENDS
