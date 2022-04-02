@@ -116,7 +116,7 @@ export class User {
     // 5. when role has changes
     initializeTask(): void {
         let urlPath = window.location.pathname;
-        const [, modulePath, taskPath] = urlPath.split('/');
+        const [, , modulePath, taskPath] = urlPath.split('/');
         let urlParams = new URLSearchParams(window.location.search);
         let module: any;
         let task: any;

@@ -14,7 +14,7 @@ export class CommonFunctions {
 
     static getModuleTaskPaths() {
         let routePathList = location.pathname.split('/').slice(1);
-        return { modulePath: routePathList[0], taskPath: routePathList[1] };
+        return { modulePath: routePathList[1], taskPath: routePathList[2] };
     }
 
     static async createRecord(employeeId, moduleName, taskName, moduleList, actionString) {

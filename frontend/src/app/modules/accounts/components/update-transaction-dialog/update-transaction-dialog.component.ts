@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PricingComponent } from 'app/frontpage/pricing/pricing.component';
 import { CommonFunctions } from './../../../../classes/common-functions';
 
 @Component({
