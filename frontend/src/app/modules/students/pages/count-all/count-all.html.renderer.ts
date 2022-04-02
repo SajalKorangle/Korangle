@@ -14,7 +14,6 @@ export class CountAllHtmlRenderer {
 
     /* Open Existing Table */
     tableOpenClicked(table, idx): void {
-        console.log("Table: ", table);
         this.vm.isTableEditing = true;
         this.vm.tableActiveId = table["id"];
         this.vm.tableActiveIdx = idx;
@@ -82,7 +81,7 @@ export class CountAllHtmlRenderer {
     }  // Ends: checkTableName()
 
     /* For mobile-browser */
-    isMobile(): boolean {
+    isMobileBrowser(): boolean {
         if (window.innerWidth > 991) {
             return false;
         }
@@ -90,7 +89,7 @@ export class CountAllHtmlRenderer {
     }
 
     /* For mobile-application */
-    checkMobile(): boolean {
+    isMobileApplication(): boolean {
         return isMobile();
     }
 }

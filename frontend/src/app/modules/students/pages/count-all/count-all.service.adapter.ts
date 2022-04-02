@@ -241,7 +241,6 @@ export class CountAllServiceAdapter {
         /* Update An Object */
         const response = await new Query().updateObject({student_app: 'CountAllTable'}, tableDataObject);
         this.vm.tableList[this.vm.tableActiveIdx] = response;
-        console.log("response: ", response);
         this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableActiveIdx);
 
         if (operation == "createNew") {
