@@ -200,6 +200,7 @@ export class CountAllServiceAdapter {
         if (operation == "initializeTableDetails") {
             this.vm.initializeTableDetails();
         }
+
         if (operation == "openTable") {
             this.vm.htmlRenderer.tableOpenClicked(table, idx);
         }
@@ -211,50 +212,68 @@ export class CountAllServiceAdapter {
 
     /* Update Table */
     async updatetable(operation = "", table = null, idx = null) {
+
         this.vm.isLoading = true;
-        let tableDataObject = {};
-        tableDataObject["id"] = this.vm.tableActiveId;
 
-        if (this.vm.tableFormatTitle.toString().trim()) {
-            tableDataObject["formatName"] = this.vm.tableFormatTitle.toString().trim();
-        } else {
-            tableDataObject["formatName"] = this.vm.oldTableFormatTitle.toString().trim();
-        }
-        tableDataObject["parentSchool"] = this.vm.user.activeSchool.dbId;
+        const count_all_table_filter = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+            id: this.vm.tableActiveId,
+        };
 
-        /* Get Rows */
-        let rows = {};
-        this.vm.rowFilterList.forEach((rowFilter, index) => {
-            let name = "row" + index;
-            rows[name] = rowFilter;
-        });
-        tableDataObject["rows"] = rows;
+        const response = await new Query().filter(count_all_table_filter).getObjectList({student_app: 'CountAllTable'});
 
-        /* Get Columns */
-        let cols = {};
-        this.vm.columnFilterList.forEach((colFilter, index) => {
-            let name = "col" + index;
-            cols[name] = colFilter;
-        });
-        tableDataObject["cols"] = cols;
+        if (response.length > 0) {
+            let tableDataObject = {};
+            tableDataObject["id"] = this.vm.tableActiveId;
 
-        /* Update An Object */
-        const response = await new Query().updateObject({student_app: 'CountAllTable'}, tableDataObject);
-        this.vm.tableList[this.vm.tableActiveIdx] = response;
-        this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableActiveIdx);
-
-        if (operation == "createNew") {
-            this.vm.initializeTableDetails();
-        }
-        if (table) {
-            if (response["id"] != table["id"]) {
-                this.vm.htmlRenderer.tableOpenClicked(table, idx);
+            if (this.vm.tableFormatTitle.toString().trim()) {
+                tableDataObject["formatName"] = this.vm.tableFormatTitle.toString().trim();
+            } else {
+                tableDataObject["formatName"] = this.vm.oldTableFormatTitle.toString().trim();
             }
-        }
+            tableDataObject["parentSchool"] = this.vm.user.activeSchool.dbId;
 
-        this.vm.isTableUpdated = false;
-        this.vm.isLoading = false;
-        alert("Table updated successfully.");
+            /* Get Rows */
+            let rows = {};
+            this.vm.rowFilterList.forEach((rowFilter, index) => {
+                let name = "row" + index;
+                rows[name] = rowFilter;
+            });
+            tableDataObject["rows"] = rows;
+
+            /* Get Columns */
+            let cols = {};
+            this.vm.columnFilterList.forEach((colFilter, index) => {
+                let name = "col" + index;
+                cols[name] = colFilter;
+            });
+            tableDataObject["cols"] = cols;
+
+            /* Update An Object */
+            const response = await new Query().updateObject({student_app: 'CountAllTable'}, tableDataObject);
+            this.vm.tableList[this.vm.tableActiveIdx] = response;
+            this.vm.htmlRenderer.tableOpenClicked(response, this.vm.tableActiveIdx);
+
+            if (operation == "createNew") {
+                this.vm.initializeTableDetails();
+            }
+
+            if (table) {
+                if (response["id"] != table["id"]) {
+                    this.vm.htmlRenderer.tableOpenClicked(table, idx);
+                }
+            }
+
+            this.vm.isTableUpdated = false;
+            this.vm.isLoading = false;
+            alert("Table updated successfully.");
+        } else {
+            this.vm.initializeTableDetails();
+            let response = await new Query().filter({parentSchool: this.vm.user.activeSchool.dbId}).getObjectList({student_app: 'CountAllTable'});
+            this.vm.initializeTableList(response);
+            this.vm.isLoading = false;
+            alert("Table doesn't exist.");
+        }
     }  // Ends: updatetable()
 
     /* Delete Table */
@@ -274,13 +293,36 @@ export class CountAllServiceAdapter {
 
     /* Restore Old Table */
     async restoreOldtable(tableActiveId, tableActiveIdx, table = null, idx = null) {
+
+        const count_all_table_filter = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+            id: tableActiveId,
+        };
+
+        const response = await new Query().filter(count_all_table_filter).getObjectList({student_app: 'CountAllTable'});
+
+        if (response.length == 0) {
+            let response = await new Query().filter({parentSchool: this.vm.user.activeSchool.dbId}).getObjectList({student_app: 'CountAllTable'});
+            this.vm.initializeTableList(response);
+
+            if (table.id != tableActiveId) {
+                this.vm.htmlRenderer.tableOpenClicked(table, idx);
+            } else {
+                this.vm.initializeTableDetails();
+            }
+            return;
+        }
+
         Promise.all([
             new Query().filter({id: tableActiveId}).getObject({student_app: 'CountAllTable'}),   // 0
         ]).then(
             (value) => {
                 this.vm.tableList[tableActiveIdx] = value[0];
-                if (table) {
+
+                if (table && table.id != tableActiveId) {
                     this.vm.htmlRenderer.tableOpenClicked(table, idx);
+                } else if (table) {
+                    this.vm.htmlRenderer.tableOpenClicked(this.vm.tableList[tableActiveIdx], tableActiveIdx);
                 } else {
                     this.vm.initializeTableDetails();
                 }
