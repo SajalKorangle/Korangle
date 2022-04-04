@@ -10,9 +10,7 @@ import { environment } from '../environments/environment';
 import { NotificationService } from './services/modules/notification/notification.service';
 import { Constants } from './classes/constants';
 import { registerForNotification } from './classes/common';
-import { CommonFunctions } from './classes/common-functions';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalVideoComponent } from '@basic-components/modal-video/modal-video.component';
 import { AppHtmlRenderer } from './app.html.renderer';
 import { PaymentResponseDialogComponent } from '@basic-components/payment-response-dialog/payment-response-dialog.component';
 
@@ -31,9 +29,7 @@ export class AppComponent implements OnInit {
     constructor(
         private authenticationService: AuthenticationOldService,
         private versionCheckService: VersionCheckService,
-        private dialog: MatDialog,
-        private notificationService: NotificationService
-    ) { }
+        private dialog: MatDialog) { }
 
     ngOnInit() {
         DataStorage.getInstance().setUser(this.user);
@@ -79,31 +75,4 @@ export class AppComponent implements OnInit {
         });
     }
 
-    showTutorial(url: any) {
-        this.dialog.open(ModalVideoComponent, {
-            height: '80vh',
-            width: '80vw',
-            data: {
-                videoUrl: url,
-            },
-        });
-    }
-
-    userHasAssignTaskCapability(): boolean {
-        for (let i = 0; i < this.user.activeSchool.moduleList.length; i++) {
-            if (this.user.activeSchool.moduleList[i].path === 'employees') {
-                const cd = this.user.activeSchool.moduleList[i];
-                for (let j = 0; j < cd.taskList.length; j++) {
-                    if (cd.taskList[j].path === 'assign_task') {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    isMobile(): boolean {
-        return CommonFunctions.getInstance().isMobileMenu();
-    }
 }

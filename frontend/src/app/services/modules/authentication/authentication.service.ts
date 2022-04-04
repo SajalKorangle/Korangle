@@ -16,48 +16,11 @@ export class AuthenticationService extends ServiceObject {
         super(http_class);
     }
 
-    public generateOTPForSignup(body: any): Promise<any> {
-        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-        return this.http_class
-            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/generate-otp-for-signup', body, {
-                headers: headers,
-            })
-            .toPromise()
-            .then(
-                (response) => {
-                    return this.returnResponse(response);
-                },
-                (error) => {
-                    alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
-                    return null;
-                }
-            )
-            .catch(this.handleError);
-    }
-
-    public verifyOTPForSignup(body: any): Promise<any> {
-        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-        return this.http_class
-            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-for-signup', body, {
-                headers: headers,
-            })
-            .toPromise()
-            .then(
-                (response) => {
-                    return this.returnResponse(response);
-                },
-                (error) => {
-                    alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
-                    return null;
-                }
-            )
-            .catch(this.handleError);
-    }
-
+    // Generate OTP is common for all... to distinguish the action add a element {action:'..'} in your body
     public generateOTP(body: any): Promise<any> {
-        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        const headers = new HttpHeaders({'Content-Type': 'application/json'});
         return this.http_class
-            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/generate-otp', body, { headers: headers })
+            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/generate-otp', body, {headers: headers})
             .toPromise()
             .then(
                 (response) => {
@@ -71,10 +34,46 @@ export class AuthenticationService extends ServiceObject {
             .catch(this.handleError);
     }
 
-    public verifyOTP(body: any): Promise<any> {
+    public verifyOTPAndSignup(body: any): Promise<any> {
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http_class
-            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp', body, { headers: headers })
+            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-and-signup', body, {
+                headers: headers,
+            })
+            .toPromise()
+            .then(
+                (response) => {
+                    return this.returnResponse(response);
+                },
+                (error) => {
+                    alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+                    return null;
+                }
+            )
+            .catch(this.handleError);
+    }
+
+    public verifyOTPAndChangePassword(body: any): Promise<any> {
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.http_class
+            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-and-change-password', body, { headers: headers })
+            .toPromise()
+            .then(
+                (response) => {
+                    return this.returnResponse(response);
+                },
+                (error) => {
+                    alert('Error: Press Ctrl + F5 to update your software or Contact Admin');
+                    return null;
+                }
+            )
+            .catch(this.handleError);
+    }
+
+    public verifyOTPAndCreateSchool(body: any): Promise<any> {
+        const headers = new HttpHeaders({'Content-Type': 'application/json'});
+        return this.http_class
+            .post(environment.DJANGO_SERVER + Constants.api_version + this.module_url + '/verify-otp-and-create-school', body, {headers: headers})
             .toPromise()
             .then(
                 (response) => {

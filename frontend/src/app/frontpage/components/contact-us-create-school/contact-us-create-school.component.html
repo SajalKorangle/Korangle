@@ -1,0 +1,35 @@
+<!----- Desktop Version  starts ------>
+<div *ngIf="!isMobile()" id="desktop-version" class="background"
+     style="background-image:url(/assets/img/contact_create_desktop.png);min-height: 100vh">
+    <img src="/assets/img/korangleLogo.png" width="30" height="30"
+         class="logo" alt="korangle logo">
+    <span class="logo-name">Korangle</span>
+    <a href="https://korangle.com" class="back-button" style="float: right;right: 15%;top: 4%;">
+        Back to HomePage
+    </a>
+    <!-- This Ng template Outlet will be replaced by the component from which we are calling this component --->
+    <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
+</div>
+<!----- Desktop Version  ends ------>
+
+<!----- Mobile Version Starts------>
+<div *ngIf="isMobile()" id="mobile-version" class="background"
+     style="background-image:url(/assets/img/create_contact_mobile.png);">
+    <div class="mobile-header">
+        <img src="/assets/img/korangleLogo.png" width="30" height="30" class="mobile-logo" alt="korangle logo">
+        <span class="mobile-logo-name">Korangle</span>
+    </div>
+
+    <div class="centered-div" style="margin-bottom: 60px">
+        <div class="col-md-4">
+            <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
+        </div>
+        <a href="https://korangle.com" style="bottom: 6%;" class="back-button">Back to HomePage</a>
+    </div>
+    <div class="mobile-footer"></div>
+</div>
+<!----- Mobile Version ends------>
+
+<ng-template #contentTpl>
+    <ng-content select="content"></ng-content>
+</ng-template>
