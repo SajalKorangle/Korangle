@@ -1,40 +1,73 @@
-<div class="container-fluid" style="padding-top: 5vh; padding-bottom: 5vh; color: black; background-color: whitesmoke" id="ContactUs">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4" style="">
-                <p style="font-family: KorangleLogo; font-size: 54pt; line-height: 54pt">Korangle</p>
-                <p>
-                    www.korangle.com
-                    <br />@copyright-2020
-                    <br />
-                    <a href="../../../assets/terms-and-conditions.html" style="color: #3498db"><b><u>Terms & Conditions</u></b></a>
-                    <br />
-                    <a href="../../../assets/privacy-policy.html" style="color: #3498db"><b><u>Privacy Policy</u></b></a>
-                    <br />
-                    <a href="../../../assets/refund-and-cancellation-policy.html" style="color: #3498db"><b><u>Refunds & Cancellation Policy</u></b></a>
-                </p>
-            </div>
-            <div class="col-md-4" style="border-left: 1px solid lightgrey; border-right: 1px solid lightgrey">
-                <span style="word-spacing: 0.3em"><b>Address:</b></span>
-                <p style="">
-                    E-15 Brijnagar Colony,
-                    <br />Shujalpur Mandi, <br />Dist. - Shajapur,M.P. 465333
-                </p>
-                <b>Email:</b>
-                <p style="">korangleplus@gmail.com</p>
-            </div>
-            <div class="col-md-4" style="">
-                <div class="row" style="text-align: right">
-                    <div class="col-md-6">
-                        <p style=""><b>Sales support</b></p>
-                        +91 79741 51131
+<contact-us-create-school-component>
+    <ng-container ngProjectAs="content">
+        <div style="min-height: 100vh" id="contact">
+            <!-- Contact Us Form Starts --->
+            <mat-tab-group [color]="'warn'" *ngIf="!stateKeeper.isLoading">
+                <mat-tab label="Contact Us">
+                    <br>
+                    <span style="margin-bottom: 5px">Enter your details and we will contact you</span><br><br>
+                    <label>
+                        Mobile Number <span style="color:#f88c7c">*</span>
+                    </label>
+                    <mat-form-field appearance="outline">
+                        <input matInput placeholder="Mobile Number"
+                               [(ngModel)]="contactDetails.mobileNumber"
+                               [pattern]="validators.phoneNumber"
+                               type="text">
+                        <mat-error>Please provide correct 10 digits mobile number</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                        <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
+                            <label>First Name <span style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="First Name"
+                                       [(ngModel)]="contactDetails.firstName"
+                                       [pattern]="validators.name"
+                                       type="text">
+                                <mat-error>Please provide a valid name</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6" style="padding-left:0 !important;padding-right: 0 !important;">
+                            <label>Last Name <span
+                                    style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="Last Name"
+                                       [(ngModel)]="contactDetails.lastName"
+                                       type="text">
+                            </mat-form-field>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <p style=""><b>Technical support</b></p>
-                        +91 79999 51154
+                    <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                        <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
+                            <label>Email ID</label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="Email ID"
+                                       [(ngModel)]="contactDetails.emailId"
+                                       [pattern]="validators.email"
+                                       type="email">
+                                <mat-error>Please provide a valid email</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6" style="padding-left:0 !important;padding-right: 0 !important;">
+                            <label>School Name</label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="School Name"
+                                       [(ngModel)]="contactDetails.schoolName"
+                                       type="text">
+                            </mat-form-field>
+                        </div>
                     </div>
-                </div>
-            </div>
+                    <button type="button" class="btn" [disabled]="isSubmitDisabled()"
+                            (click)="serviceAdapter.submitDetails()">
+                        Submit
+                    </button>
+                </mat-tab>
+            </mat-tab-group>
+            <!-- Contact Us Form Ends --->
         </div>
-    </div>
-</div>
+        <ng-container *ngIf="stateKeeper.isLoading">
+            <app-loading-spinner></app-loading-spinner>
+        </ng-container>
+    </ng-container>
+</contact-us-create-school-component>

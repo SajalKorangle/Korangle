@@ -9,37 +9,36 @@ import { BasicComponentsModule } from './basic-components/basic-components.modul
 
 import { AppComponent } from './app.component';
 
-import { LoginComponent } from './authentication/login/login.component';
-import { AuthenticationComponent } from './authentication/authentication.component';
-import { ForgotPasswordComponent } from './authentication/forgot-password/forgot-password.component';
+import { ForgotPasswordComponent } from './frontpage/forgot-password/forgot-password.component';
 
 import { PrintService } from './print/print-service';
-import { FrontpageComponent } from './frontpage/frontpage.component';
-import { AboutUsComponent } from './frontpage/about-us/about-us.component';
-import { WhyKorangleComponent } from './frontpage/why-korangle/why-korangle.component';
-import { ContactUsComponent } from './frontpage/contact-us/contact-us.component';
-import { PricingComponent } from './frontpage/pricing/pricing.component';
-import { TextCarouselComponent } from './frontpage/text-carousel/text-carousel.component';
-import { WhatKorangleCanDoComponent } from './frontpage/what-korangle-can-do/what-korangle-can-do.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SignupComponent } from './authentication/signup/signup.component';
 import { DecimalPipe } from '@angular/common';
+import {ComponentsModule} from '@components/components.module';
+import {LoginSignupComponent} from './frontpage/login-signup/login-signup.component';
+import {ContactUsComponent} from './frontpage/contact-us/contact-us.component';
+import {CreateSchoolComponent} from './frontpage/create-school/create-school.component';
 import { PaymentResponseDialogComponent } from '@basic-components/payment-response-dialog/payment-response-dialog.component';
+import {NgOtpInputModule} from 'ng-otp-input';
+import {ContactUsCreateSchoolComponent} from './frontpage/components/contact-us-create-school/contact-us-create-school.component';
+import {AuthenticationComponent} from './frontpage/components/authentication/authentication.component';
+import {PageNotFoundComponent} from './frontpage/page-not-found/page-not-found.component';
+import {DashBoardComponent} from '@modules/dash-board.component';
+import {FrontpageAuthGuard} from './auth-guards/frontpage-auth-guard';
+import {DashboardAuthGuard} from './auth-guards/dashboard-auth-guard';
 
 @NgModule({
     declarations: [
         AppComponent,
-        LoginComponent,
         ForgotPasswordComponent,
-        SignupComponent,
-        AuthenticationComponent,
-        FrontpageComponent,
-        AboutUsComponent,
-        WhyKorangleComponent,
+        ForgotPasswordComponent,
+        LoginSignupComponent,
         ContactUsComponent,
-        PricingComponent,
-        TextCarouselComponent,
-        WhatKorangleCanDoComponent,
+        CreateSchoolComponent,
+        ContactUsCreateSchoolComponent,
+        AuthenticationComponent,
+        PageNotFoundComponent,
+        DashBoardComponent
     ],
     imports: [
         BasicComponentsModule,
@@ -48,11 +47,13 @@ import { PaymentResponseDialogComponent } from '@basic-components/payment-respon
         BrowserModule,
         BrowserAnimationsModule,
         ReactiveFormsModule,
+        ComponentsModule,
+        NgOtpInputModule,
         // RecaptchaModule,  // this is the recaptcha main module
     ],
     entryComponents: [PaymentResponseDialogComponent],
     exports: [],
-    providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }, PrintService, DecimalPipe],
+    providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig }, PrintService, DecimalPipe, DashboardAuthGuard, FrontpageAuthGuard],
     bootstrap: [AppComponent],
 })
 export class AppModule { }
