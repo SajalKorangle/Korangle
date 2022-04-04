@@ -1,0 +1,150 @@
+.example-card {
+    margin: 0 auto;
+    width: 40%;
+    vertical-align: middle;
+}
+
+/deep/ .mat-tab-label {
+    font-size: 18px;
+    padding: 0 !important;
+    text-align: left !important;
+    justify-content: normal !important;
+}
+
+/deep/ .mat-tab-group {
+    flex-direction: column !important;
+    align-content: center !important;
+    flex-wrap: wrap !important;
+}
+
+/deep/ .mat-tab-label-active {
+    color: #FF7131 !important;
+    opacity: 0.6 !important;
+}
+
+/deep/ .mat-tab-label {
+    color: #000000;
+}
+
+/deep/ .mat-form-field-appearance-outline .mat-form-field-outline {
+    background-color: #F9F9F9 !important;
+}
+
+.example-container .mat-form-field + .mat-form-field {
+    margin-left: 8px;
+}
+
+/deep/ .wrapper {
+    height: fit-content !important;
+}
+
+.btn {
+    padding: 9px 20px !important;
+}
+
+/deep/ .mat-form-field {
+    font-size: 12px;
+}
+
+/deep/ .otp-input {
+    font-size: 16px !important;
+    width: 35px !important;
+    height: 35px !important;
+    font-weight: bold !important;
+    background-color: #F9F9F9 !important;
+}
+
+/deep/ #desktop-version .mat-tab-header {
+    margin-top: 5%;
+}
+
+/deep/ #desktop-version #contact .mat-tab-header {
+    width: 600px;
+}
+
+.mobile-header {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(147.48deg, #0B0D17 -15.91%, #707379 97.45%);
+}
+
+.background {
+    min-height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.mobile-logo {
+    margin-top: 10px;
+    margin-left: 15px;
+    position: relative;
+}
+
+.mobile-logo-name {
+    font-weight: bold;
+    font-size: 20px;
+    color: #FF7131;
+    top: 9px;
+    margin-left: 6px;
+    position: relative;
+}
+
+.centered-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/deep/ .btn {
+    background-color: #FF7131 !important;
+}
+
+label {
+    color: black;
+}
+
+/deep/ mat-form-field {
+    width: 100%;
+}
+
+.mobile-footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background-color: #c4c4c4;
+}
+
+.logo {
+    margin-left: 15px;
+    margin-top: 15px;
+    position: absolute;
+}
+
+.logo-name {
+    font-weight: bold;
+    font-size: 23px;
+    color: #FF7131;
+    top: 18px;
+    left: 50px;
+    position: absolute;
+}
+
+.back-button {
+    color: black;
+    text-decoration: underline;
+    font-size: 16px;
+    position: absolute;
+}
+
+.back-button {
+    color: black;
+    text-decoration: underline;
+    font-size: 16px;
+    position: absolute;
+}

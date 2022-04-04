@@ -11,7 +11,8 @@ class OTP(models.Model):
     generationDateTime = models.DateTimeField(null=False, auto_now_add=True, verbose_name='generationDateTime')
     ACTION = (
         ( 'SIGN UP', 'SIGN UP' ),
-        ( 'FORGOT PASSWORD', 'FORGOT PASSWORD' )
+        ( 'FORGOT PASSWORD', 'FORGOT PASSWORD' ),
+        ( 'CREATE SCHOOL', 'CREATE SCHOOL' )
     )
     action = models.CharField(max_length=20, choices=ACTION, null=True)
 
