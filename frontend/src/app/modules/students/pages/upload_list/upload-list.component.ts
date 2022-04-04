@@ -109,7 +109,7 @@ const SECTION_VALUES = [
 ];
 
 // Admission Session Values
-const ADMISSION_SESSION_VALUES = ['Admission Session Values', 'Session 2017-18', 'Session 2018-19', 'Session 2019-20'];
+const ADMISSION_SESSION_VALUES = ['Admission Session Values', 'Session 2017-18', 'Session 2018-19', 'Session 2019-20', 'Session 2020-21', 'Session 2021-22', 'Session 2022-23'];
 
 // Gender Values
 const GENDER_VALUES = ['Gender Values', 'Male', 'Female', 'Other'];

@@ -46,7 +46,7 @@ export class VersionCheckService {
                     this.currentHash = hash;*/
                     const computerLastUpdation = response.computerLastUpdation.toString();
                     if (parseInt(this.lastUpdation) < parseInt(computerLastUpdation)) {
-                        location.assign('www.korangle.com');
+                        location.assign('app.korangle.com');
                         location.reload(true);
                     }
                     this.lastUpdation = computerLastUpdation;
