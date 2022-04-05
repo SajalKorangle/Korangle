@@ -24,6 +24,8 @@ export class AddEmployeeComponent implements OnInit {
     height = [];
     showToolTip = [];
 
+    assignTaskPermission: boolean = true;
+
     newEmployee: any;
     newEmployeeSessionDetail: any;
 
