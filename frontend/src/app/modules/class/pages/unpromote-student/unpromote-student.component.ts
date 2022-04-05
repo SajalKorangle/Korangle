@@ -21,6 +21,7 @@ export class UnpromoteStudentComponent implements OnInit {
     selectedStudentDiscountList = [];
     selectedStudentDeleteDisabledReason = {};
     tcList: Array<TransferCertificateNew> = [];
+    sessionList = [];
 
     // Data from Parent Student Filter
     classList = [];
