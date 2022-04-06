@@ -23,10 +23,7 @@ class DeviceWhitelistCheck:
                 jwtEntry[0].save()
                 response = self.get_response(request)
             else :
-                #return get_error_response("yoo!")
                 return JsonResponse({'token_revoked':True, 'message':'Permission Denied, login again to access the account'})
-                #return HttpResponseForbidden()
-                #return JsonResponse({'response': { 'status':'fail', 'message':"Permission Denied, login again to access the account"}})
         else :
             response = self.get_response(request)
 
