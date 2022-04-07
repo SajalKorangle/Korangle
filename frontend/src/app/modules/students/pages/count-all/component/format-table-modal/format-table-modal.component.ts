@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { DataStorage } from '@classes/data-storage';
 
 @Component({
     selector: 'app-format-table-modal',
@@ -7,6 +8,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
     styleUrls: ['./format-table-modal.component.css']
 })
 export class FormatTableModalComponent implements OnInit {
+    user: any;
     name: string = "";
     tableList: any = [];
     isUnique: boolean = true;
@@ -19,7 +21,9 @@ export class FormatTableModalComponent implements OnInit {
         this.tableList = data.tableList;
     }
 
-    ngOnInit() { }
+    ngOnInit() {
+        this.user = DataStorage.getInstance().getUser();
+    }
 
     /* Check Table Name Uniqueness */
     checkTableName() {

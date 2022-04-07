@@ -23,6 +23,11 @@
     font-weight: 500;
     font-size: 12px;
 }
+
+.save-btn {
+    text-transform: capitalize !important;
+    padding: 7px 17px;
+}
 /* Ends: Bottom Btns */
 
 /* Starts: Media Query */
