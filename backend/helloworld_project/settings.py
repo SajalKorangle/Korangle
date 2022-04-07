@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'errors_app',
     'tc_app',
     'online_classes_app',
+    'contact_app',
     'payment_app',
     'activity_record_app',
 

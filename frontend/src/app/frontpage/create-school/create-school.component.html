@@ -1,0 +1,154 @@
+<contact-us-create-school-component>
+    <ng-container ngProjectAs="content">
+        <mat-tab-group [color]="'warn'" *ngIf="!stateKeeper.isLoading">
+            <!--- CREATE SCHOOL --->
+            <mat-tab label="Create School"><br>
+                <form>
+                    <label>Mobile Number <span style="color:#f88c7c">*</span></label><br>
+                    <mat-form-field appearance="outline">
+                        <input matInput placeholder="Mobile Number"
+                               [(ngModel)]="userDetails.mobileNumber"
+                               [pattern]="validators.phoneNumber"
+                               maxlength="10"
+                               name="mobileNumber"
+                               type="text">
+                        <mat-error>Please provide correct 10 digits mobile number</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <span>An OTP will be sent For verification </span>
+                    <button type="button" class="btn btn-primary" [disabled]="isSendOTPDisabled()"
+                            (click)="serviceAdapter.submitCaptcha()">
+                        {{getOTPButtonText()}}
+                    </button>
+                    <mat-icon *ngIf="otpSent" style="color: green">done</mat-icon>
+                    <br> <br>
+                    <label>OTP <span style="color:#f88c7c">*</span></label><br>
+                    <ng-otp-input (onInputChange)="otp = $event"
+                                  [config]="{length:6,allowNumbersOnly:true}"></ng-otp-input>
+                    <br>
+                    <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                        <div class="col-md-4" style="padding-left:0 !important;padding-right: 15px !important;">
+                            <label>First Name <span style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="First Name"
+                                       [(ngModel)]="userDetails.firstName"
+                                       [disabled]="userAlreadyExists"
+                                       name="firstName">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4" style="padding-left:0 !important;padding-right: 15px !important;">
+                            <label>Last Name <span style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="Last Name"
+                                       [(ngModel)]="userDetails.lastName"
+                                       [disabled]="userAlreadyExists"
+                                       name="lastName">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4" style="padding-left:0 !important;padding-right: 0 !important;">
+                            <label>Email ID</label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="Email ID"
+                                       [(ngModel)]="userDetails.emailId"
+                                       [pattern]="validators.email"
+                                       [disabled]="userAlreadyExists"
+                                       name="email"
+                                       type="email">
+                                <mat-error>Please provide a valid email address</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div *ngIf="otpSent" class="row"
+                         style="margin-right: 0 !important;margin-left: 0 !important;">
+                        <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
+                            <label>Password<span
+                                    style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="Password"
+                                       [(ngModel)]="userDetails.password"
+                                       name="password"
+                                       autocomplete="off"
+                                       [pattern]="validators.password"
+                                       type="{{ passwordVisibility ? 'text' : 'password' }}"
+                                >
+                                <mat-icon matSuffix style="cursor: pointer" class="material-icons"
+                                          (click)="passwordVisibility = !passwordVisibility">{{
+                                    getVisibilityMode(passwordVisibility)
+                                    }}</mat-icon>
+                                <mat-error>Provide a password of atleast 8 characters</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="!userAlreadyExists" class="col-md-6"
+                             style="padding-left:0 !important;padding-right: 15px !important;">
+                            <label>Confirm Password
+                            </label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="Confirm Password"
+                                       [(ngModel)]="userDetails.confirmPassword"
+                                       [pattern]="validators.password"
+                                       name="confirmPassword"
+                                       autocomplete="off"
+                                       type="{{ confirmPasswordVisibility ? 'text' : 'password' }}"
+                                >
+                                <mat-icon matSuffix style="cursor: pointer" class="material-icons"
+                                          (click)="confirmPasswordVisibility = !confirmPasswordVisibility">{{
+                                    getVisibilityMode(confirmPasswordVisibility)
+                                    }}</mat-icon>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                        <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
+                            <label>Full Name of School <span
+                                    style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="Full School Name"
+                                       [(ngModel)]="schoolDetails.fullName"
+                                       name="schoolPrintName">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6" style="padding-left:0 !important;padding-right: 15px !important;">
+                            <label>Name
+                                <span>( in short less than 15 Characters )</span>
+                                <span style="color:#f88c7c">*</span>
+                            </label><br>
+                            <mat-form-field appearance="outline">
+                                <input matInput placeholder="School Name"
+                                       [(ngModel)]="schoolDetails.shortName"
+                                       maxlength="15"
+                                       name="schoolShortName">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-right: 0 !important;margin-left: 0 !important;">
+                        <div class="col-md-4" style="padding-left:0 !important;padding-right: 15px !important;">
+                            <label>Medium<span
+                                    style="color:#f88c7c">*</span></label><br>
+                            <mat-form-field appearance="outline">
+                                <mat-select placeholder="Medium" [(ngModel)]="schoolDetails.medium" name="medium">
+                                    <mat-option *ngFor="let medium of mediumList" [value]="medium">
+                                        {{ medium }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <label>Address</label><br>
+                    <mat-form-field appearance="outline">
+                        <input matInput placeholder="Address"
+                               [(ngModel)]="schoolDetails.address"
+                               name="address">
+                    </mat-form-field>
+                    <button type="button" class="btn" [disabled]="isCreateDisabled()"
+                            (click)="serviceAdapter.createSchool()">
+                        Create School
+                    </button>
+                </form>
+            </mat-tab>
+        </mat-tab-group>
+
+        <ng-container *ngIf="stateKeeper.isLoading">
+            <app-loading-spinner [user]="user"></app-loading-spinner>
+        </ng-container>
+    </ng-container>
+</contact-us-create-school-component>
