@@ -4,7 +4,6 @@ import { ComponentsModule } from '../../components/components.module';
 import { ComplaintsComponent } from './complaints.component';
 import { ComplaintsRoutingModule } from './complaints.routing';
 import { PrintCountAllTableComplaintsComponent } from './print/print-count-all-table-complaints/print-count-all-table-complaints.component';
-import { ImagePdfPreviewDialogComponent } from "../../components/image-pdf-preview-dialog/image-pdf-preview-dialog.component";
 
 @NgModule({
     declarations: [
@@ -13,8 +12,8 @@ import { ImagePdfPreviewDialogComponent } from "../../components/image-pdf-previ
     ],
 
     imports: [ComponentsModule, ComplaintsRoutingModule],
-    exports: [ImagePdfPreviewDialogComponent],
-    entryComponents: [ImagePdfPreviewDialogComponent],
+    exports: [],
+    entryComponents: [],
     providers: [],
     bootstrap: [ComplaintsComponent],
 })

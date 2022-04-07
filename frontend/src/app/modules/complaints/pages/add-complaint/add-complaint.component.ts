@@ -27,8 +27,6 @@ export class AddComplaintComponent implements OnInit {
     isStudentListLoading: boolean = false;
 
     selectedStudent: any = {};
-    studentName: string = "";
-    fatherName: string = "";
     comment: string = "";
     complaintTitle: string = "";
     complaintTypeName: string = "Select Complaint Type";
@@ -56,14 +54,11 @@ export class AddComplaintComponent implements OnInit {
     /* Initialize Selected Student Data */
     initializeStudentData(student) {
         this.selectedStudent = student;
-        this.studentName = this.selectedStudent.name;
-        this.fatherName = this.selectedStudent.fathersName;
     }  // Ends: initializeStudentData()
 
     /* Initialize Complaint Data */
     initializeComplaintData() {
         this.selectedStudent = {};
-        this.fatherName = "";
         this.comment = "";
         this.complaintTitle = "";
         this.complaintTypeName = "Select Complaint Type";

@@ -5,7 +5,6 @@ import { DataStorage } from '../../classes/data-storage';
     template: '<router-outlet></router-outlet>',
 })
 export class ComplaintsComponent implements OnInit {
-    user: any;
 
     constructor() {}
 

@@ -13,7 +13,7 @@ export class ShowComplaintListModalHtmlRenderer {
     }  // Ends: initializeRenderer()
 
     /* Get Student Name */
-    getStudent(studentId) {
+    getStudentName(studentId) {
         let studentName = "Not Selected";
 
         this.vm.studentList.forEach((student) => {
@@ -22,7 +22,7 @@ export class ShowComplaintListModalHtmlRenderer {
             }
         });
         return studentName;
-    }  // Ends: getStudent()
+    }  // Ends: getStudentName()
 
     /* Get Complaint Type Name */
     getComplaintType(complaintTypeId) {

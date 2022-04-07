@@ -18,7 +18,7 @@
         <div class="common-section" style="margin-bottom: 20px;">
             <span class="text-{{ user.activeSchool.secondaryThemeColor }} header">Student’s Name : </span>
             <div>
-                {{ studentName }}
+                {{ selectedStudent.name }}
             </div>
         </div>
         <br *ngIf="htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()"/>
@@ -28,7 +28,7 @@
         <div class="common-section">
             <span class="text-{{ user.activeSchool.secondaryThemeColor }} header">Father’s Name : </span>
             <div>
-                {{ fatherName }}
+                {{ selectedStudent.fathersName }}
             </div>
         </div>
         <br *ngIf="htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()"/>
