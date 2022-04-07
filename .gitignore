@@ -25,6 +25,7 @@ frontend/src/coverage/*.json
 frontend/copytoserver.sh
 frontend/copytostagingserver.sh
 frontend/tests/karma/dummy.spec.ts
+backend/prod_postgres.dump
 backend/*db.sqlite3*
 *.pyc
 *.swp
