@@ -13,7 +13,8 @@ export class FilterModalComponent implements OnInit {
     filter: any;
 
     name: string = "";
-    isEditing: boolean;
+    isEditing: boolean = false;
+    isNameProvided: boolean = true;
 
     /* Details of Start Date */
     startDateType: string = "Select Start Date";
@@ -36,7 +37,7 @@ export class FilterModalComponent implements OnInit {
         this.statusList = data.statusList;
 
         /* Initialize Default Value of Filters */
-        if (data.filter) {
+        if (data["filter"]) {
             this.isEditing = true;
             this.filter = data.filter;
             this.name = this.filter["name"];
@@ -157,9 +158,11 @@ export class FilterModalComponent implements OnInit {
     /* Apply Button Clicked */
     applyClick(): void {
         if (!this.name.toString().trim()) {
+            this.isNameProvided = false;
             alert("Please enter the name.");
             return;
         }
+        this.isNameProvided = true;
 
         let filtersData = {};
         filtersData["name"] = this.name.toString().trim();

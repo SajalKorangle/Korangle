@@ -61,6 +61,6 @@ export class FormatTableModalComponent implements OnInit {
             return;
         }
 
-        this.dialogRef.close({name: this.name});
+        this.dialogRef.close({name: this.name.toString().trim()});
     }  // Ends: saveClick()
 }

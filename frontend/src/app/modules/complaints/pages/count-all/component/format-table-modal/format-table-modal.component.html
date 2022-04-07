@@ -7,7 +7,7 @@
     <!-- Starts: Format Name -->
     <br /><b>Format Name - </b>
     <mat-form-field class="inputField" style="margin-left: 10%;">
-        <input matInput type="text" [ngModel]="name" (ngModelChange)="name = $event; checkTableName()" required />
+        <input matInput type="text" placeholder="Table Name" [ngModel]="name" (ngModelChange)="name = $event; checkTableName()" required />
     </mat-form-field>
     <p *ngIf="!isUnique" style="color: red;">Table name should be unique.</p>
     <!-- Ends: Format Name -->
@@ -29,7 +29,7 @@
         <button
             type="button"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }} save-btn"
-            matTooltip="Save"
+            matTooltip="Save Table Name"
             tooltip-position="left"
             (click) = "saveClick()"
             [disabled]="!name.toString().trim() || !isUnique"

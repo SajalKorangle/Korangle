@@ -4,13 +4,12 @@
     <mat-form-field class="inputField" style="margin-left: 10%;">
         <input matInput required type="text" [(ngModel)]="name" />
     </mat-form-field>
-    <br />
-    <br />
+    <p *ngIf="!isNameProvided && !name" style="color: red;">Filter name is necessary.</p>
     <!-- Ends: Name Field -->
 
     <!-- Starts: Time Span Section -->
     <div class="time-span-section">
-        <b>Time Span</b><br /><br *ngIf="!isMobileBrowser() && !isMobileApplication()"/>
+        <br /><br /><b>Time Span</b><br /><br *ngIf="!isMobileBrowser() && !isMobileApplication()"/>
 
         <!-- Starts: Start Date -- Time Span Sub-Section -->
         <div class="time-span-sub-section">

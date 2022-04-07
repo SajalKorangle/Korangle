@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 
 import { MatDialog } from '@angular/material';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonFunctions } from "../../../../classes/common-functions";
 
 import { ExcelService } from '../../../../excel/excel-service';
@@ -131,6 +131,7 @@ export class CountAllComponent implements OnInit {
         this.tableActiveId = null;
         this.tableActiveIdx = null;
         this.tableFormatTitle = "";
+        this.oldTableFormatTitle = "";
         this.columnFilterList = [];
         this.rowFilterList = [];
     }  // Ends: initializeTableDetails()

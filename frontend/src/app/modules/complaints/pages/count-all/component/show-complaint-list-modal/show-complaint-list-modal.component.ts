@@ -26,7 +26,6 @@ export class ShowComplaintListModalComponent implements OnInit {
         this.statusList = data.statusList;
         this.complaintTypeList = data.complaintTypeList;
         this.studentList = data.studentList;
-        console.log("List: ", this.complaintList);
     }
 
     ngOnInit() {
