@@ -1,16 +1,37 @@
+.card-content {
+    padding: 2rem;
+    /* min-height: 75vh; */
+}
+
+/* Starts: Generated Tables List */
 .table-List {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+}
+
+.print-download-button {
+    display: flex;
+    align-items: center;
+    margin-right: 3rem;
+}
+
+.change-table-name {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .delete-icon {
     color: red;
     cursor: pointer;
+    margin-right: 3rem;
 }
+/* Ends: Generated Tables List */
 
 /* Starts: Table Section */
 .example-viewport {
-    height: 70vh;
+    height: 50vh;
     width: 100%;
 }
 
