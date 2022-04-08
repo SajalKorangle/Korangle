@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 import { MatDialog } from '@angular/material';
 
-import { AssignEmployeeComponent } from '@modules/complaints/pages/manage-complaints/component/assign-employee/assign-employee.component';
+import { AssignEmployeeModalComponent } from '@modules/complaints/pages/manage-complaints/component/assign-employee-modal/assign-employee-modal.component';
 import { ManageComplaintsServiceAdapter } from './manage-complaints.service.adapter';
 import { ManageComplaintsHtmlRenderer } from './manage-complaints.html.renderer';
 import { DeleteTableModalComponent } from '@modules/complaints/component/delete-table-modal/delete-table-modal.component';
@@ -412,7 +412,7 @@ export class ManageComplaintsComponent implements OnInit {
     /* Open Filter Modal */
     openAssignEmployeeDialog(complaint, idx): void {
         clearInterval(this.progressInterval);
-        const dialogRef = this.dialog.open(AssignEmployeeComponent, {
+        const dialogRef = this.dialog.open(AssignEmployeeModalComponent, {
             data: {
                 employeeList: CommonFunctions.getInstance().deepCopy(this.employeeList),
                 openedComplaint: CommonFunctions.getInstance().deepCopy(complaint),

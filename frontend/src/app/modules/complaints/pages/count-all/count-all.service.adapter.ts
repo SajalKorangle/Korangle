@@ -209,13 +209,16 @@ export class CountAllServiceAdapter {
     /* Restore Old Table */
     async restoreOldtable(tableActiveId, tableActiveIdx, table = null, idx = null) {
 
+        /* Starts: Check table exist in the database or not. */
         const count_all_complaints_filter = {
             parentSchool: this.vm.user.activeSchool.dbId,
             id: tableActiveId,
         };
 
         const response = await new Query().filter(count_all_complaints_filter).getObjectList({complaints_app: 'CountAllComplaints'});
+        /* Ends: Check table exist in the database or not. */
 
+        /* If table does not exist, fetch all available tables and update the tableList. */
         if (response.length == 0) {
             let response = await new Query().filter({parentSchool: this.vm.user.activeSchool.dbId}).getObjectList({complaints_app: 'CountAllComplaints'});
             this.vm.tableList = response;
@@ -228,6 +231,7 @@ export class CountAllServiceAdapter {
             return;
         }
 
+        /* If table exist, fetch old table. */
         Promise.all([
             new Query().filter({id: tableActiveId}).getObject({complaints_app: 'CountAllComplaints'}),   // 0
         ]).then(

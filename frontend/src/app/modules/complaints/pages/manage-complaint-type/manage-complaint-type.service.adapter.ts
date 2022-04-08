@@ -229,7 +229,7 @@ export class ManageComplaintTypeServiceAdapter {
         let n = this.vm.applicableStatusList.length, i = 0;
         let m = this.vm.applicableStatusTempList.length, j = 0;
 
-            /* Starts: Algoritham - Merge 2 arrays */
+            /* Starts: Algorithm - Merge 2 arrays */
         while (i < n && j < m) {
             if (this.vm.applicableStatusList[i].id != this.vm.applicableStatusTempList[j].id) {
                 if (this.vm.applicableStatusList[i].id > this.vm.applicableStatusTempList[j].id) {   //  If current status is not in the Assigned statusList, delete it.
@@ -266,7 +266,7 @@ export class ManageComplaintTypeServiceAdapter {
             deleteStatusComplaintList.push(statusComplaintTypeObject);
             j++;
         }
-            /* Ends: Algoritham - Merge 2 arrays */
+            /* Ends: Algorithm - Merge 2 arrays */
 
             /* Add Status-ComplaintType */
         if (createStatusComplaintList.length) {
@@ -297,7 +297,7 @@ export class ManageComplaintTypeServiceAdapter {
         n = selectedEmployeeList.length, i = 0;
         m = this.vm.applicableEmployeeList.length, j = 0;
 
-            /* Starts: Algoritham - Merge 2 arrays */
+            /* Starts: Algorithm - Merge 2 arrays */
         while (i < n && j < m) {
             if (selectedEmployeeList[i].id != this.vm.applicableEmployeeList[j].id) {
                 if (selectedEmployeeList[i].id > this.vm.applicableEmployeeList[j].id) {   //  If current employee is not in the Assigned employeeList, delete it.
@@ -334,7 +334,7 @@ export class ManageComplaintTypeServiceAdapter {
             deleteEmployeeComplaintList.push(employeeComplaintTypeObject);
             j++;
         }
-            /* Ends: Algoritham - Merge 2 arrays */
+            /* Ends: Algorithm - Merge 2 arrays */
 
             /* Add Employee-ComplaintType */
         if (createEmployeeComplaintList.length) {

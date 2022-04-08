@@ -1,13 +1,13 @@
-import { AssignEmployeeComponent } from './assign-employee.component';
+import { AssignEmployeeModalComponent } from './assign-employee-modal.component';
 import { Query } from '@services/generic/query';
 
-export class AssignEmployeeServiceAdapter {
-    vm: AssignEmployeeComponent;
+export class AssignEmployeeModalServiceAdapter {
+    vm: AssignEmployeeModalComponent;
 
     constructor() { }
 
     /* Initialize Adapter */
-    initializeAdapter(vm: AssignEmployeeComponent): void {
+    initializeAdapter(vm: AssignEmployeeModalComponent): void {
         this.vm = vm;
     }  // Ends: initializeAdapter()
 

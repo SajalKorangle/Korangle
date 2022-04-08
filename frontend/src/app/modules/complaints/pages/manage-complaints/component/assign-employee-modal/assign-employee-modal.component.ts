@@ -2,16 +2,16 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
-import { AssignEmployeeServiceAdapter } from './assign-employee.service.adapter';
+import { AssignEmployeeModalServiceAdapter } from './assign-employee-modal.service.adapter';
 import { CommonFunctions } from "@classes/common-functions";
 
 
 @Component({
-    selector: 'app-assign-employee',
-    templateUrl: './assign-employee.component.html',
-    styleUrls: ['./assign-employee.component.css']
+    selector: 'app-assign-employee-modal',
+    templateUrl: './assign-employee-modal.component.html',
+    styleUrls: ['./assign-employee-modal.component.css']
 })
-export class AssignEmployeeComponent implements OnInit {
+export class AssignEmployeeModalComponent implements OnInit {
     user: any;
 
     addressToSearchString: string = ""; /* Employee Search String */
@@ -24,11 +24,11 @@ export class AssignEmployeeComponent implements OnInit {
     employeeComplaintList: any = [];
     newlyAssignedEmployeeList: any = [];
 
-    serviceAdapter: AssignEmployeeServiceAdapter;
+    serviceAdapter: AssignEmployeeModalServiceAdapter;
 
 
     constructor(
-        public dialogRef: MatDialogRef<AssignEmployeeComponent>,
+        public dialogRef: MatDialogRef<AssignEmployeeModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data,
     ) {
 
@@ -43,7 +43,7 @@ export class AssignEmployeeComponent implements OnInit {
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
 
-        this.serviceAdapter = new AssignEmployeeServiceAdapter();
+        this.serviceAdapter = new AssignEmployeeModalServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
     }
 

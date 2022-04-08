@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { ComponentsModule } from '@components/components.module';
-import { AssignEmployeeComponent } from './assign-employee/assign-employee.component';
+import { AssignEmployeeModalComponent } from './assign-employee-modal/assign-employee-modal.component';
 import { ListComplaintsComponent } from './list-complaints/list-complaints.component';
 import { OpenComplaintComponent } from './open-complaint/open-complaint.component';
 
 @NgModule({
     declarations: [
-        AssignEmployeeComponent,
+        AssignEmployeeModalComponent,
         ListComplaintsComponent,
         OpenComplaintComponent,
     ],
     imports: [ComponentsModule],
     exports: [
-        AssignEmployeeComponent,
+        AssignEmployeeModalComponent,
         ListComplaintsComponent,
         OpenComplaintComponent,
     ],
