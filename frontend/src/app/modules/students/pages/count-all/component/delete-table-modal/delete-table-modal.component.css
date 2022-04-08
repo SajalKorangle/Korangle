@@ -10,11 +10,6 @@
     float: right;
 }
 
-.bottom-btns .btn {
-    font-weight: 500;
-    font-size: 12px;
-}
-
 .cancel-btn {
     background-color: white;
     outline: none;
@@ -22,11 +17,15 @@
     text-decoration: underline;
     box-shadow: none;
     text-transform: capitalize !important;
+    font-weight: 500;
+    font-size: 12px;
 }
 
 .delete-btn {
     text-transform: capitalize !important;
     padding: 7px 17px;
+    font-weight: 500;
+    font-size: 12px;
 }
 /* Ends: Bottom Btns */
 
