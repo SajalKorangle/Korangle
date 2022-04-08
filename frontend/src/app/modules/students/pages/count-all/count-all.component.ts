@@ -9,8 +9,10 @@ import { DataStorage } from '../../../../classes/data-storage';
 import { CountAllServiceAdapter } from './count-all.service.adapter';
 import { CountAllBackendData } from './count-all.backend.data';
 import { CountAllHtmlRenderer } from './count-all.html.renderer';
-import { FilterModalComponent } from '@modules/students/component/filter-modal/filter-modal.component';
-import { FormatTableModalComponent } from '@modules/students/component/format-table-modal/format-table-modal.component';
+import { FilterModalComponent } from '@modules/students/pages/count-all/component/filter-modal/filter-modal.component';
+import { FormatTableModalComponent } from '@modules/students/pages/count-all/component/format-table-modal/format-table-modal.component';
+import { ShowStudentListModalComponent } from '@modules/students/pages/count-all/component/show-student-list-modal/show-student-list-modal.component';
+import { DeleteTableModalComponent } from '@modules/students/pages/count-all/component/delete-table-modal/delete-table-modal.component';
 
 import { MatDialog } from '@angular/material';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -29,13 +31,15 @@ export class CountAllComponent implements OnInit {
     NULL_CONSTANT = null;
 
     isTableEditing: boolean = false;
-    tableActiveId: number = 0;
-    tableActiveIdx: number = 0;
+    isTableUpdated: boolean = false;
+    tableActiveId: number = null;
+    tableActiveIdx: number = null;
 
     tableFormatTitle: string = "";     // Table Name
+    oldTableFormatTitle: string = "";     // Old Table Name
     whereToAdd: string = "";    // Row  or  Column
-    rowFilters: any = [];    // Row List
-    columnFilters: any = [];    // Column List
+    rowFilterList: any = [];    // Row List
+    columnFilterList: any = [];    // Column List
 
     tableList: any = [];
     classSectionList: any = [];
@@ -96,9 +100,6 @@ export class CountAllComponent implements OnInit {
             }
             return true;
         });
-        if (!sectionObject) {
-            console.log('Error: should have section object');
-        }
         return sectionObject;
     }  // Ends: getSectionObject()
 
@@ -114,38 +115,212 @@ export class CountAllComponent implements OnInit {
         });
     }  // Ends: initializeStudentFullProfileList()
 
-    /* Update Row Data After Column Drag */
-    updateRowFiltersAfterColumnDrag(): void {
-        for (let i = 0; i < this.rowFilters.length; i++) {
-            // initializing the result.
-            for (let j = 0; j < this.columnFilters.length; j++) {
-                this.rowFilters[i]["answer"][j] = 0;
+    /* Get the index of custom filter */
+    getFilterParameterIdx(filterValues, filter) {
+        let filterIdx = -1;
+        for (let idx = 0; idx < filterValues.length; idx++) {
+            if (filterValues[idx].name == filter.name) {
+                filterIdx = idx;
+            }
+        }
+
+        return filterIdx;
+    }  // Ends: getFilterParameterIdx()
+
+    /* Update Table Data */
+    updateTableData(tableRows, tableCols) {
+
+        let studentParameterList = this.getFilteredStudentParameterList();
+
+        /* Update the column-headers */
+        for (let i = 0; i < tableCols.length; i++) {
+
+            /* Update Custom Parameters */
+            let newStudentParameterList = [];
+            let idx1 = 0, idx2 = 0, len1 = tableCols[i].studentParameterList.length, len2 = studentParameterList.length;
+
+            /* Starts: Merge Two studentParameterList */
+            while (idx1 < len1 && idx2 < len2) {
+                if (tableCols[i].studentParameterList[idx1].id == studentParameterList[idx2].id) {
+
+                    let filterValueList = [];
+                    let studentParameter = CommonFunctions.getInstance().deepCopy(studentParameterList[idx2]);
+
+                    studentParameter.filterValues.forEach((filter) => {
+                        let filterParameterIdx = this.getFilterParameterIdx(tableCols[i].studentParameterList[idx1].filterValues, filter);
+
+                        if (filterParameterIdx == -1) {
+                            filterValueList.push(filter);
+                        } else {
+                            filterValueList.push(tableCols[i].studentParameterList[idx1].filterValues[filterParameterIdx]);
+                        }
+                    });
+
+                    studentParameter.filterValues = filterValueList;
+                    studentParameter.showNone = tableCols[i].studentParameterList[idx1].showNone;
+                    newStudentParameterList.push(studentParameter);
+                    idx1++;
+                    idx2++;
+                } else if (tableCols[i].studentParameterList[idx1].id > studentParameterList[idx2].id) {
+                    let studentParameter = CommonFunctions.getInstance().deepCopy(studentParameterList[idx2]);
+                    newStudentParameterList.push(studentParameter);
+                    idx2++;
+                } else {
+                    idx1++;
+                }
             }
 
-            // Logic:  first check student with row, and then with column.
-            this.studentFullProfileList.forEach((student) => {
-                let check = this.checkFilters(student, this.rowFilters[i]);
-                if (check) {
-                    for (let j = 0; j < this.columnFilters.length; j++) {
-                        check = this.checkFilters(student, this.columnFilters[j]);
-                        if (check) {
-                            this.rowFilters[i]["answer"][j] += 1;
-                        }
-                    }
+            while (idx2 < len2) {
+                let studentParameter = CommonFunctions.getInstance().deepCopy(studentParameterList[idx2]);
+                newStudentParameterList.push(studentParameter);
+                idx2++;
+            }
+            /* Ends: Merge Two studentParameterList */
+
+            tableCols[i].studentParameterList = newStudentParameterList;
+
+            /* Initialize category */
+            if (tableCols[i]["category"]) {
+                let category = tableCols[i]["category"];
+                let newCategory = [];
+
+                if (category.includes("SC")) {
+                    newCategory.push("SC");
                 }
-            });
+                if (category.includes("ST")) {
+                    newCategory.push("ST");
+                }
+                if (category.includes("OBC")) {
+                    newCategory.push("OBC");
+                }
+                if (category.includes("GEN") || category.includes("Gen.")) {
+                    newCategory.push("Gen.");
+                }
+                if (category.includes("NONE")) {
+                    newCategory.push("NONE");
+                }
+
+                tableCols[i]["category"] = newCategory;
+            }   //  Ends: Initialize category
         }
-    }  // Ends: updateRowFiltersAfterColumnDrag()
+
+        /* Update the rows */
+        for (let i = 0; i < tableRows.length; i++) {
+
+            /* Update Custom Parameters */
+            let newStudentParameterList = [];
+            let idx1 = 0, idx2 = 0, len1 = tableRows[i].studentParameterList.length, len2 = studentParameterList.length;
+
+            /* Starts: Merge Two studentParameterList */
+            while (idx1 < len1 && idx2 < len2) {
+                if (tableRows[i].studentParameterList[idx1].id == studentParameterList[idx2].id) {
+
+                    let filterValueList = [];
+                    let studentParameter = CommonFunctions.getInstance().deepCopy(studentParameterList[idx2]);
+
+                    studentParameter.filterValues.forEach((filter) => {
+                        let filterParameterIdx = this.getFilterParameterIdx(tableRows[i].studentParameterList[idx1].filterValues, filter);
+
+                        if (filterParameterIdx == -1) {
+                            filterValueList.push(filter);
+                        } else {
+                            filterValueList.push(tableRows[i].studentParameterList[idx1].filterValues[filterParameterIdx]);
+                        }
+                    });
+
+                    studentParameter.filterValues = filterValueList;
+                    studentParameter.showNone = tableRows[i].studentParameterList[idx1].showNone;
+                    newStudentParameterList.push(studentParameter);
+                    idx1++;
+                    idx2++;
+                } else if (tableRows[i].studentParameterList[idx1].id > studentParameterList[idx2].id) {
+                    let studentParameter = CommonFunctions.getInstance().deepCopy(studentParameterList[idx2]);
+                    newStudentParameterList.push(studentParameter);
+                    idx2++;
+                } else {
+                    idx1++;
+                }
+            }
+
+            while (idx2 < len2) {
+                let studentParameter = CommonFunctions.getInstance().deepCopy(studentParameterList[idx2]);
+                newStudentParameterList.push(studentParameter);
+                idx2++;
+            }
+            /* Starts: Merge Two studentParameterList */
+
+            tableRows[i].studentParameterList = newStudentParameterList;
+
+            /* Initialize category */
+            if (tableRows[i]["category"]) {
+                let category = tableRows[i]["category"];
+                let newCategory = [];
+
+                if (category.includes("SC")) {
+                    newCategory.push("SC");
+                }
+                if (category.includes("ST")) {
+                    newCategory.push("ST");
+                }
+                if (category.includes("OBC")) {
+                    newCategory.push("OBC");
+                }
+                if (category.includes("GEN") || category.includes("Gen.")) {
+                    newCategory.push("Gen.");
+                }
+                if (category.includes("NONE")) {
+                    newCategory.push("NONE");
+                }
+
+                tableRows[i]["category"] = newCategory;
+            }   //  Ends: Initialize category
+        }
+    }  // Ends: updateTableData()
+
+    /* Initialize Table List */
+    initializeTableList(tableList) {
+        for (let idx = 0; idx < tableList.length; idx++) {
+            let table = tableList[idx];
+            let tableRows = [];
+            let tableCols = [];
+
+            Object.entries(table["cols"]).forEach(([key, value]) => {
+                tableCols.push(value);
+            });
+
+            Object.entries(table["rows"]).forEach(([key, value]) => {
+                tableRows.push(value);
+            });
+            this.updateTableData(tableRows, tableCols);
+        }
+
+        this.tableList = tableList;
+        this.serviceAdapter.updateTableList();
+    }  // Ends: initializeTableList()
+
+    /* Initialize Table Details */
+    initializeTableDetails() {
+        this.isTableUpdated = false;
+        this.isTableEditing = false;
+        this.tableActiveId = null;
+        this.tableActiveIdx = null;
+        this.tableFormatTitle = "";
+        this.oldTableFormatTitle = "";
+        this.columnFilterList = [];
+        this.rowFilterList = [];
+    }  // Ends: initializeTableDetails()
 
     /* Will be Called After Dragging of a Row */
     dropRow(event: CdkDragDrop<string[]>): void {
-        moveItemInArray(this.rowFilters, event.previousIndex, event.currentIndex);
+        this.isTableUpdated = true;
+        moveItemInArray(this.rowFilterList, event.previousIndex, event.currentIndex);
     }
 
     /* Will be Called After Dragging of a Column */
     dropColumn(event: CdkDragDrop<string[]>): void {
-        moveItemInArray(this.columnFilters, event.previousIndex, event.currentIndex);
-        this.updateRowFiltersAfterColumnDrag();
+        this.isTableUpdated = true;
+        moveItemInArray(this.columnFilterList, event.previousIndex, event.currentIndex);
+        // this.updaterowFilterListAfterColumnDrag();
     }
 
     /* Get Value of Custom Parameter */
@@ -157,7 +332,7 @@ export class CountAllComponent implements OnInit {
         } catch {
             return this.NULL_CONSTANT;
         }
-    }
+    }  // Ends: getParameterValue()
 
     /* Check Applied set of Filters on a Student */
     checkFilters(student, filtersData): any {
@@ -175,12 +350,28 @@ export class CountAllComponent implements OnInit {
                 ? Math.floor((new Date(filtersData[filter][0]).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
                 : null;
 
-                if (age) {
-                    if (age > filtersData[filter][2] || age < filtersData[filter][1]) {
+                /* Min-Age check */
+                if (filtersData[filter][1] != null && !isNaN(filtersData[filter][1])) {
+                    if (age == null || age == undefined) {
+                        check = false;
+                        break;
+                    } else if (age < filtersData[filter][1]) {
                         check = false;
                         break;
                     }
                 }
+
+                /* Max-Age check */
+                if (filtersData[filter][2] != null && !isNaN(filtersData[filter][2])) {
+                    if (age == null || age == undefined) {
+                        check = false;
+                        break;
+                    } else if (age > filtersData[filter][2]) {
+                        check = false;
+                        break;
+                    }
+                }
+
             } else if (filter == "category") {  /* Category Check */
                 let category = student.category ? student.category : "NONE";
 
@@ -244,103 +435,41 @@ export class CountAllComponent implements OnInit {
                         }
                     }
                 }
+
+                if (!check) {
+                    break;
+                }
             }
         }
         return check;
     }  // Ends: checkFilters()
 
-    /* Get Table Date From Newly Added Row */
-    getTableDataRow(filtersData): any {
-
-        // initializing the result.
-        let totalCount = 0;
-        let answer = [];
-        for (let i = 0; i < this.columnFilters.length; i++) {
-            answer.push(0);
-        }
-
-        // Logic:  first check student with row, and then with column.
-        this.studentFullProfileList.forEach((student) => {
-            let check = this.checkFilters(student, filtersData);
-            if (check) {
-                totalCount += 1;
-                for (let i = 0; i < this.columnFilters.length; i++) {
-                    let columnFilterData = this.columnFilters[i];
-                    check = this.checkFilters(student, columnFilterData);
-                    if (check) {
-                        answer[i] += 1;
-                    }
-                }
-            }
-        });  // Ends: Logic
-
-        let returnData = {};
-        returnData["answer"] = answer;
-        returnData["totalCount"] = totalCount;
-        return returnData;
-    }  // Ends: getTableDataRow()
-
-    /* Get Table Date From Newly Added Column */
-    getTableDataColumn(filtersData): any {
-
-        // initializing the result.
-        let totalCount = 0;
-        for (let i = 0; i < this.rowFilters.length; i++) {
-            this.rowFilters[i].answer.push(0);
-        }
-
-        // Logic:  first check student with column, and then with row.
-        this.studentFullProfileList.forEach((student) => {
-            let check = this.checkFilters(student, filtersData);
-            if (check) {
-                totalCount += 1;
-                for (let i = 0; i < this.rowFilters.length; i++) {
-                    let rowFilterData = this.rowFilters[i];
-                    check = this.checkFilters(student, rowFilterData);
-                    if (check) {
-                        this.rowFilters[i].answer[this.rowFilters[i].answer.length - 1] += 1;
-                    }
-                }
-            }
-        });   // Ends: Logic
-        return totalCount;
-    }  // Ends: getTableDataColumn()
-
-    /* Get Updated Table Date */
-    getUpdatedTableDataColumn(filtersData, index): any {
-
-        // initializing the result.
-        let totalCount = 0;
-        for (let i = 0; i < this.rowFilters.length; i++) {
-            this.rowFilters[i].answer[index] = 0;
-        }
-
-        // Logic:  first check student with column, and then with row.
-        this.studentFullProfileList.forEach((student) => {
-            let check = this.checkFilters(student, filtersData);
-            if (check) {
-                totalCount += 1;
-                for (let i = 0; i < this.rowFilters.length; i++) {
-                    let rowFilterData = this.rowFilters[i];
-                    check = this.checkFilters(student, rowFilterData);
-                    if (check) {
-                        this.rowFilters[i].answer[index] += 1;
-                    }
-                }
-            }
-        });   // Ends: Logic
-        return totalCount;
-    }  // Ends: getUpdatedTableDataColumn()
-
+    /* Get Filtered Student Parameter List */
     getFilteredStudentParameterList(): any {
-        return this.studentParameterList.filter((x) => x.parameterType === 'FILTER');
-    }
+        return this.studentParameterList.filter((x) => x.parameterType === 'FILTER').sort((a, b) => a.id - b.id);
+    }  // Ends: getFilteredStudentParameterList()
+
+    /* Get Filtered Student List */
+    getFilteredStudentList(rowFilter, columnFilter) {
+        let studentList = [];
+        this.studentFullProfileList.forEach((student) => {
+            let check = this.checkFilters(student, rowFilter);
+            if (check) {
+                check = this.checkFilters(student, columnFilter);
+                if (check) {
+                    studentList.push(student);
+                }
+            }
+        });
+
+        return studentList;
+    }  // Ends: getFilteredStudentList()
 
     /* Open Filter Modal */
     openDialog(): void {
         const dialogRef = this.dialog.open(FilterModalComponent, {
             data: {
-                classSectionList: this.classSectionList,
+                classSectionList: CommonFunctions.getInstance().deepCopy(this.classSectionList),
                 studentParameterList: CommonFunctions.getInstance().deepCopy(this.getFilteredStudentParameterList()),
             }
         });
@@ -348,22 +477,13 @@ export class CountAllComponent implements OnInit {
         // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.filtersData) {
+                this.isTableUpdated = true;
                 let filtersData = data.filtersData;
                 if (this.whereToAdd === 'row') {  /* Row Filter */
-                    let returnData = this.getTableDataRow(filtersData);
-                    filtersData["answer"] = returnData.answer;
-                    filtersData["totalCount"] = returnData.totalCount;
-                    this.rowFilters.push(filtersData);
+                    this.rowFilterList.push(filtersData);
                 } else if (this.whereToAdd === 'col') {  /* Column Filter */
-                    filtersData["totalCount"] = this.getTableDataColumn(filtersData);
-                    this.columnFilters.push(filtersData);
+                    this.columnFilterList.push(filtersData);
                 }
-            } else {
-                this.classSectionList.forEach((classs) => {
-                    classs.sectionList.forEach((section) => {
-                        section.selected = false;
-                    });
-                });
             }
         });
     }  // Ends: openDialog()
@@ -372,7 +492,7 @@ export class CountAllComponent implements OnInit {
     openChangeDialog(filter): void {
         const dialogRef = this.dialog.open(FilterModalComponent, {
             data: {
-                classSectionList: this.classSectionList,
+                classSectionList: CommonFunctions.getInstance().deepCopy(this.classSectionList),
                 studentParameterList: CommonFunctions.getInstance().deepCopy(this.getFilteredStudentParameterList()),
                 filter: filter,
             }
@@ -381,65 +501,52 @@ export class CountAllComponent implements OnInit {
         // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data.filtersData) {
+                this.isTableUpdated = true;
                 let filtersData = data.filtersData;
 
                 if (filtersData["operation"] == "update") {    /* Update Filter */
                     delete filtersData["operation"];
                     if (this.whereToAdd == 'row') {    /* Update Row */
                         let index = 0;
-                        for (let i = 0; i < this.rowFilters.length; i++) {
-                            if (this.rowFilters[i]["name"] == filter["name"]) {
+                        for (let i = 0; i < this.rowFilterList.length; i++) {
+                            if (this.rowFilterList[i]["name"] == filter["name"]) {
                                 index = i;
                                 break;
                             }
                         }
-
-                        let returnData = this.getTableDataRow(filtersData);
-                        filtersData["answer"] = returnData.answer;
-                        filtersData["totalCount"] = returnData.totalCount;
-                        this.rowFilters[index] = filtersData;
+                        this.rowFilterList[index] = filtersData;
                     } else if (this.whereToAdd === 'col') {    /* Update Column */
                         let index = 0;
-                        for (let i = 0; i < this.columnFilters.length; i++) {
-                            if (this.columnFilters[i]["name"] == filter["name"]) {
+                        for (let i = 0; i < this.columnFilterList.length; i++) {
+                            if (this.columnFilterList[i]["name"] == filter["name"]) {
                                 index = i;
                                 break;
                             }
                         }
-                        filtersData["totalCount"] = this.getUpdatedTableDataColumn(filtersData, index);
-                        this.columnFilters[index] = filtersData;
+                        this.columnFilterList[index] = filtersData;
                     }
                 } else if (filtersData["operation"] == "delete") {    /* Delete Filter */
                     delete filtersData["operation"];
                     if (this.whereToAdd == 'row') {    /* Delete Row */
                         let index = 0;
-                        for (let i = 0; i < this.rowFilters.length; i++) {
-                            if (this.rowFilters[i]["name"] == filter["name"]) {
+                        for (let i = 0; i < this.rowFilterList.length; i++) {
+                            if (this.rowFilterList[i]["name"] == filter["name"]) {
                                 index = i;
                                 break;
                             }
                         }
-                        this.rowFilters.splice(index, 1);
+                        this.rowFilterList.splice(index, 1);
                     } else if (this.whereToAdd === 'col') {    /* Delete Column */
                         let index = 0;
-                        for (let i = 0; i < this.columnFilters.length; i++) {
-                            if (this.columnFilters[i]["name"] == filter["name"]) {
+                        for (let i = 0; i < this.columnFilterList.length; i++) {
+                            if (this.columnFilterList[i]["name"] == filter["name"]) {
                                 index = i;
                                 break;
                             }
                         }
-                        this.columnFilters.splice(index, 1);
-                        for (let i = 0; i < this.rowFilters.length; i++) {
-                            this.rowFilters[i]["answer"].splice(index, 1);
-                        }
+                        this.columnFilterList.splice(index, 1);
                     }
                 }
-            } else {
-                this.classSectionList.forEach((classs) => {
-                    classs.sectionList.forEach((section) => {
-                        section.selected = false;
-                    });
-                });
             }
         });   // Dialog Closed.
     }  // Ends: openChangeDialog()
@@ -448,7 +555,8 @@ export class CountAllComponent implements OnInit {
     openSaveFormatDialog(): void {
         const dialogRef = this.dialog.open(FormatTableModalComponent, {
             data: {
-                formatName: this.tableFormatTitle,
+                formatName: "",
+                tableList: this.tableList,
             }
         });
 
@@ -461,7 +569,28 @@ export class CountAllComponent implements OnInit {
         });
     }  // Ends: openSaveFormatDialog()
 
+    /* Open Table Format Name Dialog */
+    openShowStudentListDialog(rowFilter, columnFilter): void {
+        const dialogRef = this.dialog.open(ShowStudentListModalComponent, {
+            data: {
+                studentList: this.getFilteredStudentList(rowFilter, columnFilter),
+            }
+        });
+    }  // Ends: openShowStudentListDialog()
+
     updateChangesClicked(): void {
+
+        if (!this.tableFormatTitle.toString().trim()) {
+            alert("Please enter the table name.");
+            return;
+        }
+
+        if (!this.htmlRenderer.checkTableName()) {
+            alert("Table name must be unique.");
+            return;
+        }
+
+        this.isTableUpdated = false;
         this.serviceAdapter.updatetable();
     }
 
@@ -470,6 +599,7 @@ export class CountAllComponent implements OnInit {
         const dialogRef = this.dialog.open(FormatTableModalComponent, {
             data: {
                 formatName: "",
+                tableList: this.tableList,
             }
         });
 
@@ -486,8 +616,10 @@ export class CountAllComponent implements OnInit {
     getHeaderValues(): any {
         let headerValues = [];
         headerValues.push('');
-        this.columnFilters.forEach((columnFilter) => {
-            headerValues.push(columnFilter.name);
+        this.columnFilterList.forEach((columnFilter) => {
+            let filterTotalCount = this.htmlRenderer.getFilterTotalCount(columnFilter);
+            let filterName = columnFilter.name + " (" + filterTotalCount + ")";
+            headerValues.push(filterName);
         });
         return headerValues;
     }  // Ends: getHeaderValues()
@@ -495,9 +627,12 @@ export class CountAllComponent implements OnInit {
     /* Get Filter Information */
     getFilterInfo(filter: any): any {
         let filterInfo = [];
-        filterInfo.push(filter.name);
-        filter.answer.forEach((ans: number) => {
-            filterInfo.push(ans);
+
+        let filterTotalCount = this.htmlRenderer.getFilterTotalCount(filter);
+        let filterName = filter.name + " (" + filterTotalCount + ")";
+        filterInfo.push(filterName);
+        this.columnFilterList.forEach((columnFilter) => {
+            filterInfo.push(this.htmlRenderer.getIntersectionCount(filter, columnFilter));
         });
         return filterInfo;
     }  // Ends: getFilterInfo()
@@ -506,7 +641,7 @@ export class CountAllComponent implements OnInit {
     downloadList(): void {
         let template: any;
         template = [this.getHeaderValues()];
-        this.rowFilters.forEach((rowFilter) => {
+        this.rowFilterList.forEach((rowFilter) => {
             template.push(this.getFilterInfo(rowFilter));
         });
         let fileName: string = this.tableFormatTitle;
@@ -514,10 +649,10 @@ export class CountAllComponent implements OnInit {
         this.excelService.downloadFile(template, fileName);
     }  // Ends: downloadList()
 
-    printStudentList(): void {
+    printTable(): void {
         // alert('Functionality needs to be implemented once again');
         let template: any = [];
-        this.rowFilters.forEach((rowFilter) => {
+        this.rowFilterList.forEach((rowFilter) => {
             template.push(this.getFilterInfo(rowFilter));
         });
 
@@ -551,7 +686,7 @@ export class CountAllComponent implements OnInit {
     /* Get Width of 1st Column */
     getTextWidthRow(): any {
         let textContent = "+ Row";
-        this.rowFilters.forEach((row) => {
+        this.rowFilterList.forEach((row) => {
             if (row.name.length > textContent.length) {
                 textContent = row.name;
             }
@@ -560,16 +695,108 @@ export class CountAllComponent implements OnInit {
         return this.getTextWidthColumn(textContent);
     }  // Ends: getTextWidthRow()
 
-    initializeTableDetails() {
-        this.isTableEditing = false;
-        this.tableActiveId = 0;
-        this.tableActiveIdx = 0;
-        this.tableFormatTitle = "";
-        this.columnFilters = [];
-        this.rowFilters = [];
-    }
+    /* Open Delete Table Dialog */
+    openDeleteTableModal(): void {
+        const dialogRef = this.dialog.open(DeleteTableModalComponent, {
+            data: {
+                formatName: this.tableFormatTitle,
+            }
+        });
 
+        // OnClosing of Modal.
+        dialogRef.afterClosed().subscribe((data) => {
+            if (data && data["operation"] && data["operation"] == "Delete") {
+                this.deleteTable();
+            }
+        });
+    }  // Ends: openDeleteTableModal()
+
+    /* Delete Table */
     deleteTable() {
         this.serviceAdapter.deleteTable();
-    }
+        alert("Table deleted successfully.");
+    }  // Ends: deleteTable()
+
+    /* Create New Table */
+    addNewTableClicked() {
+
+        if (!this.isTableEditing && (this.rowFilterList.length + this.columnFilterList.length) > 0) {
+            let conformation = confirm("Do you want to save the current table?");
+            if (conformation) {
+                const dialogRef = this.dialog.open(FormatTableModalComponent, {
+                    data: {
+                        formatName: "",
+                        tableList: this.tableList,
+                    }
+                });
+
+                // OnClosing of Modal.
+                dialogRef.afterClosed().subscribe((data) => {
+                    if (data && data.name) {
+                        this.tableFormatTitle = data.name;
+                        this.serviceAdapter.saveTable("initializeTableDetails");
+                    }
+                });
+            } else {
+                this.initializeTableDetails();
+            }
+            this.isTableUpdated = false;
+            return;
+        }
+
+        if (this.isTableUpdated) {
+            let conformation = confirm("Do you want to update your changes?");
+            if (conformation) {
+                let operation = "createNew";
+                this.isTableUpdated = false;
+                this.serviceAdapter.updatetable(operation);
+            } else {
+                this.isTableUpdated = false;
+                this.serviceAdapter.restoreOldtable(this.tableActiveId, this.tableActiveIdx);
+            }
+        } else {
+            this.initializeTableDetails();
+        }
+    }  // Ends: addNewTableClicked()
+
+    /* Open Clicked Table */
+    openTableClicked(table, idx) {
+
+        if (!this.isTableEditing && (this.rowFilterList.length + this.columnFilterList.length) > 0) {
+            let conformation = confirm("Do you want to save the current table?");
+            if (conformation) {
+                const dialogRef = this.dialog.open(FormatTableModalComponent, {
+                    data: {
+                        formatName: "",
+                        tableList: this.tableList,
+                    }
+                });
+
+                // OnClosing of Modal.
+                dialogRef.afterClosed().subscribe((data) => {
+                    if (data && data.name) {
+                        this.tableFormatTitle = data.name;
+                        this.serviceAdapter.saveTable("openTable", table, idx);
+                    }
+                });
+            } else {
+                this.htmlRenderer.tableOpenClicked(table, idx);
+            }
+            this.isTableUpdated = false;
+            return;
+        }
+
+        if (this.isTableUpdated) {
+            let conformation = confirm("Do you want to update your changes?");
+            if (conformation) {
+                let operation = "";
+                this.serviceAdapter.updatetable(operation, table, idx);
+            } else {
+                this.serviceAdapter.restoreOldtable(this.tableActiveId, this.tableActiveIdx, table, idx);
+            }
+        } else {
+            this.htmlRenderer.tableOpenClicked(table, idx);
+        }
+        this.isTableUpdated = false;
+    }  // Ends: openTableClicked()
 }

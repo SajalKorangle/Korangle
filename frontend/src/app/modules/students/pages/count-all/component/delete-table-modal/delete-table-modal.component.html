@@ -1,12 +1,11 @@
 <mat-dialog-content class="format-table-modal-container">
-    <h4><b>Save Table Format</b></h4>
+    <!-- Starts: Header -->
+    <h4><b>Confirm Deletion</b></h4>
     <div style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
+    <!-- Ends: Header -->
 
     <!-- Starts: Format Name -->
-    <br /><b>Format Name - </b>
-    <mat-form-field class="inputField" style="margin-left: 10%;">
-        <input matInput type="text" [(ngModel)]="name" required />
-    </mat-form-field>
+    <br /><b>Delete Report Format - <span class="text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-left: 2rem;">{{ name }}</span></b>
     <!-- Ends: Format Name -->
 </mat-dialog-content>
 
@@ -15,23 +14,21 @@
     <div class="bottom-btns">
         <button
             type="button"
-            class="btn delete-btn"
-            style="padding: 7px 17px;"
-            matTooltip="Cancle"
+            class="text-{{ user.activeSchool.secondaryThemeColor }} cancel-btn"
+            matTooltip="Cancel"
             tooltip-position="left"
             (click) = "cancelClick()"
         >
-            Delete
+            Cancel
         </button>
         <button
             type="button"
-            class="btn btn-warning"
-            style="padding: 7px 17px;"
-            matTooltip="Save Table"
+            class="btn btn-danger delete-btn"
+            matTooltip="Delete Table"
             tooltip-position="left"
-            (click) = "saveClick()"
+            (click) = "deleteClick()"
         >
-            Save
+            delete
         </button>
     </div>
 </ng-container>
