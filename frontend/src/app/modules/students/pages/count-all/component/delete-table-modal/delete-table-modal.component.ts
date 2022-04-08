@@ -22,32 +22,6 @@ export class DeleteTableModalComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
     }
 
-    getCancelBtnStyle() {
-        let style = {};
-
-        let color = "";
-        if (this.user.activeSchool.secondaryThemeColor == "primary") {
-            color = "#1976D2";
-        } else if (this.user.activeSchool.secondaryThemeColor == "warning") {
-            color = "#FFC107";
-        } else if (this.user.activeSchool.secondaryThemeColor == "secondary") {
-            color = "#424242";
-        } else if (this.user.activeSchool.secondaryThemeColor == "accent") {
-            color = "#82B1FF";
-        } else if (this.user.activeSchool.secondaryThemeColor == "error") {
-            color = "#FF5252";
-        } else if (this.user.activeSchool.secondaryThemeColor == "info") {
-            color = "#2196F3";
-        } else if (this.user.activeSchool.secondaryThemeColor == "success") {
-            color = "#4CAF50";
-        }
-
-        style["padding"] = "7px 17px";
-        style["color"] = color;
-        style["font-weight"] = "500";
-        return style;
-    }
-
     /* Cancel Clicked */
     cancelClick(): void {
         this.dialogRef.close();

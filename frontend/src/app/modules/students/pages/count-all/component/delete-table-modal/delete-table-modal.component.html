@@ -14,8 +14,7 @@
     <div class="bottom-btns">
         <button
             type="button"
-            class="btn cancel-btn"
-            [ngStyle]="getCancelBtnStyle()"
+            class="text-{{ user.activeSchool.secondaryThemeColor }} cancel-btn"
             matTooltip="Cancel"
             tooltip-position="left"
             (click) = "cancelClick()"
