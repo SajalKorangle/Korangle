@@ -12,48 +12,6 @@ export class OpenComplaintHtmlRenderer {
         this.vm = vm;
     }  // Ends: initializeRenderer()
 
-    /* Get Primary Color */
-    getPrimaryColor() {
-        return 'rgba(76, 175, 80, 0.2)';
-    }  // Ends: getPrimaryColor()
-
-    /* Get Secondary Color */
-    getSecondaryColor() {
-        let bgColor = "1976D2";
-        switch (this.vm.user.activeSchool.secondaryThemeColor) {
-            case 'primary':
-                bgColor = '1976D2';
-                break;
-
-            case 'secondary':
-                bgColor = '424242';
-                break;
-
-            case 'accent':
-                bgColor = '82B1FF';
-                break;
-
-            case 'error':
-                bgColor = 'FF5252';
-                break;
-
-            case 'info':
-                bgColor = '2196F3';
-                break;
-
-            case 'success':
-                bgColor = '4CAF50';
-                break;
-
-            case 'warning':
-                bgColor = 'FFC107';
-                break;
-        }
-
-        bgColor = '#' + bgColor;
-        return bgColor;
-    }  // Ends: getSecondaryColor()
-
     /* Get Date-Time Info (hh:mm, dd-mm-yy) */
     getDateTimeInfo(createdAt) {
         let newDate: any = new Date(createdAt);
@@ -149,21 +107,6 @@ export class OpenComplaintHtmlRenderer {
         }
         return comment.parentStudent.fathersName;
     }  // Ends: getAuthorComment()
-
-    /* Get Assigned Employee Name List */
-    getAssignedEmployeeName(employeeComplaintList) {
-        let employeeName = "";
-        let length = employeeComplaintList.length;
-
-        for (let i = 0; i < length; i++) {
-            employeeName += employeeComplaintList[i].name;
-            if (i < length - 1) {
-                employeeName += ", ";
-            }
-        }
-
-        return employeeName;
-    }  // Ends: getAssignedEmployeeName()
 
     /* For mobile-browser */
     isMobileBrowser(): boolean {

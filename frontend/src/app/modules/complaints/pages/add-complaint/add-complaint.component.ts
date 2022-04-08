@@ -49,8 +49,6 @@ export class AddComplaintComponent implements OnInit {
         this.htmlRenderer.initializeRenderer(this);
     }
 
-    handleDetailsFromParentStudentFilter(value): void { }
-
     /* Initialize Selected Student Data */
     initializeStudentData(student) {
         this.selectedStudent = student;

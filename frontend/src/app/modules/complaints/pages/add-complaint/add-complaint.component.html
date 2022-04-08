@@ -2,7 +2,6 @@
 
     <parent-student-filter
         [user]="user"
-        (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
         (onStudentListSelected)="initializeStudentData($event[0][0])"
         (onStudentListLoading)="isStudentListLoading = $event"
         [selectedFilterType]="'Student'"

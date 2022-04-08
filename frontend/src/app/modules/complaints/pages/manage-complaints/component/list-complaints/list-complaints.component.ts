@@ -26,6 +26,7 @@ export class ListComplaintsComponent implements OnInit {
     @Output() openComplaint = new EventEmitter<any>();
     @Output() deleteComplaint = new EventEmitter<any>();
     @Output() startNewProgressBar = new EventEmitter<any>();
+    @Output() loadMoreClick = new EventEmitter<any>();
 
 
     searchString: string = "";
@@ -143,4 +144,9 @@ export class ListComplaintsComponent implements OnInit {
 
         this.deleteComplaint.emit(response);
     }  // Ends: triggerDeleteComplaint()
+
+    /* Load More Clicked */
+    triggerLoadMoreClicked() {
+        this.loadMoreClick.emit();
+    }  // Ends: triggerLoadMoreClicked()
 }

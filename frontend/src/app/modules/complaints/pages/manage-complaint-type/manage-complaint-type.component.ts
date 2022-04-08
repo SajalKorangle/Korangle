@@ -123,28 +123,6 @@ export class ManageComplaintTypeComponent implements OnInit {
         });
     }  // Ends: initializeEmployeeList()
 
-    /* Check Existence of Employee */
-    checkEmployeeExist(employeeId) {
-        for (let i = 0; i < this.selectedEmployeeList.length; i++) {
-            if (this.selectedEmployeeList[i].id == employeeId) {
-                return true;
-            }
-        }
-
-        return false;
-    }  // Ends: checkEmployeeExist()
-
-    /* Initialize Employee Data */
-    initializeEmployeeData(employee) {
-        let check = this.checkEmployeeExist(employee.id);
-
-        if (!check) {
-            let employeeCopy = CommonFunctions.getInstance().deepCopy(employee);
-            employeeCopy["selected"] = true;
-            this.selectedEmployeeList.push(employeeCopy);
-        }
-    }  // Ends: initializeEmployeeData()
-
     /* Initialize Applicable Status List */
     initializeStatusComplaintType(statusComplaintTypeList) {
         this.applicableStatusList = [];
@@ -166,31 +144,6 @@ export class ManageComplaintTypeComponent implements OnInit {
             this.complaintTypeList[idx]["addressEmployeeList"].push(employee);
         });
     }  // Ends: initializeEmployeeComplaintType()
-
-    /* Get Searched Employee List */
-    searchEmployee() {
-        this.searchedEmployeeList = [];
-        if (!this.addressToSearchString) {
-            return ;
-        }
-
-        this.employeeList.forEach((employee) => {
-            if (employee.name.toLowerCase().indexOf(this.addressToSearchString.toLowerCase()) === 0) {
-                this.searchedEmployeeList.push(employee);
-            }
-        });
-    }  // Ends: searchEmployee()
-
-    /* Debouncing */
-    debounce(func, timeout = 300) {
-        let timer;
-        return (...args) => {
-        clearTimeout(timer);
-            timer = setTimeout(() => { func.apply(this, args); }, timeout);
-         };
-    }  // Ends: debounce()
-
-    seachChanged = this.debounce(() => this.searchEmployee());
 
     /* Open Add Status Modal */
     openAddStatusDialog(): void {
@@ -260,35 +213,6 @@ export class ManageComplaintTypeComponent implements OnInit {
             }
         }
     }  // Ends: getEmployeeFromId()
-
-    /* Get Applicable Status */
-    getApplicableStatusId(id) {
-        for (let i = 0; i < this.applicableStatusList.length; i++) {
-            if (this.applicableStatusList[i].id == id) {
-                return i;
-            }
-        }
-        return -1;
-    }  // Ends: getApplicableStatusId()
-
-    /* Add Status to Applicable-Status-List */
-    applicableStatusClicked(status) {
-        let isSelected = !status.selected;
-        if (isSelected) {
-            let tempStatus = CommonFunctions.getInstance().deepCopy(status);
-            this.applicableStatusList.push(tempStatus);
-        } else {
-            if (this.defaultStatus == status.name) {
-                this.defaultStatus = "Not Selected";
-            }
-
-            let idx = this.getApplicableStatusId(status.id);
-            if (idx != -1) {
-                this.applicableStatusList.splice(idx, 1);
-            }
-        }
-        this.applicableStatusList.sort((a, b) => (a.id - b.id));
-    }  // Ends: applicableStatusClicked()
 
     /* Save Complaint Type */
     saveClicked() {

@@ -122,38 +122,6 @@ export class ManageComplaintsComponent implements OnInit {
         this.startNewProgressBar();
     }  // Ends: sortOldestClicked()
 
-    /* Select All Complaint Type */
-    selectAllComplaintType() {
-        this.filterComplaintTypeList.forEach((complaintType) => {
-            complaintType["selected"] = true;
-        });
-        this.startNewProgressBar();
-    }  // Ends: selectAllComplaintType()
-
-    /* Unselect All Complaint Type */
-    unselectAllComplaintType() {
-        this.filterComplaintTypeList.forEach((complaintType) => {
-            complaintType["selected"] = false;
-        });
-        this.startNewProgressBar();
-    }  // Ends: unselectAllComplaintType()
-
-    /* Select All Status */
-    selectAllStatus() {
-        this.filterStatusList.forEach((status) => {
-            status["selected"] = true;
-        });
-        this.startNewProgressBar();
-    }  // Ends: selectAllStatus()
-
-    /* Unselect All Status */
-    unselectAllStatus() {
-        this.filterStatusList.forEach((status) => {
-            status["selected"] = false;
-        });
-        this.startNewProgressBar();
-    }  // Ends: unselectAllStatus()
-
     /* Status Filter Option Clicked */
     statusOptionClicked(status) {
         status.selected = !status.selected;
@@ -436,21 +404,10 @@ export class ManageComplaintsComponent implements OnInit {
         return nullEmployee;
     }  // Ends: getEmployee()
 
-    /* Debouncing */
-    debounce(func, timeout = 300) {
-        let timer;
-        return (...args) => {
-        clearTimeout(timer);
-            timer = setTimeout(() => { func.apply(this, args); }, timeout);
-         };
-    }  // Ends: debounce()
-
     /* Get Searched Complaint List */
     getSearchedComplaintList() {
         this.loadComplaints();
     }  // Ends: getSearchedComplaintList()
-
-    seachChanged = this.debounce(() => this.getSearchedComplaintList());
 
     /* Open Filter Modal */
     openAssignEmployeeDialog(complaint, idx): void {

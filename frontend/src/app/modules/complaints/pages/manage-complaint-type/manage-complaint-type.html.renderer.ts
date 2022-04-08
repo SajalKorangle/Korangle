@@ -38,16 +38,7 @@ export class ManageComplaintTypeHtmlRenderer {
         return style;
     }  // Ends: getCancelBtnStyle()
 
-    checkUniqueness() {
-        let answer = true;
-        this.vm.statusList.forEach((status) => {
-            if (status.name.toString().trim() == this.vm.addStatusName.toString().trim()) {
-                answer = false;
-            }
-        });
-        return answer;
-    }
-
+    /* Check Complaint-Type Uniquness */
     checkTypeNameUniqueness() {
         let answer = true;
         this.vm.complaintTypeList.forEach((complaintType) => {
@@ -56,18 +47,5 @@ export class ManageComplaintTypeHtmlRenderer {
             }
         });
         return answer;
-    }
-
-    /* For mobile-browser */
-    isMobileBrowser(): boolean {
-        if (window.innerWidth > 991) {
-            return false;
-        }
-        return true;
-    }  // Ends: isMobileBrowser()
-
-    /* For mobile-application */
-    isMobileApplication(): boolean {
-        return isMobile();
-    }  // Ends: isMobileApplication()
+    }  // Ends: checkTypeNameUniqueness()
 }

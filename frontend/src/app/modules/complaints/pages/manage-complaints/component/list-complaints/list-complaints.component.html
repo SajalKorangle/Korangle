@@ -188,7 +188,7 @@
 <!-- Starts: Load More -->
 <div style="padding: 0rem 3rem 2rem 3rem;">
     <ng-container *ngIf="isLoadMore">
-        <div class="load-more text-{{ user.activeSchool.secondaryThemeColor }}" >
+        <div class="load-more text-{{ user.activeSchool.secondaryThemeColor }}" (click)="triggerLoadMoreClicked()">
             LOAD MORE (50)
         </div>
     </ng-container>
