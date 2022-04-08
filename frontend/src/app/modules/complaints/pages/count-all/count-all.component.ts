@@ -433,8 +433,8 @@ export class CountAllComponent implements OnInit {
     /* Create New Table */
     addNewTableClicked() {
         if (!this.isTableEditing && (this.rowFilterList.length + this.columnFilterList.length) > 0) {
-            let conformation = confirm("Do you want to save the current table?");
-            if (conformation) {
+            let confirmation = confirm("Do you want to save the current table?");
+            if (confirmation) {
                 const dialogRef = this.dialog.open(TableNameModalComponent, {
                     data: {
                         formatName: "",
@@ -457,8 +457,8 @@ export class CountAllComponent implements OnInit {
         }
 
         if (this.isTableUpdated) {
-            let conformation = confirm("Do you want to update your changes?");
-            if (conformation) {
+            let confirmation = confirm("Do you want to update your changes?");
+            if (confirmation) {
                 let operation = "createNew";
                 this.isTableUpdated = false;
                 this.serviceAdapter.updatetable(operation);
@@ -475,8 +475,8 @@ export class CountAllComponent implements OnInit {
     openTableClicked(table, idx) {
 
         if (!this.isTableEditing && (this.rowFilterList.length + this.columnFilterList.length) > 0) {
-            let conformation = confirm("Do you want to save the current table?");
-            if (conformation) {
+            let confirmation = confirm("Do you want to save the current table?");
+            if (confirmation) {
                 const dialogRef = this.dialog.open(TableNameModalComponent, {
                     data: {
                         formatName: "",
@@ -499,8 +499,8 @@ export class CountAllComponent implements OnInit {
         }
 
         if (this.isTableUpdated) {
-            let conformation = confirm("Do you want to update your changes?");
-            if (conformation) {
+            let confirmation = confirm("Do you want to update your changes?");
+            if (confirmation) {
                 let operation = "";
                 this.serviceAdapter.updatetable(operation, table, idx);
             } else {
