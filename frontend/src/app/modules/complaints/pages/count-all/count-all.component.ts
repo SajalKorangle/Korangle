@@ -12,7 +12,7 @@ import { PRINT_COUNT_ALL_TABLE_COMPLAINTS } from '../../../../print/print-routes
 import { CountAllServiceAdapter } from './count-all.service.adapter';
 import { CountAllHtmlRenderer } from './count-all.html.renderer';
 import { FilterModalComponent } from '@modules/complaints/pages/count-all/component/filter-modal/filter-modal.component';
-import { FormatTableModalComponent } from '@modules/complaints/pages/count-all/component/format-table-modal/format-table-modal.component';
+import { TableNameModalComponent } from '@modules/complaints/pages/count-all/component/table-name-modal/table-name-modal.component';
 import { ShowComplaintListModalComponent } from '@modules/complaints/pages/count-all/component/show-complaint-list-modal/show-complaint-list-modal.component';
 import { DeleteTableModalComponent } from '@modules/complaints/component/delete-table-modal/delete-table-modal.component';
 
@@ -290,7 +290,7 @@ export class CountAllComponent implements OnInit {
 
     /* Open Table Format Name Dialog */
     openSaveFormatDialog(): void {
-        const dialogRef = this.dialog.open(FormatTableModalComponent, {
+        const dialogRef = this.dialog.open(TableNameModalComponent, {
             data: {
                 formatName: "",
                 tableList: this.tableList,
@@ -337,7 +337,7 @@ export class CountAllComponent implements OnInit {
 
     /* Open Table Format Name Dialog - Save As Clicked */
     saveAsClicked(): void {
-        const dialogRef = this.dialog.open(FormatTableModalComponent, {
+        const dialogRef = this.dialog.open(TableNameModalComponent, {
             data: {
                 formatName: "",
                 tableList: this.tableList,
@@ -435,7 +435,7 @@ export class CountAllComponent implements OnInit {
         if (!this.isTableEditing && (this.rowFilterList.length + this.columnFilterList.length) > 0) {
             let conformation = confirm("Do you want to save the current table?");
             if (conformation) {
-                const dialogRef = this.dialog.open(FormatTableModalComponent, {
+                const dialogRef = this.dialog.open(TableNameModalComponent, {
                     data: {
                         formatName: "",
                         tableList: this.tableList,
@@ -477,7 +477,7 @@ export class CountAllComponent implements OnInit {
         if (!this.isTableEditing && (this.rowFilterList.length + this.columnFilterList.length) > 0) {
             let conformation = confirm("Do you want to save the current table?");
             if (conformation) {
-                const dialogRef = this.dialog.open(FormatTableModalComponent, {
+                const dialogRef = this.dialog.open(TableNameModalComponent, {
                     data: {
                         formatName: "",
                         tableList: this.tableList,

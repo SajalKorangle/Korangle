@@ -1,16 +1,16 @@
-<mat-dialog-content class="format-table-modal-container">
+<mat-dialog-content class="table-name-modal-container">
     <!-- Starts: Header -->
-    <h4><b>Save Table Format</b></h4>
+    <h4><b>Save Table Name</b></h4>
     <div style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
     <!-- Ends: Header -->
 
-    <!-- Starts: Format Name -->
-    <br /><b>Format Name - </b>
+    <!-- Starts: Table Name -->
+    <br /><b>Table Name - </b>
     <mat-form-field class="inputField" style="margin-left: 10%;">
         <input matInput type="text" placeholder="Table Name" [ngModel]="name" (ngModelChange)="name = $event; checkTableName()" required />
     </mat-form-field>
     <p *ngIf="!isUnique" style="color: red;">Table name should be unique.</p>
-    <!-- Ends: Format Name -->
+    <!-- Ends: Table Name -->
 </mat-dialog-content>
 
 <!-- Starts: Bottom Buttons -->

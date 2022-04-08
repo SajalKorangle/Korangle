@@ -3,18 +3,18 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataStorage } from "@classes/data-storage";
 
 @Component({
-    selector: 'app-format-table-modal',
-    templateUrl: './format-table-modal.component.html',
-    styleUrls: ['./format-table-modal.component.css']
+    selector: 'app-table-name-modal',
+    templateUrl: './table-name-modal.component.html',
+    styleUrls: ['./table-name-modal.component.css']
 })
-export class FormatTableModalComponent implements OnInit {
+export class TableNameModalComponent implements OnInit {
     user: any;
     name: string = "";
     tableList: any = [];
     isUnique: boolean = true;
 
     constructor(
-        public dialogRef: MatDialogRef<FormatTableModalComponent>,
+        public dialogRef: MatDialogRef<TableNameModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data,
     ) {
         this.name = data.formatName;
