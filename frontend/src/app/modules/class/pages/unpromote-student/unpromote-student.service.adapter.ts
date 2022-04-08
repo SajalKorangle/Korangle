@@ -83,7 +83,7 @@ export class UnpromoteStudentServiceAdapter {
             return this.vm.selectedStudentSectionList.find(studentSection => {
                 return studentSection.parentSession == session.id;
             }) != undefined;
-        }).sort((a, b) => { return a.orderNumber-b.orderNumber; });
+        }).sort((a, b) => { return a.orderNumber - b.orderNumber; });
         this.vm.selectedStudentDeleteDisabledReason["isMiddleSession"] =
             orderedFilteredSessionList[orderedFilteredSessionList.length - 1].id != this.vm.user.activeSchool.currentSessionDbId;
 
