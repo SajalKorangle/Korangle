@@ -43,7 +43,7 @@
     float: right;
 }
 
-.bottom-btns .btn {
+.save-btn {
     font-weight: 500;
     font-size: 12px;
 }
@@ -51,6 +51,8 @@
 .cancel-btn {
     background-color: white;
     color: black;
+    font-weight: 500;
+    font-size: 12px;
 }
 /* Ends: Bottom Btns */
 
