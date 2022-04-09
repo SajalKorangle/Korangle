@@ -463,7 +463,7 @@ export class ViewAllComponent implements OnInit {
                     ? Math.floor((new Date(this.asOnDate).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
                     : null;
                 if (this.minAge != '' && this.minAge != null && !isNaN(this.minAge)) {
-                    if (!age) {
+                    if (age == null || age == undefined) {
                         student.show = false;
                         return;
                     } else if (age < this.minAge) {
@@ -472,7 +472,7 @@ export class ViewAllComponent implements OnInit {
                     }
                 }
                 if (this.maxAge != '' && this.maxAge != null && !isNaN(this.maxAge)) {
-                    if (!age) {
+                    if (age == null || age == undefined) {
                         student.show = false;
                         return;
                     } else if (age > this.maxAge) {

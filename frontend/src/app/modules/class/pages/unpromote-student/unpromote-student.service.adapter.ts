@@ -59,25 +59,33 @@ export class UnpromoteStudentServiceAdapter {
             this.vm.selectedStudentSectionList,
             this.vm.selectedStudentFeeReceiptList,
             this.vm.selectedStudentDiscountList,
-            this.vm.tcList
-
+            this.vm.tcList,
+            this.vm.sessionList,
         ] = await Promise.all([
             studentQuery,   // 0
             studentSectionQuery,    // 1
             feeReceiptQuery,    // 2
             discountQuery,  // 3
-            transferCertificateNewQuery // 4
+            transferCertificateNewQuery, // 4
+            new Query().getObjectList({school_app: 'Session'}) // 5
         ]);
 
         this.vm.selectedStudent = studentList[0];
         Object.keys(tempStudentList).forEach((key) => {
             this.vm.selectedStudent[key] = tempStudentList[key];
         });
-        this.vm.selectedStudent['rollNumber'] = this.vm.selectedStudentSectionList[0].rollNumber;
+        this.vm.selectedStudent['rollNumber'] = this.vm.selectedStudentSectionList.find(studentSection => {
+            return studentSection.parentSession = this.vm.user.activeSchool.currentSessionDbId;
+        }).rollNumber;
 
         // Checking if the current session is not the latest one for the student (which means that this session is a middle session or not)
+        let orderedFilteredSessionList = this.vm.sessionList.filter(session => {
+            return this.vm.selectedStudentSectionList.find(studentSection => {
+                return studentSection.parentSession == session.id;
+            }) != undefined;
+        }).sort((a, b) => { return a.orderNumber - b.orderNumber; });
         this.vm.selectedStudentDeleteDisabledReason["isMiddleSession"] =
-            this.vm.selectedStudentSectionList[this.vm.selectedStudentSectionList.length - 1].parentSession != this.vm.user.activeSchool.currentSessionDbId;
+            orderedFilteredSessionList[orderedFilteredSessionList.length - 1].id != this.vm.user.activeSchool.currentSessionDbId;
 
         // Checking if the current session is the only session in which student is registered (If that's the case then student can't be deleted)
         this.vm.selectedStudentDeleteDisabledReason["hasOnlyOneSession"] = this.vm.selectedStudentSectionList.length == 1;
