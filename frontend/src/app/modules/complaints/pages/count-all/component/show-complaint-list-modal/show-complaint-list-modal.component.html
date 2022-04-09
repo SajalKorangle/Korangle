@@ -7,37 +7,49 @@
     <br />
     <!-- Ends: Header -->
 
-    <div>
-        <div class="column-detail text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-bottom: 2rem;">
-            <div class="complaint-title">
-                Complaint Title
-            </div>
-            <div class="complaint-student">
-                Student
-            </div>
-            <div class="complaint-complaint-type">
-                Complaint Type
-            </div>
-            <div class="complaint-status">
-                Status
-            </div>
-        </div>
+    <!-- Starts: Table -->
+    <ng-container>
+        <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+            <table class="table table-hover">
+                <!-- Starts: Table Header -->
+                <thead>
+                    <tr class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                        <th class="minWidth">
+                            Complaint Title
+                        </th>
+                        <th class="minWidth">
+                            Student
+                        </th>
+                        <th class="minWidth">
+                            Complaint Type
+                        </th>
+                        <th class="minWidth">
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <!-- Ends: Table Header -->
 
-        <ng-container *ngFor="let complaint of complaintList">
-            <div class="column-detail" style="font-size: 12px;">
-                <div class="complaint-title">
-                    {{ complaint.title }}
-                </div>
-                <div class="complaint-student">
-                    {{ htmlRenderer.getStudentName(complaint.parentStudent) }}
-                </div>
-                <div class="complaint-complaint-type">
-                    {{ htmlRenderer.getComplaintType(complaint.parentSchoolComplaintType) }}
-                </div>
-                <div class="complaint-status">
-                    {{ htmlRenderer.getStatus(complaint.parentSchoolComplaintStatus) }}
-                </div>
-            </div>
-        </ng-container>
-    </div>
+                <!-- Starts: Table Body -->
+                <tbody>
+                    <tr *ngFor="let complaint of complaintList">
+                        <td class="minWidth">
+                            {{ complaint.title }}
+                        </td>
+                        <td class="minWidth">
+                            {{ htmlRenderer.getStudentName(complaint.parentStudent) }}
+                        </td>
+                        <td class="minWidth">
+                            {{ htmlRenderer.getComplaintType(complaint.parentSchoolComplaintType) }}
+                        </td>
+                        <td class="minWidth">
+                            {{ htmlRenderer.getStatus(complaint.parentSchoolComplaintStatus) }}
+                        </td>
+                    </tr>
+                </tbody>
+                <!-- Ends: Table Body -->
+            </table>
+        </cdk-virtual-scroll-viewport>
+    </ng-container>
+    <!-- End of Table -->
 </mat-dialog-content>
