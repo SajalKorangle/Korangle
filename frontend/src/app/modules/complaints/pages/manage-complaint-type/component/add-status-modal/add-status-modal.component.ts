@@ -69,30 +69,4 @@ export class AddStatusModalComponent implements OnInit {
     deleteClick() {
         this.dialogRef.close({operation: "delete"});
     }  // Ends: deleteClick()
-
-    /* Map Bootstarp Color Name to Hex-Color Code */
-    getCancelBtnStyle() {
-        let color = "white";
-        if (this.user.activeSchool.secondaryThemeColor == "primary") {
-            color = "#1976D2";
-        } else if (this.user.activeSchool.secondaryThemeColor == "warning") {
-            color = "#FFC107";
-        } else if (this.user.activeSchool.secondaryThemeColor == "secondary") {
-            color = "#424242";
-        } else if (this.user.activeSchool.secondaryThemeColor == "accent") {
-            color = "#82B1FF";
-        } else if (this.user.activeSchool.secondaryThemeColor == "error") {
-            color = "#FF5252";
-        } else if (this.user.activeSchool.secondaryThemeColor == "info") {
-            color = "#2196F3";
-        } else if (this.user.activeSchool.secondaryThemeColor == "success") {
-            color = "#4CAF50";
-        }
-
-        let style = {
-            'border': '1.5px solid ' + color,
-        };
-
-        return style;
-    }  // Ends: getCancelBtnStyle()
 }

@@ -13,6 +13,7 @@ export class ListComplaintsComponent implements OnInit {
     @Input() user;
     @Input() progress;
     @Input() isLoadMore;
+    @Input() userPermission;
     @Input() filterComplaintTypeList;
     @Input() filterStatusList;
     @Input() searchedComplaintList;

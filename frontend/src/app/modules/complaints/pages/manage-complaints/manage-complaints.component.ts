@@ -84,7 +84,6 @@ export class ManageComplaintsComponent implements OnInit {
         } else {
             this.progress++;
         }
-        console.log("Progress: ", this.progress);
     }  // Ends: setProgressInterval()
 
     /* Starts Progress Bar */

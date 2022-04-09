@@ -160,8 +160,7 @@
     </button>
     <button
         type="button"
-        class="btn cancel-btn"
-        [ngStyle]="htmlRenderer.getCancelBtnStyle()"
+        class="btn-{{ user.activeSchool.secondaryThemeColor }} cancel-btn"
         (click)="triggerCancelClicked()"
     >
         Cancel
