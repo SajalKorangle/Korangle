@@ -14,7 +14,7 @@ export class ShowComplaintListModalHtmlRenderer {
 
     /* Get Student Name */
     getStudentName(studentId) {
-        let studentName = "Not Selected";
+        let studentName = "";
 
         this.vm.studentList.forEach((student) => {
             if (student["dbId"] == studentId) {
@@ -26,7 +26,7 @@ export class ShowComplaintListModalHtmlRenderer {
 
     /* Get Complaint Type Name */
     getComplaintType(complaintTypeId) {
-        let complaintTypeName = "Not Selected";
+        let complaintTypeName = "None";
 
         this.vm.complaintTypeList.forEach((complaintType) => {
             if (complaintType["id"] == complaintTypeId) {
@@ -38,7 +38,7 @@ export class ShowComplaintListModalHtmlRenderer {
 
     /* Get Status Name */
     getStatus(statusId) {
-        let statusName = "Not Selected";
+        let statusName = "None";
 
         this.vm.studentList.forEach((status) => {
             if (status["id"] == statusId) {
