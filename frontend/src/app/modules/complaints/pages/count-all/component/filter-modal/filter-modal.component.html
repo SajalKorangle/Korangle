@@ -19,17 +19,18 @@
             <div class="date-options">
                 <mat-form-field style="margin-right: 15px">
                     <!-- Starts: Possible Options for Start-Date -->
-                    <mat-select placeholder="{{ startDateType }}" style="width: 100%">
-                        <mat-option (click)="startDateType = 'Select Start Date'" style="width: 100%">
+                    <mat-label>Start Date</mat-label>
+                    <mat-select [(value)]="startDateType" style="width: 100%">
+                        <mat-option style="width: 100%">
                             Cancel Date Selection
                         </mat-option>
-                        <mat-option (click)="startDateType = 'Select Date'" style="width: 100%">
+                        <mat-option value="Select Date" style="width: 100%">
                             Select Date
                         </mat-option>
-                        <mat-option (click)="startDateType = '1st of Ongoing Month'" style="width: 100%">
+                        <mat-option value="1st of Ongoing Month" style="width: 100%">
                             1st of Ongoing Month
                         </mat-option>
-                        <mat-option (click)="startDateType = 'From Days Ago'" style="width: 100%">
+                        <mat-option value="From Days Ago" style="width: 100%">
                             From Days Ago
                         </mat-option>
                     </mat-select>
@@ -55,7 +56,7 @@
                 </span>
                 <!-- Ends: If DateType = Days Ago -->
             </div>
-        </div>
+        </div><br />
         <!-- Ends: Start Date -- Time Span Sub-Section -->
 
         <!-- Starts: End Date -- Time Span Sub-Section -->
@@ -66,17 +67,18 @@
             <div class="date-options">
                 <mat-form-field style="margin-right: 15px">
                     <!-- Starts: Possible Options for End-Date -->
-                    <mat-select placeholder="{{ endDateType }}" style="width: 100%">
-                        <mat-option (click)="endDateType = 'Select End Date'" style="width: 100%">
+                    <mat-label>End Date</mat-label>
+                    <mat-select [(value)]="endDateType" style="width: 100%">
+                        <mat-option style="width: 100%">
                             Cancel Date Selection
                         </mat-option>
-                        <mat-option (click)="endDateType = 'Select Date'" style="width: 100%">
+                        <mat-option value="Select Date" style="width: 100%">
                             Select Date
                         </mat-option>
-                        <mat-option (click)="endDateType = 'Current Date'" style="width: 100%">
+                        <mat-option value="Current Date" style="width: 100%">
                             Current Date
                         </mat-option>
-                        <mat-option (click)="endDateType = 'From Days Ago'" style="width: 100%">
+                        <mat-option value="From Days Ago" style="width: 100%">
                             From Days Ago
                         </mat-option>
                     </mat-select>

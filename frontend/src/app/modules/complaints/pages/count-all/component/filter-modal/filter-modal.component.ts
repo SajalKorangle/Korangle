@@ -17,14 +17,14 @@ export class FilterModalComponent implements OnInit {
     isNameProvided: boolean = true;
 
     /* Details of Start Date */
-    startDateType: string = "Select Start Date";
+    startDateType: string = "";
     sDate: string = "";
-    sDays: number = 0;
+    sDays: number = null;
 
     /* Details of Ends Date */
-    endDateType: string = "Select End Date";
+    endDateType: string = "";
     eDate: string = "";
-    eDays: number = 0;
+    eDays: number = null;
 
     complaintTypeList: any = [];
     statusList: any = [];
@@ -190,14 +190,14 @@ export class FilterModalComponent implements OnInit {
         }  // Ends: Selected Statuses
 
         /* Validation: Start Date  &&  End Date */
-        if (this.startDateType != "Select Start Date" || this.endDateType != "Select End Date") {
+        if (this.startDateType || this.endDateType) {
 
-            if (this.startDateType == "Select Start Date") {
+            if (!this.startDateType) {
                 alert("Please select an option for the start date.");
                 return;
             }
 
-            if (this.endDateType == "Select End Date") {
+            if (!this.endDateType) {
                 alert("Please select an option for the end date.");
                 return;
             }
@@ -212,13 +212,13 @@ export class FilterModalComponent implements OnInit {
                 return;
             }
 
-            if (this.startDateType == "From Days Ago" && this.sDays == 0) {
-                alert("Please enter the value of start days.");
+            if (this.startDateType == "From Days Ago" && (!this.sDays || this.sDays < 0)) {
+                alert("Please enter the valid value of start days.");
                 return;
             }
 
-            if (this.endDateType == "From Days Ago" && this.eDays == 0) {
-                alert("Please enter the value of end days");
+            if (this.endDateType == "From Days Ago" && (!this.eDays || this.eDays < 0)) {
+                alert("Please enter the valid value of end days");
                 return;
             }
 
@@ -281,6 +281,18 @@ export class FilterModalComponent implements OnInit {
 
                 this.eDate = year + "-" + month + "-" + date;
                 filtersData["eDays"] = this.eDays;
+            }
+
+            let startDateTime = new Date(this.sDate).getTime();
+            let endDateTime = new Date(this.eDate).getTime();
+
+            if (endDateTime < startDateTime) {
+                this.sDate = "";
+                this.eDate = "";
+                this.sDays = null;
+                this.eDays = null;
+                alert("The start date must come before the end date.");
+                return;
             }
 
             filtersData["startDate"] = this.sDate;
