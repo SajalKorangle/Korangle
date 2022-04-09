@@ -164,6 +164,10 @@
                 </ng-container>
 
                 <!-- Starts: Dummy Row -->
+
+                    <!-- In column header, there are two dropdowns (Status Filter & Complaint Type Filter).
+                         Those dropdowns won't be visible properly when there are not enough rows.
+                         So in order to provide the needed height dummy row would be used. -->
                 <tr *ngIf="searchedComplaintList.length <= 4">
                     <td class="dummyRow" style="min-width: 140px;"></td>
                     <td class="dummyRow" style="min-width: 140px;"></td>
