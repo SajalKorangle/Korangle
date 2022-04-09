@@ -12,7 +12,7 @@ export class PrintService {
         if (!this.isPrinting) {
             this.isPrinting = true;
             this.data = data;
-            const moduleName = window.location.pathname.split('/')[1];
+            const moduleName = window.location.pathname.split('/')[2];
             this.router.navigate([{ outlets: { print: ['print', moduleName, routeName] } }]);
         }
     }

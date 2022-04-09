@@ -85,32 +85,37 @@ export class AddEmployeeServiceAdapter {
          })
          .getObject({ employee_app: 'EmployeePermission' });
 
-        let loggedInEmployeePermissionPermissionDict = JSON.parse(loggedInEmployeePermission.configJSON);
-        // Extracting Delegation Permission Dict for Logged in Employee ENDS
 
-        // If loggedInEmployeePermissionPermissionDict is empty means employee has delegation permission for each task
-        if (Object.keys(loggedInEmployeePermissionPermissionDict).length !== 0) {
-            let tempModuleList = [];
-            this.vm.moduleList.forEach(module => {
-                let tempTaskList = [];
-                let tempModule = module;
+         if (loggedInEmployeePermission) {
+             // Extracting Delegation Permission Dict for Logged in Employee ENDS
+             let loggedInEmployeePermissionPermissionDict = JSON.parse(loggedInEmployeePermission.configJSON);
 
-                module.taskList.forEach(task => {
-                    if (loggedInEmployeePermissionPermissionDict[module.id][task.id] === true) {
-                        tempTaskList.push(task);
-                    }
-                });
+             // If loggedInEmployeePermissionPermissionDict is empty means employee has delegation permission for each task
+             if (Object.keys(loggedInEmployeePermissionPermissionDict).length !== 0) {
+                 let tempModuleList = [];
+                 this.vm.moduleList.forEach(module => {
+                     let tempTaskList = [];
+                     let tempModule = module;
 
-                if (tempTaskList.length) {
-                    tempModule.taskList = tempTaskList;
-                    tempModuleList.push(tempModule);
-                }
-            });
+                     module.taskList.forEach(task => {
+                         if (loggedInEmployeePermissionPermissionDict[module.id][task.id] === true) {
+                             tempTaskList.push(task);
+                         }
+                     });
 
-            this.vm.moduleList = tempModuleList;
-        }
+                     if (tempTaskList.length) {
+                         tempModule.taskList = tempTaskList;
+                         tempModuleList.push(tempModule);
+                     }
+                 });
 
-        this.intializeAssignTaskPermission();
+                 this.vm.moduleList = tempModuleList;
+                 this.intializeAssignTaskPermission();
+             }
+         } else {
+             this.vm.assignTaskPermission = false;
+         }
+
         this.vm.isLoading = false;
     }
 
