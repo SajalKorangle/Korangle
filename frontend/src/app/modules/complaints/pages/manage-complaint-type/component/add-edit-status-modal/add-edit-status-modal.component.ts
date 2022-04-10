@@ -3,11 +3,11 @@ import { DataStorage } from "@classes/data-storage";
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-    selector: 'app-add-status-modal',
-    templateUrl: './add-status-modal.component.html',
-    styleUrls: ['./add-status-modal.component.css']
+    selector: 'app-add-edit-status-modal',
+    templateUrl: './add-edit-status-modal.component.html',
+    styleUrls: ['./add-edit-status-modal.component.css']
 })
-export class AddStatusModalComponent implements OnInit {
+export class AddEditStatusModalComponent implements OnInit {
     user: any;
 
     operation: string = "";  /* Add New  OR  Update  OR  Delete */
@@ -17,7 +17,7 @@ export class AddStatusModalComponent implements OnInit {
     statusList: any = [];
 
     constructor(
-        public dialogRef: MatDialogRef<AddStatusModalComponent>,
+        public dialogRef: MatDialogRef<AddEditStatusModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data,
     ) {
         this.operation = data.operation;

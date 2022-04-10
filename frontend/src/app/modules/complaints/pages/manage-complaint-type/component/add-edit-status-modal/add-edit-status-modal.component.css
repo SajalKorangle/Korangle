@@ -1,5 +1,5 @@
 /* Starts: Modal Container */
-.add-status-modal-container {
+.add-edit-status-modal-container {
     height: 30vh;
     width: 50vw;
 }
@@ -64,7 +64,7 @@
 /* Media Query - Mobile Phones */
 @media only screen and (max-width: 992px) {
     /* Starts: Modal Container */
-    .add-status-modal-container {
+    .add-edit-status-modal-container {
         width: 100%;
         margin: 0;
         padding: 0;

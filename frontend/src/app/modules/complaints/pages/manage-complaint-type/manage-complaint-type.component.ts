@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonFunctions } from "../../../../classes/common-functions";
 import { DataStorage } from "@classes/data-storage";
 
-import { AddStatusModalComponent } from '@modules/complaints/pages/manage-complaint-type/component/add-status-modal/add-status-modal.component';
+import { AddEditStatusModalComponent } from '@modules/complaints/pages/manage-complaint-type/component/add-edit-status-modal/add-edit-status-modal.component';
 import { ManageComplaintTypeServiceAdapter } from './manage-complaint-type.service.adapter';
 import { ManageComplaintTypeHtmlRenderer } from './manage-complaint-type.html.renderer';
 
@@ -147,7 +147,7 @@ export class ManageComplaintTypeComponent implements OnInit {
 
     /* Open Add Status Modal */
     openAddStatusDialog(): void {
-        const dialogRef = this.dialog.open(AddStatusModalComponent, {
+        const dialogRef = this.dialog.open(AddEditStatusModalComponent, {
             data: {
                 operation: "Add",
                 statusList: this.statusList,
@@ -165,7 +165,7 @@ export class ManageComplaintTypeComponent implements OnInit {
 
     /* Open Change Status Modal */
     openChangeStatusDialog(status, idx): void {
-        const dialogRef = this.dialog.open(AddStatusModalComponent, {
+        const dialogRef = this.dialog.open(AddEditStatusModalComponent, {
             data: {
                 operation: "Edit",
                 statusName: status.name,

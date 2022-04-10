@@ -5,7 +5,7 @@ import { ComponentsModule } from "../../../../components/components.module";
 import { ManageComplaintTypeComponent } from "./manage-complaint-type.component";
 import { LocalComponentsModule } from '@modules/complaints/component/local-components.module';
 import { LocalComponentsModule as LocalComponentsModulee } from '@modules/complaints/pages/manage-complaint-type/component/local-components.module';
-import { AddStatusModalComponent } from '@modules/complaints/pages/manage-complaint-type/component/add-status-modal/add-status-modal.component';
+import { AddEditStatusModalComponent } from '@modules/complaints/pages/manage-complaint-type/component/add-edit-status-modal/add-edit-status-modal.component';
 import { DeleteTableModalComponent } from '@modules/complaints/component/delete-table-modal/delete-table-modal.component';
 
 @NgModule({
@@ -15,6 +15,6 @@ import { DeleteTableModalComponent } from '@modules/complaints/component/delete-
     exports: [],
     providers: [],
     bootstrap: [ManageComplaintTypeComponent],
-    entryComponents: [AddStatusModalComponent, DeleteTableModalComponent],
+    entryComponents: [AddEditStatusModalComponent, DeleteTableModalComponent],
 })
 export class ManageComplaintTypeModule { }
