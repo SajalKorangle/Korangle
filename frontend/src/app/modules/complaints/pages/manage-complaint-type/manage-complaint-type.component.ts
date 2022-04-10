@@ -96,7 +96,7 @@ export class ManageComplaintTypeComponent implements OnInit {
         });
 
         for (let idx = 0; idx < this.complaintTypeList.length; idx++) {
-            this.serviceAdapter.getEmployeeCompalintType(this.complaintTypeList[idx].id, idx);
+            this.serviceAdapter.getEmployeeComplaintType(this.complaintTypeList[idx].id, idx);
         }
     }  // Ends: initializecomplaintTypeList()
 

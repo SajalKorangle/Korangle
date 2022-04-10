@@ -49,7 +49,7 @@ export class ManageComplaintTypeServiceAdapter {
     }  // Ends: initializeData()
 
     /* Get Employee-ComplaintType */
-    async getEmployeeCompalintType(complaintTypeId, idx) {
+    async getEmployeeComplaintType(complaintTypeId, idx) {
 
         const employeeComplaintTypeQuery = new Query()
             .filter({ parentSchoolComplaintType: complaintTypeId })
@@ -63,7 +63,7 @@ export class ManageComplaintTypeServiceAdapter {
         ]);
 
         this.vm.initializeEmployeeComplaintType(employeeComplaintTypeList, idx);
-    }  // Ends: getEmployeeCompalintType()
+    }  // Ends: getEmployeeComplaintType()
 
     /* Add Status */
     async addStatus() {
