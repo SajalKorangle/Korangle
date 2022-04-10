@@ -16,7 +16,7 @@
 
 <!-- Starts: Add Complaint Type -->
 <ng-container *ngIf="pageName == 'addCompalintType' && !isLoading">
-    <app-add-complaint-type
+    <app-add-edit-complaint-type
         [user]="user"
         [complaintTypeList]="complaintTypeList"
         [statusList]="statusList"
@@ -32,7 +32,7 @@
         (addStatusClick)="typeName = $event[0]; defaultText = $event[1]; defaultStatus = $event[2]; defaultStatusId = $event[3]; editingComplaintTypeId = $event[4]; addStatusName = $event[5]; addStatusClick()"
         (saveClicked)="typeName = $event[0]; defaultText = $event[1]; defaultStatus = $event[2]; defaultStatusId = $event[3]; editingComplaintTypeId = $event[4]; saveClicked()"
         (cancelClicked)="cancelClicked()"
-    ></app-add-complaint-type>
+    ></app-add-edit-complaint-type>
 </ng-container>
 
 <!-- Starts: Spinner -->

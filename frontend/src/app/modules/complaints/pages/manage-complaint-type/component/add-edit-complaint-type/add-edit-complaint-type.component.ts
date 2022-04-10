@@ -1,13 +1,13 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
-import { AddComplaintTypeHtmlRenderer } from './add-complaint-type.html.renderer';
+import { AddEditComplaintTypeHtmlRenderer } from './add-edit-complaint-type.html.renderer';
 import { CommonFunctions } from "@classes/common-functions";
 
 @Component({
-    selector: 'app-add-complaint-type',
-    templateUrl: './add-complaint-type.component.html',
-    styleUrls: ['./add-complaint-type.component.css']
+    selector: 'app-add-edit-complaint-type',
+    templateUrl: './add-edit-complaint-type.component.html',
+    styleUrls: ['./add-edit-complaint-type.component.css']
 })
-export class AddComplaintTypeComponent implements OnInit {
+export class AddEditComplaintTypeComponent implements OnInit {
     @Input() user;
     @Input() complaintTypeList;
     @Input() statusList;
@@ -29,12 +29,12 @@ export class AddComplaintTypeComponent implements OnInit {
     addressToSearchString: string = "";
     searchedEmployeeList: any = [];
 
-    htmlRenderer: AddComplaintTypeHtmlRenderer;
+    htmlRenderer: AddEditComplaintTypeHtmlRenderer;
 
     constructor() { }
 
     ngOnInit() {
-        this.htmlRenderer = new AddComplaintTypeHtmlRenderer();
+        this.htmlRenderer = new AddEditComplaintTypeHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
 
         this.applicableStatusList.sort((a, b) => (a.id - b.id));

@@ -1,14 +1,14 @@
-import { AddComplaintTypeComponent } from './add-complaint-type.component';
+import { AddEditComplaintTypeComponent } from './add-edit-complaint-type.component';
 import { isMobile } from '@classes/common';
 
-export class AddComplaintTypeHtmlRenderer {
+export class AddEditComplaintTypeHtmlRenderer {
 
-    vm: AddComplaintTypeComponent;
+    vm: AddEditComplaintTypeComponent;
 
     constructor() { }
 
     /* Initialize Renderer */
-    initializeRenderer(vm: AddComplaintTypeComponent): void {
+    initializeRenderer(vm: AddEditComplaintTypeComponent): void {
         this.vm = vm;
     }  // Ends: initializeRenderer()
 
