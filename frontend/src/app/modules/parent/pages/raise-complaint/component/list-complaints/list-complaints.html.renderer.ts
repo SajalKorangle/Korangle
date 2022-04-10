@@ -11,6 +11,27 @@ export class ListComplaintsHtmlRenderer {
         this.vm = vm;
     }  // Ends: initializeRenderer()
 
+    /* Get Searched Complaint List */
+    getSearchedComplaintList() {
+        let searchedComplaintList = [];
+        let searchString = this.vm.searchString.trim();
+
+        this.vm.complaintList.forEach((complaint) => {
+            if (complaint.parentStudent.name.toLowerCase().includes(searchString.toLowerCase())) { /* Check for student name */
+                searchedComplaintList.push(complaint);
+            } else if (complaint.title.toLowerCase().includes(searchString.toLowerCase())) { /* Check for complaint title */
+                searchedComplaintList.push(complaint);
+            } else if (
+                complaint.parentSchoolComplaintType["name"] &&
+                complaint.parentSchoolComplaintType.name.toLowerCase().includes(searchString.toLowerCase())
+            ) { /* Check for complaint type */
+                searchedComplaintList.push(complaint);
+            }
+        });
+
+        return searchedComplaintList;
+    }  // Ends: getSearchedComplaintList()
+
     /* Get Date Info (dd-mm-yy) */
     getDateInfo(createdAt) {
         let newDate: any = new Date(createdAt);

@@ -34,7 +34,7 @@
 
                 <!-- Starts: Table Body -->
                 <tbody>
-                    <ng-container *ngFor="let complaint of getSearchedComplaintList()">
+                    <ng-container *ngFor="let complaint of htmlRenderer.getSearchedComplaintList()">
                         <tr>
                             <td>{{ complaint.parentStudent.name }}</td>
                             <td>{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>

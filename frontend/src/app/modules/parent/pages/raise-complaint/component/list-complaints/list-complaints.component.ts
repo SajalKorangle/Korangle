@@ -31,27 +31,6 @@ export class ListComplaintsComponent implements OnInit {
         this.htmlRenderer.initializeRenderer(this);
     }
 
-    /* Get Searched Complaint List */
-    getSearchedComplaintList() {
-        let searchedComplaintList = [];
-        let searchString = this.searchString.trim();
-
-        this.complaintList.forEach((complaint) => {
-            if (complaint.parentStudent.name.toLowerCase().includes(searchString.toLowerCase())) { /* Check for student name */
-                searchedComplaintList.push(complaint);
-            } else if (complaint.title.toLowerCase().includes(searchString.toLowerCase())) { /* Check for complaint title */
-                searchedComplaintList.push(complaint);
-            } else if (
-                complaint.parentSchoolComplaintType["name"] &&
-                complaint.parentSchoolComplaintType.name.toLowerCase().includes(searchString.toLowerCase())
-            ) { /* Check for complaint type */
-                searchedComplaintList.push(complaint);
-            }
-        });
-
-        return searchedComplaintList;
-    }  // Ends: getSearchedComplaintList()
-
     /* Open Complaint */
     triggerOpenComplaint(complaint) {
         this.openComplaint.emit(complaint);
