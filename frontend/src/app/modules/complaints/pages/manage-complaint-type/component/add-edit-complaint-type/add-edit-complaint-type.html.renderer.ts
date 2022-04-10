@@ -12,6 +12,13 @@ export class AddEditComplaintTypeHtmlRenderer {
         this.vm = vm;
     }  // Ends: initializeRenderer()
 
+    getComplaintTypeOperation() {
+        if (this.vm.editingCompalaintType) {
+            return "Edit";
+        }
+        return "Add";
+    }
+
     /* Check Status Name Uniqueness */
     checkUniqueness() {
         let answer = true;

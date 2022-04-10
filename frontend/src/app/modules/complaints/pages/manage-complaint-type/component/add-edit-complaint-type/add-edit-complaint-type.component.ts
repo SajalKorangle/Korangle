@@ -9,6 +9,7 @@ import { CommonFunctions } from "@classes/common-functions";
 })
 export class AddEditComplaintTypeComponent implements OnInit {
     @Input() user;
+    @Input() editingCompalaintType;
     @Input() complaintTypeList;
     @Input() statusList;
     @Input() employeeList;

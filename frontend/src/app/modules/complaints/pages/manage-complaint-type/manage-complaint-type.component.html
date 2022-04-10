@@ -18,6 +18,7 @@
 <ng-container *ngIf="pageName == 'addCompalintType' && !isLoading">
     <app-add-edit-complaint-type
         [user]="user"
+        [editingCompalaintType]="editingCompalaintType"
         [complaintTypeList]="complaintTypeList"
         [statusList]="statusList"
         [employeeList]="employeeList"
