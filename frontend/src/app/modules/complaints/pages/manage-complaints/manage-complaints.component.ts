@@ -235,7 +235,6 @@ export class ManageComplaintsComponent implements OnInit {
         for (let i = length; i < this.complaintList.length; i++) {
             this.serviceAdapter.getEmployeeCompalint(this.complaintList[i].id, i);
         }
-        // this.isProgress = false;
 
         if (complaintList.length < 50) {
             this.isLoadMore = false;
