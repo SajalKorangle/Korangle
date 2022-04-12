@@ -14,6 +14,8 @@ export class ListComplaintsComponent implements OnInit {
     @Input() progress;
     @Input() isLoadMore;
     @Input() userPermission;
+    @Input() sortNewest;
+    @Input() sortOldest;
     @Input() filterComplaintTypeList;
     @Input() filterStatusList;
     @Input() searchedComplaintList;
