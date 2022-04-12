@@ -29,7 +29,7 @@ export class ManageComplaintsServiceAdapter {
         const employee_permission_filter = {
             parentEmployee: this.vm.user.activeSchool.employeeId,
             parentTask: this.getParentTask(),
-        }
+        };
 
 
         const complaintTypeQuery = new Query()

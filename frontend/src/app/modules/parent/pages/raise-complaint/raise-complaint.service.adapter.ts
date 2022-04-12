@@ -339,7 +339,10 @@ export class RaiseComplaintServiceAdapter {
 
         let notificationObject = {};
 
-        notificationObject["content"] = "Renotification for comlpaint " + this.vm.openedComplaint.title + " by " + this.vm.openedComplaint.parentStudent.fathersName;
+        notificationObject["content"] = "Renotification for comlpaint " +
+                                            this.vm.openedComplaint.title +
+                                            " by " +
+                                            this.vm.openedComplaint.parentStudent.fathersName;
         notificationObject["parentSchool"] = this.vm.user.activeSchool.dbId;
         notificationObject["parentUser"] = parentUserList[0].id;
 

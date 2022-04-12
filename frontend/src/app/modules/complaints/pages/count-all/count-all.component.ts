@@ -357,7 +357,7 @@ export class CountAllComponent implements OnInit {
     getHeaderValues(): any {
         let headerValues = [];
         headerValues.push('');
-        this.columnFilterList.forEach((columnFilter)=> {
+        this.columnFilterList.forEach((columnFilter) => {
             let filterTotalCount = this.htmlRenderer.getFilterTotalCount(columnFilter);
             let filterName = columnFilter.name + " (" + filterTotalCount + ")";
             headerValues.push(filterName);

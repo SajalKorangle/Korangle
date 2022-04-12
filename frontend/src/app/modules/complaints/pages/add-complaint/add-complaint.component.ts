@@ -12,7 +12,7 @@ import { AddComplaintHtmlRenderer } from './add-complaint.html.renderer';
     styleUrls: ['./add-complaint.component.css']
 })
 export class AddComplaintComponent implements OnInit {
-    user:any;
+    user: any;
     isLoading: boolean;
     NULL_CONSTANT: any = null;
 

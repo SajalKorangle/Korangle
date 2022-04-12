@@ -13,8 +13,8 @@ export class AssignEmployeeModalServiceAdapter {
 
     /* Get Employee from ID */
     getEmployee(id) {
-        for(let i = 0; i < this.vm.employeeList.length; i++) {
-            if(this.vm.employeeList[i].id == id) {
+        for (let i = 0; i < this.vm.employeeList.length; i++) {
+            if (this.vm.employeeList[i].id == id) {
                 return this.vm.employeeList[i];
             }
         }
