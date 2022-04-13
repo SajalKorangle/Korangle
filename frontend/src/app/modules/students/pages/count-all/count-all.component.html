@@ -1,20 +1,7 @@
-<div *ngIf="!isLoading" class="card-content table-responsive">
-    <b>Define custom rows and columns or choose from saved tables</b>
-    <!-- <br *ngIf="!htmlRenderer.checkMobile() && htmlRenderer.isMobile()"/> -->
-    <!-- Starts: Print && Download Buttons Section -->
-    <ng-container *ngIf="!htmlRenderer.checkMobile() && (rowFilters.length > 0 || columnFilters.length > 0)">
-        <button
-            id="print-list"
-            type="button"
-            class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
-            [ngStyle]="{ 'padding': '12px 15px', 'margin-left': htmlRenderer.isMobile() ? '0%' : '5%'}"
-            matTooltip="Print the following table"
-            tooltip-position="left"
-            (click)="printStudentList()"
-        >
-            Print<i class="material-icons" style="margin-left: 17px">print</i>
-        </button>
-
+<div *ngIf="!isLoading" class="card-content" [ngStyle]="{'min-height': (rowFilterList.length > 0 || columnFilterList.length > 0) ? '80vh' : '90vh'}">
+    <b>Define custom rows and columns or choose from saved tables.</b>
+    <!-- Starts: Print && Download Buttons Section (Mobile Browser) -->
+    <ng-container *ngIf="!htmlRenderer.isMobileApplication() && htmlRenderer.isMobileBrowser() && (rowFilterList.length > 0 || columnFilterList.length > 0)">
         <button
             type="button"
             id="download"
@@ -27,35 +14,82 @@
             Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
         </button>
     </ng-container>
-    <!--  Ends: Print && Download Buttons Section -->
+    <!--  Ends: Print && Download Buttons Section (Mobile Browser) -->
 
     <br /><br /><b>Table Format</b><br />
     <!--Starts: Generated Tables List -->
     <div class="table-List">
-        <mat-form-field style="margin-right: 30px">
-            <mat-select placeholder="{{tableFormatTitle ? tableFormatTitle : 'Not Selected'}}" id="select-class" style="width: 100%">
+        <mat-form-field class="table-names">
+            <mat-select placeholder="{{ oldTableFormatTitle ? oldTableFormatTitle : 'Not Selected' }}" style="width: 100%">
+                <mat-option (click)="addNewTableClicked()" style="width: 100%">
+                    Create New Table
+                </mat-option>
                 <ng-container *ngFor="let table of tableList; let idx = index">
-                    <mat-option (click)="htmlRenderer.tableOpenClicked(table, idx)" style="width: 100%">
+                    <mat-option (click)="openTableClicked(table, idx)" style="width: 100%">
                         {{ table.formatName }}
                     </mat-option>
                 </ng-container>
             </mat-select>
         </mat-form-field>
-        <i *ngIf="tableFormatTitle" (click)="deleteTable()" class="material-icons delete-icon"> delete_forever </i>
+
+        <div class="print-download-button">
+            <!-- Starts: Print && Download Buttons Section (Desktop) -->
+            <ng-container *ngIf="!htmlRenderer.isMobileApplication() && !htmlRenderer.isMobileBrowser() && (rowFilterList.length > 0 || columnFilterList.length > 0)">
+                <button
+                    id="print-list"
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
+                    style="padding: 12px 15px;"
+                    matTooltip="Print the following table"
+                    tooltip-position="left"
+                    (click)="printTable()"
+                >
+                    Print<i class="material-icons" style="margin-left: 17px">print</i>
+                </button>
+
+                <button
+                    type="button"
+                    id="download"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    style="padding: 12px 15px; margin-left: 5%;"
+                    matTooltip="Download the following table"
+                    tooltip-position="left"
+                    (click)="downloadList()"
+                >
+                    Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
+                </button>
+            </ng-container>
+            <!--  Ends: Print && Download Buttons Section (Desktop) -->
+        </div>
     </div>
     <!-- Ends: Generated Tables List -->
 
+    <!--Starts: Change Table Name -->
+    <div class="change-table-name" *ngIf="tableActiveId">
+        <div>
+            <mat-form-field class="inputField">
+                <input matInput type="text" [(ngModel)]="tableFormatTitle" required />
+            </mat-form-field>
+            <span *ngIf="(!htmlRenderer.isMobileBrowser() && !htmlRenderer.isMobileApplication()) && !htmlRenderer.checkTableName()" style="color: red">Table name must be unique.</span>
+        </div>
+
+        <i (click)="openDeleteTableModal()" matTooltip="Delete table" tooltip-position="left" class="material-icons delete-icon"> delete_forever </i>
+    </div>
+    <span *ngIf="(htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()) && !htmlRenderer.checkTableName()" style="color: red">Table name must be unique.</span>
+    <br />
+    <!--Ends: Change Table Name -->
+
     <!-- Starts: Table -->
-    <ng-container *ngIf="!isLoading">
+    <ng-container>
         <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
             <table class="table">
                 <!-- Starts: Table Header -->
                 <thead>
                     <tr cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="dropColumn($event)">
                         <th class="minWidth"></th>
-                        <th *ngFor="let filter of columnFilters" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth" cdkDragLockAxis="x" cdkDrag>
+                        <th *ngFor="let filter of columnFilterList" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth" cdkDragLockAxis="x" cdkDrag>
                             <span (click)="whereToAdd = 'col'; openChangeDialog(filter)" style="cursor: pointer">
-                                {{filter.name}} (<span>{{filter.totalCount}}</span>)
+                                {{ filter.name }} (<span>{{ htmlRenderer.getFilterTotalCount(filter) }}</span>)
                             </span>
                             <i class="material-icons menu-icon" style="float: right; margin-right: 10px;" cdkDragHandle>menu</i>
                         </th>
@@ -70,16 +104,18 @@
 
                 <!-- Starts: Table Body -->
                 <tbody cdkDropList class="example-list" (cdkDropListDropped)="dropRow($event)">
-                    <tr class="example-box" *ngFor="let filter of rowFilters" cdkDragLockAxis="y" cdkDrag>
+                    <tr class="example-box" *ngFor="let rowFilter of rowFilterList" cdkDragLockAxis="y" cdkDrag>
                         <th class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
                             <i class="material-icons menu-icon" style="float: left" cdkDragHandle>menu</i>
-                            <span (click)="whereToAdd = 'row'; openChangeDialog(filter)" style="cursor: pointer">
-                                {{filter.name}} (<span>{{filter.totalCount}}</span>)
+                            <span (click)="whereToAdd = 'row'; openChangeDialog(rowFilter)" style="cursor: pointer">
+                                {{ rowFilter.name }} (<span>{{ htmlRenderer.getFilterTotalCount(rowFilter) }}</span>)
                             </span>
                         </th>
-                        <td class="minWidth" *ngFor="let ans of filter.answer">
-                            {{ans}}
-                        </td>
+                        <ng-container *ngFor="let columnFilter of columnFilterList; let idx = index">
+                            <td class="minWidth" style="cursor: pointer" (click)="openShowStudentListDialog(rowFilter, columnFilter)">
+                                {{ htmlRenderer.getIntersectionCount(rowFilter, columnFilter) }}
+                            </td>
+                        </ng-container>
                         <td class="minWidth">-</td>
                     </tr>
                     <tr class="last-child">
@@ -88,7 +124,7 @@
                                 + Row
                             </span>
                         </th>
-                        <td class="minWidth" *ngFor="let filter of columnFilters">-</td>
+                        <td class="minWidth" *ngFor="let filter of columnFilterList">-</td>
                         <td class="minWidth">-</td>
                     </tr>
                 </tbody>
@@ -100,11 +136,11 @@
 </div>
 
 <ng-container *ngIf="!isLoading">
-    <div *ngIf="!htmlRenderer.isMobile()" style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
+    <div *ngIf="!htmlRenderer.isMobileBrowser() || !htmlRenderer.isMobileApplication()" style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
 
     <!-- Starts: Save Button -->
     <ng-container *ngIf="!isTableEditing">
-        <button *ngIf="rowFilters.length > 0 || columnFilters.length > 0"
+        <button *ngIf="rowFilterList.length > 0 || columnFilterList.length > 0"
             type="button"
             (click)="openSaveFormatDialog()"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
@@ -117,10 +153,12 @@
 
     <!-- Starts: Update Changes  &&  Save As Buttons Section -->
     <ng-container *ngIf="isTableEditing">
+
         <button type="button"
             (click)="updateChangesClicked()"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
             style="padding: 7px 17px; font-size: 1.3rem; float: right; margin-right: 25px;"
+            [disabled]="!htmlRenderer.checkTableName()"
         >
             Update Changes
         </button>
