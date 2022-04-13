@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { isMobile } from '@classes/common';
 
 @Component({
     selector: 'app-filter-modal',
@@ -13,11 +14,12 @@ export class FilterModalComponent implements OnInit {
 
     /* Row Name */
     name: string = "";
+    isNameProvided: boolean = true;
 
     /* Age Check */
-    minAge: number = 0;
-    maxAge: number = 1000;
-    asOnDate = new Date();
+    minAge: number;
+    maxAge: number;
+    asOnDate;
 
     /* Category Options */
     scSelected: boolean = false;
@@ -88,7 +90,7 @@ export class FilterModalComponent implements OnInit {
                 if (category.includes("OBC")) {
                     this.obcSelected = true;
                 }
-                if (category.includes("GEN")) {
+                if (category.includes("Gen.")) {
                     this.generalSelected = true;
                 }
                 if (category.includes("NONE")) {
@@ -99,9 +101,11 @@ export class FilterModalComponent implements OnInit {
             /* Initialize age */
             if (this.filter["age"]) {
                 let age = this.filter["age"];
-                this.asOnDate = age[0];
-                this.minAge = age.length > 1 ? age[1] : 0;
-                this.maxAge = age.length > 2 ? age[2] : 1000;
+
+                let newDate = new Date(age[0]);
+                this.asOnDate = newDate.toJSON().slice(0, 10);
+                this.minAge = age[1];
+                this.maxAge = age[2];
             }   //  Ends: Initialize age
 
             /* Initialize gender */
@@ -159,28 +163,30 @@ export class FilterModalComponent implements OnInit {
                     this.noTC = true;
                 }
             }   //  Ends: Initialize TC
+
         }  // Ends: Initialize Default Value of Filters
+        else {
+            let today = new Date();
+            today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+            this.asOnDate = today.toJSON().slice(0, 10);
+        }
     }
 
-    ngOnInit() {
-    }
+    ngOnInit() { }
 
-    /* Check Mobile - maxidth (991) */
-    isMobile(): boolean {
+    /* Check Width - maxidth (575) */
+    /* It is being used to style the page based on width.
+     For a very small device, some "<br />" needs to removed. */
+    checkWidth(): boolean {
         if (window.innerWidth > 991) {
             return false;
         }
         return true;
     }
 
-    /* Check Width - maxidth (575) */
-    /* It is being used to style the page based on width.
-     For a very small device, some "<br />" needs to removed. */
-    checkWidth(): boolean {
-        if (window.innerWidth > 575) {
-            return false;
-        }
-        return true;
+    /* For mobile-application */
+    checkMobile(): boolean {
+        return isMobile();
     }
 
     /* Unselect All Classes */
@@ -229,6 +235,14 @@ export class FilterModalComponent implements OnInit {
         });
     }  // Ends: getFilteredFilterValues()
 
+    /* Make input-date non-typeable */
+    handleOnKeyDown(event: any) {
+        let keyPressed = event.keyCode;
+        if (keyPressed != 8 && keyPressed != 46) { //check if it is not delete
+            return false; // don't allow to input any value
+        }
+    }  // Ends: handleOnKeyDown()
+
     /* Delete Button Clicked */
     deleteClick(): void {
         let conformation = confirm("Do you really want to delete this?");
@@ -247,9 +261,25 @@ export class FilterModalComponent implements OnInit {
 
     /* Apply Button Clicked */
     applyClick(): void {
-        if (!this.name) {
+        if (!this.name.toString().trim()) {
+            this.isNameProvided = false;
             alert("Please enter the name.");
             return;
+        }
+        this.isNameProvided = true;
+
+        if (this.asOnDate) {
+            if (this.minAge != null && !isNaN(this.minAge) && this.maxAge != null && !isNaN(this.maxAge) && this.minAge > this.maxAge) {
+                alert("min-age should be less than or equal to max-age.");
+                return;
+            }
+        }
+
+        if ((this.minAge != null && !isNaN(this.minAge)) || (this.maxAge != null && !isNaN(this.maxAge))) {
+            if (!this.asOnDate) {
+                alert("Please choose a date from the age section.");
+                return;
+            }
         }
 
         let filtersData = {};
@@ -270,28 +300,27 @@ export class FilterModalComponent implements OnInit {
         /* Ends: Class-Section */
 
         /* Name */
-        filtersData["name"] = this.name;
+        filtersData["name"] = this.name.toString().trim();
 
         /* Age */
         let age = [];
         if (this.asOnDate) {
             age.push(this.asOnDate);
-        } else {
-            let today = new Date();
-            today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-            age.push(today.toJSON().slice(0, 10));
+
+            if (this.minAge != null && !isNaN(this.minAge)) {
+                age.push(this.minAge);
+            } else {
+                age.push(null);
+            }
+
+            if (this.maxAge != null && !isNaN(this.maxAge)) {
+                age.push(this.maxAge);
+            } else {
+                age.push(null);
+            }
+
+            filtersData["age"] = age;
         }
-        if (this.minAge != null && !isNaN(this.minAge)) {
-            age.push(Math.max(this.minAge, 0));
-        } else {
-            age.push(0);
-        }
-        if (this.maxAge != null && !isNaN(this.maxAge)) {
-            age.push(Math.max(this.maxAge, 0));
-        } else {
-            age.push(1000);
-        }
-        filtersData["age"] = age;
         /* Ends: Age */
 
         /* Category */
@@ -306,7 +335,7 @@ export class FilterModalComponent implements OnInit {
             category.push("OBC");
         }
         if (this.generalSelected) {
-            category.push("GEN");
+            category.push("Gen.");
         }
         if (this.noneCategory) {
             category.push("NONE");

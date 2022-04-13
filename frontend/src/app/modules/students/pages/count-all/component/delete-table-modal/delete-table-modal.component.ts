@@ -1,22 +1,25 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { DataStorage } from "@classes/data-storage";
 
 @Component({
-    selector: 'app-format-table-modal',
-    templateUrl: './format-table-modal.component.html',
-    styleUrls: ['./format-table-modal.component.css']
+    selector: 'app-delete-table-modal',
+    templateUrl: './delete-table-modal.component.html',
+    styleUrls: ['./delete-table-modal.component.css']
 })
-export class FormatTableModalComponent implements OnInit {
+export class DeleteTableModalComponent implements OnInit {
+    user: any;
     name: string = "";
 
     constructor(
-        public dialogRef: MatDialogRef<FormatTableModalComponent>,
+        public dialogRef: MatDialogRef<DeleteTableModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data,
     ) {
         this.name = data.formatName;
     }
 
     ngOnInit() {
+        this.user = DataStorage.getInstance().getUser();
     }
 
     /* Cancel Clicked */
@@ -25,11 +28,8 @@ export class FormatTableModalComponent implements OnInit {
     }  // Ends: cancleClick()
 
     /* Save Button Clicked */
-    saveClick(): void {
-        if (!this.name) {
-            alert("Please enter the name.");
-            return;
-        }
-        this.dialogRef.close({name: this.name});
+    deleteClick(): void {
+        this.dialogRef.close({operation: "Delete"});
     }  // Ends: saveClick()
+
 }

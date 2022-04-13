@@ -1,7 +1,7 @@
 /* Starts: Modal Container */
 .format-table-modal-container {
     height: 23vh;
-    width: 30vw;
+    width: 50vw;
 }
 /* Ends: Modal Container */
 
@@ -10,16 +10,22 @@
     float: right;
 }
 
-.delete-btn {
-    color: #FF1717;    /* Red */
+.cancel-btn {
     background-color: white;
     outline: none;
     border: none;
     text-decoration: underline;
     box-shadow: none;
+    text-transform: capitalize !important;
+    font-weight: 500;
+    font-size: 12px;
+    padding: 7px 17px;
+    font-weight: 500;
 }
 
-.bottom-btns .btn {
+.delete-btn {
+    text-transform: capitalize !important;
+    padding: 7px 17px;
     font-weight: 500;
     font-size: 12px;
 }
