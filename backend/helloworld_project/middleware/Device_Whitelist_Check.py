@@ -1,6 +1,5 @@
 from rest_framework.response import Response
 from django.http import HttpResponseForbidden, JsonResponse
-from sqlalchemy import true
 from authentication_app.models import DeviceList
 import datetime
 
