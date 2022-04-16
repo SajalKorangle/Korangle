@@ -28,6 +28,16 @@ export class ChangePasswordComponent {
     }
 
     changePassword(): void {
+        if (!this.oldPassword || !this.newPassword) {
+            alert('Please enter old and new password');
+            return;
+        }
+
+        if (!this.confirmPassword) {
+            alert('Please confirm the new password');
+            return;
+        }
+
         if (this.confirmPassword !== this.newPassword) {
             alert('New Password and confirm password are not same');
             return;

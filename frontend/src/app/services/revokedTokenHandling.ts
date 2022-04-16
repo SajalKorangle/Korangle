@@ -9,7 +9,7 @@ export function checkTokenRevokedStatus(response) {
         user.isAuthenticated = false;
         user.emptyUserDetails();
         alert(response['message']);     //  Here the user is receiving permission denied message
-        window.location.reload();
+        document.location.href = '/login';  // redirecting
         return true;
     }
     return false;
