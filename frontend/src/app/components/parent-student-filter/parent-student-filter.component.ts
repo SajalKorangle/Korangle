@@ -140,6 +140,12 @@ export class ParentStudentFilterComponent implements OnInit {
         });
     }
 
+    sortStudentList(item: any) {
+        this.studentList = this.studentList.sort(function(a: any, b: any) {
+            return (a[item].toLowerCase() > b[item].toLowerCase()) ? 1 : ((a[item].toLowerCase() < b[item].toLowerCase()) ? -1 : 0);
+        });
+    }
+
     displayStudentFunction(student?: any): any {
         if (student) {
             if (typeof student == 'string') {
@@ -157,9 +163,6 @@ export class ParentStudentFilterComponent implements OnInit {
                 return studentSection.parentStudent == student.id;
             });
             return (
-                student.name +
-                (student.scholarNumber ? ' (' + student.scholarNumber + ')' : '') +
-                ', ' +
                 this.getClassName(studentSection.parentClass) +
                 ', ' +
                 this.getSectionName(studentSection.parentDivision)

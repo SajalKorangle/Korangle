@@ -15,14 +15,24 @@
                     (optionSelected)="handleStudentSelection($event.option.value)"
                     [displayWith]="displayStudentFunction"
                 >
-                    <mat-option *ngFor="let student of filteredStudentList | async" [value]="student">
-                        <img *ngIf="student.profileImage" style="width: 10%" src="{{ student.profileImage }}" />
-                        <img
-                            *ngIf="!student.profileImage"
-                            style="width: 10%"
-                            src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
-                        />
-                        {{ displayStudentListFunction(student) }}
+                    {{ sortStudentList('name') }}
+                    <mat-option *ngFor="let student of (filteredStudentList | async )" [value]="student">
+                        <div class="box">
+                            <img class="pix" *ngIf="student.profileImage"  src="{{ student.profileImage }}" />
+                            <img
+                                 class="pix"
+                                 *ngIf="!student.profileImage"
+                                 src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                            />
+                            <span style="width: 85%;">
+                                <p class="paraUp" >
+                                {{ student.name }}{{ student.scholarNumber?' ('+student.scholarNumber+')':'' }}
+                                </p>
+                                <p class="paraDown">
+                                {{ student.fathersName+', ' }}{{ displayStudentListFunction(student) }}
+                                </p>
+                            </span>
+                        </div>
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
