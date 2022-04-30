@@ -13,9 +13,7 @@
                 <mat-autocomplete
                     #autoStudent="matAutocomplete"
                     (optionSelected)="handleStudentSelection($event.option.value)"
-                    [displayWith]="displayStudentFunction"
                 >
-                    {{ sortStudentList('name') }}
                     <mat-option *ngFor="let student of (filteredStudentList | async )" [value]="student">
                         <div class="box">
                             <img class="pix" *ngIf="student.profileImage"  src="{{ student.profileImage }}" />
@@ -29,7 +27,7 @@
                                 {{ student.name }}{{ student.scholarNumber?' ('+student.scholarNumber+')':'' }}
                                 </p>
                                 <p class="paraDown">
-                                {{ student.fathersName+', ' }}{{ displayStudentListFunction(student) }}
+                                {{ student.fathersName+', ' }}{{ getStudentClassAndSection(student) }}
                                 </p>
                             </span>
                         </div>

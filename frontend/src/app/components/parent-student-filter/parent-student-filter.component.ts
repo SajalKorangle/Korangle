@@ -53,6 +53,7 @@ export class ParentStudentFilterComponent implements OnInit {
         this.serviceAdapter = new ParentStudentFilterServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+        this.studentList = this.sortStudentList('name');
 
         this.filteredStudentList = this.studentFormControl.valueChanges.pipe(
             map((value) => (typeof value === 'string' ? value : (value as any).name)),
@@ -134,8 +135,8 @@ export class ParentStudentFilterComponent implements OnInit {
         }
         return this.studentList.filter((student) => {
             return (
-                student.name.toLowerCase().indexOf(value.toLowerCase()) === 0 ||
-                (student.scholarNumber && student.scholarNumber.toLowerCase().indexOf(value.toLowerCase()) === 0)
+                student.name.toLowerCase().indexOf(value.toLowerCase()) != -1 ||
+                (student.scholarNumber && student.scholarNumber.toLowerCase().indexOf(value.toLowerCase()) != -1)
             );
         });
     }
@@ -144,20 +145,10 @@ export class ParentStudentFilterComponent implements OnInit {
         this.studentList = this.studentList.sort(function(a: any, b: any) {
             return (a[item].toLowerCase() > b[item].toLowerCase()) ? 1 : ((a[item].toLowerCase() < b[item].toLowerCase()) ? -1 : 0);
         });
+        return this.studentList;
     }
 
-    displayStudentFunction(student?: any): any {
-        if (student) {
-            if (typeof student == 'string') {
-                return student;
-            } else {
-                return student.name + (student.scholarNumber ? ' (' + student.scholarNumber + ')' : '');
-            }
-        }
-        return '';
-    }
-
-    displayStudentListFunction(student?: any): any {
+    getStudentClassAndSection(student?: any): any {
         if (student) {
             let studentSection = this.studentSectionList.find((studentSection) => {
                 return studentSection.parentStudent == student.id;
