@@ -15,6 +15,7 @@ export class FilterModalComponent implements OnInit {
     name: string = "";
     isEditing: boolean = false;
     isNameProvided: boolean = true;
+    isDeleteDisabled: boolean = true;
 
     /* Details of Start Date */
     startDateType: string = "";
@@ -38,6 +39,7 @@ export class FilterModalComponent implements OnInit {
 
         /* Initialize Default Value of Filters */
         if (data["filter"]) {
+            this.isDeleteDisabled = false;
             this.isEditing = true;
             this.filter = data.filter;
             this.name = this.filter["name"];
@@ -106,6 +108,7 @@ export class FilterModalComponent implements OnInit {
 
     /* Make input-date non-typeable */
     handleOnKeyDown(event: any) {
+        this.isDeleteDisabled = false;
         let keyPressed = event.keyCode;
         if (keyPressed != 8 && keyPressed != 46) { //check if it is not delete
             return false; // don't allow to input any value
@@ -114,6 +117,7 @@ export class FilterModalComponent implements OnInit {
 
     /* Unselect All ComplaintTypes */
     unselectAllComplaintType(): void {
+        this.isDeleteDisabled = false;
         this.complaintTypeList.forEach((complaintType) => {
             complaintType.selected = false;
         });
@@ -121,6 +125,7 @@ export class FilterModalComponent implements OnInit {
 
     /* Select All ComplaintTypes */
     selectAllComplaintType(): void {
+        this.isDeleteDisabled = false;
         this.complaintTypeList.forEach((complaintType) => {
             complaintType.selected = true;
         });
@@ -128,6 +133,7 @@ export class FilterModalComponent implements OnInit {
 
     /* Unselect All Statuses */
     unselectAllStatus(): void {
+        this.isDeleteDisabled = false;
         this.statusList.forEach((status) => {
             status.selected = false;
         });
@@ -135,6 +141,7 @@ export class FilterModalComponent implements OnInit {
 
     /* Select All Statuses */
     selectAllStatus(): void {
+        this.isDeleteDisabled = false;
         this.statusList.forEach((status) => {
             status.selected = true;
         });
@@ -142,16 +149,20 @@ export class FilterModalComponent implements OnInit {
 
     /* Delete Button Clicked */
     deleteClick(): void {
-        let conformation = confirm("Do you really want to delete this?");
-        if (conformation) {
-            if (this.isEditing) {
-                let filtersData = {};
-                filtersData["operation"] = "delete";
-                this.dialogRef.close({ filtersData: filtersData });
+        if (!this.isDeleteDisabled) {
+            let conformation = confirm("Do you really want to delete this?");
+            if (conformation) {
+                if (this.isEditing) {
+                    let filtersData = {};
+                    filtersData["operation"] = "delete";
+                    this.dialogRef.close({ filtersData: filtersData });
+                }
+                else {
+                    this.dialogRef.close();
+                }
             }
-            else {
-                this.dialogRef.close();
-            }
+        } else {
+            this.dialogRef.close();
         }
     }  // Ends: deleteClick()
 

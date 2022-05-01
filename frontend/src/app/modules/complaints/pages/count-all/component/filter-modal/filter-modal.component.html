@@ -2,9 +2,9 @@
     <!-- Starts: Name Field -->
     <b>Name - </b>
     <mat-form-field class="inputField" style="margin-left: 10%;">
-        <input matInput required type="text" [(ngModel)]="name" />
+        <input matInput required type="text" [ngModel]="name" (ngModelChange)="name = $event; isDeleteDisabled = false;" />
     </mat-form-field>
-    <p *ngIf="!isNameProvided && !name" style="color: red;">Filter name is necessary.</p>
+    <p *ngIf="!isNameProvided && !name.toString().trim()" style="color: red;">Filter name is necessary.</p>
     <!-- Ends: Name Field -->
 
     <!-- Starts: Time Span Section -->
@@ -21,16 +21,16 @@
                     <!-- Starts: Possible Options for Start-Date -->
                     <mat-label>Start Date</mat-label>
                     <mat-select [(value)]="startDateType" style="width: 100%">
-                        <mat-option style="width: 100%">
+                        <mat-option (click)="isDeleteDisabled = false;" style="width: 100%">
                             Cancel Date Selection
                         </mat-option>
-                        <mat-option value="Select Date" style="width: 100%">
+                        <mat-option (click)="isDeleteDisabled = false;" value="Select Date" style="width: 100%">
                             Select Date
                         </mat-option>
-                        <mat-option value="1st of Ongoing Month" style="width: 100%">
+                        <mat-option (click)="isDeleteDisabled = false;" value="1st of Ongoing Month" style="width: 100%">
                             1st of Ongoing Month
                         </mat-option>
-                        <mat-option value="From Days Ago" style="width: 100%">
+                        <mat-option (click)="isDeleteDisabled = false;" value="From Days Ago" style="width: 100%">
                             From Days Ago
                         </mat-option>
                     </mat-select>
@@ -69,16 +69,16 @@
                     <!-- Starts: Possible Options for End-Date -->
                     <mat-label>End Date</mat-label>
                     <mat-select [(value)]="endDateType" style="width: 100%">
-                        <mat-option style="width: 100%">
+                        <mat-option (click)="isDeleteDisabled = false;" style="width: 100%">
                             Cancel Date Selection
                         </mat-option>
-                        <mat-option value="Select Date" style="width: 100%">
+                        <mat-option (click)="isDeleteDisabled = false;" value="Select Date" style="width: 100%">
                             Select Date
                         </mat-option>
-                        <mat-option value="Current Date" style="width: 100%">
+                        <mat-option (click)="isDeleteDisabled = false;" value="Current Date" style="width: 100%">
                             Current Date
                         </mat-option>
-                        <mat-option value="From Days Ago" style="width: 100%">
+                        <mat-option (click)="isDeleteDisabled = false;" value="From Days Ago" style="width: 100%">
                             From Days Ago
                         </mat-option>
                     </mat-select>
@@ -131,7 +131,7 @@
                         <mat-checkbox
                             class="checkbox-label"
                             [(ngModel)]="complaintType.selected"
-                            (click)="$event.stopPropagation()"
+                            (click)="isDeleteDisabled = false; $event.stopPropagation()"
                         >
                             {{ complaintType.name }}
                         </mat-checkbox>
@@ -158,7 +158,7 @@
                     <mat-option class="mat-option-complaint-type">
                         <mat-checkbox
                             [(ngModel)]="status.selected"
-                            (click)="$event.stopPropagation()"
+                            (click)="isDeleteDisabled = false; $event.stopPropagation()"
                         >
                             {{ status.name }}
                         </mat-checkbox>
@@ -171,6 +171,8 @@
     <br />
     <br *ngIf="!isMobileBrowser() && !isMobileApplication()"/>
     <!-- Ends: Complaint type  &&  Status Section -->
+
+    <!-- [disabled] = "isDeleteDisabled" -->
 
     <!-- Starts: Bottom Buttons -->
     <div class="bottom-btns">
