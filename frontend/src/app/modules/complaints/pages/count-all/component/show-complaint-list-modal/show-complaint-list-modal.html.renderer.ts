@@ -4,8 +4,7 @@ export class ShowComplaintListModalHtmlRenderer {
 
     vm: ShowComplaintListModalComponent;
 
-    constructor() {
-    }
+    constructor() { }
 
     /* Initialize Renderer */
     initializeRenderer(vm: ShowComplaintListModalComponent): void {
@@ -40,7 +39,7 @@ export class ShowComplaintListModalHtmlRenderer {
     getStatus(statusId) {
         let statusName = "None";
 
-        this.vm.studentList.forEach((status) => {
+        this.vm.statusList.forEach((status) => {
             if (status["id"] == statusId) {
                 statusName = status["name"];
             }

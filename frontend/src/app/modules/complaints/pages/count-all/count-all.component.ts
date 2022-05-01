@@ -30,7 +30,7 @@ export class CountAllComponent implements OnInit {
     nullComplaintType = {
         id: null,
         defaultText: '',
-        name: 'Not Selected',
+        name: 'None',
         parentSchoolComplaintStatusDefault: null,
         parentSchool: null,
         selected: false,
@@ -38,7 +38,7 @@ export class CountAllComponent implements OnInit {
 
     nullStatus = {
         id: null,
-        name: 'Not Applicable',
+        name: 'None',
         parentSchool: null,
         selected: false,
     };

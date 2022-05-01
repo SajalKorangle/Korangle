@@ -34,7 +34,7 @@
 /* Starts: Media Query */
 @media only screen and (max-width: 992px) {
     /* Starts: Modal Container */
-    .format-table-modal-container {
+    .table-name-modal-container {
         height: 30vh;
         width: 100%;
         font-size: 12px;
