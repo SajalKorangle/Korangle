@@ -56,7 +56,6 @@ export class AddComplaintComponent implements OnInit {
 
     /* Initialize Complaint Data */
     initializeComplaintData() {
-        this.selectedStudent = {};
         this.comment = "";
         this.complaintTitle = "";
         this.complaintTypeName = "Select Complaint Type";

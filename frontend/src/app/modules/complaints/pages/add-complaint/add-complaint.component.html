@@ -1,5 +1,4 @@
 <div [class.card-content]="selectedStudent['id']" [class.search-field-margin]="!selectedStudent['id']">
-
     <parent-student-filter
         [user]="user"
         (onStudentListSelected)="initializeStudentData($event[0][0])"

@@ -56,11 +56,11 @@ export class AddComplaintServiceAdapter {
         /* Ends: Add it to database */
 
         /* Starts: Create && Add Comment Object */
-        if (this.vm.comment) {
+        if (this.vm.comment.toString().trim()) {
             let commentObject = {};
             commentObject["parentEmployee"] = this.vm.NULL_CONSTANT;
             commentObject["parentStudent"] = this.vm.selectedStudent.id;
-            commentObject["message"] = this.vm.comment;
+            commentObject["message"] = this.vm.comment.toString().trim();
             commentObject["parentComplaint"] = complaint.id;
 
             const comment = await new Query().createObject({complaints_app: 'Comment'}, commentObject);
