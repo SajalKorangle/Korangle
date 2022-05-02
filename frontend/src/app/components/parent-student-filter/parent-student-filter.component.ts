@@ -53,7 +53,6 @@ export class ParentStudentFilterComponent implements OnInit {
         this.serviceAdapter = new ParentStudentFilterServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-        this.studentList = this.sortStudentList('name');
 
         this.filteredStudentList = this.studentFormControl.valueChanges.pipe(
             map((value) => (typeof value === 'string' ? value : (value as any).name)),
@@ -139,13 +138,6 @@ export class ParentStudentFilterComponent implements OnInit {
                 (student.scholarNumber && student.scholarNumber.toLowerCase().indexOf(value.toLowerCase()) != -1)
             );
         });
-    }
-
-    sortStudentList(item: any) {
-        this.studentList = this.studentList.sort(function(a: any, b: any) {
-            return (a[item].toLowerCase() > b[item].toLowerCase()) ? 1 : ((a[item].toLowerCase() < b[item].toLowerCase()) ? -1 : 0);
-        });
-        return this.studentList;
     }
 
     getStudentClassAndSection(student?: any): any {
