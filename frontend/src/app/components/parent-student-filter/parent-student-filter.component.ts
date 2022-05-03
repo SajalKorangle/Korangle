@@ -185,6 +185,8 @@ export class ParentStudentFilterComponent implements OnInit {
     leftText(name: any): any {
         let text = (<HTMLInputElement>document.getElementById("textInput")).value;
         let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        if (ind == -1)
+            return name;
         if (ind > 0)
             return name.substring(0, ind);
         return '';
@@ -193,6 +195,8 @@ export class ParentStudentFilterComponent implements OnInit {
     rightText(name: any): any {
         let text = (<HTMLInputElement>document.getElementById("textInput")).value;
         let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        if (ind == -1)
+            return '';
         let right = ind + text.length;
         if (right < name.length)
             return name.substring(right, name.length);
@@ -202,7 +206,9 @@ export class ParentStudentFilterComponent implements OnInit {
     highlightText(name: any): any {
         let text = (<HTMLInputElement>document.getElementById("textInput")).value;
         let ind = name.toLowerCase().indexOf(text.toLowerCase());
-        return name.substring(ind, ind + text.length);
+        if (ind != -1)
+            return name.substring(ind, ind + text.length);
+        return '';
     }
 
 }
