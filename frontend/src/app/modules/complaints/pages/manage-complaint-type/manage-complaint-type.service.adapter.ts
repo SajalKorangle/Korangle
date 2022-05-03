@@ -42,6 +42,10 @@ export class ManageComplaintTypeServiceAdapter {
             employeeQuery,   // 2
         ]);
 
+        statusList.sort((a, b) => (a.id - b.id));
+        employeeList.sort((a, b) => (a.id - b.id));
+        complaintTypeList.sort((a, b) => (a.id - b.id));
+
         this.vm.initializeStatusList(statusList);
         this.vm.initializeEmployeeList(employeeList);
         this.vm.initializecomplaintTypeList(complaintTypeList);
