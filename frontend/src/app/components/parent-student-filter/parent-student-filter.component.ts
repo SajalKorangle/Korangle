@@ -181,4 +181,28 @@ export class ParentStudentFilterComponent implements OnInit {
         let studentList = this.getFilteredStudentListByMobileNumber(mobileNumber);
         this.onStudentListSelected.emit([studentList, this.getFilteredStudentSectionListByStudentList(studentList)]);
     }
+
+    leftText(name: any): any {
+        let text = (<HTMLInputElement>document.getElementById("textInput")).value;
+        let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        if (ind > 0)
+            return name.substring(0, ind);
+        return '';
+    }
+
+    rightText(name: any): any {
+        let text = (<HTMLInputElement>document.getElementById("textInput")).value;
+        let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        let right = ind + text.length;
+        if (right < name.length)
+            return name.substring(right, name.length);
+        return '';
+    }
+
+    highlightText(name: any): any {
+        let text = (<HTMLInputElement>document.getElementById("textInput")).value;
+        let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        return name.substring(ind, ind + text.length);
+    }
+
 }
