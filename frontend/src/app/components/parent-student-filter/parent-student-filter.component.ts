@@ -140,6 +140,17 @@ export class ParentStudentFilterComponent implements OnInit {
         });
     }
 
+    displayStudentFunction(student?: any): any {
+        if (student) {
+            if (typeof student == 'string') {
+                return student;
+            } else {
+                return student.name + (student.scholarNumber ? ' (' + student.scholarNumber + ')' : '');
+            }
+        }
+        return '';
+    }
+
     getStudentClassAndSection(student?: any): any {
         if (student) {
             let studentSection = this.studentSectionList.find((studentSection) => {

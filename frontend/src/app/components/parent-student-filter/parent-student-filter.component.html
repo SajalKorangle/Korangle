@@ -11,10 +11,12 @@
                     matInput
                     [formControl]="studentFormControl"
                     [matAutocomplete]="autoStudent"
+
                 />
                 <mat-autocomplete
                     #autoStudent="matAutocomplete"
                     (optionSelected)="handleStudentSelection($event.option.value)"
+                    [displayWith]="displayStudentFunction"
                 >
                     <mat-option *ngFor="let student of (filteredStudentList | async )" [value]="student">
                         <div class="box">
