@@ -50,7 +50,7 @@ export class ManageComplaintsComponent implements OnInit {
     filterComplaintTypeList: any = [];
 
     defaultStatus: any = {};
-    defaultStatusTitle: string = "Not Selected";
+    defaultStatusTitle: string = "None";
     openedComplaint: any = {};
     openedComplaintIdx: number;
 

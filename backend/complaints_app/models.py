@@ -66,13 +66,13 @@ class Complaint(models.Model):
     # Creator (Employee)
     # It will be null for the parent, who is not an employee of the school.
     # This would be required if the complaint is raised by the employee of the school.
-    parentEmployee = models.ForeignKey(Employee, on_delete = models.CASCADE, null = True)
+    parentEmployee = models.ForeignKey(Employee, on_delete = models.SET_NULL, null = True)
 
     # Date Sent
     dateSent = models.DateTimeField(auto_now_add = True)
 
     # Complaint Type
-    parentSchoolComplaintType = models.ForeignKey(SchoolComplaintType, on_delete = models.CASCADE, null = True)
+    parentSchoolComplaintType = models.ForeignKey(SchoolComplaintType, on_delete = models.SET_NULL, null = True)
 
     # Child
     parentStudent = models.ForeignKey(Student, on_delete = models.CASCADE)
