@@ -46,6 +46,7 @@ export class ParentStudentFilterServiceAdapter {
 
                 this.populateStudentList(value[3]);
                 this.populateMobileNumberList();
+                this.sortStudentList('name');
 
                 this.vm.handleDataLoading();
 
@@ -69,6 +70,12 @@ export class ParentStudentFilterServiceAdapter {
         this.vm.mobileNumberList.concat(this.vm.studentList.map((a) => a.secondMobileNumber));
         this.vm.mobileNumberList = this.vm.mobileNumberList.filter((item, index) => {
             return item != null && this.vm.mobileNumberList.indexOf(item) == index;
+        });
+    }
+
+    sortStudentList(item: any) {
+        this.vm.studentList = this.vm.studentList.sort(function(a: any, b: any) {
+            return (a[item].toLowerCase() > b[item].toLowerCase()) ? 1 : ((a[item].toLowerCase() < b[item].toLowerCase()) ? -1 : 0);
         });
     }
 }
