@@ -183,7 +183,7 @@ export class ManageComplaintsComponent implements OnInit {
             this.complaintTypeList.push(complaintType);
         });
 
-        this.filterComplaintTypeList = CommonFunctions.getInstance().deepCopy(this.complaintTypeList);
+        // this.filterComplaintTypeList = CommonFunctions.getInstance().deepCopy(this.complaintTypeList);
     }  // Ends: initializeComplaintTypeList()
 
     /* Initialize Address-TO-Employee List (If Complaint-Type is Null) */
@@ -239,7 +239,7 @@ export class ManageComplaintsComponent implements OnInit {
         if (complaintList.length < 50) {
             this.isLoadMore = false;
         }
-        this.searchedComplaintList = this.complaintList;
+        // this.searchedComplaintList = this.complaintList;
         this.startNewProgressBar();
     }  // Ends: initializeComplaintList()
 
@@ -294,7 +294,7 @@ export class ManageComplaintsComponent implements OnInit {
             status["selected"] = false;
             this.statusList.push(status);
         });
-        this.filterStatusList = CommonFunctions.getInstance().deepCopy(this.statusList);
+        // this.filterStatusList = CommonFunctions.getInstance().deepCopy(this.statusList);
     }  // Ends: initializeStatusList()
 
     /* Initialize Employee List */

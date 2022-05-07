@@ -16,9 +16,9 @@ export class ListComplaintsComponent implements OnInit {
     @Input() userPermission;
     @Input() sortNewest;
     @Input() sortOldest;
-    @Input() filterComplaintTypeList;
-    @Input() filterStatusList;
-    @Input() searchedComplaintList;
+    @Input() complaintTypeList;
+    @Input() statusList;
+    @Input() complaintList;
     @Output() searchComplaints = new EventEmitter<any>();
     @Output() doneIconClicked = new EventEmitter<any>();
     @Output() sortNewestClicked = new EventEmitter<any>();
@@ -50,7 +50,7 @@ export class ListComplaintsComponent implements OnInit {
 
     /* Select All Complaint Type */
     selectAllComplaintType() {
-        this.filterComplaintTypeList.forEach((complaintType) => {
+        this.complaintTypeList.forEach((complaintType) => {
             complaintType["selected"] = true;
         });
         this.startNewProgressBar.emit();
@@ -58,7 +58,7 @@ export class ListComplaintsComponent implements OnInit {
 
     /* Unselect All Complaint Type */
     unselectAllComplaintType() {
-        this.filterComplaintTypeList.forEach((complaintType) => {
+        this.complaintTypeList.forEach((complaintType) => {
             complaintType["selected"] = false;
         });
         this.startNewProgressBar.emit();
@@ -66,7 +66,7 @@ export class ListComplaintsComponent implements OnInit {
 
     /* Select All Status */
     selectAllStatus() {
-        this.filterStatusList.forEach((status) => {
+        this.statusList.forEach((status) => {
             status["selected"] = true;
         });
         this.startNewProgressBar.emit();
@@ -74,7 +74,7 @@ export class ListComplaintsComponent implements OnInit {
 
     /* Unselect All Status */
     unselectAllStatus() {
-        this.filterStatusList.forEach((status) => {
+        this.statusList.forEach((status) => {
             status["selected"] = false;
         });
         this.startNewProgressBar.emit();

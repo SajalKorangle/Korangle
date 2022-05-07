@@ -164,10 +164,10 @@ export class ManageComplaintsServiceAdapter {
     getParentTask() {
         let moduleList = this.vm.user.activeSchool.moduleList;
         for (let i = 0; i < moduleList.length; i++) {
-            if (moduleList[i].path == "complaints") {
+            if (moduleList[i].path == this.vm.user.section.route) {
                 let taskList = moduleList[i].taskList;
                 for (let j = 0; j < taskList.length; j++) {
-                    if (taskList[j].path == "manage_complaints") {
+                    if (taskList[j].path == this.vm.user.section.subRoute) {
                         return taskList[j].dbId;
                     }
                 }
@@ -310,7 +310,6 @@ export class ManageComplaintsServiceAdapter {
         let isStatusNull = false;
         this.vm.filterStatusList.forEach((status) => {
             if (status.selected) {
-                statusList.push(status.id);
                 if (status.id) {
                     statusList.push(status.id);
                 } else {
