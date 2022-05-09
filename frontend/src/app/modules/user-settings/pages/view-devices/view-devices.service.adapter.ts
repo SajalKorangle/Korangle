@@ -93,7 +93,9 @@ export class ViewDevicesServiceAdapter {
         min = min - temp * 60;
         hour = hour + temp;
 
-        const formatedDateTime = hour + ":" + min + ", " + day + "-" + month + "-" + year;
+        var min2 = min >= 10 ? min : ("0" + min);
+
+        const formatedDateTime = hour + ":" + min2 + ", " + day + "-" + month + "-" + year;
 
         return formatedDateTime;
     }
