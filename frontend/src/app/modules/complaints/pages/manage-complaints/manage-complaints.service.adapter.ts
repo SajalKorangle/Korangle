@@ -197,7 +197,10 @@ export class ManageComplaintsServiceAdapter {
             comment["parentEmployee"] = this.vm.getEmployee(comment["parentEmployee"]);
             comment["parentStudent"] = this.vm.getParentStudent(comment["parentStudent"]);
         });
-        this.vm.complaintList[idx]["commentList"] = commentList;
+
+        if (this.vm.complaintList && this.vm.complaintList.length > 0) {
+            this.vm.complaintList[idx]["commentList"] = commentList;
+        }
 
         this.vm.isLoading = false;
     }  // Ends: getCommentComplaint()
@@ -224,7 +227,9 @@ export class ManageComplaintsServiceAdapter {
             applicableStatusList.push(status);
         });
 
-        this.vm.complaintList[idx]["applicableStatusList"] = applicableStatusList;
+        if (this.vm.complaintList && this.vm.complaintList.length > 0) {
+            this.vm.complaintList[idx]["applicableStatusList"] = applicableStatusList;
+        }
         this.vm.isLoading = false;
     }  // Ends: getStatusCompalintType()
 
@@ -401,7 +406,7 @@ export class ManageComplaintsServiceAdapter {
             complaintQuery,   // 0
         ]);
 
-        this.vm.initializeComplaintList(complaintList);
+        this.vm.addNewComplaints(complaintList);
     }  // Ends: loadComplaints()
 
     async addNewlyAssignedEmployee(complaint, newlyAssignedEmployeeList, idx) {
