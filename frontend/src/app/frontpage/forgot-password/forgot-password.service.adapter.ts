@@ -67,6 +67,7 @@ export class ForgotPasswordServiceAdapter {
                     if (otpResponse.status === 'success') {
                         this.vm.stateKeeper.isLoading = false;
                         alert('Password changed successfully');
+                        this.vm.router.navigate(['/login']);
                     } else if (otpResponse.status === 'failure') {
                         this.vm.stateKeeper.isLoading = false;
                         alert(otpResponse.message);

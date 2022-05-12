@@ -5,6 +5,10 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Constants } from '../classes/constants';
 import { environment } from '../../environments/environment';
 
+import { DataStorage } from '../classes/data-storage';
+
+import { checkTokenRevokedStatus } from '@services/revokedTokenHandling';
+
 @Injectable()
 export class AuthenticationOldService {
     private getUserDetailsUrl = environment.DJANGO_SERVER + Constants.api_version + '/school/get-user-details/';
@@ -15,7 +19,35 @@ export class AuthenticationOldService {
     constructor(private http: HttpClient) {}
 
     loginUserDetails(username: any, password: any): Promise<any> {
-        const body = { username: username, password: password };
+
+        /* Starts: Getting device name */
+        const agent = window.navigator.userAgent.toLowerCase();
+        var device_name = '';
+        var suffix = '';
+
+        if ( navigator.userAgent === 'Mobile' ) {
+            suffix = 'app';
+        }
+        else {
+            suffix = 'web';
+        }
+
+        if (agent.match('android')) {
+            device_name = 'android-';
+        }
+        else if (agent.match('windows')) {
+            device_name = 'windows-';
+        }
+        else if (agent.match('mac')) {
+            device_name = 'mac-';
+        }
+        else {
+            device_name = 'other-';
+        }
+        device_name = device_name + suffix;
+        /* Ends: Getting device name */
+
+        const body = { username: username, password: password, device_name: device_name };
         this.headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.http
             .post(this.loginUserDetailsUrl, body, { headers: this.headers })
@@ -34,6 +66,10 @@ export class AuthenticationOldService {
             .toPromise()
             .then(
                 (response) => {
+                    //  Handling revoked rokens here
+                    if ( checkTokenRevokedStatus(response)) {
+                        return null;
+                    }
                     return (<any>response).data;
                 },
                 (error) => {

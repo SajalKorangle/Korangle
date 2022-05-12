@@ -1,0 +1,69 @@
+<div class="card-content">
+    <ng-container *ngIf="!isLoading">
+
+        <!-- Starts: View Devices Section -->
+
+            <!-- Device Section -->
+            <div *ngIf="loginList.length>0">
+
+                <!-- No other logins found message -->
+                <div style="margin: 16px;">
+                    List of device logins
+                </div>
+                
+                <!-- Starts: Devices Table -->
+
+                <table class="table table-hover">
+                    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                        <tr>
+                            <th>Device</th>
+                            <th>Last Active</th>
+                            <th>Login Date</th>
+                            <th>
+                                <!-- Starts: Refresh Button -->
+                                <button
+                                    type="button"
+                                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} refresh-btn"
+                                    (click)="refreshLoginList()"
+                                >
+                                    <i class="material-icons">refresh</i>
+                                </button>
+                                <!-- Ends: Refresh Button -->
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let instance of loginList ">
+                            <td>{{ instance.device_name }}</td>
+                            <td>{{ instance.last_active }}</td>
+                            <td>{{ instance.login_date }}</td>
+                            <td *ngIf="currID===instance.id">Current Device</td>
+                            <td *ngIf="currID!==instance.id">
+                                <button *ngIf="!instance.loading" class="btn btn-{{ user.activeSchool.primaryThemeColor }} logout-btn" (click)="logoutInstance(instance)">Logout</button>
+                                <!-- Starts: Logout Spinner -->
+                                <div *ngIf="instance.loading" class="loader-container logout-btn-loader-container" align="center">
+                                    <div class="loader logout-btn-loader"></div>
+                                </div>
+                                <!-- Ends: Logout Spinner -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Ends: Devices Table -->
+
+            </div>
+
+            <!-- No other logins found message -->
+            <div *ngIf="loginList.length===0" style="margin: 16px;">
+                No other device is logged in except this device
+            </div>
+
+        <!-- Ends: View Devices Section -->
+
+    </ng-container>
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

@@ -31,6 +31,11 @@ const routes: Routes = [
         data: { moduleName: 'user-settings' },
     },
     {
+        path: 'view_devices',
+        loadChildren: 'app/modules/user-settings/pages/view-devices/view-devices.module#ViewDevicesModule',
+        data: { moduleName: 'user-settings' },
+    },
+    {
         path: '',
         component: UserSettingsComponent,
     },
