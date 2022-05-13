@@ -23,6 +23,7 @@ export class UpdateProfileComponent implements OnInit {
 
     employeeList: any;
     NULL_CONSTANT = null;
+    yo = true;
     selectedEmployeeProfile: any;
     currentEmployeeProfile: any;
 
