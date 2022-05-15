@@ -28,7 +28,7 @@ export class RaiseComplaintComponent implements OnInit {
     complaintComment: string = "";
     complaintList: any = [];
 
-    complaintTypeName: string = "Select Complaint Type";
+    complaintTypeName: string = "None";
     complaintTypeDefaultText: string = "";
     complaintType: any = {};
     complaintTypeList: any = [];
@@ -57,7 +57,7 @@ export class RaiseComplaintComponent implements OnInit {
     nullComplaintType = {
         id: null,
         defaultText: '',
-        name: 'Select Complaint Type',
+        name: 'None',
         parentSchoolComplaintStatusDefault: null,
         parentSchool: null,
     };
@@ -97,7 +97,7 @@ export class RaiseComplaintComponent implements OnInit {
         this.complaintTitle = "";
         this.complaintStudentName = "Select Student";
         this.complaintStudent = {};
-        this.complaintTypeName = "Select Complaint Type";
+        this.complaintTypeName = "None";
         this.complaintTypeDefaultText = "";
         this.complaintType = {};
         this.complaintComment = "";
