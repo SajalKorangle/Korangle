@@ -40,7 +40,7 @@ export class RaiseComplaintComponent implements OnInit {
     employeeList: any = [];
 
     defaultStatus: any = {};
-    defaultStatusTitle: string = "Not Selected";
+    defaultStatusTitle: string = "None";
     openedComplaint: any = {};
     openedComplaintIdx: number;
 
@@ -273,12 +273,12 @@ export class RaiseComplaintComponent implements OnInit {
             return;
         }
 
-        if (!this.complaintTitle) {
+        if (!this.complaintTitle.toString().trim()) {
             alert("Please enter the complaint title.");
             return;
         }
 
-        if (!this.commentMessage) {
+        if (!this.commentMessage.toString().trim()) {
             alert("Please enter your query.");
             return;
         }
@@ -309,7 +309,7 @@ export class RaiseComplaintComponent implements OnInit {
         this.pageName = "open-complaint";
 
         if (!this.defaultStatusTitle) {
-            this.defaultStatusTitle = "Not Applicable";
+            this.defaultStatusTitle = "None";
         }
     }  // Ends: openComplaint()
 

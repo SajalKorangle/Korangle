@@ -38,8 +38,8 @@
                         <tr>
                             <td>{{ complaint.parentStudent.name }}</td>
                             <td>{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
-                            <td>{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "Not Selected" }}</td>
-                            <td>{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "Not Applicable" }}</td>
+                            <td>{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "None" }}</td>
+                            <td>{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "None" }}</td>
                             <td style="text-align: center">{{ complaint.commentList.length }}</td>
                             <td
                                 style="text-align: center"
