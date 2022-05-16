@@ -23,7 +23,7 @@ export class ViewDevicesServiceAdapter {
     async getLoginList() {
         const token = localStorage.getItem('schoolJWT');
         const loginDataQuery = new Query()
-            .filter({})
+            .filter({ parentUser : this.vm.user.id })
             .getObjectList({ authentication_app: 'DeviceList' });
 
         let loginData = [];
