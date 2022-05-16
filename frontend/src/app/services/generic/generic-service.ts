@@ -160,6 +160,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     complaints_app: 'SchoolComplaintType' | 'SchoolComplaintStatus' | 'StatusComplaintType' | 'Complaint' | 'Comment' | 'EmployeeComplaintType' | 'EmployeeComplaint' | 'CountAllComplaints';
     employee_app: 'Employee' | 'EmployeePermission' | 'EmployeeParameter';
     team_app: 'Module' | 'Task';
+    authentication_app: 'DeviceList';
     notification_app: 'Notification';
     user_app: 'User';
 }

@@ -4,6 +4,7 @@ import { Constants } from '../classes/constants';
 import { environment } from '../../environments/environment';
 
 import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { checkTokenRevokedStatus } from '@services/revokedTokenHandling';
 
 @Injectable()
 export class CommonServiceRequirements {
@@ -14,6 +15,12 @@ export class CommonServiceRequirements {
     }
 
     public returnResponse(response: any): any {
+
+        //  Handling revoked rokens here
+        if ( checkTokenRevokedStatus(response)) {
+            return null;
+        }
+
         // const jsonResponse = response.json().response;
         const jsonResponse = response.response;
         if (jsonResponse.status === 'success') {

@@ -114,6 +114,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'helloworld_project.middleware.Device_Whitelist_Check.DeviceWhitelistCheck',
 ]
 
 ROOT_URLCONF = 'helloworld_project.urls'
