@@ -90,7 +90,7 @@ export class ManageComplaintsComponent implements OnInit {
     startProgressBar() {
         this.pageName = "showTables";
         this.progress = 1;
-        this.progressInterval = setInterval(() => this.setProgressInterval(), 600);  /* 30 seconds full time */
+        this.progressInterval = setInterval(() => this.setProgressInterval(), 600);  /* 60 seconds full time */
     }  // Ends: startProgressBar()
 
     startNewProgressBar() {
@@ -223,17 +223,17 @@ export class ManageComplaintsComponent implements OnInit {
             this.complaintList.push(complaint);
         });
 
-        for (let i = length; i < this.complaintList.length; i++) {
+        for (let i = 0; i < this.complaintList.length; i++) {
             this.serviceAdapter.getCommentComplaint(this.complaintList[i].id, i);
         }
 
-        for (let i = length; i < this.complaintList.length; i++) {
+        for (let i = 0; i < this.complaintList.length; i++) {
             if (this.complaintList[i]["parentSchoolComplaintType"]["id"]) {
                 this.serviceAdapter.getStatusCompalintType(this.complaintList[i]["parentSchoolComplaintType"].id, i);
             }
         }
 
-        for (let i = length; i < this.complaintList.length; i++) {
+        for (let i = 0; i < this.complaintList.length; i++) {
             this.serviceAdapter.getEmployeeCompalint(this.complaintList[i].id, i);
         }
 

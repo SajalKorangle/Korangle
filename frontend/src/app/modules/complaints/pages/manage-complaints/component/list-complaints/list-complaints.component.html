@@ -75,7 +75,7 @@
                                                     [ngModel]="complaintType.selected"
                                                     (ngModelChange)="triggerComplaintTypeOptionClicked(complaintType);"
                                                 >
-                                                    {{ complaintType.name ? complaintType.name : "Not Selected" }}
+                                                    {{ complaintType.name ? complaintType.name : "None" }}
                                                 </mat-checkbox>
                                             </mat-option>
                                         </ng-container>
@@ -109,7 +109,7 @@
                                                     [ngModel]="status.selected"
                                                     (ngModelChange)="triggerStatusOptionClicked(status);"
                                                 >
-                                                    {{ status.name ? status.name : "Not Applicable" }}
+                                                    {{ status.name ? status.name : "None" }}
                                                 </mat-checkbox>
                                             </mat-option>
                                         </ng-container>
