@@ -5,7 +5,7 @@
             <tr>
                 <th *ngIf="receiptColumnFilter.receiptNumber">Receipt No.</th>
                 <th *ngIf="receiptColumnFilter.nameClass" class="text-center">Name & Class</th>
-                <th  class="text-center">Session</th>
+                <th *ngIf="receiptColumnFilter.session" class="text-center">Session</th>
                 <th *ngIf="receiptColumnFilter.scholarNumber" class="text-center">Scholar No.</th>
                 <th *ngIf="receiptColumnFilter.amount" class="text-right">Amount</th>
                 <!-- <th *ngIf="receiptColumnFilter.mobileNumber" class="text-right">Mobile Number</th> -->
@@ -32,7 +32,7 @@
                         {{ getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession) }}
                     </ng-container>
                 </td>
-                <td  align="center">{{ getSessionName(feeReceipt.parentSession) }}</td>
+                <td *ngIf="receiptColumnFilter.session" align="center">{{ getSessionName(feeReceipt.parentSession) }}</td>
                 <td *ngIf="receiptColumnFilter.scholarNumber" align="center">
                     <ng-container *ngIf="!feeReceipt.parentStudent">-</ng-container>
                     <ng-container *ngIf="feeReceipt.parentStudent">{{ getStudentScholarNumber(feeReceipt.parentStudent) }}</ng-container>
