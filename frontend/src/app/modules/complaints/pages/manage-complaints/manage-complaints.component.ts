@@ -37,8 +37,8 @@ export class ManageComplaintsComponent implements OnInit {
     sortType: string = "-dateSent";
 
     startNumber: number = 1;    /* Starting Index of Records */
-    endNumber: number = 50;    /* Ending Index of Records */
-    numberOfComplaintsPerPage: number = 50;
+    endNumber: number = 10;    /* Ending Index of Records */
+    numberOfComplaintsPerPage: number = 10;
 
     statusList: any = [];
     filterStatusList: any = [];
@@ -90,7 +90,7 @@ export class ManageComplaintsComponent implements OnInit {
     startProgressBar() {
         this.pageName = "showTables";
         this.progress = 1;
-        this.progressInterval = setInterval(() => this.setProgressInterval(), 300);  /* 30 seconds full time */
+        this.progressInterval = setInterval(() => this.setProgressInterval(), 600);  /* 30 seconds full time */
     }  // Ends: startProgressBar()
 
     startNewProgressBar() {
@@ -137,7 +137,8 @@ export class ManageComplaintsComponent implements OnInit {
     loadComplaints() {
         this.complaintList = [];
         this.startNumber = 1;
-        this.endNumber = 50;
+        this.endNumber = this.numberOfComplaintsPerPage;
+        this.isLoadMore = true;
         this.serviceAdapter.loadComplaints();
     }  // Ends: loadComplaints()
 
@@ -236,7 +237,7 @@ export class ManageComplaintsComponent implements OnInit {
             this.serviceAdapter.getEmployeeCompalint(this.complaintList[i].id, i);
         }
 
-        if (complaintList.length < 50) {
+        if (complaintList.length < this.numberOfComplaintsPerPage) {
             this.isLoadMore = false;
         }
         // this.searchedComplaintList = this.complaintList;
@@ -281,7 +282,7 @@ export class ManageComplaintsComponent implements OnInit {
             this.serviceAdapter.getEmployeeCompalint(this.complaintList[i].id, i);
         }
 
-        if (complaintList.length < 50) {
+        if (complaintList.length < this.numberOfComplaintsPerPage) {
             this.isLoadMore = false;
         }
         // this.searchedComplaintList = this.complaintList;

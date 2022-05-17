@@ -313,7 +313,7 @@ export class ManageComplaintsServiceAdapter {
         /* Status Id Check */
         let statusList = [];
         let isStatusNull = false;
-        this.vm.filterStatusList.forEach((status) => {
+        this.vm.statusList.forEach((status) => {
             if (status.selected) {
                 if (status.id) {
                     statusList.push(status.id);
@@ -337,7 +337,7 @@ export class ManageComplaintsServiceAdapter {
         /* Complaint Type Id Check */
         let complaintTypeList = [];
         let isComplaintTypeNull = false;
-        this.vm.filterComplaintTypeList.forEach((complaintType) => {
+        this.vm.complaintTypeList.forEach((complaintType) => {
             if (complaintType.selected) {
                 if (complaintType.id) {
                     complaintTypeList.push(complaintType.id);

@@ -135,8 +135,8 @@
                         <td style="min-width: 140px;">{{ complaint.parentStudent.name }}</td>
                         <td style="min-width: 140px;">{{ complaint.parentStudent.fathersName }}</td>
                         <td style="min-width: 110px;">{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
-                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "Not Selected" }}</td>
-                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "Not Applicable" }}</td>
+                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "None" }}</td>
+                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "None" }}</td>
                         <td style="min-width: 125px;">{{ complaint.parentStudent.mobileNumber ? complaint.parentStudent.mobileNumber : "Not Entered" }}</td>
                         <td style="min-width: 100px; text-align: center">{{ complaint.commentList.length }}</td>
                         <td *ngIf="userPermission" style="min-width: 150px; text-align: center">
@@ -195,7 +195,7 @@
 <div style="padding: 0rem 3rem 2rem 3rem;">
     <ng-container *ngIf="isLoadMore">
         <div class="load-more text-{{ user.activeSchool.secondaryThemeColor }}" (click)="triggerLoadMoreClicked()">
-            LOAD MORE (50)
+            LOAD MORE (10)
         </div>
     </ng-container>
 </div>
