@@ -28,7 +28,7 @@ export class ReceiptColumnFilter {
     'employee' = true;
     'printButton' = true;
     'status' = true;
-    'mobileNumber' = true;
+    'mobileNumber' = false;
     'cancelledRemark' = false;
     'cancelledDate' = false;
     'session' = true;
