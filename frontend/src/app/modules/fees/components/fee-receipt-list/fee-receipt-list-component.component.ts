@@ -143,6 +143,8 @@ export class FeeReceiptListComponent implements OnInit {
         let session = this.sessionList.find((session) => {
             return session.id == parentSession;
         });
+        console.log(session)
+
         return session.name;
     }
 
