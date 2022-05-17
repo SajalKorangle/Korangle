@@ -31,7 +31,7 @@ export class ReceiptColumnFilter {
     'mobileNumber' = true;
     'cancelledRemark' = false;
     'cancelledDate' = false;
-    'session' = false;
+    'session' = true;
 }
 
 export class DiscountColumnFilter {
