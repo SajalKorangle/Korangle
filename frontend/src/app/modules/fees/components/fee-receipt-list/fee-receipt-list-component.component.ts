@@ -49,6 +49,8 @@ export class FeeReceiptListComponent implements OnInit {
     ngOnInit() {
         this.serviceAdapter = new FeeReceiptListComponentServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
+        this.receiptColumnFilter.session = true;
+        this.receiptColumnFilter.mobileNumber = false;
     }
 
     printFeeReceipt(feeReceipt: any): void {
@@ -138,6 +140,7 @@ export class FeeReceiptListComponent implements OnInit {
         });
         return employee ? employee.name : null;
     }
+    
 
     getSessionName(parentSession: any): any {
         let session = this.sessionList.find((session) => {
