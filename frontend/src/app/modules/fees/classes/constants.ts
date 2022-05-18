@@ -28,10 +28,10 @@ export class ReceiptColumnFilter {
     'employee' = true;
     'printButton' = true;
     'status' = true;
-    'mobileNumber' = false;
+    'mobileNumber' = true;
     'cancelledRemark' = false;
     'cancelledDate' = false;
-    'session' = true;
+    'session' = false;
 }
 
 export class DiscountColumnFilter {
