@@ -28,7 +28,7 @@
                     <ng-container *ngIf="!feeReceipt.parentStudent">Deleted Student</ng-container>
                     <ng-container *ngIf="feeReceipt.parentStudent">
                         {{ getStudent(feeReceipt.parentStudent).name }}<br />
-                        {{ getClassName(feeReceipt.parentStudent, feeReceipt.parentSession) }}
+                        {{ getClassName(feeReceipt.parentStudent, feeReceipt.parentSession) }},
                         {{ getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession) }}
                     </ng-container>
                 </td>
