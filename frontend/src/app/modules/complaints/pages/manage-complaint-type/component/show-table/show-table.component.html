@@ -28,8 +28,8 @@
                             <td>{{ i + 1 }}.</td>
                             <td style="text-align: center">{{ complaintType.name }}</td>
                             <td style="text-align: center">{{ complaintType.addressEmployeeList.length }}</td>
-                            <td><i class="material-icons edit-icon" style="cursor: pointer" (click)="triggerEditComplaintType(complaintType, i)">edit</i></td>
-                            <td><i class="material-icons delete-icon" style="cursor: pointer" (click)="triggerDeleteComplaintType(complaintType, i)">delete_forever</i></td>
+                            <td><i class="material-icons edit-icon" style="cursor: pointer" (click)="triggerEditComplaintType(i)">edit</i></td>
+                            <td><i class="material-icons delete-icon" style="cursor: pointer" (click)="triggerDeleteComplaintType(i)">delete_forever</i></td>
                         </tr>
                     </ng-container>
                 </tbody>

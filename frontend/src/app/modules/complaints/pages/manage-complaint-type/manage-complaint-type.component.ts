@@ -75,7 +75,7 @@ export class ManageComplaintTypeComponent implements OnInit {
         this.defaultText = "";
         this.addressToSearchString = "";
         this.addStatusName = "";
-        this.defaultStatus = "Not Selected";
+        this.defaultStatus = "None";
         this.defaultStatusId = null;
         this.editingCompalaintTypeIndex = null;
         this.editingComplaintTypeId = null;
@@ -281,6 +281,9 @@ export class ManageComplaintTypeComponent implements OnInit {
 
     /* Edit Complaint Type */
     editComplaintType(complaintType, idx) {
+
+        console.log("Edit complaint type called.");
+
         this.typeName = complaintType.name;
         this.defaultText = complaintType.defaultText;
         this.defaultStatus = complaintType.parentSchoolComplaintStatusDefault.name;
@@ -295,6 +298,9 @@ export class ManageComplaintTypeComponent implements OnInit {
 
     /* Delete Complaint Type */
     deleteComplaintType(complaintType, idx) {
+
+        console.log("Delete Complaint Type Called.");
+
         const dialogRef = this.dialog.open(DeleteTableModalComponent, {
             data: {
                 formatName: complaintType.name,

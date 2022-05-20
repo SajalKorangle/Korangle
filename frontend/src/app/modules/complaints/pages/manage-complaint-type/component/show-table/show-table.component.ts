@@ -16,24 +16,35 @@ export class ShowTableComponent implements OnInit {
     @Output() openChangeStatusDialog = new EventEmitter<any>();
     @Output() deleteStatus = new EventEmitter<any>();
     @Output() openAddStatusDialog = new EventEmitter<any>();
+    @Output() initializeComplaintTypeDetails = new EventEmitter<any>();
 
     constructor() { }
 
     ngOnInit() { }
 
     /* Edit Complaint Type */
-    triggerEditComplaintType(complaintType, idx) {
+    triggerEditComplaintType(idx) {
+        console.log("Trigger edit complaint type called.");
+        console.log("Idx: ", idx);
+
+        console.log("Complaint Type List: ", this.complaintTypeList);
+
         let response = [];
-        response.push(complaintType);
+        response.push(this.complaintTypeList[idx]);
         response.push(idx);
 
         this.editComplaintType.emit(response);
     }   // Ends: triggerEditComplaintType()
 
     /* Delete Complaint Type */
-    triggerDeleteComplaintType(complaintType, idx) {
+    triggerDeleteComplaintType(idx) {
+        console.log("Trigger delete complaint type called.");
+        console.log("Idx: ", idx);
+
+        console.log("Complaint Type List: ", this.complaintTypeList);
+
         let response = [];
-        response.push(complaintType);
+        response.push(this.complaintTypeList[idx]);
         response.push(idx);
 
         this.deleteComplaintType.emit(response);
@@ -41,6 +52,7 @@ export class ShowTableComponent implements OnInit {
 
     /* Change Page */
     changePage() {
+        this.initializeComplaintTypeDetails.emit();
         this.changePageName.emit("addCompalintType");
     }   // Ends: changePage()
 
