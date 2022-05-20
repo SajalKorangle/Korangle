@@ -486,7 +486,7 @@ export class ManageComplaintsComponent implements OnInit {
         this.pageName = "showComplaint";
 
         if (!this.defaultStatusTitle) {
-            this.defaultStatusTitle = "Not Applicable";
+            this.defaultStatusTitle = "None";
         }
         clearInterval(this.progressInterval);
     }  // Ends: openComplaint()
