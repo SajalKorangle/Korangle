@@ -19,12 +19,12 @@ export class FilterModalComponent implements OnInit {
 
     /* Details of Start Date */
     startDateType: string = "";
-    sDate: string = "";
+    sDate: string = null;
     sDays: number = null;
 
     /* Details of Ends Date */
     endDateType: string = "";
-    eDate: string = "";
+    eDate: string = null;
     eDays: number = null;
 
     complaintTypeList: any = [];
@@ -213,12 +213,12 @@ export class FilterModalComponent implements OnInit {
                 return;
             }
 
-            if (this.startDateType == "Select Date" && this.sDate == "") {
+            if (this.startDateType == "Select Date" && this.sDate == null) {
                 alert("Please enter the start date.");
                 return;
             }
 
-            if (this.endDateType == "Select End Date" && this.eDate == "") {
+            if (this.endDateType == "Select End Date" && this.eDate == null) {
                 alert("Please enter the end date.");
                 return;
             }
@@ -298,8 +298,8 @@ export class FilterModalComponent implements OnInit {
             let endDateTime = new Date(this.eDate).getTime();
 
             if (endDateTime < startDateTime) {
-                this.sDate = "";
-                this.eDate = "";
+                this.sDate = null;
+                this.eDate = null;
                 this.sDays = null;
                 this.eDays = null;
                 alert("The start date must come before the end date.");
