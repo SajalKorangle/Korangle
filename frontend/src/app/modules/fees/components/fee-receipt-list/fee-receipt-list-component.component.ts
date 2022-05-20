@@ -140,7 +140,6 @@ export class FeeReceiptListComponent implements OnInit {
         });
         return employee ? employee.name : null;
     }
-    
 
     getSessionName(parentSession: any): any {
         let session = this.sessionList.find((session) => {
