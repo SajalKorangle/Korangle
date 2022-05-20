@@ -43,7 +43,7 @@
                 <td *ngIf="receiptColumnFilter.mobileNumber" style="padding-right: 15px" align="right">
                     <ng-container *ngIf="!feeReceipt.parentStudent">-</ng-container>
                     <ng-container *ngIf="feeReceipt.parentStudent">{{ getStudentMobileNumber(feeReceipt) }}</ng-container>
-                </td>   
+                </td>
                 <td *ngIf="receiptColumnFilter.modeOfPayment" align="center">{{ feeReceipt.modeOfPayment }}</td>
                 <td *ngIf="receiptColumnFilter.chequeNumber" align="center">{{ feeReceipt.chequeNumber }}</td>
                 <td *ngIf="receiptColumnFilter.date" align="center">{{ feeReceipt.generationDateTime | date: 'dd - MMM - yyyy' }}</td>
