@@ -80,6 +80,21 @@ export class ListComplaintsComponent implements OnInit {
         this.startNewProgressBar.emit();
     }  // Ends: unselectAllStatus()
 
+    tableBodyClicked() {
+        this.showFilterOptionComplaintType = false;
+        this.showFilterOptionStatus = false;
+    }
+
+    complaintTypeFilterOptionClicked() {
+        this.showFilterOptionComplaintType = !this.showFilterOptionComplaintType;
+        this.showFilterOptionStatus = false;
+    }
+
+    statusFilterOptionClicked() {
+        this.showFilterOptionStatus = !this.showFilterOptionStatus;
+        this.showFilterOptionComplaintType = false;
+    }
+
     /* Search Complaints */
     triggerSearchChanged() {
         this.searchComplaints.emit(this.searchString);
@@ -98,6 +113,7 @@ export class ListComplaintsComponent implements OnInit {
 
     /* Done Icon Clicked */
     triggerDoneIconClicked() {
+        this.tableBodyClicked();
         this.doneIconClicked.emit(this.searchString);
     }  // Ends: triggerDoneIconClicked()
 

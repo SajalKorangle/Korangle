@@ -56,7 +56,7 @@
                             <div>Type</div>
                             <!-- Starts: Complaint Type Filter -->
                             <div style="position: relative;">
-                                <i class="material-icons filter-alt-btn" (click)="showFilterOptionComplaintType = !showFilterOptionComplaintType; showFilterOptionStatus = false;">filter_alt</i>
+                                <i class="material-icons filter-alt-btn" (click)="complaintTypeFilterOptionClicked();">filter_alt</i>
                                 <div *ngIf="showFilterOptionComplaintType" class="filter-option">
                                     <cdk-virtual-scroll-viewport itemSize="0" style="height: 100%; width: 100%;">
                                         <mat-option style="background-color: #F5F5F5">
@@ -90,7 +90,7 @@
                             <div>Status</div>
                             <!-- Starts: Status Filter -->
                             <div style="position: relative;">
-                                <i class="material-icons filter-alt-btn" (click)="showFilterOptionStatus = !showFilterOptionStatus; showFilterOptionComplaintType = false;">filter_alt</i>
+                                <i class="material-icons filter-alt-btn" (click)="statusFilterOptionClicked();">filter_alt</i>
                                 <div *ngIf="showFilterOptionStatus" class="filter-option">
                                     <cdk-virtual-scroll-viewport itemSize="0" style="height: 100%; width: 100%;">
                                         <mat-option style="background-color: #F5F5F5">
@@ -129,7 +129,7 @@
             <!-- Ends: Table Header -->
 
             <!-- Starts: Table Body -->
-            <tbody>
+            <tbody (click)="tableBodyClicked()">
                 <ng-container *ngFor="let complaint of complaintList; let i = index">
                     <tr>
                         <td style="min-width: 140px;">{{ complaint.parentStudent.name }}</td>
