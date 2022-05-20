@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 
 # Register your models here.
@@ -18,9 +19,6 @@ from datetime import date
 from django.db.models import Q
 
 admin.site.register(Session)
-
-
-from django.utils.translation import gettext_lazy as _
 
 
 class ActiveListFilter(admin.SimpleListFilter):
@@ -46,32 +44,24 @@ class ActiveListFilter(admin.SimpleListFilter):
 @admin.register(School)
 class SchoolAdmin(admin.ModelAdmin):
     search_fields = ('printName', 'id')
-    list_display = ('Name', 'Stud','Empl', 'Fee_Receipts', 'Subj', 'Stud_Marks', 'Hwk_Ques', 'Tuts', 'Active', 'S_2020_21', 'S_2019_20', 'S_2018_19', 'S_2017_18')
+    list_display = ('Name', 'Stud', 'Empl', 'Fee_Receipts', 'Stud_Marks',
+                    'Active', 'S_2021_22', 'S_2020_21')
     list_filter = (ActiveListFilter,)
 
-    def Name(self,obj):
+    def Name(self, obj):
         return str(obj.pk) + ' - ' + obj.printName
 
     def Stud(self, obj):
-        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2021-22').count())
+        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2022-23').count())
 
     def Empl(self, obj):
         return str(Employee.objects.filter(parentSchool_id=obj.pk).count())
 
     def Fee_Receipts(self, obj):
-        return str(FeeReceipt.objects.filter(parentSchool_id=obj.pk, parentSession__name='Session 2021-22').count())
-
-    def Subj(self, obj):
-        return str(ClassSubject.objects.filter(parentSchool_id=obj.pk, parentSession__name='2021-04-01').count())
+        return str(FeeReceipt.objects.filter(parentSchool_id=obj.pk).count())
 
     def Stud_Marks(self, obj):
-        return str(StudentTest.objects.filter(parentStudent__parentSchool_id=obj.pk, parentExamination__parentSession__name='2021-04-01').count())
-
-    def Hwk_Ques(self, obj):
-        return str(HomeworkQuestion.objects.filter(parentClassSubject__parentSchool_id=obj.pk, parentClassSubject__parentSession__name='2021-04-01').count())
-
-    def Tuts(self, obj):
-        return str(Tutorial.objects.filter(parentClassSubject__parentSchool_id=obj.pk, parentClassSubject__parentSession__name='2021-04-01').count())
+        return str(StudentTest.objects.filter(parentStudent__parentSchool_id=obj.pk).count())
 
     def Active(self, obj):
         if obj.expired:
@@ -83,33 +73,8 @@ class SchoolAdmin(admin.ModelAdmin):
         else:
             return 'Yes'
 
-    def S_2020_21(self, obj):
-        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2020-21').count())
-
-    def S_2019_20(self, obj):
-        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2019-20').count())
-
-    def S_2018_19(self, obj):
-        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2018-19').count())
-
-    def S_2017_18(self, obj):
-        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2017-18').count())
-
-'''@admin.register(School)
-class SchoolAdmin(admin.ModelAdmin):
-    search_fields = ('printName', 'id')
-    list_display = ('Name', 'Students', 'Fees', 'Attendance', 'expired')
-    list_filter = ('expired',)
-
-    def Name(self,obj):
-        return str(obj.pk) + ' - ' + obj.printName
-
-    def Students(self, obj):
+    def S_2021_22(self, obj):
         return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2021-22').count())
 
-    def Fees(self, obj):
-        return str(SubFeeReceipt.objects.filter(parentStudentFee__parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2021-22').count())
-
-    def Attendance(self, obj):
-        return str(StudentAttendance.objects.filter(parentStudent__parentSchool_id=obj.pk, dateOfAttendance__gte='2021-04-01').count())'''
-
+    def S_2020_21(self, obj):
+        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2020-21').count())
