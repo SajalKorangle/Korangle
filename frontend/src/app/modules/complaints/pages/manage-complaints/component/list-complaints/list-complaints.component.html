@@ -1,6 +1,6 @@
 <div class="card-content">
     <!-- Starts: Search Bar -->
-    <div class="search-bar">
+    <div class="search-bar" (click)="closeFilterOptions()">
         <input class="search-field" type="search" placeholder="Search by parent name, student name, title" [ngModel]="searchString" (ngModelChange)="searchString = $event; triggerSearchChanged()">
         <button class="search-btn"><i class="material-icons search-icon">search</i></button>
     </div>
@@ -8,8 +8,7 @@
     <!-- Ends: Search Bar -->
 
     <!-- Starts: Progress Bar Section -->
-    <ng-container *ngIf="progress > 0">
-    <div class="progress-container">
+    <div class="progress-container" (click)="closeFilterOptions()">
         <!-- Starts: progress-bar -->
         <div class="progress-bar">
             <div id="progress" class="progress" [ngStyle]="{ 'background-color': htmlRenderer.getSecondaryColor(), 'width': progress + '%', 'height': '6px'}"></div>
@@ -27,7 +26,6 @@
         </div>
         <!-- Ends: Done Icon -->
     </div>
-    </ng-container>
     <!-- Ends: Progress Bar Section -->
 
     <!-- Starts: Complaint List Table -->
@@ -38,9 +36,9 @@
             <!-- Starts: Table Header -->
             <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                 <tr>
-                    <th style="min-width: 140px;">Student Name</th>
-                    <th style="min-width: 140px;">Father’s Name</th>
-                    <th style="min-width: 110px;">
+                    <th (click)="closeFilterOptions()" style="min-width: 140px;">Student Name</th>
+                    <th (click)="closeFilterOptions()" style="min-width: 140px;">Father’s Name</th>
+                    <th (click)="closeFilterOptions()" style="min-width: 110px;">
                         <div class="filter-column">
                             <div>Date Sent</div>
                             <!-- Starts: Date Sent Sort Type Filter -->
@@ -53,7 +51,7 @@
                     </th>
                     <th style="min-width: 110px;">
                         <div class="filter-column">
-                            <div>Type</div>
+                            <div (click)="closeFilterOptions()">Type</div>
                             <!-- Starts: Complaint Type Filter -->
                             <div style="position: relative;">
                                 <i class="material-icons filter-alt-btn" (click)="complaintTypeFilterOptionClicked();">filter_alt</i>
@@ -87,7 +85,7 @@
                     </th>
                     <th style="min-width: 110px;">
                         <div class="filter-column">
-                            <div>Status</div>
+                            <div (click)="closeFilterOptions()">Status</div>
                             <!-- Starts: Status Filter -->
                             <div style="position: relative;">
                                 <i class="material-icons filter-alt-btn" (click)="statusFilterOptionClicked();">filter_alt</i>
@@ -119,17 +117,17 @@
                             <!-- Ends: Status Filter -->
                         </div>
                     </th>
-                    <th style="min-width: 125px;">Father’s Contact</th>
-                    <th style="min-width: 100px; text-align: center">Comments</th>
-                    <th *ngIf="userPermission" style="min-width: 150px; text-align: center">Handlers</th>
-                    <th></th>
-                    <th></th>
+                    <th (click)="closeFilterOptions()" style="min-width: 125px;">Father’s Contact</th>
+                    <th (click)="closeFilterOptions()" style="min-width: 100px; text-align: center">Comments</th>
+                    <th (click)="closeFilterOptions()" *ngIf="userPermission" style="min-width: 150px; text-align: center">Handlers</th>
+                    <th (click)="closeFilterOptions()"></th>
+                    <th (click)="closeFilterOptions()"></th>
                 </tr>
             </thead>
             <!-- Ends: Table Header -->
 
             <!-- Starts: Table Body -->
-            <tbody (click)="tableBodyClicked()">
+            <tbody (click)="closeFilterOptions()">
                 <ng-container *ngFor="let complaint of complaintList; let i = index">
                     <tr>
                         <td style="min-width: 140px;">{{ complaint.parentStudent.name }}</td>

@@ -80,7 +80,7 @@ export class ListComplaintsComponent implements OnInit {
         this.startNewProgressBar.emit();
     }  // Ends: unselectAllStatus()
 
-    tableBodyClicked() {
+    closeFilterOptions() {
         this.showFilterOptionComplaintType = false;
         this.showFilterOptionStatus = false;
     }
@@ -113,7 +113,7 @@ export class ListComplaintsComponent implements OnInit {
 
     /* Done Icon Clicked */
     triggerDoneIconClicked() {
-        this.tableBodyClicked();
+        this.closeFilterOptions();
         this.doneIconClicked.emit(this.searchString);
     }  // Ends: triggerDoneIconClicked()
 
