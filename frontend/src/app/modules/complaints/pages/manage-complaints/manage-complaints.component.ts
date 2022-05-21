@@ -244,6 +244,17 @@ export class ManageComplaintsComponent implements OnInit {
         this.startNewProgressBar();
     }  // Ends: initializeComplaintList()
 
+    findComplaint(complaintId) {
+        let found = false;
+        this.complaintList.forEach((complaint) => {
+            if (complaint["id"] == complaintId) {
+                found = true;
+            }
+        });
+
+        return found;
+    }
+
     /* Add New Complaints */
     addNewComplaints(complaintList) {
 
@@ -254,18 +265,20 @@ export class ManageComplaintsComponent implements OnInit {
         let length = this.complaintList.length;
 
         complaintList.forEach((complaintObject) => {
-            let complaint = {};
-            complaint["parentSchoolComplaintType"] = this.getParentComplaintType(complaintObject["parentSchoolComplaintType"]);
-            complaint["id"] = complaintObject["id"];
-            complaint["dateSent"] = complaintObject["dateSent"];
-            complaint["parentEmployee"] = this.getEmployee(complaintObject["parentEmployee"]);
-            complaint["applicableStatusList"] = [];
-            complaint["employeeComplaintList"] = [];
-            complaint["commentList"] = [];
-            complaint["parentStudent"] = this.getParentStudent(complaintObject["parentStudent"]);
-            complaint["title"] = complaintObject["title"];
-            complaint["parentSchoolComplaintStatus"] = this.getStatus(complaintObject["parentSchoolComplaintStatus"]);
-            this.complaintList.push(complaint);
+            if (!this.findComplaint(complaintObject["id"])) {
+                let complaint = {};
+                complaint["parentSchoolComplaintType"] = this.getParentComplaintType(complaintObject["parentSchoolComplaintType"]);
+                complaint["id"] = complaintObject["id"];
+                complaint["dateSent"] = complaintObject["dateSent"];
+                complaint["parentEmployee"] = this.getEmployee(complaintObject["parentEmployee"]);
+                complaint["applicableStatusList"] = [];
+                complaint["employeeComplaintList"] = [];
+                complaint["commentList"] = [];
+                complaint["parentStudent"] = this.getParentStudent(complaintObject["parentStudent"]);
+                complaint["title"] = complaintObject["title"];
+                complaint["parentSchoolComplaintStatus"] = this.getStatus(complaintObject["parentSchoolComplaintStatus"]);
+                this.complaintList.push(complaint);
+            }
         });
 
         for (let i = length; i < this.complaintList.length; i++) {
