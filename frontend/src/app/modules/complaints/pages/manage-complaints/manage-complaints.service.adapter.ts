@@ -369,6 +369,8 @@ export class ManageComplaintsServiceAdapter {
 
         /* User Permission Check */
         if (!this.vm.userPermission) {
+            console.log("YES");
+
             /* Get Assigned Complaint */
             const employeeComplaintQuery = new Query()
                 .filter({ parentEmployee: this.vm.user.activeSchool.employeeId })
@@ -386,7 +388,7 @@ export class ManageComplaintsServiceAdapter {
                 complaintIdList.push(employeeComplaint.parentComplaint);
             });
             if (complaintIdList.length) {
-                filterData["id_in"] = complaintIdList;
+                filterData["id__in"] = complaintIdList;
             }
         }
 
