@@ -48,6 +48,12 @@ export class OpenComplaintComponent implements OnInit {
 
     /* Update Status */
     triggerUpdateStatus(status) {
+
+        if (this.defaultStatusTitle == status.name) {
+            alert("The current status is same as updating status.");
+            return;
+        }
+        
         let response = [];
         response.push(this.commentMessage);
         response.push(status);
