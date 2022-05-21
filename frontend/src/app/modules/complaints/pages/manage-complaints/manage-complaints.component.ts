@@ -37,8 +37,8 @@ export class ManageComplaintsComponent implements OnInit {
     sortType: string = "-dateSent";
 
     startNumber: number = 1;    /* Starting Index of Records */
-    endNumber: number = 10;    /* Ending Index of Records */
-    numberOfComplaintsPerPage: number = 10;
+    endNumber: number = 50;    /* Ending Index of Records */
+    numberOfComplaintsPerPage: number = 50;
 
     statusList: any = [];
     filterStatusList: any = [];
