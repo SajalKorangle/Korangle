@@ -283,6 +283,7 @@ export class ManageComplaintTypeComponent implements OnInit {
     editComplaintType(complaintType, idx) {
 
         console.log("Edit complaint type called.");
+        console.log("Main-Page - Complaint Type: ", complaintType);
 
         this.typeName = complaintType.name;
         this.defaultText = complaintType.defaultText;

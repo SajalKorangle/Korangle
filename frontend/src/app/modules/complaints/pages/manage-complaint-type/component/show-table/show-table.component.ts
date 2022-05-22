@@ -28,6 +28,7 @@ export class ShowTableComponent implements OnInit {
         console.log("Idx: ", idx);
 
         console.log("Complaint Type List: ", this.complaintTypeList);
+        console.log("Show-Table - Complaint Type: ", this.complaintTypeList[idx]);
 
         let response = [];
         response.push(this.complaintTypeList[idx]);
@@ -42,6 +43,7 @@ export class ShowTableComponent implements OnInit {
         console.log("Idx: ", idx);
 
         console.log("Complaint Type List: ", this.complaintTypeList);
+        console.log("Show-Table - Complaint Type: ", this.complaintTypeList[idx]);
 
         let response = [];
         response.push(this.complaintTypeList[idx]);

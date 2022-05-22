@@ -67,6 +67,7 @@ export class ManageComplaintsComponent implements OnInit {
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
+        console.log("User: ", this.user);
 
         this.htmlRenderer = new ManageComplaintsHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
@@ -82,7 +83,11 @@ export class ManageComplaintsComponent implements OnInit {
             clearInterval(this.progressInterval);
             this.loadComplaints();
         } else {
-            this.progress++;
+            if (this.user.section.subRoute != "manage_complaints") {
+                clearInterval(this.progressInterval);
+            } else {
+                this.progress++;
+            }
         }
     }  // Ends: setProgressInterval()
 

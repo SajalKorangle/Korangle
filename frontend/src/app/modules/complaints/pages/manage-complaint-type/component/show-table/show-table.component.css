@@ -20,6 +20,11 @@ tbody tr:last-child td {
     opacity: 0.9;
 }
 
+.minWidth {
+    max-width: 350px;
+    word-wrap: break-word;
+}
+
 .delete-icon {
     color: red;
 }
@@ -31,6 +36,10 @@ tbody tr:last-child td {
     .card-content {
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+
+    .minWidth {
+        max-width: 100px;
     }
 }
 /* Ends: Media Query - Mobile Phone */

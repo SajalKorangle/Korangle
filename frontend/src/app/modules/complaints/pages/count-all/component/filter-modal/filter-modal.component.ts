@@ -223,12 +223,12 @@ export class FilterModalComponent implements OnInit {
                 return;
             }
 
-            if (this.startDateType == "From Days Ago" && (!this.sDays || this.sDays < 0)) {
+            if (this.startDateType == "From Days Ago" && (this.sDays == null || this.sDays < 0)) {
                 alert("Please enter the valid value of start days.");
                 return;
             }
 
-            if (this.endDateType == "From Days Ago" && (!this.eDays || this.eDays < 0)) {
+            if (this.endDateType == "From Days Ago" && (this.eDays == null || this.eDays < 0)) {
                 alert("Please enter the valid value of end days");
                 return;
             }
