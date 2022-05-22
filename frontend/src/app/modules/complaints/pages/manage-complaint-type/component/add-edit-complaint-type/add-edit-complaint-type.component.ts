@@ -49,7 +49,7 @@ export class AddEditComplaintTypeComponent implements OnInit {
         }
 
         this.employeeList.forEach((employee) => {
-            if (employee.name.toLowerCase().indexOf(this.addressToSearchString.toLowerCase()) === 0) {
+            if (employee.name.toString().trim().toLowerCase().indexOf(this.addressToSearchString.toString().trim().toLowerCase()) === 0) {
                 this.searchedEmployeeList.push(employee);
             }
         });
