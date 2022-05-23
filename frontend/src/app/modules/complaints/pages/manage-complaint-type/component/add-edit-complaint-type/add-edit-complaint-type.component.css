@@ -40,7 +40,7 @@
 }
 
     /* Starts: Search Bar */
-.search-bar {
+/* .search-bar {
     display: flex;
     height: 25px;
     font-size: 14px;
@@ -48,7 +48,7 @@
 
 .search-field {
     flex-basis: 63%;
-    border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
+    border: 0.4px solid rgba(0, 0, 0, 0.5);
     border-top-left-radius: 2px;
     border-bottom-left-radius: 2px;
     padding: 5px;
@@ -56,7 +56,7 @@
 
 .search-btn {
     flex-basis: 7%;
-    border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
+    border: 0.4px solid rgba(0, 0, 0, 0.5);
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
     background-color: white;
@@ -64,7 +64,7 @@
 
 .search-icon {
     color: rgba(0, 0, 0, 0.5);
-}
+} */
     /* Ends: Search Bar */
 
 .checkbox-group {

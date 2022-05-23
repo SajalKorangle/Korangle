@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { AddEditComplaintTypeHtmlRenderer } from './add-edit-complaint-type.html.renderer';
 import { CommonFunctions } from "@classes/common-functions";
+// import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-add-edit-complaint-type',
@@ -28,7 +29,12 @@ export class AddEditComplaintTypeComponent implements OnInit {
 
     addStatusName: string = "";
     addressToSearchString: string = "";
-    searchedEmployeeList: any = [];
+    // searchedEmployeeList: any = [];
+
+    // employeeFormControl = new FormControl();
+
+    selectedEmployee: any;
+    tempEmployeeList: any;
 
     htmlRenderer: AddEditComplaintTypeHtmlRenderer;
 
@@ -42,18 +48,18 @@ export class AddEditComplaintTypeComponent implements OnInit {
     }
 
     /* Get Searched Employee List */
-    searchEmployee() {
-        this.searchedEmployeeList = [];
-        if (!this.addressToSearchString) {
-            return ;
-        }
-
-        this.employeeList.forEach((employee) => {
-            if (employee.name.toString().trim().toLowerCase().indexOf(this.addressToSearchString.toString().trim().toLowerCase()) === 0) {
-                this.searchedEmployeeList.push(employee);
-            }
-        });
-    }  // Ends: searchEmployee()
+    // searchEmployee() {
+    //     this.searchedEmployeeList = [];
+    //     if (!this.addressToSearchString) {
+    //         return ;
+    //     }
+    //
+    //     this.employeeList.forEach((employee) => {
+    //         if (employee.name.toString().trim().toLowerCase().indexOf(this.addressToSearchString.toString().trim().toLowerCase()) === 0) {
+    //             this.searchedEmployeeList.push(employee);
+    //         }
+    //     });
+    // }
 
     /* Check Existence of Employee */
     checkEmployeeExist(employeeId) {

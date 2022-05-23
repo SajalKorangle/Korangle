@@ -30,14 +30,20 @@
         <br />
 
         <!-- Starts: Search Bar -->
-        <div class="search-bar">
+        <app-employee-filter
+            [user]="user"
+            (employee)="selectedEmployee = $event; initializeEmployeeData(selectedEmployee)"
+            (emitEmployeeList)="tempEmployeeList = $event;"
+        ></app-employee-filter>
+
+        <!-- <div class="search-bar">
             <input class="search-field" type="search" placeholder="Search employee name" [ngModel]="addressToSearchString" (ngModelChange)="addressToSearchString = $event; searchEmployee()">
             <button class="search-btn"><i class="material-icons search-icon">search</i></button>
-        </div>
+        </div> -->
         <!-- Ends: Search Bar -->
 
         <!-- Starts: Searched Employee List -->
-        <div *ngIf="searchedEmployeeList.length > 0" class="flex-box">
+        <!-- <div *ngIf="searchedEmployeeList.length > 0" class="flex-box">
             <div style="flex-basis: 70%;">
                 <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
                     <ng-container *ngFor="let employee of searchedEmployeeList">
@@ -47,7 +53,7 @@
                     </ng-container>
                 </cdk-virtual-scroll-viewport>
             </div>
-        </div>
+        </div> -->
         <!-- Ends: Searched Employee List -->
 
         <!-- Starts: Selected Employee List -->
