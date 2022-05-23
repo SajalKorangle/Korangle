@@ -53,7 +53,7 @@ export class OpenComplaintComponent implements OnInit {
             alert("The current status is same as updating status.");
             return;
         }
-        
+
         let response = [];
         response.push(this.commentMessage);
         response.push(status);
