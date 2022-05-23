@@ -136,6 +136,8 @@ export class CollectFeeComponent implements OnInit {
 
         this.receiptColumnFilter.receiptNumber = true;
         this.receiptColumnFilter.scholarNumber = false;
+        this.receiptColumnFilter.session = true;
+        this.receiptColumnFilter.mobileNumber = false;
 
         if (CommonFunctions.getInstance().isMobileMenu()) {
             this.receiptColumnFilter.receiptNumber = false;
