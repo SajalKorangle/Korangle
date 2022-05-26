@@ -39,8 +39,8 @@ export class ManageComplaintTypeComponent implements OnInit {
     typeName: string = "";
     defaultText: string = "";
     addressToSearchString: string = "";
-    defaultStatus: string = "Not Selected";
-    defaultStatusId: number = 0;
+    defaultStatus: string = "None";
+    defaultStatusId: number = null;
     complaintTypeList: any = [];
 
     serviceAdapter: ManageComplaintTypeServiceAdapter;
@@ -281,14 +281,14 @@ export class ManageComplaintTypeComponent implements OnInit {
 
     /* Edit Complaint Type */
     editComplaintType(complaintType, idx) {
-
-        console.log("Edit complaint type called.");
-        console.log("Main-Page - Complaint Type: ", complaintType);
-
         this.typeName = complaintType.name;
         this.defaultText = complaintType.defaultText;
-        this.defaultStatus = complaintType.parentSchoolComplaintStatusDefault.name;
-        this.defaultStatusId = complaintType.parentSchoolComplaintStatusDefault.id;
+
+        if (complaintType.parentSchoolComplaintStatusDefault && complaintType.parentSchoolComplaintStatusDefault["id"] != null) {
+            this.defaultStatus = complaintType.parentSchoolComplaintStatusDefault.name;
+            this.defaultStatusId = complaintType.parentSchoolComplaintStatusDefault.id;
+        }
+
         this.editingCompalaintType = true;
         this.editingCompalaintTypeIndex = idx;
         this.editingComplaintTypeId = complaintType.id;
@@ -299,9 +299,6 @@ export class ManageComplaintTypeComponent implements OnInit {
 
     /* Delete Complaint Type */
     deleteComplaintType(complaintType, idx) {
-
-        console.log("Delete Complaint Type Called.");
-
         const dialogRef = this.dialog.open(DeleteTableModalComponent, {
             data: {
                 formatName: complaintType.name,
@@ -331,4 +328,12 @@ export class ManageComplaintTypeComponent implements OnInit {
             }
         });
     }  // Ends: deleteStatus()
+
+    removeDeletedStatus(statusId) {
+        this.complaintTypeList.forEach((complaintType) => {
+            if (complaintType["parentSchoolComplaintStatusDefault"] && complaintType["parentSchoolComplaintStatusDefault"]["id"] == statusId) {
+                complaintType["parentSchoolComplaintStatusDefault"] = null;
+            }
+        });
+    }
 }

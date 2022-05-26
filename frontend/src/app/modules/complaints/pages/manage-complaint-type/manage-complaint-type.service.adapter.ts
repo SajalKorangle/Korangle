@@ -101,13 +101,16 @@ export class ManageComplaintTypeServiceAdapter {
 
         this.vm.isLoading = true;
 
+        let statusId = status.id;
+
         let statusData = {
-            id: status.id,
+            id: statusId,
         };
 
         await new Query().filter(statusData).deleteObjectList({complaints_app: 'SchoolComplaintStatus'});
 
         this.vm.statusList.splice(idx, 1);
+        this.vm.removeDeletedStatus(statusId);
         alert("Status deleted successfully.");
         this.vm.isLoading = false;
     }  // Ends: deleteStatus()

@@ -24,12 +24,6 @@ export class ShowTableComponent implements OnInit {
 
     /* Edit Complaint Type */
     triggerEditComplaintType(idx) {
-        console.log("Trigger edit complaint type called.");
-        console.log("Idx: ", idx);
-
-        console.log("Complaint Type List: ", this.complaintTypeList);
-        console.log("Show-Table - Complaint Type: ", this.complaintTypeList[idx]);
-
         let response = [];
         response.push(this.complaintTypeList[idx]);
         response.push(idx);
@@ -39,12 +33,6 @@ export class ShowTableComponent implements OnInit {
 
     /* Delete Complaint Type */
     triggerDeleteComplaintType(idx) {
-        console.log("Trigger delete complaint type called.");
-        console.log("Idx: ", idx);
-
-        console.log("Complaint Type List: ", this.complaintTypeList);
-        console.log("Show-Table - Complaint Type: ", this.complaintTypeList[idx]);
-
         let response = [];
         response.push(this.complaintTypeList[idx]);
         response.push(idx);

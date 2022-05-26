@@ -47,20 +47,6 @@ export class AddEditComplaintTypeComponent implements OnInit {
         this.applicableStatusList.sort((a, b) => (a.id - b.id));
     }
 
-    /* Get Searched Employee List */
-    // searchEmployee() {
-    //     this.searchedEmployeeList = [];
-    //     if (!this.addressToSearchString) {
-    //         return ;
-    //     }
-    //
-    //     this.employeeList.forEach((employee) => {
-    //         if (employee.name.toString().trim().toLowerCase().indexOf(this.addressToSearchString.toString().trim().toLowerCase()) === 0) {
-    //             this.searchedEmployeeList.push(employee);
-    //         }
-    //     });
-    // }
-
     /* Check Existence of Employee */
     checkEmployeeExist(employeeId) {
         for (let i = 0; i < this.selectedEmployeeList.length; i++) {
@@ -163,7 +149,7 @@ export class AddEditComplaintTypeComponent implements OnInit {
         }
 
         /* Check Default Status */
-        if (this.defaultStatus == "Not Selected") {
+        if (this.defaultStatusId == null) {
             alert("Please select default status.");
             return;
         }
