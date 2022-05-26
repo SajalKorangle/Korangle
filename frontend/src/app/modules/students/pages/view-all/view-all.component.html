@@ -378,6 +378,16 @@
                 (click)="$event.stopPropagation()"
                 >Generated
             </mat-checkbox>
+
+            <br /><b>Is Logged In?</b><br />
+            <mat-checkbox
+                [(ngModel)]="isLogged"
+                style="margin-right: 5px"
+                (ngModelChange)="handleStudentDisplay()"
+                (click)="$event.stopPropagation()"
+                >
+            </mat-checkbox>
+
             <br />
             <hr />
             <h5>Custom Filters</h5>
