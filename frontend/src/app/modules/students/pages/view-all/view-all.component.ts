@@ -24,6 +24,11 @@ import { ComponentsModule } from 'app/components/components.module';
 
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import { ViewAllBackendData } from './view-all.backend.data';
+import { MessageService } from '@services/message-service';
+import { NotificationService } from '@services/modules/notification/notification.service';
+import { UserService } from '@services/modules/user/user.service';
+import { SmsService } from '@services/modules/sms/sms.service';
+import { VARIABLE_MAPPED_EVENT_LIST } from '@modules/classes/constants';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -63,7 +68,7 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService, TCService],
+    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService, TCService, NotificationService, UserService, SmsService,],
 })
 export class ViewAllComponent implements OnInit {
     user;
@@ -105,6 +110,17 @@ export class ViewAllComponent implements OnInit {
     /* TC Options */
     noTC = true;
     yesTC = true;
+
+    /* Is Logged In? Options */
+    messageService: any;
+    dataForMapping = {} as any;
+    message = '';
+    isLogged = false;
+    studentSectionList = [];
+    studentList = [];
+    includeSecondMobileNumber = false;
+    notificationPersonList = [];
+    tempList = [];
 
     displayStudentNumber = 0;
 
@@ -153,7 +169,10 @@ export class ViewAllComponent implements OnInit {
         public printService: PrintService,
         public busStopService: BusStopService,
         public tcService: TCService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        public notificationService: NotificationService,
+        public userService: UserService,
+        public smsService: SmsService,
     ) { }
 
     ngOnInit(): void {
@@ -167,6 +186,8 @@ export class ViewAllComponent implements OnInit {
         this.serviceAdapter = new ViewAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.currentProfileDocumentFilter = this.profileDocumentSelectList[0];
         this.percent_download_comlpleted = 0;
@@ -446,6 +467,65 @@ export class ViewAllComponent implements OnInit {
         return sectionLength > 1;
     }
 
+    isLoggedIn(){
+        let variableList = VARIABLE_MAPPED_EVENT_LIST.find(vme => vme.eventId == 1).variableList;
+        variableList = variableList.slice(2,);
+        let temp = variableList.slice(0,1);
+        variableList = variableList.slice(4,);
+        variableList = [...temp, ...variableList];
+        this.dataForMapping['studentList'] = this.studentSectionList.filter((x) => {
+            return x.selected;
+        }).map(a => a.student);
+        this.dataForMapping['studentList'].forEach(person => {
+            if (!this.messageService.checkForDuplicate(variableList, this.tempList, this.dataForMapping,
+                person, this.message, 'student')) {
+                person['student'] = true; // to identify which person in list eg: x['student'] = true
+                this.tempList.push(person);
+            }
+                if (this.columnFilter.showSecondMobileNumber && this.isMobileNumberValid(person.secondMobileNumber)) {
+                    if (!this.messageService.checkForDuplicate(variableList, this.tempList, this.dataForMapping,
+                        person, this.message, person, true)) {
+                        person['student'] = true;
+                        let personWithoutReference = JSON.parse(JSON.stringify(person));
+                        personWithoutReference.mobileNumber = person.secondMobileNumber;
+                        personWithoutReference['isSecondNumber'] = true; // mentioning the element is secondNumber entry
+                        this.tempList.push(personWithoutReference);
+                    }
+                }
+        });
+        this.notificationPersonList = this.tempList.filter((temp) => {
+            return (!temp.isSecondNumber && temp.notification) || (this.columnFilter.showSecondMobileNumber && temp.isSecondNumber && temp.secondNumberNotification);
+        }); 
+    }
+
+    isMobileNumberValid(mobileNumber: any): boolean {
+        if (mobileNumber === null) {
+            return false;
+        }
+        if (mobileNumber === '') {
+            return false;
+        }
+        if (typeof mobileNumber !== 'number') {
+            return false;
+        }
+        if (mobileNumber < 1000000000) {
+            return false;
+        }
+        if (mobileNumber > 9999999999) {
+            return false;
+        }
+        return true;
+    }
+
+    checkMobileNumberInNotificationList(student: any): boolean{
+        this.isLoggedIn();
+        for(let i=0; i<this.notificationPersonList.length; i++){
+            if(student.dbId === this.notificationPersonList[i]["id"])
+                return true;
+        }
+        return false;
+    }
+
     handleStudentDisplay(): void {
         let serialNumber = 0;
         this.displayStudentNumber = 0;
@@ -581,6 +661,12 @@ export class ViewAllComponent implements OnInit {
                 student.show = false;
                 return;
             }
+
+            // isLoggedIn Filter Check
+            if (this.isLogged && !this.checkMobileNumberInNotificationList(student)) {
+                student.show = false;
+                return;
+            }        
 
             // Custom filters check
             for (let x of this.getFilteredStudentParameterList()) {
