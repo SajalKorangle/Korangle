@@ -235,12 +235,11 @@
                         [ngModel]="selectedEmployeeProfile.pranNumber" />
                 </mat-form-field>
             </div>
-            {{yo}}
             <div class="col-md-3">
                 <mat-form-field>
-                    <mat-select placeholder="Is Non-Salaried Employee" [(value)]="yo">
-                        <mat-option value={{true}}>True</mat-option>
-                        <mat-option value={{false}}>False</mat-option>
+                    <mat-select placeholder="Is Non-Salaried Employee" [(ngModel)]="currentEmployeeProfile.isNonSalariedEmployee">
+                        <mat-option [value]="true">True</mat-option>
+                        <mat-option [value]="false">False</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
