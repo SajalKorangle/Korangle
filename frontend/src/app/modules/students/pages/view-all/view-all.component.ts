@@ -118,7 +118,6 @@ export class ViewAllComponent implements OnInit {
     isLogged = false;
     studentSectionList = [];
     studentList = [];
-    includeSecondMobileNumber = false;
     notificationPersonList = [];
     tempList = [];
 
