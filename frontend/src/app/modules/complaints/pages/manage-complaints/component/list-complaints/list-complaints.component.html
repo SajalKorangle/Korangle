@@ -128,39 +128,46 @@
 
             <!-- Starts: Table Body -->
             <tbody (click)="closeFilterOptions()">
-                <ng-container *ngFor="let complaint of complaintList; let i = index">
-                    <tr>
-                        <td style="min-width: 140px;">{{ complaint.parentStudent.name }}</td>
-                        <td style="min-width: 140px;">{{ complaint.parentStudent.fathersName }}</td>
-                        <td style="min-width: 110px;">{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
-                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "None" }}</td>
-                        <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "None" }}</td>
-                        <td style="min-width: 125px;">{{ complaint.parentStudent.mobileNumber ? complaint.parentStudent.mobileNumber : "Not Entered" }}</td>
-                        <td style="min-width: 100px; text-align: center">{{ complaint.commentList.length }}</td>
-                        <td *ngIf="userPermission" style="min-width: 150px; text-align: center">
-                            <div
-                                style="text-align: center; word-wrap: break-word;"
-                                *ngIf="complaint.employeeComplaintList.length"
-                            >
-                                {{ htmlRenderer.getAssignedEmployeeName(complaint.employeeComplaintList) }}
-                            </div>
-                            <div
+
+                <ng-container *ngIf="complaintList.length == 0">
+                    <tr><td>No complaints</td></tr>
+                </ng-container>
+
+                <ng-container *ngIf="complaintList.length > 0">
+                    <ng-container *ngFor="let complaint of complaintList; let i = index">
+                        <tr>
+                            <td style="min-width: 140px;">{{ complaint.parentStudent.name }}</td>
+                            <td style="min-width: 140px;">{{ complaint.parentStudent.fathersName }}</td>
+                            <td style="min-width: 110px;">{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
+                            <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "None" }}</td>
+                            <td style="min-width: 110px;">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "None" }}</td>
+                            <td style="min-width: 125px;">{{ complaint.parentStudent.mobileNumber ? complaint.parentStudent.mobileNumber : "Not Entered" }}</td>
+                            <td style="min-width: 100px; text-align: center">{{ complaint.commentList.length }}</td>
+                            <td *ngIf="userPermission" style="min-width: 150px; text-align: center">
+                                <div
+                                    style="text-align: center; word-wrap: break-word;"
+                                    *ngIf="complaint.employeeComplaintList.length"
+                                >
+                                    {{ htmlRenderer.getAssignedEmployeeName(complaint.employeeComplaintList) }}
+                                </div>
+                                <div
+                                    class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                                    style="text-align: center; cursor: pointer; text-decoration: underline;"
+                                    (click)="triggerOpenAssignEmployeeDialog(complaint, i)"
+                                >
+                                    Assign
+                                </div>
+                            </td>
+                            <td
                                 class="text-{{ user.activeSchool.secondaryThemeColor }}"
-                                style="text-align: center; cursor: pointer; text-decoration: underline;"
-                                (click)="triggerOpenAssignEmployeeDialog(complaint, i)"
+                                style="min-width: 50px; text-align: center; cursor: pointer; text-decoration: underline;"
+                                (click)="triggerOpenComplaint(complaint, i)"
                             >
-                                Assign
-                            </div>
-                        </td>
-                        <td
-                            class="text-{{ user.activeSchool.secondaryThemeColor }}"
-                            style="min-width: 50px; text-align: center; cursor: pointer; text-decoration: underline;"
-                            (click)="triggerOpenComplaint(complaint, i)"
-                        >
-                            Open
-                        </td>
-                        <td><i class="material-icons delete-icon" (click)="triggerDeleteComplaint(complaint, i);" style="text-align: center; color: red; cursor: pointer">delete_forever</i></td>
-                    </tr>
+                                Open
+                            </td>
+                            <td><i class="material-icons delete-icon" (click)="triggerDeleteComplaint(complaint, i);" style="text-align: center; color: red; cursor: pointer">delete_forever</i></td>
+                        </tr>
+                    </ng-container>
                 </ng-container>
 
                 <!-- Starts: Dummy Row -->

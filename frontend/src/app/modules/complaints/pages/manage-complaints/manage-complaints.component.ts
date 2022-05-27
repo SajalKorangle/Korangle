@@ -67,7 +67,6 @@ export class ManageComplaintsComponent implements OnInit {
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
-        console.log("User: ", this.user);
 
         this.htmlRenderer = new ManageComplaintsHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
