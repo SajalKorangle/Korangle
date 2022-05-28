@@ -480,7 +480,6 @@ export class ViewAllComponent implements OnInit {
                         return;
                     }
                 }
-                console.log("Minage, Age: ", this.minAge, age);
             }
 
             /* Category Check */
