@@ -45,4 +45,18 @@ export class AssignEmployeeModalServiceAdapter {
         const notification = await new Query().createObject({notification_app: 'Notification'}, notificationObject);
         alert("Renotified successfully.");
     }  // Ends: sendNotification()
+
+    async removeEmployee(complaint, employee, idx) {
+        console.log("Complaint: ", complaint);
+        console.log("Employee: ", employee);
+
+        let deleteData = {
+            parentEmployee: employee.id,
+            parentComplaint: complaint.id,
+        };
+
+        await new Query().filter(deleteData).deleteObjectList({complaints_app: 'EmployeeComplaint'});
+        this.vm.selectedEmployeeList.splice(idx, 1);
+        console.log("Selected Employee List: ", this.vm.selectedEmployeeList);
+    }
 }

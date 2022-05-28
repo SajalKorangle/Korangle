@@ -369,8 +369,6 @@ export class ManageComplaintsServiceAdapter {
 
         /* User Permission Check */
         if (!this.vm.userPermission) {
-            console.log("YES");
-
             /* Get Assigned Complaint */
             const employeeComplaintQuery = new Query()
                 .filter({ parentEmployee: this.vm.user.activeSchool.employeeId })

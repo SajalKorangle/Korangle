@@ -244,6 +244,8 @@ export class ManageComplaintsComponent implements OnInit {
         if (complaintList.length < this.numberOfComplaintsPerPage) {
             this.isLoadMore = false;
         }
+
+        console.log("Complaint List: ", this.complaintList);
         // this.searchedComplaintList = this.complaintList;
         this.startNewProgressBar();
     }  // Ends: initializeComplaintList()
@@ -477,7 +479,7 @@ export class ManageComplaintsComponent implements OnInit {
             data: {
                 employeeList: CommonFunctions.getInstance().deepCopy(this.employeeList),
                 openedComplaint: CommonFunctions.getInstance().deepCopy(complaint),
-                employeeComplaintList: CommonFunctions.getInstance().deepCopy(complaint.employeeComplaintList),
+                employeeComplaintList: complaint.employeeComplaintList,
             }
         });
 

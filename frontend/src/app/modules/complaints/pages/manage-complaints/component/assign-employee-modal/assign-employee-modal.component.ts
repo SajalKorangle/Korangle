@@ -110,4 +110,7 @@ export class AssignEmployeeModalComponent implements OnInit {
         }
     }  // Ends: initializeEmployeeData()
 
+    removeEmployee(employee, idx) {
+        this.serviceAdapter.removeEmployee(this.openedComplaint, employee, idx);
+    }
 }

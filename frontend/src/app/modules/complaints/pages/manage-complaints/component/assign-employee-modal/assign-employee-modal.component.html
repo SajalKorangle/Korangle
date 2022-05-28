@@ -40,12 +40,19 @@
             <ng-container *ngFor="let employee of selectedEmployeeList; let idx = index">
                 <div class="flex-box">
                     <div style="flex-basis: 50%;">{{ employee.name }}</div>
-                    <div
-                        class="text-{{ user.activeSchool.secondaryThemeColor }}"
-                        style="text-decoration: underline; font-weight: 400; font-size: 12px; cursor: pointer;"
-                        (click)="renotifyClicked(employee)"
-                    >
-                        Renotify
+                    <div class="flex-box" style="flex-basis: 50%; justify-content: space-around;">
+                        <div
+                            class="text-{{ user.activeSchool.secondaryThemeColor }} renotify-employee"
+                            (click)="renotifyClicked(employee)"
+                        >
+                            Renotify
+                        </div>
+                        <div
+                            class="remove-employee"
+                            (click)="removeEmployee(employee, idx)"
+                        >
+                            Remove
+                        </div>
                     </div>
                 </div>
             </ng-container>
