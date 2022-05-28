@@ -244,8 +244,6 @@ export class ManageComplaintsComponent implements OnInit {
         if (complaintList.length < this.numberOfComplaintsPerPage) {
             this.isLoadMore = false;
         }
-
-        console.log("Complaint List: ", this.complaintList);
         // this.searchedComplaintList = this.complaintList;
         this.startNewProgressBar();
     }  // Ends: initializeComplaintList()
