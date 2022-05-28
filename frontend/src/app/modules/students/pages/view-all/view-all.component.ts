@@ -460,9 +460,9 @@ export class ViewAllComponent implements OnInit {
             /* Age Check */
             if (this.asOnDate) {
                 let age = student.dateOfBirth
-                    ? Math.floor((new Date(this.asOnDate).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+                    ? (new Date(this.asOnDate).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365)
                     : null;
-                if (this.minAge != '' && this.minAge != null && !isNaN(this.minAge)) {
+                if (this.minAge != null && !isNaN(this.minAge)) {
                     if (age == null || age == undefined) {
                         student.show = false;
                         return;
@@ -471,7 +471,7 @@ export class ViewAllComponent implements OnInit {
                         return;
                     }
                 }
-                if (this.maxAge != '' && this.maxAge != null && !isNaN(this.maxAge)) {
+                if (this.maxAge != null && !isNaN(this.maxAge)) {
                     if (age == null || age == undefined) {
                         student.show = false;
                         return;
@@ -480,6 +480,7 @@ export class ViewAllComponent implements OnInit {
                         return;
                     }
                 }
+                console.log("Minage, Age: ", this.minAge, age);
             }
 
             /* Category Check */

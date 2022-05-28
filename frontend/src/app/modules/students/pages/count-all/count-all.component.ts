@@ -347,7 +347,7 @@ export class CountAllComponent implements OnInit {
                 }
             } else if (filter == "age") {  /* Age Check */
                 let age = student.dateOfBirth
-                ? Math.floor((new Date(filtersData[filter][0]).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+                ? (new Date(filtersData[filter][0]).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365)
                 : null;
 
                 /* Min-Age check */
