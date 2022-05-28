@@ -116,6 +116,7 @@ export class ViewAllComponent implements OnInit {
     dataForMapping = {} as any;
     message = '';
     isLogged = false;
+    isNotLogged = false;
     studentSectionList = [];
     studentList = [];
     notificationPersonList = [];
@@ -663,6 +664,10 @@ export class ViewAllComponent implements OnInit {
 
             // isLoggedIn Filter Check
             if (this.isLogged && !this.checkMobileNumberInNotificationList(student)) {
+                student.show = false;
+                return;
+            }  
+            if (this.isNotLogged && this.checkMobileNumberInNotificationList(student)) {
                 student.show = false;
                 return;
             }        
