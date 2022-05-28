@@ -1,657 +1,952 @@
-<div class="card-content table-responsive">
-    <!-- Class Filter -->
-    <mat-form-field style="margin-right: 15px">
-        <mat-select placeholder="Select Class" id="select-class" style="width: 100%">
-            <mat-option>
-                <button class="btn" style="padding: 4px 7px" id="select-all-classes" (click)="selectAllClasses(); $event.stopPropagation()">
-                    Select All
-                </button>
-                <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
-            </mat-option>
+import { Component, Input, OnInit } from '@angular/core';
 
-            <ng-container *ngFor="let class of classSectionList">
-                <ng-container *ngFor="let section of class.sectionList">
-                    <mat-option *ngIf="section.containsStudent" style="width: 100%">
-                        <mat-checkbox
-                            [(ngModel)]="section.selected"
-                            (ngModelChange)="handleStudentDisplay()"
-                            (click)="$event.stopPropagation()"
-                        >
-                            {{ class.name }}<span *ngIf="showSectionName(class)">, {{ section.name }}</span>
-                        </mat-checkbox>
-                    </mat-option>
-                </ng-container>
-            </ng-container>
+import { ClassService } from '../../../../services/modules/class/class.service';
+import { StudentOldService } from '../../../../services/modules/student/student-old.service';
+import { StudentService } from '../../../../services/modules/student/student.service';
 
-            <mat-option>
-                <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">Select All</button>
-                <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
+import { ExcelService } from '../../../../excel/excel-service';
+import { DataStorage } from '../../../../classes/data-storage';
+import { BusStopService } from '@services/modules/school/bus-stop.service';
+import { SchoolService } from '@services/modules/school/school.service';
+import { TCService } from './../../../../services/modules/tc/tc.service';
 
-    <!-- Column Filter For Profile Data -->
-    <mat-form-field style="margin-right: 15px" *ngIf="currentProfileDocumentFilter === 'Profile'">
-        <mat-select placeholder="Select Columns" id="select-profile-column" style="width: 100%">
-            <mat-option>
-                <button
-                    class="btn"
-                    id="select-all-profile-columns"
-                    style="padding: 4px 7px"
-                    (click)="selectAllColumns(); $event.stopPropagation()"
-                >
-                    Select All
-                </button>
-                <button
-                    class="btn"
-                    id="unselect-all-profile-columns"
-                    style="padding: 4px 7px"
-                    (click)="unSelectAllColumns(); $event.stopPropagation()"
-                >
-                    Clear All
-                </button>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showSerialNumber" (click)="$event.stopPropagation()">Serial No. </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showProfileImage" (click)="$event.stopPropagation()">Profile Image </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation()">Name </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showClassName" (click)="$event.stopPropagation()">Class </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showSectionName" (click)="$event.stopPropagation()">Section </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showRollNumber" (click)="$event.stopPropagation()">Roll No. </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showFathersName" (click)="$event.stopPropagation()">Father's Name </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showMobileNumber" (click)="$event.stopPropagation()">Mobile No. </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showSecondMobileNumber" (click)="$event.stopPropagation()"
-                    >Alt. Mobile No.
-                </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showScholarNumber" (click)="$event.stopPropagation()">Scholar No. </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showDateOfBirth" (click)="$event.stopPropagation()">Date of Birth </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showMotherName" (click)="$event.stopPropagation()">Mother's Name </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showGender" (click)="$event.stopPropagation()">Gender </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showCaste" (click)="$event.stopPropagation()">Caste </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showCategory" (click)="$event.stopPropagation()">Category </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showReligion" (click)="$event.stopPropagation()">Religion </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showFatherOccupation" (click)="$event.stopPropagation()">
-                    Father's Occupation
-                </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showAddress" (click)="$event.stopPropagation()">Address </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showChildSSMID" (click)="$event.stopPropagation()">Child SSMID </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showFamilySSMID" (click)="$event.stopPropagation()">Family SSMID </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showBankName" (click)="$event.stopPropagation()">Bank Name </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showBankIfscCode" (click)="$event.stopPropagation()">Bank Ifsc Code </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showBankAccountNum" (click)="$event.stopPropagation()">Bank Acc. No. </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showAadharNum" (click)="$event.stopPropagation()">Aadhar No. </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showBloodGroup" (click)="$event.stopPropagation()">Blood Group </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showFatherAnnualIncome" (click)="$event.stopPropagation()">
-                    Father's Annual Income
-                </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showRTE" (click)="$event.stopPropagation()"> RTE </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showAdmissionSession" (click)="$event.stopPropagation()">
-                    Admission Session
-                </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showBusStopName" (click)="$event.stopPropagation()"> Bus Stop Name </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showDateOfAdmission" (click)="$event.stopPropagation()">
-                    Date Of Admission
-                </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="columnFilter.showRemark" (click)="$event.stopPropagation()"> Remark </mat-checkbox>
-            </mat-option>
-            <mat-option *ngFor="let parameter of studentParameterOtherList">
-                <mat-checkbox [(ngModel)]="parameter.show" (click)="$event.stopPropagation()">
-                    {{ parameter.name }}
-                </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <button class="btn" style="padding: 4px 7px" (click)="selectAllColumns(); $event.stopPropagation()">Select All</button>
-                <button class="btn" style="padding: 4px 7px" (click)="unSelectAllColumns(); $event.stopPropagation()">Clear All</button>
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+import { MatDialog } from '@angular/material';
+import { ImagePdfPreviewDialogComponent } from '../../../../components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 
-    <!-- Column Filter For Document Data-->
-    <mat-form-field style="margin-right: 15px" *ngIf="currentProfileDocumentFilter === 'Documents'">
-        <mat-select placeholder="Select Documents" id="select-document-column">
-            <mat-option>
-                <button
-                    id="select-all-document-columns"
-                    class="btn"
-                    style="padding: 4px 7px"
-                    (click)="selectAllDocuments(); $event.stopPropagation()"
-                >
-                    Select All
-                </button>
-                <button
-                    id="unselect-all-document-columns"
-                    class="btn"
-                    style="padding: 4px 7px"
-                    (click)="unSelectAllDocuments(); $event.stopPropagation()"
-                >
-                    Clear All
-                </button>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="documentFilter.showName" (click)="$event.stopPropagation()">Name </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="documentFilter.showFathersName" (click)="$event.stopPropagation()">Father's Name </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="documentFilter.showClassName" (click)="$event.stopPropagation()">Class </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="documentFilter.showSectionName" (click)="$event.stopPropagation()">Section </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="documentFilter.showRollNumber" (click)="$event.stopPropagation()">Roll No. </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="documentFilter.showScholarNumber" (click)="$event.stopPropagation()">Scholar No. </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <mat-checkbox [(ngModel)]="documentFilter.showMobileNumber" (click)="$event.stopPropagation()">Mobile No. </mat-checkbox>
-            </mat-option>
-            <hr />
-            <mat-option *ngFor="let parameter of studentParameterDocumentList">
-                <mat-checkbox [(ngModel)]="parameter.show" (click)="$event.stopPropagation()">
-                    {{ parameter.name }}
-                </mat-checkbox>
-            </mat-option>
-            <mat-option>
-                <button class="btn" style="padding: 4px 7px" (click)="selectAllDocuments(); $event.stopPropagation()">Select All</button>
-                <button class="btn" style="padding: 4px 7px" (click)="unSelectAllDocuments(); $event.stopPropagation()">Clear All</button>
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+import * as JSZip from 'jszip';
+import * as FileSaver from 'file-saver';
+import { toInteger, filter } from 'lodash';
+import { CommonFunctions } from '@classes/common-functions';
+import { ViewImageModalComponent } from '@components/view-image-modal/view-image-modal.component';
+import { ComponentsModule } from 'app/components/components.module';
 
-    <button
-        *ngIf="currentProfileDocumentFilter === 'Profile'"
-        id="print-list"
-        type="button"
-        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
-        style="padding: 12px 15px; margin-right: 17px"
-        matTooltip="Print the following list"
-        tooltip-position="left"
-        (click)="printStudentList()"
-    >
-        Print<i class="material-icons" style="margin-left: 15px">print</i>
-    </button>
+import { ViewAllServiceAdapter } from './view-all.service.adapter';
+import { ViewAllBackendData } from './view-all.backend.data';
+import { MessageService } from '@services/message-service';
+import { NotificationService } from '@services/modules/notification/notification.service';
+import { UserService } from '@services/modules/user/user.service';
+import { SmsService } from '@services/modules/sms/sms.service';
+import { VARIABLE_MAPPED_EVENT_LIST } from '@modules/classes/constants';
 
-    <button
-        type="button"
-        id="download"
-        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-        style="padding: 12px 15px; margin-right: 17px"
-        matTooltip="Download the following items"
-        tooltip-position="left"
-        (click)="downloadList()"
-    >
-        Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
-    </button>
+class ColumnFilter {
+    showSerialNumber = true;
+    showProfileImage = false;
+    showName = true;
+    showClassName = false;
+    showSectionName = false;
+    showRollNumber = false;
+    showFathersName = true;
+    showMobileNumber = true;
+    showSecondMobileNumber = false;
+    showScholarNumber = false;
+    showDateOfBirth = false;
+    showMotherName = false;
+    showGender = false;
+    showCaste = false;
+    showCategory = false;
+    showReligion = false;
+    showFatherOccupation = false;
+    showAddress = true;
+    showChildSSMID = false;
+    showFamilySSMID = false;
+    showBankName = false;
+    showBankIfscCode = false;
+    showBankAccountNum = false;
+    showAadharNum = false;
+    showBloodGroup = false;
+    showFatherAnnualIncome = false;
+    showRTE = false;
+    showAdmissionSession = false;
+    showBusStopName = false;
+    showDateOfAdmission = false;
+    showRemark = false;
+}
 
-    <mat-form-field style="float: right">
-        <mat-select [ngModel]="currentProfileDocumentFilter" (ngModelChange)="currentProfileDocumentFilter = $event">
-            <mat-option value="Profile">Profile</mat-option>
-            <mat-option value="Documents">Documents</mat-option>
-        </mat-select>
-    </mat-form-field>
+@Component({
+    selector: 'view-all',
+    templateUrl: './view-all.component.html',
+    styleUrls: ['./view-all.component.css'],
+    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService, TCService, NotificationService, UserService, SmsService,],
+})
+export class ViewAllComponent implements OnInit {
+    user;
 
-    <!-- Filters -->
-    <br />
-    <ng-container>
-        <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters">
-            <ng-container *ngIf="!showFilters">Show Filters</ng-container>
-            <ng-container *ngIf="showFilters">Hide Filters</ng-container>
-        </button>
-        <ng-container *ngIf="showFilters">
-            <br /><b>Age</b><br />
-            <input type="number" style="width: 60px; margin-right: 5px" [(ngModel)]="minAge" (ngModelChange)="handleStudentDisplay()" />
-            <span style="margin-right: 5px">&lt;= Age &lt;=</span>
-            <input type="number" style="width: 60px" [(ngModel)]="maxAge" (ngModelChange)="handleStudentDisplay()" />
-            &nbsp; &nbsp; as on date &nbsp;&nbsp;
-            <!-- input type="date" [(ngModel)]="asOnDate" (ngModelChange)="handleStudentDisplay()" -->
-            <day-date [formattedDateOutput]="true"
-                      (onDateSelected)="asOnDate = $event; handleStudentDisplay()">
-            </day-date>
+    NULL_CONSTANT = null;
 
-            <br /><br /><b>Category</b><br />
-            <mat-checkbox
-                [(ngModel)]="scSelected"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >SC,
-            </mat-checkbox>
-            <mat-checkbox
-                [(ngModel)]="stSelected"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >ST,
-            </mat-checkbox>
-            <mat-checkbox
-                [(ngModel)]="obcSelected"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >OBC,
-            </mat-checkbox>
-            <mat-checkbox
-                [(ngModel)]="generalSelected"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >Gen.
-            </mat-checkbox>
+    showFilters = false;
 
-            <br /><br /><b>Gender</b><br />
-            <mat-checkbox
-                [(ngModel)]="maleSelected"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >M
-            </mat-checkbox>
-            <mat-checkbox
-                [(ngModel)]="femaleSelected"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >F
-            </mat-checkbox>
-            <mat-checkbox
-                [(ngModel)]="otherGenderSelected"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >Other
-            </mat-checkbox>
+    session_list = [];
 
-            <br /><br /><b>Admission</b><br />
-            <mat-checkbox
-                [(ngModel)]="newAdmission"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >New
-            </mat-checkbox>
-            <mat-checkbox
-                [(ngModel)]="oldAdmission"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >Old
-            </mat-checkbox>
+    columnFilter: ColumnFilter;
+    documentFilter: ColumnFilter;
 
-            <br /><br /><b>RTE</b><br />
-            <mat-checkbox
-                [(ngModel)]="noneRTE"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >None
-            </mat-checkbox>
-            <mat-checkbox
-                [(ngModel)]="yesRTE"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >Yes
-            </mat-checkbox>
-            <mat-checkbox
-                [(ngModel)]="noRTE"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >No
-            </mat-checkbox>
+    /* Age Check */
+    minAge: any;
+    maxAge: any;
+    asOnDate = new Date();
 
-            <br /><br /><b>Transfer Certificate</b><br />
-            <mat-checkbox
-                [(ngModel)]="noTC"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >Not-Generated
-            </mat-checkbox>
-            <mat-checkbox
-                [(ngModel)]="yesTC"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >Generated
-            </mat-checkbox>
+    /* Category Options */
+    scSelected = false;
+    stSelected = false;
+    obcSelected = false;
+    generalSelected = false;
 
-            <br /><b>Is Logged In?</b><br />
-            <mat-checkbox
-                [(ngModel)]="isLogged"
-                style="margin-right: 5px"
-                (ngModelChange)="handleStudentDisplay()"
-                (click)="$event.stopPropagation()"
-                >
-            </mat-checkbox>
+    /* Gender Options */
+    maleSelected = false;
+    femaleSelected = false;
+    otherGenderSelected = false;
 
-            <br />
-            <hr />
-            <h5>Custom Filters</h5>
-            <ng-container *ngFor="let parameter of getFilteredStudentParameterList()">
-                <mat-form-field>
-                    <mat-label>{{ parameter.name }}</mat-label>
-                    <input matInput type="text" [(ngModel)]="parameter.filterFilterValues" /> </mat-form-field
-                ><br />
-                <mat-checkbox
-                    [(ngModel)]="parameter.showNone"
-                    style="margin-right: 5px"
-                    (ngModelChange)="handleStudentDisplay()"
-                    (click)="$event.stopPropagation()"
-                    >None
-                </mat-checkbox>
-                <mat-checkbox
-                    *ngFor="let filter of getFilteredFilterValues(parameter)"
-                    [(ngModel)]="filter.show"
-                    style="margin-right: 5px"
-                    (ngModelChange)="handleStudentDisplay()"
-                    (click)="$event.stopPropagation()"
-                    >{{ filter.name }} </mat-checkbox
-                ><br />
-            </ng-container>
-        </ng-container>
-    </ng-container>
+    /* Admission Session Options */
+    newAdmission = true;
+    oldAdmission = true;
 
-    <ng-container *ngIf="currentProfileDocumentFilter === 'Documents'"
-        ><br />
-        <div *ngIf="download == 'START'">
-            <div class="progress" style="height: 20px">
-                <div class="progress-bar progress-bar-success" role="progressbar" [style.width.%]="percent_download_comlpleted">
-                    {{ percent_download_comlpleted | number: '1.0-0' }}%
-                </div>
-            </div>
-            <div class="text-center">
-                <h4>
-                    <b>{{ downloadedFiles }} out of {{ totalFiles }} files downloaded</b>
-                </h4>
-            </div>
-        </div>
-        <div *ngIf="download == 'END'">
-            <h4 class="text-success text-center">
-                <div class="spinner-border text-success" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-                <b>Download Done now Unziping</b>
-            </h4>
-        </div>
-        <div *ngIf="download == 'FAIL'">
-            <h4 class="text-danger text-center">
-                <b>Download failed restart again.</b>
-            </h4>
-        </div>
-        <div *ngIf="totalFailed != 0" class="text-center">
-            <h5>
-                <b
-                    ><i style="color: red">Failed to download {{ totalFailed }} files</i></b
-                >
-            </h5>
-        </div>
-    </ng-container>
+    /* RTE Options */
+    yesRTE = true;
+    noRTE = true;
+    noneRTE = true;
 
-    <!-- Student Table Profile Data List -->
-    <ng-container *ngIf="!isLoading && currentProfileDocumentFilter === 'Profile'">
-        <p>
-            Total Students: <b>{{ studentFullProfileList.length }}</b
-            >, Selected : <b>{{ displayStudentNumber }}</b>
-        </p>
-        <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
-            <table class="table table-hover">
-                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                    <tr>
-                        <th style="min-width: 60px" *ngIf="columnFilter.showSerialNumber">S No.</th>
-                        <th *ngIf="columnFilter.showProfileImage" style="min-width: 120px; text-align: center">Profile Image</th>
-                        <th style="min-width: 180px" *ngIf="columnFilter.showName">Name</th>
-                        <th style="min-width: 100px" *ngIf="columnFilter.showClassName">Class</th>
-                        <th style="min-width: 100px" *ngIf="columnFilter.showSectionName">Section</th>
-                        <th style="min-width: 80px" *ngIf="columnFilter.showRollNumber">Roll No.</th>
-                        <th style="min-width: 180px" *ngIf="columnFilter.showFathersName">Father's Name</th>
-                        <th style="min-width: 100px" *ngIf="columnFilter.showMobileNumber">Mobile No.</th>
-                        <th style="min-width: 110px" *ngIf="columnFilter.showSecondMobileNumber">Alt. Mobile No.</th>
-                        <th style="min-width: 90px" *ngIf="columnFilter.showScholarNumber">Scholar No.</th>
-                        <th style="min-width: 100px" *ngIf="columnFilter.showDateOfBirth">Date of Birth</th>
-                        <th style="min-width: 180px" *ngIf="columnFilter.showMotherName">Mother's Name</th>
-                        <th style="min-width: 80px" *ngIf="columnFilter.showGender">Gender</th>
-                        <th style="min-width: 100px" *ngIf="columnFilter.showCaste">Caste</th>
-                        <th style="min-width: 80px" *ngIf="columnFilter.showCategory">Category</th>
-                        <th style="min-width: 90px" *ngIf="columnFilter.showReligion">Religion</th>
-                        <th style="min-width: 150px" *ngIf="columnFilter.showFatherOccupation">Father's Occupation</th>
-                        <th style="min-width: 200px" *ngIf="columnFilter.showAddress">Address</th>
-                        <th style="min-width: 100px" *ngIf="columnFilter.showChildSSMID">Child SSMID</th>
-                        <th style="min-width: 100px" *ngIf="columnFilter.showFamilySSMID">Family SSMID</th>
-                        <th style="min-width: 180px" *ngIf="columnFilter.showBankName">Bank Name</th>
-                        <th style="min-width: 150px" *ngIf="columnFilter.showBankIfscCode">Bank Ifsc Code</th>
-                        <th style="min-width: 150px" *ngIf="columnFilter.showBankAccountNum">Bank Acc. No.</th>
-                        <th style="min-width: 150px" *ngIf="columnFilter.showAadharNum">Aadhar No.</th>
-                        <th style="min-width: 100px" *ngIf="columnFilter.showBloodGroup">Blood Group</th>
-                        <th style="min-width: 110px" *ngIf="columnFilter.showFatherAnnualIncome">Father's Annual Income</th>
-                        <th style="min-width: 60px" *ngIf="columnFilter.showRTE">RTE</th>
-                        <th style="min-width: 140px" *ngIf="columnFilter.showAdmissionSession">Admission Session</th>
-                        <th style="min-width: 150px" *ngIf="columnFilter.showBusStopName">Bus Stop Name</th>
-                        <th style="min-width: 150px" *ngIf="columnFilter.showDateOfAdmission">Date Of Admission</th>
-                        <th style="min-width: 200px" *ngIf="columnFilter.showRemark">Remark</th>
-                        <ng-container *ngFor="let parameter of studentParameterOtherList">
-                            <th style="min-width: 150px" *ngIf="parameter.show">
-                                {{ parameter.name }}
-                            </th>
-                        </ng-container>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ng-container *cdkVirtualFor="let student of studentFullProfileList">
-                        <tr *ngIf="student.show">
-                            <ng-container>
-                                <td *ngIf="columnFilter.showSerialNumber">{{ student.serialNumber }}.</td>
-                                <td *ngIf="columnFilter.showProfileImage" align="center">
-                                    <img *ngIf="student.profileImage" src="{{ student.profileImage }}" style="width: 50px" />
-                                    <img
-                                        *ngIf="!student.profileImage"
-                                        src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
-                                        style="width: 50px"
-                                    />
-                                </td>
-                                <td [attr.id]="'student-value-' + student.name.replace(' ', '')" *ngIf="columnFilter.showName">
-                                    {{ student.name }}
-                                </td>
-                                <td *ngIf="columnFilter.showClassName">
-                                    {{ student.className }}
-                                    <!-- span *ngIf="class.sectionList.length > 1">, {{section.name}}</span -->
-                                </td>
-                                <td *ngIf="columnFilter.showSectionName">{{ student.sectionName }}</td>
-                                <td *ngIf="columnFilter.showRollNumber">{{ student.rollNumber }}</td>
-                                <td
-                                    [attr.id]="'father-name-value-' + student.fathersName.replace(' ', '')"
-                                    *ngIf="columnFilter.showFathersName"
-                                >
-                                    {{ student.fathersName }}
-                                </td>
-                                <td *ngIf="columnFilter.showMobileNumber">
-                                    <span class="hidden-xs hidden-sm">{{ student.mobileNumber }}</span>
-                                    <a class="visible-xs visible-sm" href="tel:{{ student.mobileNumber }}">Call Me</a>
-                                </td>
-                                <td *ngIf="columnFilter.showSecondMobileNumber">
-                                    <span class="hidden-xs hidden-sm">{{ student.secondMobileNumber }}</span>
-                                    <a class="visible-xs visible-sm" href="tel:{{ student.secondMobileNumber }}">Call Me</a>
-                                </td>
-                                <td *ngIf="columnFilter.showScholarNumber">{{ student.scholarNumber }}</td>
-                                <td *ngIf="columnFilter.showDateOfBirth">
-                                    {{ student.dateOfBirth | date: 'dd/MM/yyyy' }}
-                                </td>
-                                <!-- td *ngIf="columnFilter.showMotherName">{{ student.motherName }}</td -->
-                                <td *ngIf="columnFilter.showMotherName">{{student.motherName}}</td>
-                                <td *ngIf="columnFilter.showGender">{{ student.gender }}</td>
-                                <td *ngIf="columnFilter.showCaste">{{ student.caste }}</td>
-                                <td *ngIf="columnFilter.showCategory">{{ student.category }}</td>
-                                <td *ngIf="columnFilter.showReligion">{{ student.religion }}</td>
-                                <td *ngIf="columnFilter.showFatherOccupation">{{ student.fatherOccupation }}</td>
-                                <td *ngIf="columnFilter.showAddress">{{ student.address }}</td>
-                                <td *ngIf="columnFilter.showChildSSMID">{{ student.childSSMID }}</td>
-                                <td *ngIf="columnFilter.showFamilySSMID">{{ student.familySSMID }}</td>
-                                <td *ngIf="columnFilter.showBankName">{{ student.bankName }}</td>
-                                <td *ngIf="columnFilter.showBankIfscCode">{{ student.bankIfscCode }}</td>
-                                <td *ngIf="columnFilter.showBankAccountNum">{{ student.bankAccountNum }}</td>
-                                <td *ngIf="columnFilter.showAadharNum">{{ student.aadharNum }}</td>
-                                <td *ngIf="columnFilter.showBloodGroup">{{ student.bloodGroup }}</td>
-                                <td *ngIf="columnFilter.showFatherAnnualIncome">{{ student.fatherAnnualIncome }}</td>
-                                <td *ngIf="columnFilter.showRTE">{{ student.rte }}</td>
-                                <td *ngIf="columnFilter.showAdmissionSession">
-                                    {{ getAdmissionSession(student.admissionSessionDbId) }}
-                                </td>
-                                <td *ngIf="columnFilter.showBusStopName">
-                                    {{ getBusStopName(student.busStopDbId) }}
-                                </td>
-                                <td *ngIf="columnFilter.showDateOfAdmission">
-                                    {{ student.dateOfAdmission | date: 'dd/MM/yyyy' }}
-                                </td>
-                                <td *ngIf="columnFilter.showRemark">{{ student.remark }}</td>
-                                <ng-container *ngFor="let parameter of studentParameterOtherList">
-                                    <td *ngIf="parameter.show">
-                                        {{ getParameterValue(student, parameter) }}
-                                    </td>
-                                </ng-container>
-                            </ng-container>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
-        </cdk-virtual-scroll-viewport>
-    </ng-container>
+    /* TC Options */
+    noTC = true;
+    yesTC = true;
 
-    <!-- Student Table Documents List -->
-    <ng-container *ngIf="!isLoading && currentProfileDocumentFilter === 'Documents'">
-        <p>
-            Total Students: <b>{{ studentFullProfileList.length }}</b
-            >, Displaying: <b>{{ displayStudentNumber }}</b
-            >, Selected: <b>{{ getSelectedStudents() }}</b>
-        </p>
-        <button class="btn" style="padding: 7px 7px; margin-right: 5px" (click)="selectAllStudents(); $event.stopPropagation()">
-            Select All
-        </button>
-        <button class="btn" style="padding: 7px 7px" (click)="unselectAllStudents(); $event.stopPropagation()">Clear All</button>
+    /* Is Logged In? Options */
+    messageService: any;
+    dataForMapping = {} as any;
+    message = '';
+    isLogged = false;
+    isNotLogged = false;
+    studentSectionList = [];
+    studentList = [];
+    notificationPersonList = [];
+    tempList = [];
 
-        <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
-            <table class="table table-hover">
-                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                    <tr>
-                        <th></th>
-                        <th *ngIf="documentFilter.showSerialNumber">S No.</th>
-                        <th *ngIf="documentFilter.showName">Name</th>
-                        <th *ngIf="documentFilter.showFathersName">Father's Name</th>
-                        <th *ngIf="documentFilter.showClassName">Class</th>
-                        <th *ngIf="documentFilter.showSectionName">Section</th>
-                        <th *ngIf="documentFilter.showRollNumber">Roll No.</th>
-                        <th *ngIf="documentFilter.showScholarNumber">Scholar No.</th>
-                        <th *ngIf="documentFilter.showMobileNumber">Mobile No.</th>
-                        <ng-container *ngFor="let parameter of studentParameterDocumentList">
-                            <th class="text-center"  *ngIf="parameter.show">
-                                {{ parameter.name }}
-                            </th>
-                        </ng-container>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ng-container *cdkVirtualFor="let student of studentFullProfileList">
-                        <tr *ngIf="student.show">
-                            <ng-container>
-                                <td>
-                                    <mat-checkbox [(ngModel)]="student.selectDocument" (click)="$event.stopPropagation()"> </mat-checkbox>
-                                </td>
-                                <td *ngIf="documentFilter.showSerialNumber">{{ student.serialNumber }}.</td>
-                                <td [attr.id]="'student-value-' + student.name.replace(' ', '')" *ngIf="documentFilter.showName">
-                                    {{ student.name }}
-                                </td>
-                                <td
-                                    [attr.id]="'father-name-value-' + student.fathersName.replace(' ', '')"
-                                    *ngIf="documentFilter.showFathersName"
-                                >
-                                    {{ student.fathersName }}
-                                </td>
-                                <td *ngIf="documentFilter.showClassName">{{ student.className }}</td>
-                                <td *ngIf="documentFilter.showSectionName">{{ student.sectionName }}</td>
-                                <td *ngIf="documentFilter.showRollNumber">{{ student.rollNumber }}</td>
-                                <td *ngIf="documentFilter.showScholarNumber">{{ student.scholarNumber }}</td>
-                                <td *ngIf="documentFilter.showMobileNumber">
-                                    <span class="hidden-xs hidden-sm">{{ student.mobileNumber }}</span>
-                                    <a class="visible-xs visible-sm" href="tel:{{ student.mobileNumber }}">Call Me</a>
-                                </td>
-                                <ng-container *ngFor="let parameter of studentParameterDocumentList">
-                                    <td class="text-center" *ngIf="parameter.show">
-                                        <img src="{{ getDocumentIcon(student, parameter) }}"
-                                             style="width: 20px"
-                                             (click)="openFilePreviewDialog(student, parameter)"/>
-                                    </td>
-                                </ng-container>
-                            </ng-container>
-                        </tr>
-                    </ng-container>
-                </tbody>
-            </table>
-        </cdk-virtual-scroll-viewport>
-    </ng-container>
-</div>
+    displayStudentNumber = 0;
 
-<ng-container *ngIf="isLoading">
-    <app-loading-spinner [user]="user"></app-loading-spinner>
-</ng-container>
+    classSectionList = [];
+    classList = [];
+    sectionList = [];
+
+    studentFullProfileList = [];
+
+    busStopList = [];
+
+    studentParameterList: any[] = [];
+    studentParameterOtherList: any[] = [];
+    studentParameterDocumentList: any[] = [];
+
+    studentParameterValueList: any[] = [];
+
+    profileDocumentSelectList = ['Profile', 'Documents'];
+    currentProfileDocumentFilter;
+
+    percent_download_comlpleted;
+    totalDownloadSize;
+    download;
+    totalFiles;
+    downloadedFiles;
+    totalFailed;
+
+    profileColumns;
+    documentColumns;
+
+    noFileIcon = '/assets/img/nofile.png';
+    pdfIcon = '/assets/img/pdfIcon.png';
+    imageIcon = '/assets/img/imageIcon.png';
+
+    isLoading = false;
+
+    serviceAdapter: ViewAllServiceAdapter;
+    backendData: ViewAllBackendData;
+
+    constructor(
+        public studentOldService: StudentOldService,
+        public studentService: StudentService,
+        public classService: ClassService,
+        public excelService: ExcelService,
+        public schoolService: SchoolService,
+        public printService: PrintService,
+        public busStopService: BusStopService,
+        public tcService: TCService,
+        public dialog: MatDialog,
+        public notificationService: NotificationService,
+        public userService: UserService,
+        public smsService: SmsService,
+    ) { }
+
+    ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
+        this.columnFilter = new ColumnFilter();
+        this.documentFilter = new ColumnFilter();
+
+        this.backendData = new ViewAllBackendData();
+        this.backendData.initialize(this);
+
+        this.serviceAdapter = new ViewAllServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
+
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
+
+        this.currentProfileDocumentFilter = this.profileDocumentSelectList[0];
+        this.percent_download_comlpleted = 0;
+        this.totalDownloadSize = 0;
+        this.download = 'NOT';
+        this.downloadedFiles = 0;
+        this.totalFiles = 0;
+        this.totalFailed = 0;
+    }
+
+    initializeClassSectionList(classSectionList: any): void {
+        this.classSectionList = classSectionList;
+        this.classSectionList.forEach((classs) => {
+            classs.sectionList.forEach((section) => {
+                section.selected = false;
+                section.containsStudent = false;
+            });
+        });
+    }
+
+    getParameterValue(student, parameter) {
+        try {
+            if (this.currentProfileDocumentFilter === 'Profile') {
+                return this.studentParameterValueList.find(
+                    (x) => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id
+                ).value;
+            } else {
+                let value = this.studentParameterValueList.find(
+                    (x) => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id
+                ).document_value;
+                if (value) {
+                    if (value === '' || value === undefined) {
+                    } else {
+                        return value;
+                    }
+                } else {
+                    return this.NULL_CONSTANT;
+                }
+            }
+        } catch {
+            return this.NULL_CONSTANT;
+        }
+    }
+
+    getDocumentIcon(student, parameter) {
+        try {
+            let value = this.studentParameterValueList.find(
+                (x) => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id
+            ).document_value;
+            if (value) {
+                if (value === '' || value === undefined) {
+                    return this.NULL_CONSTANT;
+                } else {
+                    let type = value.split('.');
+                    type = type[type.length - 1];
+                    if (type == 'pdf') {
+                        return this.pdfIcon;
+                    } else if (type == 'jpg' || type == 'jpeg' || type == 'png') {
+                        return this.imageIcon;
+                    }
+                }
+            } else {
+                return this.noFileIcon;
+            }
+        } catch {
+            return this.noFileIcon;
+        }
+    }
+
+    getFilteredStudentParameterList = () => this.studentParameterList.filter((x) => x.parameterType === 'FILTER');
+
+    getFilteredFilterValues(parameter: any): any {
+        if (parameter.filterFilterValues === '') {
+            return parameter.filterValues;
+        }
+        return parameter.filterValues.filter((x) => {
+            return x.name.includes(parameter.filterFilterValues);
+        });
+    }
+
+    /*initializeClassList(classList: any): void {
+        this.classList = classList;
+    }
+
+    initializeSectionList(sectionList: any): void {
+        this.sectionList = sectionList;
+    }*/
+
+    initializeStudentFullProfileList(studentFullProfileList: any): void {
+        this.studentFullProfileList = studentFullProfileList;
+        this.studentFullProfileList.forEach((studentFullProfile) => {
+            studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
+            studentFullProfile['show'] = false;
+            studentFullProfile['selectProfile'] = false;
+            studentFullProfile['selectDocument'] = false;
+            studentFullProfile['newTransferCertificate'] = this.backendData.tcList.find(tc => tc.parentStudent == studentFullProfile.dbId);
+        });
+        this.handleStudentDisplay();
+    }
+
+    getAdmissionSession(admissionSessionDbId: number): string {
+        let admissionSession = null;
+        this.session_list.every((session) => {
+            if (session.id === admissionSessionDbId) {
+                admissionSession = session.name;
+                return false;
+            }
+            return true;
+        });
+        return admissionSession;
+    }
+
+    getBusStopName(busStopDbId: any) {
+        let stopName = '';
+        if (busStopDbId !== null) {
+            this.busStopList.forEach((busStop) => {
+                if (busStop.id === busStopDbId) {
+                    stopName = busStop.stopName;
+                    return;
+                }
+            });
+        }
+        return stopName;
+    }
+
+    getSectionObject(classDbId: any, sectionDbId: number): any {
+        let sectionObject = null;
+        this.classSectionList.every((classs) => {
+            classs.sectionList.every((section) => {
+                if (sectionDbId === section.id && classDbId === classs.id) {
+                    sectionObject = section;
+                    section.containsStudent = true;
+                    return false;
+                }
+                return true;
+            });
+            if (sectionObject) {
+                return false;
+            }
+            return true;
+        });
+        if (!sectionObject) {
+            console.log('Error: should have section object');
+        }
+        return sectionObject;
+    }
+
+    printStudentList(): void {
+        // alert('Functionality needs to be implemented once again');
+        const value = {
+            studentList: this.studentFullProfileList.filter((student) => {
+                return student.show;
+            }),
+            columnFilter: this.columnFilter,
+        };
+        this.printService.navigateToPrintRoute(PRINT_STUDENT_LIST, { user: this.user, value });
+    }
+
+    unselectAllClasses(): void {
+        this.classSectionList.forEach((classs) => {
+            classs.sectionList.forEach((section) => {
+                section.selected = false;
+            });
+        });
+        this.handleStudentDisplay();
+    }
+
+    selectAllClasses(): void {
+        this.classSectionList.forEach((classs) => {
+            classs.sectionList.forEach((section) => {
+                section.selected = true;
+            });
+        });
+        this.handleStudentDisplay();
+    }
+
+    selectAllColumns(): void {
+        Object.keys(this.columnFilter).forEach((key) => {
+            this.columnFilter[key] = true;
+        });
+        this.studentParameterList.forEach((item) => {
+            item.show = true;
+        });
+    }
+
+    unSelectAllColumns(): void {
+        Object.keys(this.columnFilter).forEach((key) => {
+            this.columnFilter[key] = false;
+        });
+        this.studentParameterList.forEach((item) => {
+            item.show = false;
+        });
+    }
+
+    selectAllDocuments(): void {
+        Object.keys(this.documentFilter).forEach((key) => {
+            this.documentFilter[key] = true;
+        });
+        this.studentParameterDocumentList.forEach((item) => {
+            item.show = true;
+        });
+    }
+
+    unSelectAllDocuments(): void {
+        Object.keys(this.documentFilter).forEach((key) => {
+            this.documentFilter[key] = false;
+        });
+        this.studentParameterDocumentList.forEach((item) => {
+            item.show = false;
+        });
+    }
+
+    selectAllStudents(): void {
+        if (this.currentProfileDocumentFilter === 'Profile') {
+            this.studentFullProfileList.forEach((student) => {
+                if (student.show) {
+                    student.selectProfile = true;
+                }
+            });
+        } else {
+            this.studentFullProfileList.forEach((student) => {
+                if (student.show) {
+                    student.selectDocument = true;
+                }
+            });
+        }
+    }
+
+    unselectAllStudents(): void {
+        if (this.currentProfileDocumentFilter === 'Profile') {
+            this.studentFullProfileList.forEach((student) => {
+                if (student.show) {
+                    student.selectProfile = false;
+                }
+            });
+        } else {
+            this.studentFullProfileList.forEach((student) => {
+                if (student.show) {
+                    student.selectDocument = false;
+                }
+            });
+        }
+    }
+
+    getSelectedStudents() {
+        let count = 0;
+        if (this.currentProfileDocumentFilter === 'Profile') {
+            count = 0;
+            this.studentFullProfileList.forEach((student) => {
+                if (student.show && student.selectProfile) {
+                    ++count;
+                }
+            });
+        } else if (this.currentProfileDocumentFilter === 'Documents') {
+            count = 0;
+            this.studentFullProfileList.forEach((student) => {
+                if (student.show && student.selectDocument) {
+                    ++count;
+                }
+            });
+        }
+        return count;
+    }
+
+    showSectionName(classs: any): boolean {
+        let sectionLength = 0;
+        classs.sectionList.every((section) => {
+            if (section.containsStudent) {
+                ++sectionLength;
+            }
+            if (sectionLength > 1) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+        return sectionLength > 1;
+    }
+
+    isLoggedIn(){
+        let variableList = VARIABLE_MAPPED_EVENT_LIST.find(vme => vme.eventId == 1).variableList;
+        variableList = variableList.slice(2,);
+        let temp = variableList.slice(0,1);
+        variableList = variableList.slice(4,);
+        variableList = [...temp, ...variableList];
+        this.dataForMapping['studentList'] = this.studentSectionList.filter((x) => {
+            return x.selected;
+        }).map(a => a.student);
+        this.dataForMapping['studentList'].forEach(person => {
+            if (!this.messageService.checkForDuplicate(variableList, this.tempList, this.dataForMapping,
+                person, this.message, 'student')) {
+                person['student'] = true; // to identify which person in list eg: x['student'] = true
+                this.tempList.push(person);
+            }
+                if (this.columnFilter.showSecondMobileNumber && this.isMobileNumberValid(person.secondMobileNumber)) {
+                    if (!this.messageService.checkForDuplicate(variableList, this.tempList, this.dataForMapping,
+                        person, this.message, person, true)) {
+                        person['student'] = true;
+                        let personWithoutReference = JSON.parse(JSON.stringify(person));
+                        personWithoutReference.mobileNumber = person.secondMobileNumber;
+                        personWithoutReference['isSecondNumber'] = true; // mentioning the element is secondNumber entry
+                        this.tempList.push(personWithoutReference);
+                    }
+                }
+        });
+        this.notificationPersonList = this.tempList.filter((temp) => {
+            return (!temp.isSecondNumber && temp.notification) || (this.columnFilter.showSecondMobileNumber && temp.isSecondNumber && temp.secondNumberNotification);
+        }); 
+    }
+
+    isMobileNumberValid(mobileNumber: any): boolean {
+        if (mobileNumber === null) {
+            return false;
+        }
+        if (mobileNumber === '') {
+            return false;
+        }
+        if (typeof mobileNumber !== 'number') {
+            return false;
+        }
+        if (mobileNumber < 1000000000) {
+            return false;
+        }
+        if (mobileNumber > 9999999999) {
+            return false;
+        }
+        return true;
+    }
+
+    checkMobileNumberInNotificationList(student: any): boolean{
+        this.isLoggedIn();
+        for(let i=0; i<this.notificationPersonList.length; i++){
+            if(student.dbId === this.notificationPersonList[i]["id"])
+                return true;
+        }
+        return false;
+    }
+
+    handleStudentDisplay(): void {
+        let serialNumber = 0;
+        this.displayStudentNumber = 0;
+
+        this.studentFullProfileList.forEach((student) => {
+            /* Class Section Check */
+            if (!student.sectionObject.selected) {
+                student.show = false;
+                return;
+            }
+
+            /* Age Check */
+            if (this.asOnDate) {
+                let age = student.dateOfBirth
+                    ? Math.floor((new Date(this.asOnDate).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+                    : null;
+                if (this.minAge != '' && this.minAge != null && !isNaN(this.minAge)) {
+                    if (age == null || age == undefined) {
+                        student.show = false;
+                        return;
+                    } else if (age < this.minAge) {
+                        student.show = false;
+                        return;
+                    }
+                }
+                if (this.maxAge != '' && this.maxAge != null && !isNaN(this.maxAge)) {
+                    if (age == null || age == undefined) {
+                        student.show = false;
+                        return;
+                    } else if (age > this.maxAge) {
+                        student.show = false;
+                        return;
+                    }
+                }
+            }
+
+            /* Category Check */
+            if (
+                !(this.scSelected && this.stSelected && this.obcSelected && this.generalSelected) &&
+                !(!this.scSelected && !this.stSelected && !this.obcSelected && !this.generalSelected)
+            ) {
+                if (student.category === null || student.category === '') {
+                    student.show = false;
+                    return;
+                }
+                switch (student.category) {
+                    case 'SC':
+                        if (!this.scSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                    case 'ST':
+                        if (!this.stSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                    case 'OBC':
+                        if (!this.obcSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                    case 'Gen.':
+                        if (!this.generalSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                }
+            }
+
+            /* Gender Check */
+            if (
+                !(this.maleSelected && this.femaleSelected && this.otherGenderSelected) &&
+                !(!this.maleSelected && !this.femaleSelected && !this.otherGenderSelected)
+            ) {
+                if (student.gender === null || student.gender === '') {
+                    student.show = false;
+                    return;
+                }
+                switch (student.gender) {
+                    case 'Male':
+                        if (!this.maleSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                    case 'Female':
+                        if (!this.femaleSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                    case 'Other':
+                        if (!this.otherGenderSelected) {
+                            student.show = false;
+                            return;
+                        }
+                        break;
+                }
+            }
+
+            /* Admission Filter Check */
+            if (!this.newAdmission && student.admissionSessionDbId === this.user.activeSchool.currentSessionDbId) {
+                student.show = false;
+                return;
+            } else if (!this.oldAdmission && student.admissionSessionDbId !== this.user.activeSchool.currentSessionDbId) {
+                student.show = false;
+                return;
+            }
+
+            /* RTE Filter Check */
+            if (
+                !(
+                    (this.yesRTE && student.rte === 'YES') ||
+                    (this.noRTE && student.rte === 'NO') ||
+                    (this.noneRTE && student.rte != 'YES' && student.rte != 'NO')
+                )
+            ) {
+                /*
+                 First we are checking for which conditions student should be visible then we are applying a 'NOT'
+                 to the whole to get student invisible condition
+                 */
+                student.show = false;
+                return;
+            }
+
+            // Transfer Certiicate Check
+            if (!((this.noTC && !student.parentTransferCertificate && !student.newTransferCertificate)
+                || (this.yesTC && (student.parentTransferCertificate || student.newTransferCertificate)))) {
+                student.show = false;
+                return;
+            }
+
+            // isLoggedIn Filter Check
+            if (this.isLogged && !this.checkMobileNumberInNotificationList(student)) {
+                student.show = false;
+                return;
+            }  
+            if (this.isNotLogged && this.checkMobileNumberInNotificationList(student)) {
+                student.show = false;
+                return;
+            }        
+
+            // Custom filters check
+            for (let x of this.getFilteredStudentParameterList()) {
+                let flag = x.showNone;
+                x.filterValues.forEach((filter) => {
+                    flag = flag || filter.show;
+                });
+                if (flag) {
+                    let parameterValue = this.getParameterValue(student, x);
+                    if (parameterValue === this.NULL_CONSTANT && x.showNone) {
+                    } else if (
+                        !x.filterValues
+                            .filter((filter) => filter.show)
+                            .map((filter) => filter.name)
+                            .includes(parameterValue)
+                    ) {
+                        student.show = false;
+                        return;
+                    }
+                }
+            }
+            ++this.displayStudentNumber;
+            student.show = true;
+            student.selectDocument = true;
+            student.selectProfile = true;
+            student.serialNumber = ++serialNumber;
+        });
+    }
+
+    getDownloadSize() {
+        this.totalDownloadSize = 0;
+        this.studentFullProfileList.forEach((student) => {
+            if (student.selectDocument) {
+                this.studentParameterDocumentList.forEach((parameter) => {
+                    if (parameter.show) {
+                        let item = this.studentParameterValueList.find(
+                            (x) => x.parentStudent === student.dbId && x.parentStudentParameter === parameter.id
+                        );
+                        if (item) {
+                            this.totalFiles += 1;
+                            if (item.document_size) {
+                                this.totalDownloadSize += toInteger(item.document_size);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    dataURLtoFile(dataurl, filename) {
+        try {
+            const arr = dataurl.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+
+            return new File([u8arr], filename, { type: mime });
+        } catch (e) {
+            return null;
+        }
+    }
+
+    async download_each_file(document_url) {
+        const response = await fetch(document_url);
+        if (response.status == 403) {
+            ++this.totalFailed;
+        } else {
+            const reader = response.body.getReader();
+            const contentLength = response.headers.get('Content-Length');
+            let receivedLength = 0;
+            let chunks = [];
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) {
+                    break;
+                }
+                chunks.push(value);
+                receivedLength += value.length;
+                this.percent_download_comlpleted += ((value.length * 1.0) / (this.totalDownloadSize * 1.0)) * 100;
+                console.log(`Received ${receivedLength} of ${contentLength}`);
+                console.log(`now total received is ${this.percent_download_comlpleted} %`);
+            }
+            let blob = new Blob(chunks);
+            return blob;
+        }
+    }
+
+    downloadDocuments() {
+        this.totalFailed = 0;
+        this.download = 'START';
+        this.getDownloadSize();
+        if (this.totalDownloadSize) {
+            alert('Your are about to download ' + this.totalFiles + ' files of size ' + this.totalDownloadSize / 1000000 + ' MB');
+            let zip = new JSZip();
+            let check1 = 0;
+            this.downloadedFiles = 0;
+            let flag = 1;
+            this.studentParameterDocumentList.forEach((parameter) => {
+                if (parameter.show) {
+                    var Folder = zip.folder(parameter.name);
+                    this.studentFullProfileList.forEach((student) => {
+                        if (student.selectDocument) {
+                            let document_url = this.getParameterValue(student, parameter);
+                            if (document_url) {
+                                check1 = check1 + 1;
+                                this.download_each_file(document_url).then(
+                                    (blob) => {
+                                        if (blob) {
+                                            let type = document_url.split('.');
+                                            type = type[type.length - 1];
+                                            let file = new Blob([blob], { type: type });
+                                            Folder.file(student.name + '_' + student.dbId + '_' + parameter.name + '.' + type, file);
+                                            this.downloadedFiles = this.downloadedFiles + 1;
+                                            console.log(check1, this.downloadedFiles);
+                                        }
+                                        if (check1 === this.downloadedFiles + this.totalFailed) {
+                                            zip.generateAsync({ type: 'blob' }).then((content) => {
+                                                FileSaver.saveAs(content, 'Documents.zip');
+                                                this.download = 'NOT';
+                                            });
+                                            this.isLoading = false;
+                                            this.download = 'END';
+                                            this.downloadedFiles = 0;
+                                            this.totalFiles = 0;
+                                            this.percent_download_comlpleted = 0;
+                                            this.totalDownloadSize = 0;
+                                        }
+                                    },
+                                    (error) => {
+                                        this.download = 'FAIL';
+                                        this.isLoading = false;
+                                        this.downloadedFiles = 0;
+                                        this.totalFiles = 0;
+                                        this.percent_download_comlpleted = 0;
+                                        this.totalDownloadSize = 0;
+                                    }
+                                );
+                            }
+                        }
+                    });
+                }
+            });
+        } else {
+            alert('No documents are available for download.');
+            this.download = 'NOT';
+        }
+    }
+
+    downloadList(): void {
+        if (this.currentProfileDocumentFilter === 'Profile') {
+            let template: any;
+            template = [this.getHeaderValues()];
+            this.studentFullProfileList.forEach((student) => {
+                if (student.selectProfile && student.show) {
+                    template.push(this.getStudentDisplayInfo(student));
+                }
+            });
+            this.excelService.downloadFile(template, 'korangle_students.csv');
+        } else if (this.currentProfileDocumentFilter === 'Documents') {
+            this.downloadDocuments();
+        }
+    }
+
+    openFilePreviewDialog(student, parameter): void {
+        let file = this.getParameterValue(student, parameter);
+        if (file) {
+            let urlList = file.split('.');
+            let extension = urlList[urlList.length - 1];
+            let type;
+            if (extension == 'pdf') {
+                type = 'pdf';
+            } else if (extension == 'jpg' || extension == 'jpeg' || extension == 'png') {
+                type = 'img';
+            }
+            let dummyImageList = [];
+            if (type == 'img') {
+                let data = { imageUrl: file };
+                dummyImageList.push(data);
+            }
+            const dialogRef = this.dialog.open(ViewImageModalComponent, {
+                maxWidth: '100vw',
+                maxHeight: '100vh',
+                height: '100%',
+                width: '100%',
+                data: { imageList: dummyImageList, file: file, index: 0, type: 1, fileType: type, isMobile: this.isMobile() },
+            });
+            dialogRef.afterClosed().subscribe((result) => {
+                console.log('The dialog was closed');
+            });
+        }
+    }
+
+    isMobile(): boolean {
+        return CommonFunctions.getInstance().isMobileMenu();
+    }
+
+    getHeaderValues(): any {
+        let headerValues = [];
+        this.columnFilter.showSerialNumber ? headerValues.push('Serial No.') : '';
+        this.columnFilter.showProfileImage ? headerValues.push('Profile Image') : '';
+        this.columnFilter.showName ? headerValues.push('Name') : '';
+        this.columnFilter.showClassName ? headerValues.push('Class Name') : '';
+        this.columnFilter.showSectionName ? headerValues.push('Section Name') : '';
+        this.columnFilter.showRollNumber ? headerValues.push('Roll Number') : '';
+        this.columnFilter.showFathersName ? headerValues.push("Father's Name") : '';
+        this.columnFilter.showMobileNumber ? headerValues.push('Mobile No.') : '';
+        this.columnFilter.showSecondMobileNumber ? headerValues.push('Alt. Mobile No.') : '';
+        this.columnFilter.showScholarNumber ? headerValues.push('Scholar No.') : '';
+        this.columnFilter.showDateOfBirth ? headerValues.push('Date of Birth') : '';
+        this.columnFilter.showMotherName ? headerValues.push("Mother's Name") : '';
+        this.columnFilter.showGender ? headerValues.push('Gender') : '';
+        this.columnFilter.showCaste ? headerValues.push('Caste') : '';
+        this.columnFilter.showCategory ? headerValues.push('Category') : '';
+        this.columnFilter.showReligion ? headerValues.push('Religion') : '';
+        this.columnFilter.showFatherOccupation ? headerValues.push("Father's Occupation") : '';
+        this.columnFilter.showAddress ? headerValues.push('Address') : '';
+        this.columnFilter.showChildSSMID ? headerValues.push('Child SSMID') : '';
+        this.columnFilter.showFamilySSMID ? headerValues.push('Family SSMID') : '';
+        this.columnFilter.showBankName ? headerValues.push('Bank Name') : '';
+        this.columnFilter.showBankIfscCode ? headerValues.push('Bank Ifsc Code') : '';
+        this.columnFilter.showBankAccountNum ? headerValues.push('Bank Account No.') : '';
+        this.columnFilter.showAadharNum ? headerValues.push('Aadhar No.') : '';
+        this.columnFilter.showBloodGroup ? headerValues.push('Blood Group') : '';
+        this.columnFilter.showFatherAnnualIncome ? headerValues.push("Father's Annual Income") : '';
+        this.columnFilter.showRTE ? headerValues.push('RTE') : '';
+        this.columnFilter.showDateOfAdmission ? headerValues.push('Date of Admission') : '';
+        this.columnFilter.showAdmissionSession ? headerValues.push('Admission Session') : '';
+        this.columnFilter.showBusStopName ? headerValues.push('Bus Stop') : '';
+        this.columnFilter.showRemark ? headerValues.push('remark') : '';
+        // Custom parameters
+        this.studentParameterOtherList.forEach((item) => (item.show ? headerValues.push(item.name) : ''));
+        return headerValues;
+    }
+
+    getStudentDisplayInfo(student: any): any {
+        let studentDisplay = [];
+        this.columnFilter.showSerialNumber ? studentDisplay.push(student.serialNumber) : '';
+        this.columnFilter.showProfileImage ? studentDisplay.push(student.profileImage) : '';
+        this.columnFilter.showName ? studentDisplay.push(student.name) : '';
+        this.columnFilter.showClassName ? studentDisplay.push(student.className) : '';
+        this.columnFilter.showSectionName ? studentDisplay.push(student.sectionName) : '';
+        this.columnFilter.showRollNumber ? studentDisplay.push(student.rollNumber) : '';
+        this.columnFilter.showFathersName ? studentDisplay.push(student.fathersName) : '';
+        this.columnFilter.showMobileNumber ? studentDisplay.push(student.mobileNumber) : '';
+        this.columnFilter.showSecondMobileNumber ? studentDisplay.push(student.secondMobileNumber) : '';
+        this.columnFilter.showScholarNumber ? studentDisplay.push(student.scholarNumber) : '';
+        this.columnFilter.showDateOfBirth ? studentDisplay.push(student.dateOfBirth) : '';
+        this.columnFilter.showMotherName ? studentDisplay.push(student.motherName) : '';
+        this.columnFilter.showGender ? studentDisplay.push(student.gender) : '';
+        this.columnFilter.showCaste ? studentDisplay.push(student.caste) : '';
+        this.columnFilter.showCategory ? studentDisplay.push(student.category) : '';
+        this.columnFilter.showReligion ? studentDisplay.push(student.religion) : '';
+        this.columnFilter.showFatherOccupation ? studentDisplay.push(student.fatherOccupation) : '';
+        this.columnFilter.showAddress ? studentDisplay.push(student.address) : '';
+        this.columnFilter.showChildSSMID ? studentDisplay.push(student.childSSMID) : '';
+        this.columnFilter.showFamilySSMID ? studentDisplay.push(student.familySSMID) : '';
+        this.columnFilter.showBankName ? studentDisplay.push(student.bankName) : '';
+        this.columnFilter.showBankIfscCode ? studentDisplay.push(student.bankIfscCode) : '';
+        this.columnFilter.showBankAccountNum ? studentDisplay.push(student.bankAccountNum) : '';
+        this.columnFilter.showAadharNum ? studentDisplay.push(student.aadharNum ? student.aadharNum.toString() : '') : '';
+        this.columnFilter.showBloodGroup ? studentDisplay.push(student.bloodGroup) : '';
+        this.columnFilter.showFatherAnnualIncome ? studentDisplay.push(student.fatherAnnualIncome) : '';
+        this.columnFilter.showRTE ? studentDisplay.push(student.rte) : '';
+        this.columnFilter.showDateOfAdmission ? studentDisplay.push(student.dateOfAdmission) : '';
+        this.columnFilter.showAdmissionSession ? studentDisplay.push(this.getAdmissionSession(student.admissionSessionDbId)) : '';
+        this.columnFilter.showBusStopName ? studentDisplay.push(this.getBusStopName(student.busStopDbId)) : '';
+        this.columnFilter.showRemark ? studentDisplay.push(student.remark) : '';
+        // Custom parameter values
+        this.studentParameterOtherList.forEach((item) => (item.show ? studentDisplay.push(this.getParameterValue(student, item)) : ''));
+
+        return studentDisplay;
+    }
+}
