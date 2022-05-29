@@ -20,6 +20,12 @@
     flex-basis: 25%;
 }
 
+.min-width {
+    min-width: 200px;
+    max-width: 250px;
+    word-wrap: break-word;
+}
+
 .status-section {
     flex-basis: 35%;
     display: flex;
@@ -45,6 +51,7 @@
     font-size: 12px;
     line-height: 14px;
     opacity: 0.5;
+    word-wrap: break-word;
 }
 
 .comment {
@@ -60,6 +67,7 @@
 }
 
 .comment .information {
+    display: flex;
     justify-content: space-between;
 }
 
@@ -67,7 +75,7 @@
     font-size: 12px;
     line-height: 16px;
     letter-spacing: 0.04em;
-    flex-basis: 88%;
+    flex-basis: 80%;
     word-wrap: break-word;
 }
 
@@ -126,7 +134,12 @@
 
     .information .header {
         margin-right: 0rem;
-        flex-basis: 50%;
+        flex-basis: 40%;
+    }
+
+    .min-width {
+        min-width: 100px;
+        max-width: 150px;
     }
 
     .status-option-section {

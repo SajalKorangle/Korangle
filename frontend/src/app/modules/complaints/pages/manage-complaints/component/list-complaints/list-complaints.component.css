@@ -110,6 +110,13 @@ tr th {
     padding-top: 1rem;
     padding-bottom: 1rem;
 }
+
+.min-width {
+    min-width: 150px;
+    max-width: 200px;
+    word-wrap: break-word;
+    text-align: center;
+}
 /* Ends: Table */
 
 /* Starts: Load More */
