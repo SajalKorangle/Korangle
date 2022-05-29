@@ -134,8 +134,8 @@ export class ParentStudentFilterComponent implements OnInit {
         }
         return this.studentList.filter((student) => {
             return (
-                student.name.toLowerCase().indexOf(value.toLowerCase()) === 0 ||
-                (student.scholarNumber && student.scholarNumber.toLowerCase().indexOf(value.toLowerCase()) === 0)
+                student.name.toLowerCase().indexOf(value.toLowerCase()) != -1 ||
+                (student.scholarNumber && student.scholarNumber.toLowerCase().indexOf(value.toLowerCase()) != -1)
             );
         });
     }
@@ -151,15 +151,12 @@ export class ParentStudentFilterComponent implements OnInit {
         return '';
     }
 
-    displayStudentListFunction(student?: any): any {
+    getStudentClassAndSection(student?: any): any {
         if (student) {
             let studentSection = this.studentSectionList.find((studentSection) => {
                 return studentSection.parentStudent == student.id;
             });
             return (
-                student.name +
-                (student.scholarNumber ? ' (' + student.scholarNumber + ')' : '') +
-                ', ' +
                 this.getClassName(studentSection.parentClass) +
                 ', ' +
                 this.getSectionName(studentSection.parentDivision)
@@ -195,4 +192,34 @@ export class ParentStudentFilterComponent implements OnInit {
         let studentList = this.getFilteredStudentListByMobileNumber(mobileNumber);
         this.onStudentListSelected.emit([studentList, this.getFilteredStudentSectionListByStudentList(studentList)]);
     }
+
+    leftText(name: any): any {
+        let text = (<HTMLInputElement>document.getElementById("textInput")).value;
+        let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        if (ind == -1)
+            return name;
+        if (ind > 0)
+            return name.substring(0, ind);
+        return '';
+    }
+
+    rightText(name: any): any {
+        let text = (<HTMLInputElement>document.getElementById("textInput")).value;
+        let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        if (ind == -1)
+            return '';
+        let right = ind + text.length;
+        if (right < name.length)
+            return name.substring(right, name.length);
+        return '';
+    }
+
+    highlightText(name: any): any {
+        let text = (<HTMLInputElement>document.getElementById("textInput")).value;
+        let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        if (ind != -1)
+            return name.substring(ind, ind + text.length);
+        return '';
+    }
+
 }

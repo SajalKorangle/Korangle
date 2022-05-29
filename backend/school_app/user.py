@@ -5,6 +5,7 @@ from rest_framework_jwt.views import JSONWebTokenAPIView
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
 from django.contrib.auth import get_user_model
+from authentication_app.models import DeviceList
 
 from tc_app.models import TransferCertificateNew
 
@@ -185,9 +186,14 @@ def get_school_data_by_object(school_object):
 
 
 class AuthenticationHandler():
-    def authenticate_and_login(username, response):
+    def authenticate_and_login(username, device_name, response):
         if 'token' in response.data:
             user = User.objects.filter(username=username)
+
+            # Saving device login 
+            newJWTEntry = DeviceList(token = response.data['token'], parentUser = user[0], device_name = device_name, mobile=int(user[0].username))
+            newJWTEntry.save()
+
             response.data.update(get_user_details(user[0]))
         else:
             response.data['username'] = 'invalidUsername'
@@ -205,10 +211,13 @@ class LoginUserView(JSONWebTokenAPIView):
             request.data['username'] = username
         response = super().post(request)
 
+        device_name = request.data['device_name']
+
         print(response)
 
         response_data = AuthenticationHandler.authenticate_and_login(
                 username=username,
+                device_name=device_name,
                 response=response
         )
         return Response({"data": response_data})

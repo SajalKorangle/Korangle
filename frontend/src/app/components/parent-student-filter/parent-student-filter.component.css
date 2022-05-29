@@ -7,3 +7,42 @@
 .example-full-width {
     width: 100%;
 }
+
+mat-option {
+  white-space: normal;
+  line-height: normal;
+}
+.pix{
+    width:10%;
+    float:left;
+    vertical-align: middle;
+    margin-right: 1rem;
+}
+.box {
+    width: 100% ;
+    display: flex;
+    align-items:center;
+}
+
+.paraUp{
+    margin-bottom:0;
+    font-size: 16px;
+    font-weight:500;
+    height:20px;
+    width:inherit;
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.paraDown{
+    margin : 0;
+    padding-top:0;
+    font-size: 12px;
+    height:15px;
+    width:inherit;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

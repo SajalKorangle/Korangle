@@ -7,6 +7,7 @@ import {ForgotPasswordServiceAdapter} from './forgot-password.service.adapter';
 import {AuthenticationService} from '@services/modules/authentication/authentication.service';
 import {UserService} from '@services/modules/user/user.service';
 import {VALIDATORS_REGX} from '@classes/regx-validators';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'forgot-password-component',
@@ -40,7 +41,8 @@ export class ForgotPasswordComponent implements OnInit {
     constructor(
         public authenticationService: AuthenticationService,
         public userService: UserService,
-        public notificationService: NotificationService
+        public notificationService: NotificationService,
+        public router: Router,
     ) {
     }
 

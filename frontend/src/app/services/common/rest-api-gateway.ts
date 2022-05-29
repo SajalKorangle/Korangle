@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { DataStorage } from '../../classes/data-storage';
 import { reportError, ERROR_SOURCES } from './../modules/errors/error-reporting.service';
+import { checkTokenRevokedStatus } from '@services/revokedTokenHandling';
 
 const MAX_URL_LENGTH = 2048;
 
@@ -35,6 +36,12 @@ export class RestApiGateway {
     }
 
     public returnResponse(response: any, url: any = null, prompt: string = null): any {
+
+        //  Handling revoked rokens here
+        if ( checkTokenRevokedStatus(response)) {
+            return null;
+        }
+
         const jsonResponse = response.response;
         if (jsonResponse.status === 'success') {
             if (jsonResponse.data) return jsonResponse.data;

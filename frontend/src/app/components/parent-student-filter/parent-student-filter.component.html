@@ -4,25 +4,40 @@
             <mat-form-field *ngIf="selectedFilterType == 'Student'" class="example-full-width" floatPlaceholder="never">
                 <input
                     type="text"
+                    id="textInput"
                     placeholder="Student Name, Scholar No."
+                    value="some name..."
                     aria-label="Student"
                     matInput
                     [formControl]="studentFormControl"
                     [matAutocomplete]="autoStudent"
+
                 />
                 <mat-autocomplete
                     #autoStudent="matAutocomplete"
                     (optionSelected)="handleStudentSelection($event.option.value)"
                     [displayWith]="displayStudentFunction"
                 >
-                    <mat-option *ngFor="let student of filteredStudentList | async" [value]="student">
-                        <img *ngIf="student.profileImage" style="width: 10%" src="{{ student.profileImage }}" />
-                        <img
-                            *ngIf="!student.profileImage"
-                            style="width: 10%"
-                            src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
-                        />
-                        {{ displayStudentListFunction(student) }}
+                    <mat-option *ngFor="let student of (filteredStudentList | async )" [value]="student">
+                        <div class="box">
+                            <img class="pix" *ngIf="student.profileImage"  src="{{ student.profileImage }}" />
+                            <img
+                                 class="pix"
+                                 *ngIf="!student.profileImage"
+                                 src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                            />
+                            <span style="width: 85%;">
+                                <p class="paraUp">
+                                {{ leftText(student.name) }}<font color="#00bfff">{{ highlightText(student.name) }}</font>{{ rightText(student.name)}}
+                                    <span *ngIf="student.scholarNumber">
+                                    {{ ' ('+leftText(student.scholarNumber) }}<font color="#00bfff">{{ highlightText(student.scholarNumber) }}</font>{{ rightText(student.scholarNumber)+')'}}
+                                    </span>
+                                </p>
+                                <p class="paraDown">
+                                {{ student.fathersName+', ' }}{{ getStudentClassAndSection(student) }}
+                                </p>
+                            </span>
+                        </div>
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
