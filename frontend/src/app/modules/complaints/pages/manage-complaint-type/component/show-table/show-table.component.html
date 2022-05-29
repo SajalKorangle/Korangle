@@ -71,7 +71,7 @@
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                     <tr>
                         <th>Sr. no.</th>
-                        <th class="minWidth">Name</th>
+                        <th class="minWidth" style="text-align: center">Name</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -83,7 +83,7 @@
                     <ng-container *ngFor="let status of statusList; let i = index">
                         <tr>
                             <td> {{ i + 1 }}.</td>
-                            <td class="minWidth"> {{ status.name }} </td>
+                            <td class="minWidth" style="text-align: center"> {{ status.name }} </td>
                             <td><i class="material-icons edit-icon" style="text-align: center; cursor: pointer" (click)="triggerOpenChangeStatusDialog(status, i)">edit</i></td>
                             <td><i class="material-icons delete-icon" style="text-align: center; cursor: pointer" (click)="triggerDeleteStatus(status, i)">delete_forever</i></td>
                         </tr>
