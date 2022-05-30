@@ -28,7 +28,6 @@ import { MessageService } from '@services/message-service';
 import { NotificationService } from '@services/modules/notification/notification.service';
 import { UserService } from '@services/modules/user/user.service';
 import { SmsService } from '@services/modules/sms/sms.service';
-import { VARIABLE_MAPPED_EVENT_LIST } from '@modules/classes/constants';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -466,7 +465,7 @@ export class ViewAllComponent implements OnInit {
         return sectionLength > 1;
     }
 
-    checkForDuplicateMobileNumbers(eventVariables: any, previousList: any, data: any, currentPerson: any, person: any,
+    checkForDuplicateMobileNumbers(previousList: any, currentPerson: any,
         secondNumber: boolean = false): boolean {
             let number = secondNumber ? 'secondMobileNumber' : 'mobileNumber';
             return previousList.some(personData => {
@@ -475,23 +474,18 @@ export class ViewAllComponent implements OnInit {
     }
 
     isLoggedIn(){
-        let variableList = VARIABLE_MAPPED_EVENT_LIST.find(vme => vme.eventId == 1).variableList;
-        variableList = variableList.slice(2,);
-        let temp = variableList.slice(0,1);
-        variableList = variableList.slice(4,);
-        variableList = [...temp, ...variableList];
         this.dataForMapping['studentList'] = this.studentSectionList.filter((x) => {
             return x.selected;
         }).map(a => a.student);
         this.dataForMapping['studentList'].forEach(person => {
-            if (!this.checkForDuplicateMobileNumbers(variableList, this.tempList, this.dataForMapping,
-                person, 'student')) {
+            if (!this.checkForDuplicateMobileNumbers(this.tempList,
+                person)) {
                 person['student'] = true; // to identify which person in list eg: x['student'] = true
                 this.tempList.push(person);
             }
                 if (this.columnFilter.showSecondMobileNumber && this.isMobileNumberValid(person.secondMobileNumber)) {
-                    if (!this.checkForDuplicateMobileNumbers(variableList, this.tempList, this.dataForMapping,
-                        person, person, true)) {
+                    if (!this.checkForDuplicateMobileNumbers(this.tempList,
+                        person, true)) {
                         person['student'] = true;
                         let personWithoutReference = JSON.parse(JSON.stringify(person));
                         personWithoutReference.mobileNumber = person.secondMobileNumber;
