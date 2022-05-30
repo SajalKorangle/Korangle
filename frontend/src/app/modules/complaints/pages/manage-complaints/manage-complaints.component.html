@@ -10,6 +10,7 @@
         [complaintTypeList]="complaintTypeList"
         [statusList]="statusList"
         [complaintList]="complaintList"
+        [searchString]="searchString"
         (searchComplaints)="searchString = $event; getSearchedComplaintList()"
         (doneIconClicked)="searchString = $event; doneIconClicked()"
         (sortNewestClicked)="sortNewestClicked()"

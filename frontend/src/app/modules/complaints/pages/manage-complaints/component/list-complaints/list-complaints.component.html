@@ -1,9 +1,22 @@
 <div class="card-content">
     <!-- Starts: Search Bar -->
-    <div class="search-bar" (click)="closeFilterOptions()">
+    <!-- <div class="search-bar" (click)="closeFilterOptions()">
         <input class="search-field" type="search" placeholder="Search by parent name, student name, title" [ngModel]="searchString" (ngModelChange)="searchString = $event; searchChanged()">
-        <button class="search-btn"><i class="material-icons search-icon">search</i></button>
+        <button class="search-btn"><i class="material-icons search-icon" (click)="searchChanged()">search</i></button>
+    </div> -->
+
+    <div class="example-form">
+        <mat-form-field class="example-full-width">
+            <input
+                type="text"
+                placeholder="Search by parent name, student name, title"
+                matInput
+                [ngModel]="searchString"
+                (ngModelChange)="searchString = $event; searchChanged()"
+            />
+        </mat-form-field>
     </div>
+
     <br />
     <!-- Ends: Search Bar -->
 

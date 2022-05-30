@@ -106,7 +106,7 @@ export class RaiseComplaintComponent implements OnInit {
     /* Initialize Complaint List */
     initializeComplaintList(complaintList) {
 
-        let length = this.complaintList.length;
+        this.complaintList = [];
 
         complaintList.forEach((complaintObject) => {
 
@@ -126,12 +126,12 @@ export class RaiseComplaintComponent implements OnInit {
         });
 
         /* Get Comments */
-        for (let i = length; i < this.complaintList.length; i++) {
+        for (let i = 0; i < this.complaintList.length; i++) {
             this.serviceAdapter.getCommentComplaint(this.complaintList[i]["id"], i);
         }
 
         /* Get Applicable Status List */
-        for (let i = length; i < this.complaintList.length; i++) {
+        for (let i = 0; i < this.complaintList.length; i++) {
             if (this.complaintList[i]["parentSchoolComplaintType"]["id"]) {
                 this.serviceAdapter.getStatusCompalintType(this.complaintList[i]["parentSchoolComplaintType"].id, i);
             }

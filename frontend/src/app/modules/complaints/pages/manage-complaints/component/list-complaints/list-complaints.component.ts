@@ -19,6 +19,7 @@ export class ListComplaintsComponent implements OnInit {
     @Input() complaintTypeList;
     @Input() statusList;
     @Input() complaintList;
+    @Input() searchString;
     @Output() searchComplaints = new EventEmitter<any>();
     @Output() doneIconClicked = new EventEmitter<any>();
     @Output() sortNewestClicked = new EventEmitter<any>();
@@ -32,7 +33,6 @@ export class ListComplaintsComponent implements OnInit {
     @Output() loadMoreClick = new EventEmitter<any>();
 
 
-    searchString: string = "";
     showFilterOptionComplaintType: boolean = false;
     showFilterOptionStatus: boolean = false;
 
