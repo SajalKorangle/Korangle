@@ -114,7 +114,6 @@ export class ViewAllComponent implements OnInit {
     /* Is Logged In? Options */
     messageService: any;
     dataForMapping = {} as any;
-    message = '';
     isLogged = false;
     isNotLogged = false;
     studentSectionList = [];
@@ -467,6 +466,14 @@ export class ViewAllComponent implements OnInit {
         return sectionLength > 1;
     }
 
+    checkForDuplicateMobileNumbers(eventVariables: any, previousList: any, data: any, currentPerson: any, person: any,
+        secondNumber: boolean = false): boolean {
+            let number = secondNumber ? 'secondMobileNumber' : 'mobileNumber';
+            return previousList.some(personData => {
+            return personData.mobileNumber == currentPerson[number];
+        });
+    }
+
     isLoggedIn(){
         let variableList = VARIABLE_MAPPED_EVENT_LIST.find(vme => vme.eventId == 1).variableList;
         variableList = variableList.slice(2,);
@@ -477,14 +484,14 @@ export class ViewAllComponent implements OnInit {
             return x.selected;
         }).map(a => a.student);
         this.dataForMapping['studentList'].forEach(person => {
-            if (!this.messageService.checkForDuplicate(variableList, this.tempList, this.dataForMapping,
-                person, this.message, 'student')) {
+            if (!this.checkForDuplicateMobileNumbers(variableList, this.tempList, this.dataForMapping,
+                person, 'student')) {
                 person['student'] = true; // to identify which person in list eg: x['student'] = true
                 this.tempList.push(person);
             }
                 if (this.columnFilter.showSecondMobileNumber && this.isMobileNumberValid(person.secondMobileNumber)) {
-                    if (!this.messageService.checkForDuplicate(variableList, this.tempList, this.dataForMapping,
-                        person, this.message, person, true)) {
+                    if (!this.checkForDuplicateMobileNumbers(variableList, this.tempList, this.dataForMapping,
+                        person, person, true)) {
                         person['student'] = true;
                         let personWithoutReference = JSON.parse(JSON.stringify(person));
                         personWithoutReference.mobileNumber = person.secondMobileNumber;
