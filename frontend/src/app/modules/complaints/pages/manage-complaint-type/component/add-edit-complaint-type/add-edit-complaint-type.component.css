@@ -41,6 +41,7 @@
 
 .checkbox-group {
     display: flex;
+    justify-content: space-between;
 }
 
 .checkbox-subgroup {
@@ -101,7 +102,8 @@
 
     /* Starts: Add New Complaint Type */
     .checkbox-subgroup {
-        flex-basis: 50%;
+        width: 50%;
+        word-wrap: break-word;
     }
 
     .add-status-btn {

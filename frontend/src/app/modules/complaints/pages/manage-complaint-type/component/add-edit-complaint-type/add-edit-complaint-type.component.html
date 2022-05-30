@@ -61,12 +61,19 @@
                 <ng-container *ngFor="let status of statusList; let idx = index">
                     <ng-container *ngIf="idx < (statusList.length / 2)">
                         <br />
-                        <mat-checkbox
+                        <!-- <mat-checkbox
                             [(ngModel)]="status.selected"
                             (click)="$event.stopPropagation(); applicableStatusClicked(status);"
                         >
                             {{ status.name }}
+                        </mat-checkbox> -->
+
+                        <mat-checkbox
+                            [(ngModel)]="status.selected"
+                            (click)="$event.stopPropagation(); applicableStatusClicked(status);"
+                        >&nbsp;
                         </mat-checkbox>
+                        <span>{{ status.name }}</span>
                     </ng-container>
                 </ng-container>
             </div>
@@ -80,9 +87,15 @@
                         <mat-checkbox
                             [(ngModel)]="status.selected"
                             (click)="$event.stopPropagation(); applicableStatusClicked(status);"
+                        >&nbsp;
+                        </mat-checkbox>
+                        <span>{{ status.name }}</span>
+                        <!-- <mat-checkbox
+                            [(ngModel)]="status.selected"
+                            (click)="$event.stopPropagation(); applicableStatusClicked(status);"
                         >
                             {{ status.name }}
-                        </mat-checkbox>
+                        </mat-checkbox> -->
                     </ng-container>
                 </ng-container>
             </div>
