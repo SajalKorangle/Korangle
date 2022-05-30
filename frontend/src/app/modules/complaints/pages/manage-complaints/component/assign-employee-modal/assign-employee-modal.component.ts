@@ -24,6 +24,9 @@ export class AssignEmployeeModalComponent implements OnInit {
     employeeComplaintList: any = [];
     newlyAssignedEmployeeList: any = [];
 
+    selectedEmployee: any;
+    tempEmployeeList: any;
+
     serviceAdapter: AssignEmployeeModalServiceAdapter;
 
 

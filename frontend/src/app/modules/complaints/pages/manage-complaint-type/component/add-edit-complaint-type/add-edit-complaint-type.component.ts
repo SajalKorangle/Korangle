@@ -29,9 +29,6 @@ export class AddEditComplaintTypeComponent implements OnInit {
 
     addStatusName: string = "";
     addressToSearchString: string = "";
-    // searchedEmployeeList: any = [];
-
-    // employeeFormControl = new FormControl();
 
     selectedEmployee: any;
     tempEmployeeList: any;
