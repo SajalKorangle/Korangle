@@ -372,7 +372,32 @@ export class ManageComplaintTypeServiceAdapter {
             id: complaintTypeObject.id,
         };
 
+        const complaintQuery = new Query()
+            .filter({ parentSchoolComplaintType: complaintTypeObject.id })
+            .getObjectList({ complaints_app: 'Complaint' });
+
+        let complaintList = [];
+        [
+            complaintList,   // 0
+        ] = await Promise.all([
+            complaintQuery,   // 0
+        ]);
+
         await new Query().filter(deleteCompalintType).deleteObjectList({ complaints_app: 'SchoolComplaintType' });
+
+        complaintList.forEach((complaint) => {
+            complaint["parentSchoolComplaintType"] = null;
+            complaint["parentSchoolComplaintStatus"] = null;
+        });
+
+        Promise.all([
+            new Query().updateObjectList({complaints_app: 'Complaint'}, complaintList),    // 0
+        ]).then(
+            (value) => {
+                console.log("Value: ", value);
+            }
+        );
+
         this.vm.complaintTypeList.splice(idx, 1);
         this.vm.isLoading = false;
         alert("Complaint type deleted successfully.");
