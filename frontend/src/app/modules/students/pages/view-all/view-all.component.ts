@@ -24,6 +24,7 @@ import { ComponentsModule } from 'app/components/components.module';
 
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import { ViewAllBackendData } from './view-all.backend.data';
+import { ViewAllHtmlRenderer } from './view-all.html.renderer';
 
 import { getAge } from "../../common/common-functions";
 
@@ -145,6 +146,7 @@ export class ViewAllComponent implements OnInit {
 
     serviceAdapter: ViewAllServiceAdapter;
     backendData: ViewAllBackendData;
+    htmlRenderer: ViewAllHtmlRenderer;
 
     constructor(
         public studentOldService: StudentOldService,
@@ -169,6 +171,9 @@ export class ViewAllComponent implements OnInit {
         this.serviceAdapter = new ViewAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new ViewAllHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
 
         this.currentProfileDocumentFilter = this.profileDocumentSelectList[0];
         this.percent_download_comlpleted = 0;
