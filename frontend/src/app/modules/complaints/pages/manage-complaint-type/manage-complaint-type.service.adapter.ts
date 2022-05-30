@@ -393,9 +393,7 @@ export class ManageComplaintTypeServiceAdapter {
         Promise.all([
             new Query().updateObjectList({complaints_app: 'Complaint'}, complaintList),    // 0
         ]).then(
-            (value) => {
-                console.log("Value: ", value);
-            }
+            (value) => { }
         );
 
         this.vm.complaintTypeList.splice(idx, 1);
