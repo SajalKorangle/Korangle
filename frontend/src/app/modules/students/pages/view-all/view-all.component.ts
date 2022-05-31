@@ -24,6 +24,7 @@ import { ComponentsModule } from 'app/components/components.module';
 
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import { ViewAllBackendData } from './view-all.backend.data';
+
 import { MessageService } from '@services/message-service';
 import { NotificationService } from '@services/modules/notification/notification.service';
 import { UserService } from '@services/modules/user/user.service';
@@ -115,10 +116,7 @@ export class ViewAllComponent implements OnInit {
     dataForMapping = {} as any;
     isLogged = false;
     isNotLogged = false;
-    studentSectionList = [];
-    studentList = [];
     notificationPersonList = [];
-    tempList = [];
 
     displayStudentNumber = 0;
 
@@ -474,28 +472,27 @@ export class ViewAllComponent implements OnInit {
     }
 
     isLoggedIn(){
-        this.dataForMapping['studentList'] = this.studentSectionList.filter((x) => {
+        let tempList = [];
+        this.dataForMapping['studentList'] = this.studentFullProfileList.filter((x) => {
             return x.selected;
-        }).map(a => a.student);
-        this.dataForMapping['studentList'].forEach(person => {
-            if (!this.checkForDuplicateMobileNumbers(this.tempList,
-                person)) {
-                person['student'] = true; // to identify which person in list eg: x['student'] = true
-                this.tempList.push(person);
-            }
-                if (this.columnFilter.showSecondMobileNumber && this.isMobileNumberValid(person.secondMobileNumber)) {
-                    if (!this.checkForDuplicateMobileNumbers(this.tempList,
-                        person, true)) {
-                        person['student'] = true;
-                        let personWithoutReference = JSON.parse(JSON.stringify(person));
-                        personWithoutReference.mobileNumber = person.secondMobileNumber;
-                        personWithoutReference['isSecondNumber'] = true; // mentioning the element is secondNumber entry
-                        this.tempList.push(personWithoutReference);
-                    }
-                }
         });
-        this.notificationPersonList = this.tempList.filter((temp) => {
-            return (!temp.isSecondNumber && temp.notification) || (this.columnFilter.showSecondMobileNumber && temp.isSecondNumber && temp.secondNumberNotification);
+        this.dataForMapping['studentList'].forEach(person => {
+            if(this.isMobileNumberValid(person.mobileNumber)) {
+                if (!this.checkForDuplicateMobileNumbers(tempList, person)) {
+                    tempList.push(person);
+                }
+            }
+            if (this.isMobileNumberValid(person.secondMobileNumber)) {
+                if (!this.checkForDuplicateMobileNumbers(tempList, person, true)) {
+                    let personWithoutReference = JSON.parse(JSON.stringify(person));
+                    personWithoutReference.mobileNumber = person.secondMobileNumber;
+                    personWithoutReference['isSecondNumber'] = true;
+                    tempList.push(personWithoutReference);
+                }
+            }
+        });
+        this.notificationPersonList = tempList.filter((temp) => {
+            return (!temp.isSecondNumber && temp.notification) || (temp.isSecondNumber && temp.secondNumberNotification);
         }); 
     }
 
@@ -521,7 +518,7 @@ export class ViewAllComponent implements OnInit {
     checkMobileNumberInNotificationList(student: any): boolean{
         this.isLoggedIn();
         for(let i=0; i<this.notificationPersonList.length; i++){
-            if(student.dbId === this.notificationPersonList[i]["id"])
+            if(student.dbId === this.notificationPersonList[i]["dbId"])
                 return true;
         }
         return false;
