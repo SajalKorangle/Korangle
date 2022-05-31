@@ -17,19 +17,6 @@ export class ViewAllServiceAdapter {
             sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        const student_section_data = {
-            parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
-            parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            parentStudent__parentTransferCertificate: 'null__korangle',
-        };
-
-        const student_data = {
-            parentTransferCertificate: 'null__korangle',
-            parentSchool: this.vm.user.activeSchool.dbId,
-            fields__korangle:
-                'id,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber,rte,gender,newCategoryField,admissionSession',
-        };
-
         const class_section_request_data = {
             sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
         };
@@ -62,8 +49,6 @@ export class ViewAllServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, bus_stop_data), // 5
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 6
             this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data),   // 7
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data), //8
-            this.vm.studentService.getObjectList(this.vm.studentService.student, student_data), //9
 
         ]).then(
             (value) => {
@@ -82,8 +67,6 @@ export class ViewAllServiceAdapter {
                     showNone: false,
                     filterFilterValues: '',
                 }));
-                this.vm.studentSectionList = value[8];
-                this.vm.studentList = value[9];
                 this.vm.studentParameterValueList = value[4];
                 this.vm.studentParameterDocumentList = this.vm.studentParameterList.filter((x) => x.parameterType == 'DOCUMENT');
                 this.vm.studentParameterOtherList = this.vm.studentParameterList.filter((x) => x.parameterType !== 'DOCUMENT');
@@ -95,27 +78,14 @@ export class ViewAllServiceAdapter {
                 this.vm.isLoading = false;
             }
         );
-        this.populateStudentSectionList();     
+        this.populateStudentFullProfileList();     
     }
 
-    populateStudentSectionList(): void {
-        this.vm.messageService.fetchGCMDevicesNew(this.vm.studentList, true);
-        this.vm.studentSectionList.forEach((studentSection) => {
-            studentSection['student'] = this.vm.studentList.find((student) => {
-                return student.id == studentSection.parentStudent;
-            });
-            studentSection['validMobileNumber'] = this.vm.isMobileNumberValid(studentSection['student'].mobileNumber);
-            studentSection['selected'] = !!studentSection['validMobileNumber'];
-        });
-        this.vm.studentSectionList = this.vm.studentSectionList.sort((a, b) => {
-            return (
-                10 *
-                (this.vm.classList.find((item) => item.id == a.parentClass).orderNumber -
-                    this.vm.classList.find((item) => item.id == b.parentClass).orderNumber) +
-                (this.vm.sectionList.find((item) => item.id == a.parentDivision).orderNumber = this.vm.sectionList.find(
-                    (item) => item.id == b.parentDivision
-                ).orderNumber)
-            );
+    populateStudentFullProfileList(): void {
+        this.vm.messageService.fetchGCMDevicesNew(this.vm.studentFullProfileList, true);
+        this.vm.studentFullProfileList.forEach((eachStudent) => {
+            eachStudent['validMobileNumber'] = this.vm.isMobileNumberValid(eachStudent['mobileNumber']);
+            eachStudent['selected'] = !!eachStudent['validMobileNumber'];
         });
     }
 }
