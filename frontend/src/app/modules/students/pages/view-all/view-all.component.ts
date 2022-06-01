@@ -117,6 +117,7 @@ export class ViewAllComponent implements OnInit {
     isLogged = false;
     isNotLogged = false;
     notificationPersonList = [];
+    flag = false;
 
     displayStudentNumber = 0;
 
@@ -477,11 +478,9 @@ export class ViewAllComponent implements OnInit {
             return x.selected;
         });
         this.dataForMapping['studentList'].forEach(person => {
-            if(this.isMobileNumberValid(person.mobileNumber)) {
                 if (!this.checkForDuplicateMobileNumbers(tempList, person)) {
                     tempList.push(person);
                 }
-            }
             if (this.isMobileNumberValid(person.secondMobileNumber)) {
                 if (!this.checkForDuplicateMobileNumbers(tempList, person, true)) {
                     let personWithoutReference = JSON.parse(JSON.stringify(person));
@@ -494,6 +493,7 @@ export class ViewAllComponent implements OnInit {
         this.notificationPersonList = tempList.filter((temp) => {
             return (!temp.isSecondNumber && temp.notification) || (temp.isSecondNumber && temp.secondNumberNotification);
         }); 
+        this.flag = true;
     }
 
     isMobileNumberValid(mobileNumber: any): boolean {
@@ -515,8 +515,8 @@ export class ViewAllComponent implements OnInit {
         return true;
     }
 
-    checkMobileNumberInNotificationList(student: any): boolean{
-        this.isLoggedIn();
+    checkIdInNotificationList(student: any): boolean{
+        if(!this.flag) this.isLoggedIn();
         for(let i=0; i<this.notificationPersonList.length; i++){
             if(student.dbId === this.notificationPersonList[i]["dbId"])
                 return true;
@@ -661,11 +661,11 @@ export class ViewAllComponent implements OnInit {
             }
 
             // isLoggedIn Filter Check
-            if (this.isLogged && !this.checkMobileNumberInNotificationList(student)) {
+            if (this.isLogged && !this.checkIdInNotificationList(student)) {
                 student.show = false;
                 return;
             }  
-            if (this.isNotLogged && this.checkMobileNumberInNotificationList(student)) {
+            if (this.isNotLogged && this.checkIdInNotificationList(student)) {
                 student.show = false;
                 return;
             }        
