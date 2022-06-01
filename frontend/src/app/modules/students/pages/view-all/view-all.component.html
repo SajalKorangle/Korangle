@@ -222,7 +222,7 @@
     </mat-form-field>
 
     <button
-        *ngIf="currentProfileDocumentFilter === 'Profile'"
+        *ngIf="currentProfileDocumentFilter === 'Profile' && !htmlRenderer.isMobileApplication() && !htmlRenderer.isMobileBrowser()"
         id="print-list"
         type="button"
         class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
@@ -235,6 +235,7 @@
     </button>
 
     <button
+        *ngIf="!htmlRenderer.isMobileApplication()"
         type="button"
         id="download"
         class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
