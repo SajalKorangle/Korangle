@@ -6,7 +6,7 @@
     <div class="flex-box">
         <div class="field-title">Type Name : </div>
         <mat-form-field>
-            <input matInput placeholder="Type Name" type="text" [(ngModel)]="typeName" style="opacity: 0.6; font-weight: 400; font-size: 14px; line-height: 16px;" />
+            <input matInput placeholder="Type Name" type="text" [(ngModel)]="typeName" style="font-weight: 400; font-size: 14px; line-height: 16px;" />
         </mat-form-field>
     </div>
     <div *ngIf="!htmlRenderer.checkTypeNameUniqueness()" style="color: red; font-size: 14px;">Complaint Type name must be unique.</div>
