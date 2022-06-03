@@ -1,6 +1,6 @@
 .card-content {
     padding: 3rem;
-    min-height: 90vh;
+    min-height: 82vh;
 }
 
 .common-section {
@@ -16,8 +16,14 @@
 }
 
 .information .header {
-    margin-right: 3rem;
-    flex-basis: 35%;
+    margin-right: 5rem;
+    flex-basis: 25%;
+}
+
+.min-width {
+    min-width: 200px;
+    max-width: 250px;
+    word-wrap: break-word;
 }
 
 .status-section {
@@ -57,6 +63,7 @@
     font-size: 12px;
     line-height: 14px;
     opacity: 0.5;
+    word-wrap: break-word;
 }
 
 .comment {
@@ -73,6 +80,7 @@
 }
 
 .comment .information {
+    display: flex;
     justify-content: space-between;
 }
 
@@ -80,13 +88,15 @@
     font-size: 12px;
     line-height: 16px;
     letter-spacing: 0.04em;
-    opacity: 0.7;
-    flex-basis: 88%;
+    /* flex-basis: 80%; */
+    width: 80%;
     word-wrap: break-word;
+    opacity: 0.7;
 }
 
 .time {
-    flex-basis: 15%;
+    /* flex-basis: 15%; */
+    width: 15%;
     font-size: 10px;
     opacity: 0.5;
     display: flex;
@@ -134,6 +144,46 @@
     .card-content {
         padding-left: 1rem;
         padding-right: 1rem;
+    }
+
+    .information {
+        flex-basis: 100%;
+    }
+
+    .information .header {
+        margin-right: 0rem;
+        flex-basis: 40%;
+    }
+
+    .min-width {
+        min-width: 100px;
+        max-width: 150px;
+    }
+
+    .status-option-section {
+        flex-basis: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .time {
+        flex-basis: 35%;
+        font-size: 12px;
+        opacity: 0.5;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        word-wrap: break-word;
+    }
+
+    .dummyRow {
+        height: 50vh;
+    }
+
+    .filter-option {
+        width: 40vh;
+        height: 40vh;
     }
 
    .bottom-section {

@@ -1,6 +1,9 @@
 <div class="card-content">
     <!-- Starts: Back Button -->
-    <div (click)="triggerStartProgressBar();" style="display: flex; align-items: center; justify-content: center; cursor: pointer; width: 20px; height: 20px; background-color: #C4C4C4; border-radius: 5px;">
+    <div
+        (click)="triggerStartProgressBar();"
+        style="display: flex; align-items: center; justify-content: center; cursor: pointer; width: 20px; height: 20px; background-color: #C4C4C4; border-radius: 5px;"
+    >
         <span class="material-icons" style="font-size: 12px; text-align: center;">arrow_back_ios</span>
     </div>
     <br />
@@ -21,13 +24,15 @@
                 <span class="text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-right: 2rem">Status: </span>
                 <mat-form-field>
                     <mat-select placeholder="{{ defaultStatusTitle }}" style="width: 100%">
-                        <ng-container *ngFor="let status of openedComplaint.applicableStatusList; let idxStatus = index">
-                            <mat-option (click)="triggerUpdateStatus(status);">{{ status.name }}</mat-option>
+                        <ng-container *ngFor="let status of openedComplaint.applicableStatusList">
+                            <mat-option (click)="triggerUpdateStatus(status);">
+                                {{ status.name }}
+                            </mat-option>
                         </ng-container>
                     </mat-select>
                 </mat-form-field>
             </div>
-            <i class="material-icons delete-icon" style="cursor: pointer" (click)="triggerDeleteComplaint(openedComplaint);">delete_forever</i>
+            <i class="material-icons delete-icon" (click)="triggerDeleteComplaint(openedComplaint);">delete_forever</i>
         </div>
         <!-- Ends: Status -->
     </div>
@@ -48,7 +53,7 @@
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Complaint Type :</div>
-            <div class="min-width">{{ openedComplaint.parentSchoolComplaintType.name ? openedComplaint.parentSchoolComplaintType.name : "None" }}</div>
+            <div class="min-width">{{ openedComplaint.parentSchoolComplaintType["name"] ? openedComplaint.parentSchoolComplaintType.name : "None" }}</div>
         </div>
     </div>
     <br />
@@ -92,12 +97,14 @@
                 <div class="status-option-section">
                     <mat-form-field style="flex-basis: 80%">
                         <mat-select placeholder="{{ defaultStatusTitle }}" style="width: 100%">
-                            <ng-container *ngFor="let status of openedComplaint.applicableStatusList; let idxStatus = index">
-                                <mat-option (click)="triggerUpdateStatus(status);">{{ status.name }}</mat-option>
+                            <ng-container *ngFor="let status of openedComplaint.applicableStatusList">
+                                <mat-option (click)="triggerUpdateStatus(status);">
+                                    {{ status.name }}
+                                </mat-option>
                             </ng-container>
                         </mat-select>
                     </mat-form-field>
-                    <i class="material-icons delete-icon" style="flex-basis: 20%, cursor: pointer" (click)="triggerDeleteComplaint(openedComplaint);">delete_forever</i>
+                    <i style="flex-basis: 20%" class="material-icons delete-icon" (click)="triggerDeleteComplaint(openedComplaint);">delete_forever</i>
                 </div>
             </div>
         </div>

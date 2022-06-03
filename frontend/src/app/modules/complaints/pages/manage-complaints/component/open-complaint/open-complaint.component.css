@@ -38,6 +38,7 @@
 .delete-icon {
     margin-right: 3rem;
     color: red;
+    cursor: pointer
 }
 
 /* Starts: Comment Section */

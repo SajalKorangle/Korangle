@@ -13,8 +13,8 @@
     <div class="common-section">
         <!-- Starts: Parent Name -->
         <div class="information">
-            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Parent Name:</div>
-            <div>{{ openedComplaint.parentStudent.fathersName }}</div>
+            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Father's Name:</div>
+            <div class="min-width">{{ openedComplaint.parentStudent.fathersName }}</div>
         </div>
         <!-- Ends: Parent Name -->
 
@@ -43,7 +43,7 @@
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Date Sent :</div>
-            <div>{{ htmlRenderer.getDateInfo(openedComplaint.dateSent) }}</div>
+            <div class="min-width">{{ htmlRenderer.getDateInfo(openedComplaint.dateSent) }}</div>
         </div>
     </div>
     <br />
@@ -53,7 +53,7 @@
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Compalint Type :</div>
-            <div>{{ openedComplaint.parentSchoolComplaintType["name"] ? openedComplaint.parentSchoolComplaintType.name : "Not Selected" }}</div>
+            <div class="min-width">{{ openedComplaint.parentSchoolComplaintType["name"] ? openedComplaint.parentSchoolComplaintType.name : "None" }}</div>
         </div>
     </div>
     <br />
@@ -63,7 +63,7 @@
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Student Name :</div>
-            <div>{{ openedComplaint.parentStudent.name }}</div>
+            <div class="min-width">{{ openedComplaint.parentStudent.name }}</div>
         </div>
     </div>
     <br />
@@ -73,7 +73,7 @@
     <div class="common-section">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Parent Contact :</div>
-            <div>{{ openedComplaint.parentStudent.mobileNumber }}</div>
+            <div class="min-width">{{ openedComplaint.parentStudent.mobileNumber }}</div>
         </div>
     </div>
     <br />
@@ -83,7 +83,7 @@
     <div class="common-section" style="align-items: flex-end">
         <div class="information">
             <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Title :</div>
-            <div style="word-wrap: break-word;">{{ openedComplaint.title }}</div>
+            <div class="min-width" style="word-wrap: break-word;">{{ openedComplaint.title }}</div>
         </div>
 
         <!-- Starts: Refresh Button -->
@@ -109,10 +109,12 @@
             <div class="information">
                 <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Status: </div>
                 <div class="status-option-section">
-                    <mat-form-field style="flex-basis: 70%">
+                    <mat-form-field style="flex-basis: 80%">
                         <mat-select placeholder="{{ defaultStatusTitle }}" style="width: 100%">
                             <ng-container *ngFor="let status of openedComplaint.applicableStatusList">
-                                <mat-option (click)="triggerUpdateStatus(status);">{{ status.name }}</mat-option>
+                                <mat-option (click)="triggerUpdateStatus(status);">
+                                    {{ status.name }}
+                                </mat-option>
                             </ng-container>
                         </mat-select>
                     </mat-form-field>
