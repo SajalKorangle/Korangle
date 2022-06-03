@@ -138,6 +138,33 @@ export class RaiseComplaintComponent implements OnInit {
         }
     }  // Ends: initializeComplaintList()
 
+    /* Initialize Complaint List */
+    addNewComplaint(complaintObject) {
+
+        let complaint = {};
+
+        complaint["parentSchoolComplaintType"] = this.getParentComplaintType(complaintObject["parentSchoolComplaintType"]);
+        complaint["id"] = complaintObject["id"];
+        complaint["dateSent"] = complaintObject["dateSent"];
+        complaint["parentEmployee"] = this.getEmployee(complaintObject["parentEmployee"]);
+        complaint["applicableStatusList"] = [];
+        complaint["employeeComplaintList"] = [];
+        complaint["commentList"] = [];
+        complaint["parentStudent"] = this.getParentStudent(complaintObject["parentStudent"]);
+        complaint["title"] = complaintObject["title"];
+        complaint["parentSchoolComplaintStatus"] = this.getStatus(complaintObject["parentSchoolComplaintStatus"]);
+        this.complaintList.push(complaint);
+
+        let idx = this.complaintList.length - 1;
+        /* Get Comments */
+        this.serviceAdapter.getCommentComplaint(this.complaintList[idx]["id"], idx);
+
+        /* Get Applicable Status List */
+        if (this.complaintList[idx]["parentSchoolComplaintType"]["id"]) {
+            this.serviceAdapter.getStatusCompalintType(this.complaintList[idx]["parentSchoolComplaintType"].id, idx);
+        }
+    }  // Ends: addNewComplaintList()
+
     /* Initialize Student Full Profile List */
     initializeStudentFullProfileList(studentList, studentSectionList) {
 

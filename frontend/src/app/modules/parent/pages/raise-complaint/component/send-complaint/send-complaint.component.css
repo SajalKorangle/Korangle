@@ -37,6 +37,7 @@
     opacity: 0.5;
     border-bottom: 1px solid #C4C4C4;
     padding: 2rem;
+    word-wrap: break-word;
 }
 
 .bottom-section {

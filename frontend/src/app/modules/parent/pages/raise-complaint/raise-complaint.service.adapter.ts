@@ -232,19 +232,18 @@ export class RaiseComplaintServiceAdapter {
             let commentObject = {};
             commentObject["parentEmployee"] = this.vm.NULL_CONSTANT;
             commentObject["parentStudent"] = this.vm.complaintStudent.dbId;
-            commentObject["message"] = this.vm.commentMessage;
+            commentObject["message"] = this.vm.commentMessage.toString().trim();
             commentObject["parentComplaint"] = complaint.id;
 
             const comment = await new Query().createObject({complaints_app: 'Comment'}, commentObject);
         }
 
         this.vm.commentMessage = "";
-        this.vm.initializeComplaintList([complaint]);
-
+        this.vm.addNewComplaint(complaint);
+        this.vm.initializeComplaintData();
         this.vm.pageName = "list-of-complaints";
         alert("Complaint sent successfully.");
         this.vm.isLoading = false;
-        this.vm.initializeComplaintData();
     }  // Ends: sendComplaint()
 
     /* Delete Complaint */
