@@ -78,7 +78,7 @@ class Complaint(models.Model):
     parentStudent = models.ForeignKey(Student, on_delete = models.CASCADE)
 
     # Complaint Title
-    title = models.CharField(max_length = 100)
+    title = models.TextField()
 
     # Complaint Status
     parentSchoolComplaintStatus = models.ForeignKey(SchoolComplaintStatus, on_delete = models.SET_NULL, null = True)
