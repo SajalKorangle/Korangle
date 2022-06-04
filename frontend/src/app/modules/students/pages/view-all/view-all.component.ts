@@ -24,9 +24,6 @@ import { ComponentsModule } from 'app/components/components.module';
 
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import { ViewAllBackendData } from './view-all.backend.data';
-import { ViewAllHtmlRenderer } from './view-all.html.renderer';
-
-import { getAge } from "../../common/common-functions";
 
 import { MessageService } from '@services/message-service';
 import { NotificationService } from '@services/modules/notification/notification.service';
@@ -116,7 +113,6 @@ export class ViewAllComponent implements OnInit {
 
     /* Is Logged In? Options */
     messageService: any;
-    dataForMapping = {} as any;
     isLogged = false;
     isNotLogged = false;
     notificationPersonList = [];
@@ -159,7 +155,6 @@ export class ViewAllComponent implements OnInit {
 
     serviceAdapter: ViewAllServiceAdapter;
     backendData: ViewAllBackendData;
-    htmlRenderer: ViewAllHtmlRenderer;
 
     constructor(
         public studentOldService: StudentOldService,
@@ -189,8 +184,6 @@ export class ViewAllComponent implements OnInit {
         this.serviceAdapter.initializeData();
 
         this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
-        this.htmlRenderer = new ViewAllHtmlRenderer();
-        this.htmlRenderer.initializeRenderer(this);
 
         this.currentProfileDocumentFilter = this.profileDocumentSelectList[0];
         this.percent_download_comlpleted = 0;
@@ -470,55 +463,11 @@ export class ViewAllComponent implements OnInit {
         return sectionLength > 1;
     }
 
-    checkForDuplicateMobileNumbers(previousList: any, currentPerson: any,
-        secondNumber: boolean = false): boolean {
-            let number = secondNumber ? 'secondMobileNumber' : 'mobileNumber';
-            return previousList.some(personData => {
-            return personData.mobileNumber == currentPerson[number];
-        });
-    }
-
     isLoggedIn(){
-        let tempList = [];
-        this.dataForMapping['studentList'] = this.studentFullProfileList.filter((x) => {
-            return x.selected;
+        this.notificationPersonList = this.studentFullProfileList.filter((x) => {
+            return (x.notification || x.secondNumberNotification);
         });
-        this.dataForMapping['studentList'].forEach(person => {
-                if (!this.checkForDuplicateMobileNumbers(tempList, person)) {
-                    tempList.push(person);
-                }
-            if (this.isMobileNumberValid(person.secondMobileNumber)) {
-                if (!this.checkForDuplicateMobileNumbers(tempList, person, true)) {
-                    let personWithoutReference = JSON.parse(JSON.stringify(person));
-                    personWithoutReference.mobileNumber = person.secondMobileNumber;
-                    personWithoutReference['isSecondNumber'] = true;
-                    tempList.push(personWithoutReference);
-                }
-            }
-        });
-        this.notificationPersonList = tempList.filter((temp) => {
-            return (!temp.isSecondNumber && temp.notification) || (temp.isSecondNumber && temp.secondNumberNotification);
-        }); 
         this.flag = true;
-    }
-
-    isMobileNumberValid(mobileNumber: any): boolean {
-        if (mobileNumber === null) {
-            return false;
-        }
-        if (mobileNumber === '') {
-            return false;
-        }
-        if (typeof mobileNumber !== 'number') {
-            return false;
-        }
-        if (mobileNumber < 1000000000) {
-            return false;
-        }
-        if (mobileNumber > 9999999999) {
-            return false;
-        }
-        return true;
     }
 
     checkIdInNotificationList(student: any): boolean{
@@ -543,14 +492,11 @@ export class ViewAllComponent implements OnInit {
 
             /* Age Check */
             if (this.asOnDate) {
-                let age = null;
-
-                if (student.dateOfBirth) {
-                    age = getAge(this.asOnDate, student.dateOfBirth);
-                }
-
-                if (this.minAge != null && !isNaN(this.minAge)) {
-                    if (age == null) {
+                let age = student.dateOfBirth
+                    ? Math.floor((new Date(this.asOnDate).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
+                    : null;
+                if (this.minAge != '' && this.minAge != null && !isNaN(this.minAge)) {
+                    if (age == null || age == undefined) {
                         student.show = false;
                         return;
                     } else if (age < this.minAge) {
@@ -558,9 +504,8 @@ export class ViewAllComponent implements OnInit {
                         return;
                     }
                 }
-
-                if (this.maxAge != null && !isNaN(this.maxAge)) {
-                    if (age == null) {
+                if (this.maxAge != '' && this.maxAge != null && !isNaN(this.maxAge)) {
+                    if (age == null || age == undefined) {
                         student.show = false;
                         return;
                     } else if (age > this.maxAge) {
