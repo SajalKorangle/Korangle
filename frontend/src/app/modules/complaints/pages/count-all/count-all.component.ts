@@ -321,9 +321,14 @@ export class CountAllComponent implements OnInit {
 
             } else if (filter == "startDate") {  /* Date Range Check */
 
-                let complaintDate = new Date(complaint.dateSent).getTime();
-                let filterStartDate = new Date(filtersData["startDate"]).getTime();
-                let filterEndDate = new Date(filtersData["endDate"]).getTime();
+                let [cMonth, cDate, cYear] = new Date(complaint.dateSent).toLocaleDateString("en-US").split("/");
+                let complaintDate = new Date(parseInt(cYear), parseInt(cMonth) - 1, parseInt(cDate), 12, 0, 0).getTime();
+
+                let [sMonth, sDate, sYear] = new Date(filtersData["startDate"]).toLocaleDateString("en-US").split("/");
+                let filterStartDate = new Date(parseInt(sYear), parseInt(sMonth) - 1, parseInt(sDate), 12, 0, 0).getTime();
+
+                let [eMonth, eDate, eYear] = new Date(filtersData["endDate"]).toLocaleDateString("en-US").split("/");
+                let filterEndDate = new Date(parseInt(eYear), parseInt(eMonth) - 1, parseInt(eDate), 12, 0, 0).getTime();
 
                 if (complaintDate < filterStartDate || complaintDate > filterEndDate) {
                     check = false;
