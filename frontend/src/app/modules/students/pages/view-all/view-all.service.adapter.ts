@@ -83,9 +83,5 @@ export class ViewAllServiceAdapter {
 
     populateStudentFullProfileList(): void {
         this.vm.messageService.fetchGCMDevicesNew(this.vm.studentFullProfileList, true);
-        this.vm.studentFullProfileList.forEach((eachStudent) => {
-            eachStudent['validMobileNumber'] = this.vm.isMobileNumberValid(eachStudent['mobileNumber']);
-            eachStudent['selected'] = !!eachStudent['validMobileNumber'];
-        });
     }
 }
