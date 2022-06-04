@@ -124,6 +124,156 @@ export class CountAllComponent implements OnInit {
         }
     }  // Ends: initializeStudentFullProfileList()
 
+    /* Update Table Data */
+    updateTableData(tableRows, tableCols) {
+        /* Update the column-headers */
+        for (let i = 0; i < tableCols.length; i++) {
+            let filter = tableCols[i];
+
+            if (filter["complaintTypeList"]) {
+                let complaintTypeIdList = filter["complaintTypeList"];
+                let newComplaintTypeIdList = [];
+
+                complaintTypeIdList.forEach((complaintType) => {
+                    if (this.checkComplaintTypeExist(complaintType)) {
+                        newComplaintTypeIdList.push(complaintType);
+                    }
+                });
+
+                filter["complaintTypeList"] = newComplaintTypeIdList;
+            }
+
+            if (filter["statusList"]) {
+                let statusIdList = filter["statusList"];
+                let newStatusIdList = [];
+
+                statusIdList.forEach((status) => {
+                    if (this.checkStatusExist(status)) {
+                        newStatusIdList.push(status);
+                    }
+                });
+
+                filter["statusList"] = newStatusIdList;
+            }
+
+            if (filter["startDateType"]) {
+                let startDateType = filter["startDateType"];
+                let endDateType = filter["endDateType"];
+
+                if (startDateType == "1st of Ongoing Month") {
+                    let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+                    [month, date, year] = new Date(parseInt(year), parseInt(month) - 1, 1).toLocaleDateString("en-US").split("/");
+
+                    if (parseInt(date) < 10) {
+                        date = "0" + date;
+                    }
+                    if (parseInt(month) < 10) {
+                        month = "0" + month;
+                    }
+
+                    filter["startDate"] = year + "-" + month + "-" + date;
+                }
+
+                if (endDateType) {
+                    let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+
+                    if (parseInt(date) < 10) {
+                        date = "0" + date;
+                    }
+                    if (parseInt(month) < 10) {
+                        month = "0" + month;
+                    }
+
+                    filter["endDate"] = year + "-" + month + "-" + date;
+                }
+            }
+        }
+
+        /* Update the rows */
+        for (let i = 0; i < tableRows.length; i++) {
+            let filter = tableRows[i];
+
+            if (filter["complaintTypeList"]) {
+                let complaintTypeIdList = filter["complaintTypeList"];
+                let newComplaintTypeIdList = [];
+
+                complaintTypeIdList.forEach((complaintType) => {
+                    if (this.checkComplaintTypeExist(complaintType)) {
+                        newComplaintTypeIdList.push(complaintType);
+                    }
+                });
+
+                filter["complaintTypeList"] = newComplaintTypeIdList;
+            }
+
+            if (filter["statusList"]) {
+                let statusIdList = filter["statusList"];
+                let newStatusIdList = [];
+
+                statusIdList.forEach((status) => {
+                    if (this.checkStatusExist(status)) {
+                        newStatusIdList.push(status);
+                    }
+                });
+
+                filter["statusList"] = newStatusIdList;
+            }
+
+            if (filter["startDateType"]) {
+                let startDateType = filter["startDateType"];
+                let endDateType = filter["endDateType"];
+
+                if (startDateType == "1st of Ongoing Month") {
+                    let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+                    [month, date, year] = new Date(parseInt(year), parseInt(month) - 1, 1).toLocaleDateString("en-US").split("/");
+
+                    if (parseInt(date) < 10) {
+                        date = "0" + date;
+                    }
+                    if (parseInt(month) < 10) {
+                        month = "0" + month;
+                    }
+
+                    filter["startDate"] = year + "-" + month + "-" + date;
+                }
+
+                if (endDateType) {
+                    let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+
+                    if (parseInt(date) < 10) {
+                        date = "0" + date;
+                    }
+                    if (parseInt(month) < 10) {
+                        month = "0" + month;
+                    }
+
+                    filter["endDate"] = year + "-" + month + "-" + date;
+                }
+            }
+        }
+    }  // Ends: updateTableData()
+
+    /* Initialize Table List */
+    initializeTableList(tableList) {
+        for (let idx = 0; idx < tableList.length; idx++) {
+            let table = tableList[idx];
+            let tableRows = [];
+            let tableCols = [];
+
+            Object.entries(table["cols"]).forEach(([key, value]) => {
+                tableCols.push(value);
+            });
+
+            Object.entries(table["rows"]).forEach(([key, value]) => {
+                tableRows.push(value);
+            });
+            this.updateTableData(tableRows, tableCols);
+        }
+
+        this.tableList = tableList;
+        this.serviceAdapter.updateTableList();
+    }  // Ends: initializeTableList()
+
     /* Initialize Table Details */
     initializeTableDetails() {
         this.isTableUpdated = false;
@@ -511,4 +661,26 @@ export class CountAllComponent implements OnInit {
         }
         this.isTableUpdated = false;
     }  // Ends: openTableClicked()
+
+    checkComplaintTypeExist(complaintTypeId) {
+        let ans = false;
+        this.complaintTypeList.forEach((complaintType) => {
+            if (complaintType.id == complaintTypeId) {
+                ans = true;
+            }
+        });
+
+        return ans;
+    }
+
+    checkStatusExist(statusId) {
+        let ans = false;
+        this.statusList.forEach((status) => {
+            if (status.id == statusId) {
+                ans = true;
+            }
+        });
+
+        return ans;
+    }
 }

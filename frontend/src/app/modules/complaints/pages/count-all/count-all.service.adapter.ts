@@ -80,10 +80,15 @@ export class CountAllServiceAdapter {
 
         /* Initialize Table List */
         tableList.sort((a, b) => a.id - b.id);
-        this.vm.tableList = tableList;
+        this.vm.initializeTableList(tableList);
 
         this.vm.isLoading = false;
     }  // Ends: initializeData()
+
+    /* Update Table List */
+    async updateTableList() {
+        await new Query().updateObjectList({complaints_app: 'CountAllComplaints'}, this.vm.tableList);
+    }  // Ends: updateTableList()
 
     /* Save Table */
     async saveTable(operation = "", table = null, idx = null) {

@@ -37,8 +37,8 @@ export class CountAllHtmlRenderer {
     /* Get total count of a filter */
     getFilterTotalCount(filter) {
         let count = 0;
-        this.vm.complaintList.forEach((student) => {
-            let check = this.vm.checkFilters(student, filter);
+        this.vm.complaintList.forEach((complaint) => {
+            let check = this.vm.checkFilters(complaint, filter);
             if (check) {
                 count++;
             }
@@ -50,10 +50,10 @@ export class CountAllHtmlRenderer {
     /* Get total count of intersection of two filters */
     getIntersectionCount(rowFilter, columnFilter) {
         let count = 0;
-        this.vm.complaintList.forEach((student) => {
-            let check = this.vm.checkFilters(student, rowFilter);
+        this.vm.complaintList.forEach((complaint) => {
+            let check = this.vm.checkFilters(complaint, rowFilter);
             if (check) {
-                check = this.vm.checkFilters(student, columnFilter);
+                check = this.vm.checkFilters(complaint, columnFilter);
                 if (check) {
                     count++;
                 }

@@ -72,6 +72,20 @@ export class FilterModalComponent implements OnInit {
                         this.sDays = this.filter["sDays"];
                         break;
 
+                    case "1st of Ongoing Month":
+                        let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+                        [month, date, year] = new Date(parseInt(year), parseInt(month) - 1, 1).toLocaleDateString("en-US").split("/");
+
+                        if (parseInt(date) < 10) {
+                            date = "0" + date;
+                        }
+                        if (parseInt(month) < 10) {
+                            month = "0" + month;
+                        }
+
+                        this.sDate = year + "-" + month + "-" + date;
+                        break;
+
                     default:
                         this.sDate = this.filter["startDate"];
                 }
@@ -80,6 +94,19 @@ export class FilterModalComponent implements OnInit {
                 switch (this.endDateType) {
                     case "From Days Ago":
                         this.eDays = this.filter["eDays"];
+                        break;
+
+                    case "Current Date":
+                        let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+
+                        if (parseInt(date) < 10) {
+                            date = "0" + date;
+                        }
+                        if (parseInt(month) < 10) {
+                            month = "0" + month;
+                        }
+
+                        this.eDate = year + "-" + month + "-" + date;
                         break;
 
                     default:
