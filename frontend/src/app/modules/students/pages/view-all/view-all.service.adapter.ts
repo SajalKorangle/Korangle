@@ -49,7 +49,6 @@ export class ViewAllServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, bus_stop_data), // 5
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 6
             this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data),   // 7
-
         ]).then(
             (value) => {
                 value[0].forEach((classs) => {
@@ -78,10 +77,5 @@ export class ViewAllServiceAdapter {
                 this.vm.isLoading = false;
             }
         );
-        this.populateStudentFullProfileList();     
-    }
-
-    populateStudentFullProfileList(): void {
-        this.vm.messageService.fetchGCMDevicesNew(this.vm.studentFullProfileList, true);
     }
 }
