@@ -118,8 +118,6 @@ export class ViewAllComponent implements OnInit {
     messageService: any;
     isLogged = false;
     isNotLogged = false;
-    notificationPersonList = [];
-    flag = false;
 
     displayStudentNumber = 0;
 
@@ -288,6 +286,7 @@ export class ViewAllComponent implements OnInit {
             studentFullProfile['selectDocument'] = false;
             studentFullProfile['newTransferCertificate'] = this.backendData.tcList.find(tc => tc.parentStudent == studentFullProfile.dbId);
         });
+        this.messageService.fetchGCMDevicesNew(this.studentFullProfileList, true);
         this.handleStudentDisplay();
     }
 
@@ -469,22 +468,6 @@ export class ViewAllComponent implements OnInit {
         });
         return sectionLength > 1;
     }
-    
-    isLoggedIn(){
-        this.notificationPersonList = this.studentFullProfileList.filter((x) => {
-            return (x.notification || x.secondNumberNotification);
-        });
-        this.flag = true;
-    }
-
-    checkIdInNotificationList(student: any): boolean{
-        if(!this.flag) this.isLoggedIn();
-        for(let i=0; i<this.notificationPersonList.length; i++){
-            if(student.dbId === this.notificationPersonList[i]["dbId"])
-                return true;
-        }
-        return false;
-    }
 
     handleStudentDisplay(): void {
         let serialNumber = 0;
@@ -627,11 +610,11 @@ export class ViewAllComponent implements OnInit {
             }
             
             // isLoggedIn Filter Check
-            if (this.isLogged && !this.checkIdInNotificationList(student)) {
+            if (this.isLogged && !(student.notification || student.secondNumberNotification)) {
                 student.show = false;
                 return;
             }  
-            if (this.isNotLogged && this.checkIdInNotificationList(student)) {
+            if (this.isNotLogged && (student.notification || student.secondNumberNotification)) {
                 student.show = false;
                 return;
             }
