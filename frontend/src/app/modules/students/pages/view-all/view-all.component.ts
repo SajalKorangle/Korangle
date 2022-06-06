@@ -180,12 +180,12 @@ export class ViewAllComponent implements OnInit {
 
         this.backendData = new ViewAllBackendData();
         this.backendData.initialize(this);
+        
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.serviceAdapter = new ViewAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-
-        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
         
         this.htmlRenderer = new ViewAllHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
