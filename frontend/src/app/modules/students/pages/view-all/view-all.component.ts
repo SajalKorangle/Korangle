@@ -24,6 +24,9 @@ import { ComponentsModule } from 'app/components/components.module';
 
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import { ViewAllBackendData } from './view-all.backend.data';
+import { ViewAllHtmlRenderer } from './view-all.html.renderer';
+
+import { getAge } from "../../common/common-functions";
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -143,6 +146,7 @@ export class ViewAllComponent implements OnInit {
 
     serviceAdapter: ViewAllServiceAdapter;
     backendData: ViewAllBackendData;
+    htmlRenderer: ViewAllHtmlRenderer;
 
     constructor(
         public studentOldService: StudentOldService,
@@ -167,6 +171,9 @@ export class ViewAllComponent implements OnInit {
         this.serviceAdapter = new ViewAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new ViewAllHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
 
         this.currentProfileDocumentFilter = this.profileDocumentSelectList[0];
         this.percent_download_comlpleted = 0;
@@ -459,11 +466,14 @@ export class ViewAllComponent implements OnInit {
 
             /* Age Check */
             if (this.asOnDate) {
-                let age = student.dateOfBirth
-                    ? Math.floor((new Date(this.asOnDate).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
-                    : null;
-                if (this.minAge != '' && this.minAge != null && !isNaN(this.minAge)) {
-                    if (age == null || age == undefined) {
+                let age = null;
+
+                if (student.dateOfBirth) {
+                    age = getAge(this.asOnDate, student.dateOfBirth);
+                }
+
+                if (this.minAge != null && !isNaN(this.minAge)) {
+                    if (age == null) {
                         student.show = false;
                         return;
                     } else if (age < this.minAge) {
@@ -471,8 +481,9 @@ export class ViewAllComponent implements OnInit {
                         return;
                     }
                 }
-                if (this.maxAge != '' && this.maxAge != null && !isNaN(this.maxAge)) {
-                    if (age == null || age == undefined) {
+
+                if (this.maxAge != null && !isNaN(this.maxAge)) {
+                    if (age == null) {
                         student.show = false;
                         return;
                     } else if (age > this.maxAge) {
