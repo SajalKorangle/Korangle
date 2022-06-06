@@ -96,7 +96,7 @@
         <!-- Starts: Add New Status -->
         <div>
             <mat-form-field>
-                <input matInput placeholder="Status Name" type="text" [(ngModel)]="addStatusName" style="opacity: 0.6; font-weight: 400; font-size: 14px; line-height: 16px;" />
+                <input matInput placeholder="Status Name" type="text" [(ngModel)]="addStatusName" style="font-weight: 400; font-size: 14px; line-height: 16px;" />
             </mat-form-field>
             <span *ngIf="!htmlRenderer.isMobileBrowser() && !htmlRenderer.isMobileApplication() && addStatusName.toString().trim() && !htmlRenderer.checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</span>
             <div *ngIf="(htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()) && addStatusName.toString().trim() && !htmlRenderer.checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</div>
