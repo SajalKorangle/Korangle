@@ -66,51 +66,68 @@ export class FilterModalComponent implements OnInit {
 
             /* Initialize Date Information */
             if (this.filter["startDateType"]) {
+
                 this.startDateType = this.filter["startDateType"];
-                switch (this.startDateType) {
-                    case "From Days Ago":
-                        this.sDays = this.filter["sDays"];
-                        break;
+                if (this.startDateType == "From Days Ago") {
+                    this.sDays = this.filter["sDays"];
+                    let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+                    var result = new Date(parseInt(year), parseInt(month) - 1, parseInt(date));
+                    result.setDate(result.getDate() - this.sDays);
+                    [month, date, year] = result.toLocaleDateString("en-US").split("/");
 
-                    case "1st of Ongoing Month":
-                        let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
-                        [month, date, year] = new Date(parseInt(year), parseInt(month) - 1, 1).toLocaleDateString("en-US").split("/");
+                    if (parseInt(date) < 10) {
+                        date = "0" + date;
+                    }
+                    if (parseInt(month) < 10) {
+                        month = "0" + month;
+                    }
 
-                        if (parseInt(date) < 10) {
-                            date = "0" + date;
-                        }
-                        if (parseInt(month) < 10) {
-                            month = "0" + month;
-                        }
+                    this.sDate = year + "-" + month + "-" + date;
+                } else if (this.startDateType == "1st of Ongoing Month") {
+                    let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+                    [month, date, year] = new Date(parseInt(year), parseInt(month) - 1, 1).toLocaleDateString("en-US").split("/");
 
-                        this.sDate = year + "-" + month + "-" + date;
-                        break;
+                    if (parseInt(date) < 10) {
+                        date = "0" + date;
+                    }
+                    if (parseInt(month) < 10) {
+                        month = "0" + month;
+                    }
 
-                    default:
-                        this.sDate = this.filter["startDate"];
+                    this.sDate = year + "-" + month + "-" + date;
+                } else {
+                    this.sDate = this.filter["startDate"];
                 }
 
                 this.endDateType = this.filter["endDateType"];
-                switch (this.endDateType) {
-                    case "From Days Ago":
-                        this.eDays = this.filter["eDays"];
-                        break;
+                if (this.endDateType == "From Days Ago") {
+                    this.eDays = this.filter["eDays"];
+                    let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+                    var result = new Date(parseInt(year), parseInt(month) - 1, parseInt(date));
+                    result.setDate(result.getDate() - this.eDays);
+                    [month, date, year] = result.toLocaleDateString("en-US").split("/");
 
-                    case "Current Date":
-                        let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+                    if (parseInt(date) < 10) {
+                        date = "0" + date;
+                    }
+                    if (parseInt(month) < 10) {
+                        month = "0" + month;
+                    }
 
-                        if (parseInt(date) < 10) {
-                            date = "0" + date;
-                        }
-                        if (parseInt(month) < 10) {
-                            month = "0" + month;
-                        }
+                    this.eDate = year + "-" + month + "-" + date;
+                } else if (this.endDateType == "Current Date") {
+                    let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
 
-                        this.eDate = year + "-" + month + "-" + date;
-                        break;
+                    if (parseInt(date) < 10) {
+                        date = "0" + date;
+                    }
+                    if (parseInt(month) < 10) {
+                        month = "0" + month;
+                    }
 
-                    default:
-                        this.eDate = this.filter["endDate"];
+                    this.eDate = year + "-" + month + "-" + date;
+                } else {
+                    this.eDate = this.filter["endDate"];
                 }
             }  // Ends: Initialize Date Information
         }

@@ -172,10 +172,40 @@ export class CountAllComponent implements OnInit {
                     }
 
                     filter["startDate"] = year + "-" + month + "-" + date;
+                } else if (startDateType == "From Days Ago") {
+                    let sDays = filter["sDays"];
+                    let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+                    var result = new Date(parseInt(year), parseInt(month) - 1, parseInt(date));
+                    result.setDate(result.getDate() - sDays);
+                    [month, date, year] = result.toLocaleDateString("en-US").split("/");
+
+                    if (parseInt(date) < 10) {
+                        date = "0" + date;
+                    }
+                    if (parseInt(month) < 10) {
+                        month = "0" + month;
+                    }
+
+                    filter["startDate"] = year + "-" + month + "-" + date;
                 }
 
-                if (endDateType) {
+                if (endDateType == "Current Date") {
                     let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+
+                    if (parseInt(date) < 10) {
+                        date = "0" + date;
+                    }
+                    if (parseInt(month) < 10) {
+                        month = "0" + month;
+                    }
+
+                    filter["endDate"] = year + "-" + month + "-" + date;
+                } else if (endDateType == "From Days Ago") {
+                    let eDays = filter["eDays"];
+                    let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+                    var result = new Date(parseInt(year), parseInt(month) - 1, parseInt(date));
+                    result.setDate(result.getDate() - eDays);
+                    [month, date, year] = result.toLocaleDateString("en-US").split("/");
 
                     if (parseInt(date) < 10) {
                         date = "0" + date;
@@ -233,12 +263,42 @@ export class CountAllComponent implements OnInit {
                     if (parseInt(month) < 10) {
                         month = "0" + month;
                     }
+    
+                    filter["startDate"] = year + "-" + month + "-" + date;
+                } else if (startDateType == "From Days Ago") {
+                    let sDays = filter["sDays"];
+                    let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+                    var result = new Date(parseInt(year), parseInt(month) - 1, parseInt(date));
+                    result.setDate(result.getDate() - sDays);
+                    [month, date, year] = result.toLocaleDateString("en-US").split("/");
+
+                    if (parseInt(date) < 10) {
+                        date = "0" + date;
+                    }
+                    if (parseInt(month) < 10) {
+                        month = "0" + month;
+                    }
 
                     filter["startDate"] = year + "-" + month + "-" + date;
                 }
 
-                if (endDateType) {
+                if (endDateType == "Current Date") {
                     let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+
+                    if (parseInt(date) < 10) {
+                        date = "0" + date;
+                    }
+                    if (parseInt(month) < 10) {
+                        month = "0" + month;
+                    }
+
+                    filter["endDate"] = year + "-" + month + "-" + date;
+                } else if (endDateType == "From Days Ago") {
+                    let eDays = filter["eDays"];
+                    let [month, date, year] = new Date().toLocaleDateString("en-US").split("/");
+                    var result = new Date(parseInt(year), parseInt(month) - 1, parseInt(date));
+                    result.setDate(result.getDate() - eDays);
+                    [month, date, year] = result.toLocaleDateString("en-US").split("/");
 
                     if (parseInt(date) < 10) {
                         date = "0" + date;
