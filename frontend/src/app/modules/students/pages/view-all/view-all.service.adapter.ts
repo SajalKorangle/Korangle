@@ -50,7 +50,7 @@ export class ViewAllServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 6
             this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data),   // 7
         ]).then(
-            (value) => {
+            async (value) => {
                 value[0].forEach((classs) => {
                     classs.sectionList = [];
                     value[1].forEach((section) => {
@@ -59,7 +59,7 @@ export class ViewAllServiceAdapter {
                 });
                 this.vm.initializeClassSectionList(value[0]);
                 this.vm.backendData.tcList = value[7];
-                this.vm.initializeStudentFullProfileList(value[2]);
+                await this.vm.initializeStudentFullProfileList(value[2]);
                 this.vm.studentParameterList = value[3].map((x) => ({
                     ...x,
                     filterValues: JSON.parse(x.filterValues).map((x2) => ({ name: x2, show: false })),
