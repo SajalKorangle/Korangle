@@ -18,6 +18,7 @@ import { MatDialog } from '@angular/material';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import { CommonFunctions } from "../../../../classes/common-functions";
 
+import { getAge } from "../../common/common-functions";
 
 @Component({
     selector: 'app-count-all',
@@ -346,13 +347,15 @@ export class CountAllComponent implements OnInit {
                     break;
                 }
             } else if (filter == "age") {  /* Age Check */
-                let age = student.dateOfBirth
-                ? Math.floor((new Date(filtersData[filter][0]).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
-                : null;
+                let age = null;
+
+                if (student.dateOfBirth) {
+                    age = getAge(filtersData[filter][0], student.dateOfBirth);
+                }
 
                 /* Min-Age check */
                 if (filtersData[filter][1] != null && !isNaN(filtersData[filter][1])) {
-                    if (age == null || age == undefined) {
+                    if (age == null) {
                         check = false;
                         break;
                     } else if (age < filtersData[filter][1]) {
@@ -363,7 +366,7 @@ export class CountAllComponent implements OnInit {
 
                 /* Max-Age check */
                 if (filtersData[filter][2] != null && !isNaN(filtersData[filter][2])) {
-                    if (age == null || age == undefined) {
+                    if (age == null) {
                         check = false;
                         break;
                     } else if (age > filtersData[filter][2]) {
