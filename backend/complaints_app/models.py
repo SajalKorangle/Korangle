@@ -22,7 +22,7 @@ def createNotification(content, parentUser, parentSchool):
 class SchoolComplaintStatus(models.Model):
 
     # Status Name
-    name = models.CharField(max_length = 100)
+    name = models.TextField()
 
     # Parent School
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
@@ -40,7 +40,7 @@ class SchoolComplaintStatus(models.Model):
 class SchoolComplaintType(models.Model):
 
     # Complaint Type Name
-    name = models.CharField(max_length = 100)
+    name = models.TextField()
 
     # Default Complaint Text
     defaultText = models.TextField()
@@ -286,7 +286,7 @@ def notify_employee_on_complaint(sender, instance, created, **kwargs):
 class CountAllComplaints(models.Model):
 
     # Table Name
-    formatName = models.CharField(max_length = 100)
+    formatName = models.TextField()
 
     # Parent School
     parentSchool = models.ForeignKey(School, on_delete = models.CASCADE)
