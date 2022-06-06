@@ -425,4 +425,8 @@ export class ManageComplaintsServiceAdapter {
         alert("Employees assigned successfully.");
         this.vm.initializeEmployeeComplaintList(response, idx);
     }
+
+    async removeAssignedEmployee(deleteData) {
+        await new Query().filter(deleteData).deleteObjectList({complaints_app: 'EmployeeComplaint'});
+    }
 }

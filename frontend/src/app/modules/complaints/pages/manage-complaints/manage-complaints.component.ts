@@ -485,9 +485,27 @@ export class ManageComplaintsComponent implements OnInit {
         dialogRef.afterClosed().subscribe((data) => {
             if (data && data["newlyAssignedEmployeeList"]) {
                 let newlyAssignedEmployeeList = data["newlyAssignedEmployeeList"];
-                if (newlyAssignedEmployeeList.length) {
-                    this.serviceAdapter.addNewlyAssignedEmployee(complaint, newlyAssignedEmployeeList, idx);
-                }
+                this.serviceAdapter.addNewlyAssignedEmployee(complaint, newlyAssignedEmployeeList, idx);
+            }
+
+            if (data && data["employeeComplaintList"]) {
+                complaint.employeeComplaintList = data["employeeComplaintList"];
+            }
+
+            if (data && data["removeEmployeeList"]) {
+                let removeEmployeeList = data["removeEmployeeList"];
+
+                let deleteData = {};
+                let employeeIdList = [];
+                let complaintIdList = [];
+                removeEmployeeList.forEach(element => {
+                    employeeIdList.push(element.parentEmployee);
+                    complaintIdList.push(element.parentComplaint);
+                });
+
+                deleteData["parentEmployee__in"] = employeeIdList;
+                deleteData["parentComplaint__in"] = complaintIdList;
+                this.serviceAdapter.removeAssignedEmployee(deleteData);
             }
             this.startProgressBar();
         });

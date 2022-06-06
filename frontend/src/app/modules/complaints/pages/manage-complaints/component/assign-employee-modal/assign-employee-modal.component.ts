@@ -21,8 +21,9 @@ export class AssignEmployeeModalComponent implements OnInit {
     employeeList: any = [];
     searchedEmployeeList: any = [];
     selectedEmployeeList: any = [];
-    employeeComplaintList: any = [];
+    tempSelectedEmployeeList: any = [];
     newlyAssignedEmployeeList: any = [];
+    removeEmployeeList: any = [];
 
     selectedEmployee: any;
     tempEmployeeList: any;
@@ -39,7 +40,7 @@ export class AssignEmployeeModalComponent implements OnInit {
         this.employeeList = data.employeeList;
         this.openedComplaint = data.openedComplaint;
         this.selectedEmployeeList = data.employeeComplaintList;
-        this.employeeComplaintList = data.employeeComplaintList;
+        this.tempSelectedEmployeeList = CommonFunctions.getInstance().deepCopy(data.employeeComplaintList);
         /* Ends: Initialize data */
     }
 
@@ -58,14 +59,22 @@ export class AssignEmployeeModalComponent implements OnInit {
     /* Save Modal */
     saveClicked() {
         let data = {};
-        data["newlyAssignedEmployeeList"] = this.newlyAssignedEmployeeList;
+        if (this.newlyAssignedEmployeeList.length > 0) {
+            data["newlyAssignedEmployeeList"] = this.newlyAssignedEmployeeList;
+        }
+
+        if (this.removeEmployeeList.length > 0) {
+            data["removeEmployeeList"] = this.removeEmployeeList;
+        }
 
         this.dialogRef.close(data);
     }  // Ends: saveClicked()
 
     /* Close Modal */
     closeClicked() {
-        this.dialogRef.close();
+        let data = {};
+        data["employeeComplaintList"] = this.tempSelectedEmployeeList;
+        this.dialogRef.close(data);
     }  // Ends: closeClicked()
 
     /* Get Searched Employee List */
@@ -102,6 +111,20 @@ export class AssignEmployeeModalComponent implements OnInit {
         return false;
     }  // Ends: checkEmployeeExist()
 
+    removeEmployeeFromRemoveEmployeeList(employeeId) {
+        let idx = -1;
+        for (let i = 0; i < this.removeEmployeeList.length; i++) {
+            if (this.removeEmployeeList[i].parentEmployee == employeeId) {
+                idx = i;
+                break;
+            }
+        }
+
+        if (idx != -1) {
+            this.removeEmployeeList.splice(idx, 1);
+        }
+    }
+
     /* Initialize Employee Data */
     initializeEmployeeData(employee) {
         let check = this.checkEmployeeExist(employee.id);
@@ -110,10 +133,18 @@ export class AssignEmployeeModalComponent implements OnInit {
             let employeeCopy = CommonFunctions.getInstance().deepCopy(employee);
             employeeCopy["selected"] = true;
             this.newlyAssignedEmployeeList.push(employeeCopy);
+
+            this.removeEmployeeFromRemoveEmployeeList(employee.id);
         }
     }  // Ends: initializeEmployeeData()
 
     removeEmployee(employee, idx) {
-        this.serviceAdapter.removeEmployee(this.openedComplaint, employee, idx);
+        let deleteData = {
+            parentEmployee: employee.id,
+            parentComplaint: this.openedComplaint.id,
+        };
+
+        this.selectedEmployeeList.splice(idx, 1);
+        this.removeEmployeeList.push(deleteData);
     }
 }
