@@ -195,7 +195,9 @@ export class TotalCollectionServiceAdapter {
                     return a.classs.orderNumber - b.classs.orderNumber;
                 }
             });
-
+        this.vm.filteredClassSectionList.forEach((classSection) => {
+            classSection.selectedClassSection = true;
+        })
         // Filtered Employee List
         this.vm.filteredEmployeeList = this.vm.employeeList.filter((employee) => {
             return this.vm.feeReceiptList
@@ -205,11 +207,15 @@ export class TotalCollectionServiceAdapter {
                 })
                 .includes(employee.id);
         });
-
+        this.vm.filteredEmployeeList.forEach((employee) => {
+            employee.selectedEmployee = true;
+        })
         // Filtered Mode of Payment List
-        this.vm.filteredModeOfPaymentList = [...new Set(this.vm.feeReceiptList.map((a) => a.modeOfPayment))].filter((a) => {
-            return a != null;
-        });
+        this.vm.filteredModeOfPaymentList = [...new Set(this.vm.feeReceiptList.map((a) => a.modeOfPayment))].filter((a) => { return a != null; }).map(mode => ({ mode }));
+
+        this.vm.filteredModeOfPaymentList.forEach((mode) => {
+            mode.selectedModeOfPayment = true;
+        })
 
         //Filtered Fee Type list
         this.vm.filteredFeeTypeList = this.vm.feeTypeList.filter((feeType) => {
@@ -218,6 +224,10 @@ export class TotalCollectionServiceAdapter {
                     return subFeeReceipt.parentFeeType == feeType.id;
                 }) != undefined
             );
+        });
+
+        this.vm.filteredFeeTypeList.forEach((feeType) => {
+            feeType.selectedFeeType = true;
         });
 
         //Filtered Session List
@@ -229,5 +239,10 @@ export class TotalCollectionServiceAdapter {
                 })
                 .includes(session.id);
         });
+
+        this.vm.filteredSessionList.forEach((session) => {
+            session.selectedSession = true;
+        });
+
     }
 }
