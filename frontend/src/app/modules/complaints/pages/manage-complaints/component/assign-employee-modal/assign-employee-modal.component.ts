@@ -21,7 +21,6 @@ export class AssignEmployeeModalComponent implements OnInit {
     employeeList: any = [];
     searchedEmployeeList: any = [];
     selectedEmployeeList: any = [];
-    tempSelectedEmployeeList: any = [];
     newlyAssignedEmployeeList: any = [];
     removeEmployeeList: any = [];
 
@@ -39,8 +38,7 @@ export class AssignEmployeeModalComponent implements OnInit {
         /* Starts: Initialize data */
         this.employeeList = data.employeeList;
         this.openedComplaint = data.openedComplaint;
-        this.selectedEmployeeList = data.employeeComplaintList;
-        this.tempSelectedEmployeeList = CommonFunctions.getInstance().deepCopy(data.employeeComplaintList);
+        this.selectedEmployeeList = CommonFunctions.getInstance().deepCopy(data.employeeComplaintList);
         /* Ends: Initialize data */
     }
 
@@ -72,9 +70,7 @@ export class AssignEmployeeModalComponent implements OnInit {
 
     /* Close Modal */
     closeClicked() {
-        let data = {};
-        data["employeeComplaintList"] = this.tempSelectedEmployeeList;
-        this.dialogRef.close(data);
+        this.dialogRef.close();
     }  // Ends: closeClicked()
 
     /* Get Searched Employee List */
@@ -114,7 +110,7 @@ export class AssignEmployeeModalComponent implements OnInit {
     removeEmployeeFromRemoveEmployeeList(employeeId) {
         let idx = -1;
         for (let i = 0; i < this.removeEmployeeList.length; i++) {
-            if (this.removeEmployeeList[i].parentEmployee == employeeId) {
+            if (this.removeEmployeeList[i] == employeeId) {
                 idx = i;
                 break;
             }
@@ -123,28 +119,29 @@ export class AssignEmployeeModalComponent implements OnInit {
         if (idx != -1) {
             this.removeEmployeeList.splice(idx, 1);
         }
+        return idx;
     }
 
     /* Initialize Employee Data */
     initializeEmployeeData(employee) {
         let check = this.checkEmployeeExist(employee.id);
+        let idx = this.removeEmployeeFromRemoveEmployeeList(employee.id);
 
         if (!check) {
-            let employeeCopy = CommonFunctions.getInstance().deepCopy(employee);
-            employeeCopy["selected"] = true;
-            this.newlyAssignedEmployeeList.push(employeeCopy);
-
-            this.removeEmployeeFromRemoveEmployeeList(employee.id);
+            if (idx == -1) {
+                let employeeCopy = CommonFunctions.getInstance().deepCopy(employee);
+                employeeCopy["selected"] = true;
+                this.newlyAssignedEmployeeList.push(employeeCopy);
+            } else {
+                let employeeCopy = CommonFunctions.getInstance().deepCopy(employee);
+                employeeCopy["selected"] = true;
+                this.selectedEmployeeList.push(employeeCopy);
+            }
         }
     }  // Ends: initializeEmployeeData()
 
     removeEmployee(employee, idx) {
-        let deleteData = {
-            parentEmployee: employee.id,
-            parentComplaint: this.openedComplaint.id,
-        };
-
         this.selectedEmployeeList.splice(idx, 1);
-        this.removeEmployeeList.push(deleteData);
+        this.removeEmployeeList.push(employee.id);
     }
 }

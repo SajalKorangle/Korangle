@@ -470,6 +470,16 @@ export class ManageComplaintsComponent implements OnInit {
         this.loadComplaints();
     }  // Ends: getSearchedComplaintList()
 
+    getIndexOfEmployeeOfEmployeeComplaintList(employeeList, employeeId) {
+        for (let i = 0; i < employeeList.length; i++) {
+            if (employeeList[i].id == employeeId) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     /* Open Filter Modal */
     openAssignEmployeeDialog(complaint, idx): void {
         clearInterval(this.progressInterval);
@@ -483,30 +493,31 @@ export class ManageComplaintsComponent implements OnInit {
 
         // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
+            let count = 0;
+
             if (data && data["newlyAssignedEmployeeList"]) {
                 let newlyAssignedEmployeeList = data["newlyAssignedEmployeeList"];
-                this.serviceAdapter.addNewlyAssignedEmployee(complaint, newlyAssignedEmployeeList, idx);
-            }
-
-            if (data && data["employeeComplaintList"]) {
-                complaint.employeeComplaintList = data["employeeComplaintList"];
+                console.log("New: ", newlyAssignedEmployeeList);
+                // this.serviceAdapter.addNewlyAssignedEmployee(complaint, newlyAssignedEmployeeList, idx);
+                count++;
             }
 
             if (data && data["removeEmployeeList"]) {
                 let removeEmployeeList = data["removeEmployeeList"];
 
                 let deleteData = {};
-                let employeeIdList = [];
-                let complaintIdList = [];
-                removeEmployeeList.forEach(element => {
-                    employeeIdList.push(element.parentEmployee);
-                    complaintIdList.push(element.parentComplaint);
-                });
-
-                deleteData["parentEmployee__in"] = employeeIdList;
-                deleteData["parentComplaint__in"] = complaintIdList;
-                this.serviceAdapter.removeAssignedEmployee(deleteData);
+                deleteData["parentEmployee__in"] = removeEmployeeList;
+                deleteData["parentComplaint"] = complaint.id;
+                // this.serviceAdapter.removeAssignedEmployee(deleteData);
+                console.log("Delete: ", removeEmployeeList);
+                count++;
             }
+
+            if (count > 0) {
+                complaint.employeeComplaintList = [];
+                this.serviceAdapter.getEmployeeCompalint(complaint.id, idx);
+            }
+
             this.startProgressBar();
         });
     }  // Ends: openAssignEmployeeDialog()
