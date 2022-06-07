@@ -277,7 +277,7 @@ export class ViewAllComponent implements OnInit {
         this.sectionList = sectionList;
     }*/
 
-    initializeStudentFullProfileList(studentFullProfileList: any): void {
+    async initializeStudentFullProfileList(studentFullProfileList: any): Promise<void> {
         this.studentFullProfileList = studentFullProfileList;
         this.studentFullProfileList.forEach((studentFullProfile) => {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
@@ -286,7 +286,7 @@ export class ViewAllComponent implements OnInit {
             studentFullProfile['selectDocument'] = false;
             studentFullProfile['newTransferCertificate'] = this.backendData.tcList.find(tc => tc.parentStudent == studentFullProfile.dbId);
         });
-        this.messageService.fetchGCMDevicesNew(this.studentFullProfileList, true);
+        await this.messageService.fetchGCMDevicesNew(this.studentFullProfileList, true);
         this.handleStudentDisplay();
     }
 
