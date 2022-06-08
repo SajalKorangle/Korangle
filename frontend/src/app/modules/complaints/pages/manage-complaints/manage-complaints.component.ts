@@ -497,8 +497,7 @@ export class ManageComplaintsComponent implements OnInit {
 
             if (data && data["newlyAssignedEmployeeList"]) {
                 let newlyAssignedEmployeeList = data["newlyAssignedEmployeeList"];
-                console.log("New: ", newlyAssignedEmployeeList);
-                // this.serviceAdapter.addNewlyAssignedEmployee(complaint, newlyAssignedEmployeeList, idx);
+                this.serviceAdapter.addNewlyAssignedEmployee(complaint, newlyAssignedEmployeeList, idx);
                 count++;
             }
 
@@ -508,8 +507,7 @@ export class ManageComplaintsComponent implements OnInit {
                 let deleteData = {};
                 deleteData["parentEmployee__in"] = removeEmployeeList;
                 deleteData["parentComplaint"] = complaint.id;
-                // this.serviceAdapter.removeAssignedEmployee(deleteData);
-                console.log("Delete: ", removeEmployeeList);
+                this.serviceAdapter.removeAssignedEmployee(deleteData);
                 count++;
             }
 
