@@ -277,13 +277,19 @@ export class TotalCollectionComponent implements OnInit {
                 filteredSubFeeList = [...filteredSubFeeList, ...(this.subFeeReceiptList.filter((subFeeRecipt) => { return subFeeRecipt.parentFeeType == feeType.id; }).map((a) => a.parentFeeReceipt))];
             }
         })
-        let extraTempListForFeeType = [];
+        // let extraTempListForFeeType = [];
+        // console.log(tempList);
+        let checkFeeType = false;
         this.filteredFeeTypeList.forEach((feeType) => {
             if (feeType.selectedFeeType) {
-                extraTempListForFeeType.push(...tempList.filter((feeReceipt) => filteredSubFeeList.includes(feeReceipt.id)));
+                checkFeeType = true;
+                tempList = tempList.filter((feeReceipt) => filteredSubFeeList.includes(feeReceipt.id));
             }
         });
-        tempList = extraTempListForFeeType;
+        if (!checkFeeType) {
+            tempList = [];
+        }
+        // tempList = extraTempListForFeeType;
 
         // filter by session
         this.filteredSessionList.forEach((session) => {
