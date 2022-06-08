@@ -409,23 +409,21 @@ export class ManageComplaintsServiceAdapter {
         this.vm.addNewComplaints(complaintList);
     }  // Ends: loadComplaints()
 
-    async addNewlyAssignedEmployee(complaint, newlyAssignedEmployeeList, idx) {
+    async addNewAndRemoveEmployee(complaintId, idx, newlyAssignedEmployeeList, removeEmployeeList) {
+        this.vm.isLoading = true;
 
-        let employeeComplaintList = [];
-        newlyAssignedEmployeeList.forEach((newlyAssignedEmployee) => {
-            let employeeComplaint = {};
-            employeeComplaint["parentEmployee"] = newlyAssignedEmployee["id"];
-            employeeComplaint["parentComplaint"] = complaint["id"];
+        if (newlyAssignedEmployeeList.length > 0) {
+            await new Query().createObjectList({complaints_app: 'EmployeeComplaint'}, newlyAssignedEmployeeList);
+        }
 
-            employeeComplaintList.push(employeeComplaint);
-        });
+        if (removeEmployeeList.length > 0) {
+            let deleteData = {};
+            deleteData["parentComplaint"] = complaintId;
+            deleteData["parentEmployee__in"] = removeEmployeeList;
+            await new Query().filter(deleteData).deleteObjectList({complaints_app: 'EmployeeComplaint'});
+        }
 
-
-        await new Query().createObjectList({complaints_app: 'EmployeeComplaint'}, employeeComplaintList);
-        alert("Employees assigned successfully.");
-    }
-
-    async removeAssignedEmployee(deleteData) {
-        await new Query().filter(deleteData).deleteObjectList({complaints_app: 'EmployeeComplaint'});
+        this.getEmployeeCompalint(complaintId, idx);
+        this.vm.isLoading = false;
     }
 }

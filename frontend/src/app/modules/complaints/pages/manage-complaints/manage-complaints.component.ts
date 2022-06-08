@@ -493,29 +493,25 @@ export class ManageComplaintsComponent implements OnInit {
 
         // OnClosing of Modal.
         dialogRef.afterClosed().subscribe((data) => {
-            let count = 0;
+            let newlyAssignedEmployeeList = [];
+            let removeEmployeeList = [];
 
             if (data && data["newlyAssignedEmployeeList"]) {
-                let newlyAssignedEmployeeList = data["newlyAssignedEmployeeList"];
-                this.serviceAdapter.addNewlyAssignedEmployee(complaint, newlyAssignedEmployeeList, idx);
-                count++;
+                data["newlyAssignedEmployeeList"].forEach((newlyAssignedEmployee) => {
+                    let employeeComplaint = {};
+                    employeeComplaint["parentEmployee"] = newlyAssignedEmployee["id"];
+                    employeeComplaint["parentComplaint"] = complaint["id"];
+
+                    newlyAssignedEmployeeList.push(employeeComplaint);
+                });
             }
 
             if (data && data["removeEmployeeList"]) {
-                let removeEmployeeList = data["removeEmployeeList"];
-
-                let deleteData = {};
-                deleteData["parentEmployee__in"] = removeEmployeeList;
-                deleteData["parentComplaint"] = complaint.id;
-                this.serviceAdapter.removeAssignedEmployee(deleteData);
-                count++;
+                removeEmployeeList = data["removeEmployeeList"];
             }
 
-            if (count > 0) {
-                complaint.employeeComplaintList = [];
-                this.serviceAdapter.getEmployeeCompalint(complaint.id, idx);
-            }
-
+            complaint.employeeComplaintList = [];
+            this.serviceAdapter.addNewAndRemoveEmployee(complaint.id, idx, newlyAssignedEmployeeList, removeEmployeeList)
             this.startProgressBar();
         });
     }  // Ends: openAssignEmployeeDialog()
