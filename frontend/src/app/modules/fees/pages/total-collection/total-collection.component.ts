@@ -73,7 +73,7 @@ export class TotalCollectionComponent implements OnInit {
         public schoolService: SchoolService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
