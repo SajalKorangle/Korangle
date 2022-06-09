@@ -101,6 +101,7 @@ export class TotalCollectionComponent implements OnInit {
         this.selectedFeeType = null;
         this.selectedFeeReceiptType = this.receiptTypeList[0];
         this.selectedSession = null;
+        
         this.receiptColumnFilter = new ReceiptColumnFilter();
         delete this.receiptColumnFilter['printButton'];
         this.receiptColumnFilter.scholarNumber = false;

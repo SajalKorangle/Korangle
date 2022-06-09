@@ -195,9 +195,11 @@ export class TotalCollectionServiceAdapter {
                     return a.classs.orderNumber - b.classs.orderNumber;
                 }
             });
+
         this.vm.filteredClassSectionList.forEach((classSection) => {
             classSection.selectedClassSection = true;
         })
+
         // Filtered Employee List
         this.vm.filteredEmployeeList = this.vm.employeeList.filter((employee) => {
             return this.vm.feeReceiptList
@@ -207,9 +209,11 @@ export class TotalCollectionServiceAdapter {
                 })
                 .includes(employee.id);
         });
+
         this.vm.filteredEmployeeList.forEach((employee) => {
             employee.selectedEmployee = true;
         })
+        
         // Filtered Mode of Payment List
         this.vm.filteredModeOfPaymentList = [...new Set(this.vm.feeReceiptList.map((a) => a.modeOfPayment))].filter((a) => { return a != null; }).map(mode => ({ mode }));
 
