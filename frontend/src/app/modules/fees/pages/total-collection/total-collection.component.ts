@@ -87,7 +87,7 @@ export class TotalCollectionComponent implements OnInit {
 
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.remark = false;*/
-        
+
         if (CommonFunctions.getInstance().isMobileMenu()) {
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
@@ -97,10 +97,10 @@ export class TotalCollectionComponent implements OnInit {
     initializeSelection(): void {
         this.selectedEmployee = null;
         this.selectedClassSection = null;
+        this.selectedModeOfPayment = null;
         this.selectedFeeType = null;
         this.selectedFeeReceiptType = this.receiptTypeList[0];
         this.selectedSession = null;
-        this.selectedModeOfPayment = null;
         this.receiptColumnFilter = new ReceiptColumnFilter();
         delete this.receiptColumnFilter['printButton'];
         this.receiptColumnFilter.scholarNumber = false;
