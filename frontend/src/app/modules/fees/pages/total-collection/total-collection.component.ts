@@ -267,7 +267,7 @@ export class TotalCollectionComponent implements OnInit {
         let filteredSubFeeList = [];
         this.filteredFeeTypeList.forEach((feeType) => {
             if (feeType.selectedFeeType) {
-                filteredSubFeeList = [...filteredSubFeeList, ...(this.subFeeReceiptList.filter((subFeeRecipt) => { return subFeeRecipt.parentFeeType == feeType.id; }).map((a) => a.parentFeeReceipt))];
+                filteredSubFeeList = [...filteredSubFeeList, ...(this.subFeeReceiptList.filter((subFeeReceipt) => { return subFeeReceipt.parentFeeType == feeType.id; }).map((a) => a.parentFeeReceipt))];
             }
         })
 

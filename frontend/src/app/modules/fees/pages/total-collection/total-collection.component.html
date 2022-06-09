@@ -2,26 +2,45 @@
     <ng-container *ngIf="!isInitialLoading">
         <div class="row" style="margin-top: 15px">
             <div class="col-sm-3">
-                <day-date [formattedDateOutput]="true" [placeHolder]="'Start Date'" [minDate]="minDate"
+                <day-date
+                    [formattedDateOutput]="true"
+                    [placeHolder]="'Start Date'"
+                    [minDate]="minDate"
                     (onDateSelected)="startDate = $event">
                 </day-date>
             </div>
             <div class="col-sm-3">
-                <day-date [formattedDateOutput]="true" [placeHolder]="'End Date'" [minDate]="minDate"
+                <day-date
+                    [formattedDateOutput]="true"
+                    [placeHolder]="'End Date'" 
+                    [minDate]="minDate"
                     (onDateSelected)="endDate = $event">
                 </day-date>
             </div>
             <div class="col-sm-3">
-                <button type="button" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                    style="padding: 12px 15px" matTooltip="Get all the receipts b/w start and end date"
-                    tooltip-position="right" (click)="serviceAdapter.getFeeCollectionList();">
-                    <i class="material-icons">search</i></button><br />
+                <button
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    style="padding: 12px 15px"
+                    matTooltip="Get all the receipts b/w start and end date"
+                    tooltip-position="right"
+                    (click)="serviceAdapter.getFeeCollectionList()"
+                >
+                    <i class="material-icons">search</i></button
+                ><br />
             </div>
             <div class="col-md-3" align="left">
-                <button type="button" *ngIf="getFilteredFeeReceiptList()"
-                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="padding: 12px 15px"
-                    matTooltip="Print the following list" tooltip-position="left" (click)="printFeeReceiptList()">
-                    Print<i class="material-icons" style="margin-left: 15px">print</i></button><br />
+                <button
+                    type="button"
+                    *ngIf="getFilteredFeeReceiptList()"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    style="padding: 12px 15px"
+                    matTooltip="Print the following list"
+                    tooltip-position="left"
+                    (click)="printFeeReceiptList()"
+                >
+                    Print<i class="material-icons" style="margin-left: 15px">print</i></button
+                ><br />
             </div>
         </div>
 
@@ -160,15 +179,24 @@
 
                 <br />
 
-                <span style="font-size: 16px"> Total Fees: {{ getFilteredFeeReceiptListTotalAmount() | indianCurrency:
-                    true }} </span>
+                <span style="font-size: 16px"> Total Fees: {{ getFilteredFeeReceiptListTotalAmount() | indianCurrency: true }} </span>
 
-                <app-fee-receipt-list [user]="user" [number]="50" [receiptColumnFilter]="receiptColumnFilter"
-                    [feeTypeList]="feeTypeList" [feeReceiptList]="getFilteredFeeReceiptList()"
-                    [subFeeReceiptList]="subFeeReceiptList" [studentList]="studentList"
-                    [studentSectionList]="studentSectionList" [employeeList]="filteredEmployeeList"
-                    [classList]="classList" [sectionList]="sectionList" [selectedFeeType]="selectedFeeType"
-                    [sessionList]="filteredSessionList" [boardList]="boardList"></app-fee-receipt-list>
+                    <app-fee-receipt-list
+                    [user]="user"
+                    [number]="50"
+                    [receiptColumnFilter]="receiptColumnFilter"
+                    [feeTypeList]="feeTypeList"
+                    [feeReceiptList]="getFilteredFeeReceiptList()"
+                    [subFeeReceiptList]="subFeeReceiptList"
+                    [studentList]="studentList"
+                    [studentSectionList]="studentSectionList"
+                    [employeeList]="filteredEmployeeList"
+                    [classList]="classList"
+                    [sectionList]="sectionList"
+                    [selectedFeeType]="selectedFeeType"
+                    [sessionList]="filteredSessionList"
+                    [boardList]="boardList"
+                ></app-fee-receipt-list>
             </ng-container>
 
             <ng-container *ngIf="getFilteredFeeReceiptList().length == 0">
