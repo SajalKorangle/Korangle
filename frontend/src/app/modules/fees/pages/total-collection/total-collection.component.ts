@@ -24,6 +24,7 @@ export class TotalCollectionComponent implements OnInit {
     installmentList = INSTALLMENT_LIST;
 
     user;
+
     startDate: any;
     endDate: any;
     minDate: any;
@@ -72,7 +73,7 @@ export class TotalCollectionComponent implements OnInit {
         public schoolService: SchoolService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -86,6 +87,7 @@ export class TotalCollectionComponent implements OnInit {
 
         this.receiptColumnFilter.scholarNumber = false;
         this.receiptColumnFilter.remark = false;*/
+        
         if (CommonFunctions.getInstance().isMobileMenu()) {
             this.receiptColumnFilter.remark = false;
             this.receiptColumnFilter.employee = false;
