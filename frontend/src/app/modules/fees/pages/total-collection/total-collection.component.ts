@@ -222,6 +222,7 @@ export class TotalCollectionComponent implements OnInit {
     getFilteredFeeReceiptList(): any {
 
         let tempList = this.feeReceiptList;
+
         // filter by selected employee
         this.filteredEmployeeList.forEach((employee) => {
             if (!employee.selectedEmployee) {
