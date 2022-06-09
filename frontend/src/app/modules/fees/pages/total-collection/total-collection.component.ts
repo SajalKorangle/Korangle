@@ -73,7 +73,7 @@ export class TotalCollectionComponent implements OnInit {
         public schoolService: SchoolService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -101,7 +101,6 @@ export class TotalCollectionComponent implements OnInit {
         this.selectedFeeType = null;
         this.selectedFeeReceiptType = this.receiptTypeList[0];
         this.selectedSession = null;
-        
         this.receiptColumnFilter = new ReceiptColumnFilter();
         delete this.receiptColumnFilter['printButton'];
         this.receiptColumnFilter.scholarNumber = false;
@@ -267,10 +266,10 @@ export class TotalCollectionComponent implements OnInit {
         });
 
         // filter by Fee Type
-        let filteredSubFeeList = [];
+        let filteredSubFeeReceiptList = [];
         this.filteredFeeTypeList.forEach((feeType) => {
             if (feeType.selectedFeeType) {
-                filteredSubFeeList = [...filteredSubFeeList, ...(this.subFeeReceiptList.filter((subFeeReceipt) => { return subFeeReceipt.parentFeeType == feeType.id; }).map((a) => a.parentFeeReceipt))];
+                filteredSubFeeReceiptList = [...filteredSubFeeReceiptList, ...(this.subFeeReceiptList.filter((subFeeReceipt) => { return subFeeReceipt.parentFeeType == feeType.id; }).map((a) => a.parentFeeReceipt))];
             }
         })
 
@@ -279,7 +278,7 @@ export class TotalCollectionComponent implements OnInit {
         this.filteredFeeTypeList.forEach((feeType) => {
             if (feeType.selectedFeeType) {
                 checkFeeType = true;
-                tempList = tempList.filter((feeReceipt) => filteredSubFeeList.includes(feeReceipt.id));
+                tempList = tempList.filter((feeReceipt) => filteredSubFeeReceiptList.includes(feeReceipt.id));
             }
         });
 
