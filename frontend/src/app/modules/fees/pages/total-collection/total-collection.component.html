@@ -131,8 +131,11 @@
 
                 <!-- Fee Receipt Type -->
                 <mat-form-field style="margin-right: 15px">
-                    <mat-select placeholder="Select Fee Receipt Type" [(ngModel)]="selectedFeeReceiptType"
-                        (ngModelChange)="checkCancelledRemark()">
+                    <mat-select
+                        placeholder="Select Fee Receipt Type"
+                        [(ngModel)]="selectedFeeReceiptType"
+                        (ngModelChange)="checkCancelledRemark()"
+                    >
                         <mat-option *ngFor="let receiptType of receiptTypeList" [value]="receiptType">
                             {{ receiptType }}
                         </mat-option>
@@ -181,7 +184,7 @@
 
                 <span style="font-size: 16px"> Total Fees: {{ getFilteredFeeReceiptListTotalAmount() | indianCurrency: true }} </span>
 
-                    <app-fee-receipt-list
+                <app-fee-receipt-list
                     [user]="user"
                     [number]="50"
                     [receiptColumnFilter]="receiptColumnFilter"
