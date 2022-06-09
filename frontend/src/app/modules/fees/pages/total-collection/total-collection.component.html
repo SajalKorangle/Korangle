@@ -39,8 +39,7 @@
                                 (click)="unselectAllEmployees(); $event.stopPropagation();">Clear All</button>
                         </mat-option>
                         <mat-option *ngFor="let employee of filteredEmployeeList">
-                            <mat-checkbox [(ngModel)]="employee.selectedEmployee"
-                                (ngModelChange)="getFilteredFeeReceiptList()">
+                            <mat-checkbox [(ngModel)]="employee.selectedEmployee">
                                 {{ employee.name }}
                             </mat-checkbox>
                         </mat-option>
@@ -58,8 +57,7 @@
                                 (click)="unselectAllPaymentModes(); $event.stopPropagation()">Clear All</button>
                         </mat-option>
                         <mat-option *ngFor="let modeOfPayment of filteredModeOfPaymentList">
-                            <mat-checkbox [(ngModel)]="modeOfPayment.selectedModeOfPayment"
-                                (ngModelChange)="getFilteredFeeReceiptList()">
+                            <mat-checkbox [(ngModel)]="modeOfPayment.selectedModeOfPayment">
                                 {{ modeOfPayment.mode }}
                             </mat-checkbox>
                         </mat-option>
@@ -82,8 +80,7 @@
                             </button>
                         </mat-option>
                         <mat-option *ngFor="let classSection of filteredClassSectionList">
-                            <mat-checkbox [(ngModel)]="classSection.selectedClassSection"
-                                (ngModelChange)="getFilteredFeeReceiptList()">
+                            <mat-checkbox [(ngModel)]="classSection.selectedClassSection">
                                 {{ classSection.classs.name }}, {{ classSection.section.name }}
                             </mat-checkbox>
                         </mat-option>
@@ -105,8 +102,7 @@
                             </button>
                         </mat-option>
                         <mat-option *ngFor="let feeType of filteredFeeTypeList">
-                            <mat-checkbox [(ngModel)]="feeType.selectedFeeType"
-                                (ngModelChange)="getFilteredFeeReceiptList()">
+                            <mat-checkbox [(ngModel)]="feeType.selectedFeeType">
                                 {{ feeType.name }}
                             </mat-checkbox>
                         </mat-option>
@@ -121,6 +117,7 @@
                         <mat-option *ngFor="let receiptType of receiptTypeList" [value]="receiptType">
                             {{ receiptType }}
                         </mat-option>
+                        <mat-option [value]="nullValue"> All </mat-option>
                     </mat-select>
                 </mat-form-field>
 
@@ -140,8 +137,7 @@
                             </button>
                         </mat-option>
                         <mat-option *ngFor="let session of filteredSessionList">
-                            <mat-checkbox [(ngModel)]="session.selectedSession"
-                                (ngModelChange)="getFilteredFeeReceiptList()">
+                            <mat-checkbox [(ngModel)]="session.selectedSession">
                                 {{ session.name }}
                             </mat-checkbox>
                         </mat-option>

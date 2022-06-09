@@ -163,61 +163,51 @@ export class TotalCollectionComponent implements OnInit {
         this.filteredEmployeeList.forEach((item) => {
             item.selectedEmployee = true;
         });
-        this.getFilteredFeeReceiptList();
     }
     unselectAllEmployees(): void {
         this.filteredEmployeeList.forEach((item) => {
             item.selectedEmployee = false;
         });
-        this.getFilteredFeeReceiptList();
     }
     selectAllClassSection(): void {
         this.filteredClassSectionList.forEach((item) => {
             item.selectedClassSection = true;
         });
-        this.getFilteredFeeReceiptList();
     }
     unselectAllClassSection(): void {
         this.filteredClassSectionList.forEach((item) => {
             item.selectedClassSection = false;
         });
-        this.getFilteredFeeReceiptList();
     }
     selectAllSession(): void {
         this.filteredSessionList.forEach((item) => {
             item.selectedSession = true;
         });
-        this.getFilteredFeeReceiptList();
     }
     unselectAllSession(): void {
         this.filteredSessionList.forEach((item) => {
             item.selectedSession = false;
         });
-        this.getFilteredFeeReceiptList();
     }
     selectAllPaymentModes(): void {
         this.filteredModeOfPaymentList.forEach((item) => {
             item.selectedModeOfPayment = true;
         });
-        this.getFilteredFeeReceiptList();
     }
     unselectAllPaymentModes(): void {
         this.filteredModeOfPaymentList.forEach((item) => {
             item.selectedModeOfPayment = false;
         });
-        this.getFilteredFeeReceiptList();
     }
     selectAllFeeType(): void {
         this.filteredFeeTypeList.forEach((item) => {
             item.selectedFeeType = true;
         });
-        this.getFilteredFeeReceiptList();
     }
     unselectAllFeeType(): void {
         this.filteredFeeTypeList.forEach((item) => {
             item.selectedFeeType = false;
         });
-        this.getFilteredFeeReceiptList();
     }
 
 
@@ -249,12 +239,14 @@ export class TotalCollectionComponent implements OnInit {
                 });
             }
         });
+
         // filter by fee receipt type
         if (this.selectedFeeReceiptType) {
             tempList = tempList.filter((feeReceipt) => {
                 return feeReceipt.cancelled == Boolean(this.selectedFeeReceiptType == 'Cancelled Receipts');
             });
         }
+
         // filter by class section
         this.filteredClassSectionList.forEach((oneClassSection) => {
             if (!oneClassSection.selectedClassSection) {
@@ -277,8 +269,8 @@ export class TotalCollectionComponent implements OnInit {
                 filteredSubFeeList = [...filteredSubFeeList, ...(this.subFeeReceiptList.filter((subFeeRecipt) => { return subFeeRecipt.parentFeeType == feeType.id; }).map((a) => a.parentFeeReceipt))];
             }
         })
-        // let extraTempListForFeeType = [];
-        // console.log(tempList);
+
+
         let checkFeeType = false;
         this.filteredFeeTypeList.forEach((feeType) => {
             if (feeType.selectedFeeType) {
@@ -286,10 +278,10 @@ export class TotalCollectionComponent implements OnInit {
                 tempList = tempList.filter((feeReceipt) => filteredSubFeeList.includes(feeReceipt.id));
             }
         });
+
         if (!checkFeeType) {
             tempList = [];
         }
-        // tempList = extraTempListForFeeType;
 
         // filter by session
         this.filteredSessionList.forEach((session) => {
