@@ -35,7 +35,7 @@ export class MessageService {
 
     //// FETCHING GCM DEVICES PART STARTS TO POPULATE THE KEY NOTIFICATION(TRUE OR FALSE) FOR ANY PERSON ////
 
-    fetchGCMDevicesNew: any = (personList: any, checkSecondNumber: boolean = false) => {
+    fetchGCMDevicesNew: any = async (personList: any, checkSecondNumber: boolean = false) => {
         const mobile_list = personList.filter((item) => item.mobileNumber).map((obj) => {
             let return_str = obj.mobileNumber.toString();
             if (checkSecondNumber && obj.secondMobileNumber) {
@@ -52,7 +52,7 @@ export class MessageService {
             username__in: mobile_list,
         };
 
-        Promise.all([
+        await Promise.all([
             this.notificationService.getObjectList(this.notificationService.gcm_device, gcm_data),
             this.userService.getObjectList(this.userService.user, user_data)
         ]).then((value) => {
