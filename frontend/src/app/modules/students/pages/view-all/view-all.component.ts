@@ -189,7 +189,7 @@ export class ViewAllComponent implements OnInit {
 
         this.htmlRenderer = new ViewAllHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
-        
+
         this.currentProfileDocumentFilter = this.profileDocumentSelectList[0];
         this.percent_download_comlpleted = 0;
         this.totalDownloadSize = 0;
