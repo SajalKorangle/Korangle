@@ -263,7 +263,7 @@ export class CountAllComponent implements OnInit {
                     if (parseInt(month) < 10) {
                         month = "0" + month;
                     }
-    
+
                     filter["startDate"] = year + "-" + month + "-" + date;
                 } else if (startDateType == "From Days Ago") {
                     let sDays = filter["sDays"];

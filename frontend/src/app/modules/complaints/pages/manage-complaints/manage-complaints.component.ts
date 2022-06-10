@@ -511,7 +511,7 @@ export class ManageComplaintsComponent implements OnInit {
             }
 
             complaint.employeeComplaintList = [];
-            this.serviceAdapter.addNewAndRemoveEmployee(complaint.id, idx, newlyAssignedEmployeeList, removeEmployeeList)
+            this.serviceAdapter.addNewAndRemoveEmployee(complaint.id, idx, newlyAssignedEmployeeList, removeEmployeeList);
             this.startProgressBar();
         });
     }  // Ends: openAssignEmployeeDialog()
