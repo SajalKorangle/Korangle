@@ -1,0 +1,54 @@
+<!-- Starts: List Of Complaints -->
+<ng-container *ngIf="!isLoading && pageName == 'list-of-complaints'">
+    <app-list-complaints
+        [user]="user"
+        [complaintList]="complaintList"
+        (openComplaint)="openComplaint($event)"
+        (deleteComplaint)="deleteComplaint($event)"
+        (changePageName)="pageName = $event"
+    ></app-list-complaints>
+</ng-container>
+<!-- Ends: List Of Complaints -->
+
+<!-- Starts: Open Complaint -->
+<ng-container *ngIf="!isLoading && pageName == 'open-complaint'">
+    <app-open-complaint
+        [user]="user"
+        [defaultStatusTitle]="defaultStatusTitle"
+        [openedComplaint]="openedComplaint"
+        [commentList]="commentList"
+        [commentMessage]="commentMessage"
+        (changePageName)="pageName = $event"
+        (initializeComplaintData)="initializeComplaintData()"
+        (updateStatus)="commentMessage = $event[0]; updateStatus($event[1])"
+        (deleteComplaint)="commentMessage = $event[0]; deleteComplaint($event[1])"
+        (refreshComplaint)="refreshClicked()"
+        (updateComplaintClicked)="commentMessage = $event; updateComplaintClicked();"
+        (renotifyComplaint)="renotifyClicked()"
+    ></app-open-complaint>
+</ng-container>
+<!-- Ends: Open Complaint -->
+
+<!-- Starts: Send Complaint -->
+<ng-container *ngIf="!isLoading && pageName == 'send-complaint'">
+    <app-send-complaint
+        [user]="user"
+        [complaintTypeList]="complaintTypeList"
+        [studentList]="studentList"
+        (changePageName)="pageName = $event"
+        (initializeComplaintData)="initializeComplaintData()"
+        (sendComplaint)="
+                        complaintType = $event[0];
+                        complaintTitle = $event[1];
+                        commentMessage = $event[2];
+                        complaintStudent = $event[3];
+                        sendComplaint();"
+    ></app-send-complaint>
+</ng-container>
+<!-- Ends: Send Complaint -->
+
+<!-- Starts: Spinner -->
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- Ends: Spinner -->

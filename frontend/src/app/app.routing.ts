@@ -58,6 +58,10 @@ const routes: Routes = [
                 loadChildren: 'app/modules/sms/sms.module#SmsModule',
             },
             {
+                path: 'complaints',
+                loadChildren: 'app/modules/complaints/complaints.module#ComplaintsModule',
+            },
+            {
                 path: 'attendance',
                 loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule',
             },
@@ -174,6 +178,7 @@ const routes: Routes = [
             { path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule' },
             { path: 'accounts', loadChildren: 'app/modules/accounts/accounts.module#AccountsModule' },
             { path: 'parent', loadChildren: 'app/modules/parent/parent.module#ParentModule' },
+            { path: 'complaints', loadChildren: 'app/modules/complaints/complaints.module#ComplaintsModule' },
         ],
     },
     // ----- Routes For Print Pages Ends -------

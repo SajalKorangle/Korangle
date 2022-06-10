@@ -1,0 +1,45 @@
+.card-content {
+    padding: 3rem;
+    min-height: 90vh;
+}
+
+/* Starts: Table */
+thead tr th {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid black;
+}
+
+tbody tr:last-child td {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.title {
+    font-size: 14px;
+    line-height: 16px;
+    opacity: 0.9;
+}
+
+.minWidth {
+    max-width: 350px;
+    word-wrap: break-word;
+}
+
+.delete-icon {
+    color: red;
+}
+/* Ends: Table */
+
+
+/* Starts: Media Query - Mobile Phone */
+@media only screen and (max-width: 992px) {
+    .card-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .minWidth {
+        max-width: 100px;
+    }
+}
+/* Ends: Media Query - Mobile Phone */

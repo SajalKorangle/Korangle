@@ -1,0 +1,169 @@
+.card-content {
+    padding: 3rem;
+    min-height: 82vh;
+}
+
+/* Starts: Search Bar */
+.search-bar {
+    display: flex;
+    height: 25px;
+    font-size: 12px;
+}
+
+.search-field {
+    flex-basis: 63%;
+    border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    padding: 5px;
+}
+
+.search-btn {
+    flex-basis: 7%;
+    border: 0.4px solid rgba(0, 0, 0, 0.5);   /* Black - Opacity(0.5) */
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    background-color: white;
+}
+
+.search-icon {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+/* Ends: Search Bar */
+
+/* Starts: Progress Bar */
+.progress-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.progress-bar {
+    flex-basis: 96%;
+    background-color: #D9D9D9;
+    height: 6px;
+    border-radius: 3px;
+}
+
+.progress-done {
+    flex-basis: 20px;
+    border-radius: 50%;
+    height: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.done-icon {
+    font-size: 12px;
+    text-align: center;
+}
+/* Ends: Progress Bar */
+
+/* Starts: Table */
+.example-viewport {
+    height: 75vh;
+    width: 100%;
+}
+
+.filter-column {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.table {
+    height: 100%;
+    width: 100%;
+    z-index: -10;
+}
+
+tr th {
+    border-bottom: 1px solid black;
+}
+
+.dummyRow {
+    border: none !important;
+    height: 40vh;
+}
+
+.filter-alt-btn {
+    margin-right: 20%;
+    cursor: pointer;
+}
+
+.filter-option {
+    position: absolute;
+    top: 35px;
+    left: -30px;
+    width: 30vh;
+    height: 30vh;
+    z-index: 100000;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.mat-option-complaint-type {
+    width: 100%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.min-width {
+    min-width: 150px;
+    max-width: 200px;
+    word-wrap: break-word;
+    text-align: center;
+}
+/* Ends: Table */
+
+/* Starts: Load More */
+.load-more {
+    margin-top: 1rem;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+/* Ends: Load More */
+
+/* Starts: Media Query - Mobile Phone */
+@media only screen and (max-width: 992px) {
+    .card-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .progress-bar {
+        flex-basis: 91%;
+    }
+
+    /* Starts: Search Bar */
+   .search-bar {
+       height: 27px;
+   }
+
+    .search-field {
+        flex-basis: 90%;
+    }
+
+    .search-btn {
+        flex-basis: 10%;
+    }
+    /* Ends: Search Bar */
+}
+/* Ends: Media Query - Mobile Phone */
