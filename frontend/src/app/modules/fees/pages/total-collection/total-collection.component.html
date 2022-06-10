@@ -32,7 +32,7 @@
             <div class="col-md-3" align="left">
                 <button
                     type="button"
-                    *ngIf="getFilteredFeeReceiptList()"
+                    *ngIf="getFilteredFeeReceiptList() && !htmlRenderer.isMobileApplication() && !htmlRenderer.isMobileBrowser()"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                     style="padding: 12px 15px"
                     matTooltip="Print the following list"
@@ -188,7 +188,7 @@
                 <br />
 
                 <span style="font-size: 16px"> Total Fees: {{ getFilteredFeeReceiptListTotalAmount() | indianCurrency: true }} </span>
-
+            <cdk-virtual-scroll-viewport itemSize="12" class="example-viewport">
                 <app-fee-receipt-list
                     [user]="user"
                     [number]="50"
@@ -205,6 +205,7 @@
                     [sessionList]="filteredSessionList"
                     [boardList]="boardList"
                 ></app-fee-receipt-list>
+            </cdk-virtual-scroll-viewport>
             </ng-container>
 
             <ng-container *ngIf="getFilteredFeeReceiptList().length == 0">

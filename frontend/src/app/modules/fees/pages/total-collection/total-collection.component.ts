@@ -10,6 +10,7 @@ import { PrintService } from '../../../../print/print-service';
 import { PRINT_FEE_RECIEPT_LIST } from '../../print/print-routes.constants';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
+import {TotalCollectionHtmlRenderer} from './total-collection.html.renderer';
 
 @Component({
     selector: 'total-collection',
@@ -64,6 +65,7 @@ export class TotalCollectionComponent implements OnInit {
 
     isInitialLoading = false;
     isLoading = false;
+    htmlRenderer: TotalCollectionHtmlRenderer;
 
     constructor(
         public feeService: FeeService,
@@ -81,6 +83,9 @@ export class TotalCollectionComponent implements OnInit {
         this.serviceAdapter = new TotalCollectionServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new TotalCollectionHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
 
         //this.initializeSelection();
         /*delete this.receiptColumnFilter['printButton'];
