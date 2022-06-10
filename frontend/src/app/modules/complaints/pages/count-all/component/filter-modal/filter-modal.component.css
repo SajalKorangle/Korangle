@@ -1,0 +1,172 @@
+/* Starts: Modal Container */
+.filter-modal-container {
+    height: 70vh;
+    width: 70vw;
+}
+/* Ends: Modal Container */
+
+/* Starts: Time Span Section */
+.time-span-sub-section .title {
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 14px;
+    opacity: 0.6;
+}
+
+.time-span-sub-section .date-options {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+}
+
+.customInput {
+    border: none;
+    border-bottom: 2px solid lightgrey;
+    width: 100%;
+}
+/* Ends: Time Span Section */
+
+/* Starts: Page Names  &&  Employee Names Section */
+.names {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 2rem;
+    padding-right: 5rem;
+}
+
+.complaint-type-section {
+    flex-basis: 40%;
+}
+
+.mat-option-complaint-type {
+    width: 100%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.status-section {
+    flex-basis: 40%;
+}
+
+.mat-option-status {
+     width: 100%;
+     padding-top: 1rem;
+     padding-bottom: 1rem;
+}
+
+.example-viewport {
+    height: 30vh;
+    width: 100%;
+}
+/* Ends: Page Names  &&  Employee Names Section */
+
+/* Starts: Bottom Btns */
+.bottom-btns {
+    float: right;
+}
+
+.delete-btn {
+    color: #FF1717;    /* Red */
+    background-color: white;
+    outline: none;
+    border: none;
+    text-decoration: underline;
+    box-shadow: none;
+    text-transform: capitalize !important;
+    font-weight: 500 !important;
+    font-size: 12px !important;
+    line-height: 14px !important;
+}
+
+.apply-btn {
+    text-transform: capitalize !important;
+    padding: 7px 17px !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    line-height: 14px !important;
+}
+/* Ends: Bottom Btns */
+
+/* Starts: Media Query */
+@media only screen and (max-width: 992px) {
+    /* Starts: Modal Container */
+    .filter-modal-container {
+        height: 90vh;
+        width: 65vw;
+        /* width: 100%; */
+        margin: 0;
+        font-size: 12px;
+        padding: 0;
+    }
+    /* Ends: Modal Container */
+
+    /* Starts: Name Section */
+    .inputField {
+        width: 50%;
+    }
+    /* Ends: Name Section */
+
+    /* Starts: Time Span Section */
+    .time-span-sub-section {
+        justify-content: flex-start;
+        flex-direction: column;
+        align-items: flex-start;
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+        margin-top: 2rem;
+    }
+
+    .time-span-sub-section .title {
+        flex-basis: 100%;
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .time-span-sub-section .date-options {
+        /* flex-basis: 100%; */
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+    }
+    /* Ends: Time Span Section */
+
+    /* Starts: Page Names  &&  Employee Names Section */
+    .names {
+        padding: 0;
+        margin: 0;
+        flex-direction: column;
+        justify-content: flex-start;
+        font-size: 12px;
+    }
+
+    .example-viewport {
+        height: 40vh;
+        width: 100%;
+        font-size: 12px;
+    }
+
+    .complaint-type-section {
+        flex-basis: 100%;
+        font-size: 12px;
+        padding: 0;
+        margin: 0;
+        margin-bottom: 2rem;
+    }
+
+    .mat-option-complaint-type {
+        width: 100%;
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+    }
+
+    .status-section {
+        flex-basis: 100%;
+        font-size: 12px;
+        padding: 0;
+        margin: 0;
+    }
+    /* Ends: Page Names  &&  Employee Names Section */
+}
+/* Ends: Media Query */

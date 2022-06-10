@@ -50,3 +50,6 @@ export const PRINT_TRANSACTIONS = 'print-transactions';
 
 // Ledger
 export const PRINT_LEDGER = 'print-ledger';
+
+// Parent Support
+export const PRINT_COUNT_ALL_TABLE_COMPLAINTS = 'print-count-all-table-complaints';

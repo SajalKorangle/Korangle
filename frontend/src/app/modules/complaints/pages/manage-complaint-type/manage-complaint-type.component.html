@@ -1,0 +1,44 @@
+<!-- Starts: Show Tables -->
+<ng-container *ngIf="pageName == 'showTables' && !isLoading">
+    <app-show-table
+        [user]="user"
+        [complaintTypeList]="complaintTypeList"
+        [statusList]="statusList"
+        (editComplaintType)="editComplaintType($event[0], $event[1])"
+        (deleteComplaintType)="deleteComplaintType($event[0], $event[1])"
+        (changePageName)="pageName = $event"
+        (openChangeStatusDialog)="openChangeStatusDialog($event[0], $event[1])"
+        (deleteStatus)="deleteStatus($event[0], $event[1])"
+        (openAddStatusDialog)="openAddStatusDialog()"
+        (initializeComplaintTypeDetails)="initializeComplaintTypeDetails()"
+    ></app-show-table>
+</ng-container>
+<!-- Ends: Show Tables -->
+
+<!-- Starts: Add Complaint Type -->
+<ng-container *ngIf="pageName == 'addCompalintType' && !isLoading">
+    <app-add-edit-complaint-type
+        [user]="user"
+        [editingCompalaintType]="editingCompalaintType"
+        [complaintTypeList]="complaintTypeList"
+        [statusList]="statusList"
+        [employeeList]="employeeList"
+        [typeName]="typeName"
+        [defaultText]="defaultText"
+        [defaultStatus]="defaultStatus"
+        [defaultStatusId]="defaultStatusId"
+        [editingComplaintTypeId]="editingComplaintTypeId"
+        [selectedEmployeeList]="selectedEmployeeList"
+        [applicableEmployeeList]="applicableEmployeeList"
+        [applicableStatusList]="applicableStatusList"
+        (addStatusClick)="typeName = $event[0]; defaultText = $event[1]; defaultStatus = $event[2]; defaultStatusId = $event[3]; editingComplaintTypeId = $event[4]; addStatusName = $event[5]; addStatusClick()"
+        (saveClicked)="typeName = $event[0]; defaultText = $event[1]; defaultStatus = $event[2]; defaultStatusId = $event[3]; editingComplaintTypeId = $event[4]; saveClicked()"
+        (cancelClicked)="cancelClicked()"
+    ></app-add-edit-complaint-type>
+</ng-container>
+
+<!-- Starts: Spinner -->
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- Ends: Spinner -->

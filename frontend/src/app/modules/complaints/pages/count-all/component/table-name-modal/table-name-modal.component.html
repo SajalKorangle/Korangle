@@ -1,0 +1,41 @@
+<mat-dialog-content class="table-name-modal-container">
+    <!-- Starts: Header -->
+    <h4><b>Save Table Name</b></h4>
+    <div style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
+    <!-- Ends: Header -->
+
+    <!-- Starts: Table Name -->
+    <br /><b>Table Name - </b>
+    <mat-form-field class="inputField" style="margin-left: 10%;">
+        <input matInput type="text" placeholder="Table Name" [ngModel]="name" (ngModelChange)="name = $event; checkTableName()" required />
+    </mat-form-field>
+    <p *ngIf="!isUnique" style="color: red;">Table name should be unique.</p>
+    <!-- Ends: Table Name -->
+</mat-dialog-content>
+
+<!-- Starts: Bottom Buttons -->
+<ng-container>
+    <div class="bottom-btns">
+        <button
+            type="button"
+            class="btn cancel-btn"
+            style="padding: 7px 17px;"
+            matTooltip="Cancel"
+            tooltip-position="left"
+            (click) = "cancelClick()"
+        >
+            Cancel
+        </button>
+        <button
+            type="button"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }} save-btn"
+            matTooltip="Save Table Name"
+            tooltip-position="left"
+            (click) = "saveClick()"
+            [disabled]="!name.toString().trim() || !isUnique"
+        >
+            Save
+        </button>
+    </div>
+</ng-container>
+<!-- Ends: Bottom Buttons -->

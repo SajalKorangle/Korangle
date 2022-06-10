@@ -1,0 +1,50 @@
+<mat-dialog-content class="add-edit-status-modal-container">
+    <!-- Starts: Header -->
+    <div class="header">
+        <div class="title">Parent Support >> {{ operation }} Complaint Status</div>
+        <div><i class="material-icons close-btn" (click)="closeClicked()">highlight_off</i></div>
+    </div>
+    <br />
+    <br />
+    <!-- Ends: Header -->
+
+    <!-- Starts: Input Name Field -->
+    <div class="inputField">
+        <div>
+            <mat-form-field>
+                <input matInput placeholder="Status Name" required type="text" [(ngModel)]="statusName" />
+            </mat-form-field>
+            <div *ngIf="statusName && !checkUniqueness()" style="color: red; font-size: 14px;">Status name must be unique.</div>
+        </div>
+        <div *ngIf="operation == 'Edit'"><i class="material-icons delete-btn" (click)="deleteClick()">delete_forever</i></div>
+    </div>
+    <!-- Ends: Input Name Field -->
+</mat-dialog-content>
+
+
+<hr style="border-top: 1px solid #C4C4C4"/>
+<!-- Starts: Bottom Buttons -->
+<div class="bottom-btns">
+    <!-- Starts: Save Button -->
+    <button
+        type="button"
+        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} save-btn"
+        style="padding: 7px 17px;"
+        (click)="saveClicked()"
+        [disabled]="!statusName.toString().trim() || !checkUniqueness()"
+    >
+        Save
+    </button>
+    <!-- Ends: Save Button -->
+
+    <!-- Starts: Cancel Button -->
+    <button
+        type="button"
+        class="btn-{{ user.activeSchool.secondaryThemeColor }} cancel-btn"
+        (click)="closeClicked()"
+    >
+        Cancel
+    </button>
+    <!-- Ends: Cancel Button -->
+</div>
+<!-- Ends: Bottom Buttons -->
