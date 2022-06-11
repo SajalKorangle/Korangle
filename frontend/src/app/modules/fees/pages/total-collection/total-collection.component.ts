@@ -274,9 +274,11 @@ export class TotalCollectionComponent implements OnInit {
         let filteredSubFeeReceiptList = [];
         this.filteredFeeTypeList.forEach((feeType) => {
             if (feeType.selectedFeeType) {
-                filteredSubFeeReceiptList = [...filteredSubFeeReceiptList, ...(this.subFeeReceiptList.filter((subFeeReceipt) => { return subFeeReceipt.parentFeeType == feeType.id; }).map((a) => a.parentFeeReceipt))];
+                filteredSubFeeReceiptList = [...filteredSubFeeReceiptList, ...(this.subFeeReceiptList
+                    .filter((subFeeReceipt) => { return subFeeReceipt.parentFeeType == feeType.id; })
+                    .map((a) => a.parentFeeReceipt))];
             }
-        })
+        });
 
 
         let checkFeeType = false;

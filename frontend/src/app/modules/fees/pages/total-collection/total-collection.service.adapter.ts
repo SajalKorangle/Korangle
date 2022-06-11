@@ -198,7 +198,7 @@ export class TotalCollectionServiceAdapter {
 
         this.vm.filteredClassSectionList.forEach((classSection) => {
             classSection.selectedClassSection = true;
-        })
+        });
 
         // Filtered Employee List
         this.vm.filteredEmployeeList = this.vm.employeeList.filter((employee) => {
@@ -212,14 +212,17 @@ export class TotalCollectionServiceAdapter {
 
         this.vm.filteredEmployeeList.forEach((employee) => {
             employee.selectedEmployee = true;
-        })
-        
+        });
+
         // Filtered Mode of Payment List
-        this.vm.filteredModeOfPaymentList = [...new Set(this.vm.feeReceiptList.map((a) => a.modeOfPayment))].filter((a) => { return a != null; }).map(mode => ({ mode }));
+        this.vm.filteredModeOfPaymentList = [...new Set(this.vm.feeReceiptList
+            .map((a) => a.modeOfPayment))]
+            .filter((a) => { return a != null; })
+            .map(mode => ({ mode }));
 
         this.vm.filteredModeOfPaymentList.forEach((mode) => {
             mode.selectedModeOfPayment = true;
-        })
+        });
 
         //Filtered Fee Type list
         this.vm.filteredFeeTypeList = this.vm.feeTypeList.filter((feeType) => {
