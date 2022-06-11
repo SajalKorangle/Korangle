@@ -68,3 +68,6 @@ import '@modules/grade/pages/grade-student/grade-student.permissions';
 
 // Attendance
 import '@modules/attendance/pages/record-attendance/record-attendance.permissions';
+
+// Parent Support
+import '@modules/complaints/pages/manage-complaints/manage-complaints.permissions';
