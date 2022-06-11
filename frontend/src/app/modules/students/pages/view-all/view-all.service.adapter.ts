@@ -10,7 +10,7 @@ export class ViewAllServiceAdapter {
         this.vm = vm;
     }
 
-    async initializeData(){
+    initializeData(): void {
         this.vm.isLoading = true;
         const student_full_profile_request_data = {
             schoolDbId: this.vm.user.activeSchool.dbId,
@@ -40,7 +40,7 @@ export class ViewAllServiceAdapter {
             fields__korangle: ['parentStudent'],
         };
 
-        await Promise.all([
+        Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),    // 0
             this.vm.classService.getObjectList(this.vm.classService.division, {}),  // 1
             this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),   // 2
