@@ -277,7 +277,7 @@ export class ViewAllComponent implements OnInit {
         this.sectionList = sectionList;
     }*/
 
-    initializeStudentFullProfileList(studentFullProfileList: any): void{
+    initializeStudentFullProfileList(studentFullProfileList: any): void {
         this.studentFullProfileList = studentFullProfileList;
         this.studentFullProfileList.forEach((studentFullProfile) => {
             studentFullProfile['sectionObject'] = this.getSectionObject(studentFullProfile.classDbId, studentFullProfile.sectionDbId);
