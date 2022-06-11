@@ -1,0 +1,220 @@
+<div class="card-content">
+    <!-- Starts: Search Bar -->
+    <!-- <div class="search-bar" (click)="closeFilterOptions()">
+        <input class="search-field" type="search" placeholder="Search by parent name, student name, title" [ngModel]="searchString" (ngModelChange)="searchString = $event; searchChanged()">
+        <button class="search-btn"><i class="material-icons search-icon" (click)="searchChanged()">search</i></button>
+    </div> -->
+
+    <div class="example-form">
+        <mat-form-field class="example-full-width">
+            <input
+                type="text"
+                placeholder="Search by parent name, student name, title"
+                matInput
+                [ngModel]="searchString"
+                (ngModelChange)="searchString = $event; searchChanged()"
+            />
+        </mat-form-field>
+    </div>
+
+    <br />
+    <!-- Ends: Search Bar -->
+
+    <!-- Starts: Progress Bar Section -->
+    <div class="progress-container" (click)="closeFilterOptions()">
+        <!-- Starts: progress-bar -->
+        <div class="progress-bar">
+            <div id="progress" class="progress" [ngStyle]="{ 'background-color': htmlRenderer.getSecondaryColor(), 'width': progress + '%', 'height': '6px'}"></div>
+        </div>
+        <!-- Ends: progress-bar -->
+
+        <!-- Starts: Done Icon -->
+        <div
+            class="progress-done"
+            matTooltip="Fetch Complaints"
+            tooltip-position="left"
+            [ngStyle]="{ 'background-color': htmlRenderer.getPrimaryColor(), 'color': user.activeSchool.primaryThemeColor}"
+        >
+            <span class="material-icons done-icon" (click)="triggerDoneIconClicked()">done</span>
+        </div>
+        <!-- Ends: Done Icon -->
+    </div>
+    <!-- Ends: Progress Bar Section -->
+
+    <!-- Starts: Complaint List Table -->
+    <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+        <!-- Starts: Table -->
+        <table class="table">
+
+            <!-- Starts: Table Header -->
+            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                <tr>
+                    <th (click)="closeFilterOptions()" class="min-width">Student Name</th>
+                    <th (click)="closeFilterOptions()" class="min-width">Father’s Name</th>
+                    <th (click)="closeFilterOptions()" class="min-width">
+                        <div class="filter-column">
+                            <div>Date Sent</div>
+                            <!-- Starts: Date Sent Sort Type Filter -->
+                            <div style="cursor: pointer;">
+                                <span *ngIf="sortNewest" style="color: black; font-size: 12px;" (click)="triggerSortNewestClicked()" class="material-icons">north</span>
+                                <span *ngIf="sortOldest" style="color: black; font-size: 12px;" (click)="triggerSortOldestClicked()" class="material-icons">south</span>
+                            </div>
+                            <!-- Ends: Date Sent Sort Type Filter -->
+                        </div>
+                    </th>
+                    <th class="min-width">
+                        <div class="filter-column">
+                            <div (click)="closeFilterOptions()">Type</div>
+                            <!-- Starts: Complaint Type Filter -->
+                            <div style="position: relative;">
+                                <i class="material-icons filter-alt-btn" (click)="complaintTypeFilterOptionClicked();">filter_alt</i>
+                                <div *ngIf="showFilterOptionComplaintType" class="filter-option">
+                                    <cdk-virtual-scroll-viewport itemSize="0" style="height: 100%; width: 100%;">
+                                        <mat-option style="background-color: #F5F5F5">
+                                            <button class="btn" style="padding: 4px 7px" (click)="selectAllComplaintType(); $event.stopPropagation()">
+                                                Select All
+                                            </button>
+                                            <button class="btn" style="padding: 4px 7px" (click)="unselectAllComplaintType(); $event.stopPropagation()">
+                                                Clear All
+                                            </button>
+                                        </mat-option>
+
+                                        <ng-container *ngFor="let complaintType of complaintTypeList">
+                                            <mat-option class="mat-option-complaint-type">
+                                                <mat-checkbox
+                                                    class="checkbox-label"
+                                                    [ngModel]="complaintType.selected"
+                                                    (ngModelChange)="triggerComplaintTypeOptionClicked(complaintType);"
+                                                >
+                                                    {{ complaintType.name ? complaintType.name : "None" }}
+                                                </mat-checkbox>
+                                            </mat-option>
+                                        </ng-container>
+                                    </cdk-virtual-scroll-viewport>
+                                </div>
+                            </div>
+                            <!-- Ends: Complaint Type Filter -->
+                        </div>
+                    </th>
+                    <th class="min-width">
+                        <div class="filter-column">
+                            <div (click)="closeFilterOptions()">Status</div>
+                            <!-- Starts: Status Filter -->
+                            <div style="position: relative;">
+                                <i class="material-icons filter-alt-btn" (click)="statusFilterOptionClicked();">filter_alt</i>
+                                <div *ngIf="showFilterOptionStatus" class="filter-option">
+                                    <cdk-virtual-scroll-viewport itemSize="0" style="height: 100%; width: 100%;">
+                                        <mat-option style="background-color: #F5F5F5">
+                                            <button class="btn" style="padding: 4px 7px" (click)="selectAllStatus(); $event.stopPropagation()">
+                                                Select All
+                                            </button>
+                                            <button class="btn" style="padding: 4px 7px" (click)="unselectAllStatus(); $event.stopPropagation()">
+                                                Clear All
+                                            </button>
+                                        </mat-option>
+
+                                        <ng-container *ngFor="let status of statusList">
+                                            <mat-option class="mat-option-complaint-type">
+                                                <mat-checkbox
+                                                    class="checkbox-label"
+                                                    [ngModel]="status.selected"
+                                                    (ngModelChange)="triggerStatusOptionClicked(status);"
+                                                >
+                                                    {{ status.name ? status.name : "None" }}
+                                                </mat-checkbox>
+                                            </mat-option>
+                                        </ng-container>
+                                    </cdk-virtual-scroll-viewport>
+                                </div>
+                            </div>
+                            <!-- Ends: Status Filter -->
+                        </div>
+                    </th>
+                    <th class="min-width" (click)="closeFilterOptions()">Father’s Contact</th>
+                    <th class="min-width" (click)="closeFilterOptions()">Comments</th>
+                    <th class="min-width" (click)="closeFilterOptions()" *ngIf="userPermission">Handlers</th>
+                    <th (click)="closeFilterOptions()"></th>
+                    <th (click)="closeFilterOptions()"></th>
+                </tr>
+            </thead>
+            <!-- Ends: Table Header -->
+
+            <!-- Starts: Table Body -->
+            <tbody (click)="closeFilterOptions()">
+
+                <ng-container *ngIf="complaintList.length == 0">
+                    <tr><td>No complaints</td></tr>
+                </ng-container>
+
+                <ng-container *ngIf="complaintList.length > 0">
+                    <ng-container *ngFor="let complaint of complaintList; let i = index">
+                        <tr>
+                            <td class="min-width">{{ complaint.parentStudent.name }}</td>
+                            <td class="min-width">{{ complaint.parentStudent.fathersName }}</td>
+                            <td class="min-width">{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
+                            <td class="min-width">{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "None" }}</td>
+                            <td class="min-width">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "None" }}</td>
+                            <td class="min-width">{{ complaint.parentStudent.mobileNumber ? complaint.parentStudent.mobileNumber : "Not Entered" }}</td>
+                            <td class="min-width">{{ complaint.commentList.length }}</td>
+                            <td *ngIf="userPermission" class="min-width">
+                                <div
+                                    style="text-align: center; word-wrap: break-word;"
+                                    *ngIf="complaint.employeeComplaintList.length"
+                                >
+                                    {{ htmlRenderer.getAssignedEmployeeName(complaint.employeeComplaintList) }}
+                                </div>
+                                <div
+                                    class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                                    style="text-align: center; cursor: pointer; text-decoration: underline;"
+                                    (click)="triggerOpenAssignEmployeeDialog(complaint, i)"
+                                >
+                                    Assign
+                                </div>
+                            </td>
+                            <td
+                                class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                                style="text-align: center; cursor: pointer; text-decoration: underline;"
+                                (click)="triggerOpenComplaint(complaint, i)"
+                            >
+                                Open
+                            </td>
+                            <td><i class="material-icons delete-icon" (click)="triggerDeleteComplaint(complaint, i);" style="text-align: center; color: red; cursor: pointer">delete_forever</i></td>
+                        </tr>
+                    </ng-container>
+                </ng-container>
+
+                <!-- Starts: Dummy Row -->
+
+                    <!-- In column header, there are two dropdowns (Status Filter & Complaint Type Filter).
+                         Those dropdowns won't be visible properly when there are not enough rows.
+                         So in order to provide the needed height dummy row would be used. -->
+                <tr *ngIf="complaintList.length <= 4">
+                    <td class="dummyRow" clsss="min-width"></td>
+                    <td class="dummyRow" clsss="min-width"></td>
+                    <td class="dummyRow" clsss="min-width"></td>
+                    <td class="dummyRow" clsss="min-width"></td>
+                    <td class="dummyRow" clsss="min-width"></td>
+                    <td class="dummyRow" clsss="min-width"></td>
+                    <td class="dummyRow" clsss="min-width"></td>
+                    <td class="dummyRow" clsss="min-width" style="text-align: center; cursor: default; text-decoration: underline;"></td>
+                    <td class="dummyRow" style="text-align: center; cursor: default; text-decoration: underline;"></td>
+                    <td class="dummyRow"></td>
+                </tr>
+                <!-- Ends: Dummy Row -->
+            </tbody>
+            <!-- Ends: Table Body -->
+        </table>
+        <!-- Ends: Table -->
+    </cdk-virtual-scroll-viewport>
+    <!-- Ends: Complaint List Table -->
+</div>
+
+<!-- Starts: Load More -->
+<div style="padding: 0rem 3rem 2rem 3rem;">
+    <ng-container *ngIf="isLoadMore">
+        <div class="load-more text-{{ user.activeSchool.secondaryThemeColor }}" (click)="triggerLoadMoreClicked()">
+            LOAD MORE (50)
+        </div>
+    </ng-container>
+</div>
+<!-- Ends: Load More -->

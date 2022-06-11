@@ -1,0 +1,56 @@
+/* Starts: Modal Container */
+.show-complaint-list-modal-container {
+    height: 70vh;
+    width: 70vw;
+}
+/* Ends: Modal Container */
+
+/* Starts: header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #C4C4C4;   /* Light Gray */
+}
+
+.title {
+    font-weight: 500;
+}
+
+.close-btn {
+    color: red;
+    cursor: pointer;
+}
+/* Ends: header */
+
+.example-viewport {
+    height: 55vh;
+    width: 100%;
+}
+
+.minWidth {
+    min-width: 300px;
+    max-width: 400px;
+    line-height: 18px;
+    word-wrap: break-word;
+    text-align: center;
+}
+
+/* Starts: Media Query */
+@media only screen and (max-width: 992px) {
+    /* Starts: Modal Container */
+    .show-complaint-list-modal-container {
+        /* height: 100vh;
+        width: 100vw; */
+        margin: 0;
+        padding: 0;
+    }
+    /* Ends: Modal Container */
+
+    .minWidth {
+        min-width: 200px;
+        max-width: 300px;
+    }
+}
+/* Ends: Media Query */

@@ -1,0 +1,35 @@
+<mat-dialog-content class="delete-modal-container">
+    <!-- Starts: Header -->
+    <h4><b>Confirm Deletion</b></h4>
+    <div style="border-bottom: 2px solid rgba(0, 0, 0, 0.1);"></div>
+    <!-- Ends: Header -->
+
+    <!-- Starts: Name -->
+    <br /><b>Delete - <span class="text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-left: 2rem;">{{ name }}</span></b>
+    <!-- Ends: Name -->
+</mat-dialog-content>
+
+<!-- Starts: Bottom Buttons -->
+<ng-container>
+    <div class="bottom-btns">
+        <button
+            type="button"
+            class="text-{{ user.activeSchool.secondaryThemeColor }} cancel-btn"
+            matTooltip="Cancel"
+            tooltip-position="left"
+            (click) = "cancelClick()"
+        >
+            Cancel
+        </button>
+        <button
+            type="button"
+            class="btn btn-danger delete-btn"
+            matTooltip="Delete"
+            tooltip-position="left"
+            (click) = "deleteClick()"
+        >
+            delete
+        </button>
+    </div>
+</ng-container>
+<!-- Ends: Bottom Buttons -->
