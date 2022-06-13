@@ -164,29 +164,29 @@ export class AddEmployeeServiceAdapter {
 
         console.log("CREATE NEW EMPLOYEE CALLED");
 
-        
+
         if (this.vm.newEmployee.name === undefined || this.vm.newEmployee.name === '') {
             alert('Name should be populated');
             return;
         }
-        
+
         if (this.vm.newEmployee.fatherName === undefined || this.vm.newEmployee.fatherName === '') {
             alert('Father\'s Name should be populated');
             return;
         }
-        
+
         if (this.vm.newEmployee.dateOfBirth === undefined || this.vm.newEmployee.dateOfBirth === '') {
             this.vm.newEmployee.dateOfBirth = null;
         }
-        
+
         if (this.vm.newEmployee.dateOfJoining === undefined || this.vm.newEmployee.dateOfJoining === '') {
             this.vm.newEmployee.dateOfJoining = null;
         }
-        
+
         if (this.vm.newEmployee.dateOfLeaving === undefined || this.vm.newEmployee.dateOfLeaving === '') {
             this.vm.newEmployee.dateOfLeaving = null;
         }
-        
+
         if (this.vm.newEmployee.mobileNumber === undefined || this.vm.newEmployee.mobileNumber === '') {
             this.vm.newEmployee.mobileNumber = null;
             alert('Mobile number is required');
@@ -206,21 +206,21 @@ export class AddEmployeeServiceAdapter {
                 return;
             }
         }
-        
+
         if (this.vm.newEmployee.aadharNumber != null
             && this.vm.newEmployee.aadharNumber.toString().length != 12) {
             alert("Aadhar No. should be 12 digits");
             return;
         }
-            
-        if(this.vm.newEmployee.isNonSalariedEmployee === undefined) {
+
+        if (this.vm.newEmployee.isNonSalariedEmployee === undefined) {
             this.vm.newEmployee.isNonSalariedEmployee = false;
         }
-        
+
         this.vm.newEmployee.parentSchool = this.vm.user.activeSchool.dbId;
-            
+
         this.vm.isLoading = true;
-            
+
         console.log(this.vm.newEmployee);
         this.vm.employeeService.createObject(this.vm.employeeService.employees, this.vm.newEmployee).then(response => {
                 let post_data = {

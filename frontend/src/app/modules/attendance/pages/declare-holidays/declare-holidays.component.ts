@@ -45,7 +45,7 @@ export class DeclareHolidaysComponent implements OnInit {
 
     initializeEmployeeList(employeeList: any): void {
         this.employeeList = employeeList.filter((employee) => {
-            return employee.dateOfLeaving === null && employee.isNonSalariedEmployee===false;
+            return employee.dateOfLeaving === null && employee.isNonSalariedEmployee === false;
         });
         this.employeeList.forEach((employee) => {
             employee.selected = false;
