@@ -1,0 +1,200 @@
+<mat-dialog-content class="filter-modal-container">
+    <!-- Starts: Name Field -->
+    <b>Name - </b>
+    <mat-form-field class="inputField" style="margin-left: 10%;">
+        <input matInput required type="text" [ngModel]="name" (ngModelChange)="name = $event; isDeleteDisabled = false;" />
+    </mat-form-field>
+    <p *ngIf="!isNameProvided && !name.toString().trim()" style="color: red;">Filter name is necessary.</p>
+    <!-- Ends: Name Field -->
+
+    <!-- Starts: Time Span Section -->
+    <div class="time-span-section">
+        <br /><br /><b>Time Span</b><br /><br *ngIf="!isMobileBrowser() && !isMobileApplication()"/>
+
+        <!-- Starts: Start Date -- Time Span Sub-Section -->
+        <div class="time-span-sub-section">
+            <div class="title">
+                Start Date -
+            </div>
+            <div class="date-options">
+                <mat-form-field style="margin-right: 15px">
+                    <!-- Starts: Possible Options for Start-Date -->
+                    <mat-label>Start Date</mat-label>
+                    <mat-select [(value)]="startDateType" style="width: 100%">
+                        <mat-option (click)="isDeleteDisabled = false;" style="width: 100%">
+                            Cancel Date Selection
+                        </mat-option>
+                        <mat-option (click)="isDeleteDisabled = false;" value="Select Date" style="width: 100%">
+                            Select Date
+                        </mat-option>
+                        <mat-option (click)="isDeleteDisabled = false;" value="1st of Ongoing Month" style="width: 100%">
+                            1st of Ongoing Month
+                        </mat-option>
+                        <mat-option (click)="isDeleteDisabled = false;" value="From Days Ago" style="width: 100%">
+                            From Days Ago
+                        </mat-option>
+                    </mat-select>
+                    <!-- Ends: Possible Options for Start-Date -->
+                </mat-form-field>
+
+                <!-- Starts: If DateType = Select Date -->
+                <mat-form-field *ngIf="startDateType == 'Select Date'">
+                    <input
+                        matInput
+                        type="date"
+                        (keydown)="handleOnKeyDown($event)"
+                        [(ngModel)]="sDate"
+                    />
+                </mat-form-field>
+                <!-- Ends: If DateType = Select Date -->
+
+                <!-- Starts: If DateType = Days Ago -->
+                <span *ngIf="startDateType == 'From Days Ago'">
+                    Fetch from
+                    <input type="number" style="width: 60px; margin-left: 1%; margin-right: 1%;" [(ngModel)]="sDays"/>
+                    days ago
+                </span>
+                <!-- Ends: If DateType = Days Ago -->
+            </div>
+        </div><br />
+        <!-- Ends: Start Date -- Time Span Sub-Section -->
+
+        <!-- Starts: End Date -- Time Span Sub-Section -->
+        <div class="time-span-sub-section">
+            <div class="title">
+                End Date -
+            </div>
+            <div class="date-options">
+                <mat-form-field style="margin-right: 15px">
+                    <!-- Starts: Possible Options for End-Date -->
+                    <mat-label>End Date</mat-label>
+                    <mat-select [(value)]="endDateType" style="width: 100%">
+                        <mat-option (click)="isDeleteDisabled = false;" style="width: 100%">
+                            Cancel Date Selection
+                        </mat-option>
+                        <mat-option (click)="isDeleteDisabled = false;" value="Select Date" style="width: 100%">
+                            Select Date
+                        </mat-option>
+                        <mat-option (click)="isDeleteDisabled = false;" value="Current Date" style="width: 100%">
+                            Current Date
+                        </mat-option>
+                        <mat-option (click)="isDeleteDisabled = false;" value="From Days Ago" style="width: 100%">
+                            From Days Ago
+                        </mat-option>
+                    </mat-select>
+                    <!-- Ends: Possible Options for End-Date -->
+                </mat-form-field>
+
+                <!-- Starts: If DateType = Select Date -->
+                <mat-form-field *ngIf="endDateType == 'Select Date'">
+                    <input
+                        matInput
+                        type="date"
+                        (keydown)="handleOnKeyDown($event)"
+                        [(ngModel)]="eDate"
+                    />
+                </mat-form-field>
+                <!-- Ends: If DateType = Select Date -->
+
+                <!-- Starts: If DateType = Days Ago -->
+                <span *ngIf="endDateType == 'From Days Ago'">
+                    Fetch till
+                    <input type="number" style="width: 60px; margin-left: 1%; margin-right: 1%;" [(ngModel)]="eDays"/>
+                    days ago
+                </span>
+                <!-- Ends: If DateType = Days Ago -->
+            </div>
+        </div>
+        <!-- Ends: End Date -- Time Span Sub-Section -->
+    </div>
+    <br />
+    <br *ngIf="!isMobileBrowser() && !isMobileApplication()"/>
+    <!-- Ends: Time Span Section -->
+
+    <!-- Starts: Complaint type  &&  Status Section -->
+    <div class="names">
+        <!-- Starts: Complaint type -->
+        <div class="complaint-type-section">
+            <b>Complaint type</b><br /><br />
+            <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+                <mat-option style="background-color: #F5F5F5">
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllComplaintType(); $event.stopPropagation()">
+                        Select All
+                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllComplaintType(); $event.stopPropagation()">
+                        Clear All
+                    </button>
+                </mat-option>
+
+                <ng-container *ngFor="let complaintType of complaintTypeList">
+                    <mat-option class="mat-option-complaint-type">
+                        <mat-checkbox
+                            class="checkbox-label"
+                            [(ngModel)]="complaintType.selected"
+                            (click)="isDeleteDisabled = false; $event.stopPropagation()"
+                        >
+                            {{ complaintType.name }}
+                        </mat-checkbox>
+                    </mat-option>
+                </ng-container>
+            </cdk-virtual-scroll-viewport>
+        </div>
+        <!-- Ends: Complaint type -->
+
+        <!-- Starts: Status -->
+        <div class="status-section">
+            <b>Status</b><br /><br />
+            <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+                <mat-option style="background-color: #F5F5F5">
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllStatus(); $event.stopPropagation()">
+                        Select All
+                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllStatus(); $event.stopPropagation()">
+                        Clear All
+                    </button>
+                </mat-option>
+
+                <ng-container *ngFor="let status of statusList">
+                    <mat-option class="mat-option-complaint-type">
+                        <mat-checkbox
+                            [(ngModel)]="status.selected"
+                            (click)="isDeleteDisabled = false; $event.stopPropagation()"
+                        >
+                            {{ status.name }}
+                        </mat-checkbox>
+                    </mat-option>
+                </ng-container>
+            </cdk-virtual-scroll-viewport>
+        </div>
+        <!-- Ends: Status -->
+    </div>
+    <br />
+    <br *ngIf="!isMobileBrowser() && !isMobileApplication()"/>
+    <!-- Ends: Complaint type  &&  Status Section -->
+
+    <!-- [disabled] = "isDeleteDisabled" -->
+
+    <!-- Starts: Bottom Buttons -->
+    <div class="bottom-btns">
+        <button
+            type="button"
+            class="btn delete-btn"
+            style="padding: 7px 17px;"
+            matTooltip="Delete Filter"
+            tooltip-position="left"
+            (click) = "deleteClick()"
+        >
+            Delete
+        </button>
+        <button
+            type="button"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }} apply-btn"
+            matTooltip="Apply Filter"
+            tooltip-position="left"
+            (click) = "applyClick()"
+        >
+            Apply
+        </button>
+    </div>
+    <!-- Ends: Bottom Buttons -->
+</mat-dialog-content>

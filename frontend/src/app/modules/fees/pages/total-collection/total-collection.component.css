@@ -62,3 +62,8 @@ input {
     width: 90%;
     margin-left: 5px;
 }
+.example-viewport {
+    height: 70vh;
+    width: 100%;
+    border-top: 2px solid #909090
+}

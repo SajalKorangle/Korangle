@@ -1,0 +1,112 @@
+.card-content {
+    padding: 3rem;
+    min-height: 90vh;
+}
+
+/* Starts: Add New Complaint */
+.add-title {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.flex-box {
+    display: flex;
+    align-items: center;
+}
+
+.field-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 1rem;
+}
+
+.example-viewport {
+    height: 20vh;
+    width: 100%;
+    font-size: 14px;
+}
+
+.defaultText {
+    height: 100px;
+    width: 200px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    border: 0.4px solid rgba(0, 0, 0, 0.7);
+    box-sizing: border-box;
+    border-radius: 2px;
+}
+
+.checkbox-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.checkbox-subgroup {
+    flex-basis: 30%;
+}
+
+.add-status-btn {
+    padding: 12px 15px;
+    margin-left: 10%;
+    text-transform: capitalize !important;
+}
+
+    /* Starts: Bottom Btns */
+.bottom-btns {
+    float: right;
+}
+
+.cancel-btn {
+    background-color: white !important;
+    color: black !important;
+    margin-left: 12px;
+    padding: 5px 15.5px;
+    font-weight: 500;
+    font-size: 12px;
+    border-style: solid;
+    border-width: 1.5px;
+    border-radius: 4px;
+}
+
+.save-btn {
+    font-weight: 500;
+    font-size: 12px;
+}
+    /* Ends: Bottom Btns */
+
+/* Ends: Add New Complaint */
+
+/* Starts: Media Query - Mobile Phone */
+@media only screen and (max-width: 992px) {
+    .card-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .defaultText {
+        width: 100px;
+    }
+
+    /* Starts: Search Bar */
+    .search-field {
+        flex-basis: 90%;
+    }
+
+    .search-btn {
+        flex-basis: 10%;
+    }
+    /* Ends: Search Bar */
+
+    /* Starts: Add New Complaint Type */
+    .checkbox-subgroup {
+        width: 50%;
+        word-wrap: break-word;
+    }
+
+    .add-status-btn {
+        margin-left: 0%;
+    }
+    /* Ends: Add New Complaint Type */
+}
+/* Ends: Media Query - Mobile Phone */

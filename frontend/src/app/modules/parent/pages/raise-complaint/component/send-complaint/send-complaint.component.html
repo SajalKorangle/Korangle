@@ -1,0 +1,120 @@
+<div [class.card-content]="complaintStudent['dbId']" [class.search-field-margin]="!complaintStudent['dbId']">
+
+    <!-- Starts: Back Button -->
+    <ng-container *ngIf="complaintStudent['dbId']">
+        <div
+            (click)="changePage(); triggerInitializeComplaintData();"
+            style="display: flex; align-items: center; justify-content: center; cursor: pointer; width: 20px; height: 20px; background-color: #C4C4C4; border-radius: 5px;">
+            <span class="material-icons" style="font-size: 12px; text-align: center;">arrow_back_ios</span>
+        </div>
+        <br />
+    </ng-container>
+    <!-- Ends: Back Button -->
+
+    <parent-student-filter
+        [user]="user"
+        (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
+        (onStudentListSelected)="initializeStudentData($event[0][0])"
+        (onStudentListLoading)="isStudentListLoading = $event"
+        [selectedFilterType]="'Student'"
+        [studentTcGenerated]="true"
+        [bothFilters]="false"
+    ></parent-student-filter>
+
+    <ng-container *ngIf="complaintStudent['dbId']">
+        <!-- Starts: Select Complaint Type -->
+        <div class="send-new-common-section">
+            <div class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Select Complaint Type : </div>
+            <mat-form-field>
+                <mat-select placeholder="{{ complaintTypeName }}" style="width: 100%">
+                    <mat-option (click)="complaintTypeName = nullComplaintType.name; complaintType = nullComplaintType; complaintTypeDefaultText = nullComplaintType.defaultText;">
+                        Cancel Selection
+                    </mat-option>
+                    <ng-container *ngFor="let complaintTypeObject of complaintTypeList">
+                        <mat-option (click)="complaintTypeName = complaintTypeObject.name; complaintType = complaintTypeObject; complaintTypeDefaultText = complaintTypeObject.defaultText;">
+                            {{ complaintTypeObject.name }}
+                        </mat-option>
+                    </ng-container>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <!-- Ends: Select Complaint Type -->
+
+        <!-- Starts: Select Student -->
+        <div class="send-new-common-section">
+            <div class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Student Name : </div>
+            <div>{{ complaintStudentName }}</div>
+        </div>
+        <br *ngIf="!htmlRenderer.isMobileBrowser() && !htmlRenderer.isMobileApplication()"/>
+        <!-- Ends: Select Student -->
+
+        <!-- Starts: Title -->
+        <div class="send-new-common-section">
+            <div class="text-{{ user.activeSchool.secondaryThemeColor }} send-new-header"> Enter title : </div>
+            <input class="title-input" type="text" placeholder="Enter Title" [(ngModel)]="complaintTitle">
+        </div>
+        <!-- Ends: Title -->
+
+        <!-- Starts: Comment Section -->
+        <br />
+        <div class="comment-section">
+
+            <!-- Starts: Default Text -->
+            <div class="send-new-default-text">
+                {{ complaintTypeDefaultText }}
+            </div>
+            <!-- Ends: Default Text -->
+
+            <!-- Starts: (Desktop) - Send Query Section -->
+            <ng-container *ngIf="!htmlRenderer.isMobileBrowser() && !htmlRenderer.isMobileApplication()">
+                <div class="bottom-section">
+                    <input class="bottom-search-field" type="search" placeholder="Type Query here" [(ngModel)]="commentMessage">
+                    <button
+                        type="button"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-search-btn"
+                        style="padding: 12px 15px"
+                        matTooltip="Send Comment"
+                        tooltip-position="left"
+                        (click)="triggerSendComplaint()"
+                    >
+                        Send
+                    </button>
+                </div>
+            </ng-container>
+            <!-- Ends: (Desktop) - Send Query Section -->
+
+            <!-- Starts: (Mobile) - Send Query Section -->
+            <ng-container *ngIf="htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()">
+                <div class="bottom-section">
+                    <textarea
+                        placeholder="Type Query here"
+                        class="bottom-text-field"
+                        [(ngModel)]="commentMessage"
+                    ></textarea>
+                    <br />
+
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <button
+                            type="button"
+                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-search-btn"
+                            style="padding: 10px 25px"
+                            matTooltip="Send Comment"
+                            tooltip-position="left"
+                            (click)="triggerSendComplaint()"
+                        >
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </ng-container>
+            <!-- Ends: (Mobile) - Send Query Section -->
+        </div>
+        <!-- Ends: Comment Section -->
+    </ng-container>
+</div>
+
+<!-- Starts: Spinner -->
+<ng-container *ngIf="isStudentListLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- Ends: Spinner -->
