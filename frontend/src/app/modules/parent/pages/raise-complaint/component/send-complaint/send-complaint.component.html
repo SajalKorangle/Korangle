@@ -1,25 +1,21 @@
 <div [class.card-content]="complaintStudent['dbId']" [class.search-field-margin]="!complaintStudent['dbId']">
 
     <!-- Starts: Back Button -->
-    <ng-container *ngIf="complaintStudent['dbId']">
-        <div
-            (click)="changePage(); triggerInitializeComplaintData();"
-            style="display: flex; align-items: center; justify-content: center; cursor: pointer; width: 20px; height: 20px; background-color: #C4C4C4; border-radius: 5px;">
-            <span class="material-icons" style="font-size: 12px; text-align: center;">arrow_back_ios</span>
-        </div>
-        <br />
-    </ng-container>
+    <div
+        (click)="changePage(); triggerInitializeComplaintData();"
+        style="display: flex; align-items: center; justify-content: center; cursor: pointer; width: 20px; height: 20px; background-color: #C4C4C4; border-radius: 5px;">
+        <span class="material-icons" style="font-size: 12px; text-align: center;">arrow_back_ios</span>
+    </div>
+    <br />
     <!-- Ends: Back Button -->
 
-    <parent-student-filter
-        [user]="user"
-        (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
-        (onStudentListSelected)="initializeStudentData($event[0][0])"
-        (onStudentListLoading)="isStudentListLoading = $event"
-        [selectedFilterType]="'Student'"
-        [studentTcGenerated]="true"
-        [bothFilters]="false"
-    ></parent-student-filter>
+    <mat-form-field style="margin-right: 15px">
+        <mat-select placeholder="Select Child" style="width: 100%">
+            <ng-container *ngFor="let student of studentList">
+                <mat-option (click)="initializeStudentData(student)" style="width: 100%">{{ student.name }}</mat-option>
+            </ng-container>
+        </mat-select>
+    </mat-form-field>
 
     <ng-container *ngIf="complaintStudent['dbId']">
         <!-- Starts: Select Complaint Type -->
@@ -31,7 +27,8 @@
                         Cancel Selection
                     </mat-option>
                     <ng-container *ngFor="let complaintTypeObject of complaintTypeList">
-                        <mat-option (click)="complaintTypeName = complaintTypeObject.name; complaintType = complaintTypeObject; complaintTypeDefaultText = complaintTypeObject.defaultText;">
+                        <mat-option
+                            (click)="complaintTypeName = complaintTypeObject.name; complaintType = complaintTypeObject; complaintTypeDefaultText = complaintTypeObject.defaultText;">
                             {{ complaintTypeObject.name }}
                         </mat-option>
                     </ng-container>
