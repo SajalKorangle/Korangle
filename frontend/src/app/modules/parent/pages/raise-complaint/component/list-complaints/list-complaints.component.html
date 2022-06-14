@@ -66,8 +66,8 @@
                         <tr>
                             <th class="min-width">Child Name</th>
                             <th class="min-width">Date Sent</th>
-                            <th class="min-width">Complaint Type</th>
                             <th class="min-width">Complaint Title</th>
+                            <th class="min-width">Complaint Type</th>
                             <th class="min-width">Status</th>
                             <th class="min-width">Comments</th>
                             <th></th>
@@ -87,8 +87,8 @@
                                 <tr>
                                     <td class="min-width">{{ complaint.parentStudent.name }}</td>
                                     <td class="min-width">{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
-                                    <td class="min-width">{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "None" }}</td>
                                     <td class="min-width">{{ complaint.title }}</td>
+                                    <td class="min-width">{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "None" }}</td>
                                     <td class="min-width">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "None" }}</td>
                                     <td class="min-width" style="text-align: center">{{ complaint.commentList.length }}</td>
                                     <td
