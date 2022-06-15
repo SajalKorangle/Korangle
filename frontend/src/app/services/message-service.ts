@@ -52,34 +52,32 @@ export class MessageService {
             username__in: mobile_list,
         };
 
-        await Promise.all([
+        let temp_gcm_list, temp_user_list;
+        
+        [temp_gcm_list, temp_user_list] = await Promise.all([
             this.notificationService.getObjectList(this.notificationService.gcm_device, gcm_data),
             this.userService.getObjectList(this.userService.user, user_data)
-        ]).then((value) => {
+        ])
 
-            let temp_gcm_list = value[0];
-            let temp_user_list = value[1];
+        const notif_usernames = temp_user_list.filter((user) => {
+            return (
+                temp_gcm_list.find((item) => {
+                    return item.user == user.id;
+                }) != undefined
+            );
+        });
 
-            const notif_usernames = temp_user_list.filter((user) => {
-                return (
-                    temp_gcm_list.find((item) => {
-                        return item.user == user.id;
-                    }) != undefined
-                );
+        // Storing because they're used later
+        this.notif_usernames = notif_usernames;
+
+        // updating two variables (notification - for actual number notification check)
+        // (secondNumberNotification - for second number notification check)
+        personList.forEach((person) => {
+            person.notification = notif_usernames.some(user => {
+                return user.username == person.mobileNumber;
             });
-
-            // Storing because they're used later
-            this.notif_usernames = notif_usernames;
-
-            // updating two variables (notification - for actual number notification check)
-            // (secondNumberNotification - for second number notification check)
-            personList.forEach((person) => {
-                person.notification = notif_usernames.some(user => {
-                    return user.username == person.mobileNumber;
-                });
-                person.secondNumberNotification = person.secondMobileNumber && notif_usernames.some(user => {
-                    return user.username == person.secondMobileNumber;
-                });
+            person.secondNumberNotification = person.secondMobileNumber && notif_usernames.some(user => {
+                return user.username == person.secondMobileNumber;
             });
         });
     }
