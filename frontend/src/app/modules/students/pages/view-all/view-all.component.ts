@@ -286,7 +286,6 @@ export class ViewAllComponent implements OnInit {
             studentFullProfile['selectDocument'] = false;
             studentFullProfile['newTransferCertificate'] = this.backendData.tcList.find(tc => tc.parentStudent == studentFullProfile.dbId);
         });
-        this.messageService.fetchGCMDevicesNew(this.studentFullProfileList, true);
         this.handleStudentDisplay();
     }
 
