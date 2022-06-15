@@ -10,6 +10,7 @@ import { PrintService } from '../../../../print/print-service';
 import { PRINT_FEE_RECIEPT_LIST } from '../../print/print-routes.constants';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
+import {TotalCollectionHtmlRenderer} from './total-collection.html.renderer';
 
 @Component({
     selector: 'total-collection',
@@ -64,6 +65,7 @@ export class TotalCollectionComponent implements OnInit {
 
     isInitialLoading = false;
     isLoading = false;
+    htmlRenderer: TotalCollectionHtmlRenderer;
 
     constructor(
         public feeService: FeeService,
@@ -81,6 +83,9 @@ export class TotalCollectionComponent implements OnInit {
         this.serviceAdapter = new TotalCollectionServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new TotalCollectionHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
 
         //this.initializeSelection();
         /*delete this.receiptColumnFilter['printButton'];
@@ -101,7 +106,6 @@ export class TotalCollectionComponent implements OnInit {
         this.selectedFeeType = null;
         this.selectedFeeReceiptType = this.receiptTypeList[0];
         this.selectedSession = null;
-
         this.receiptColumnFilter = new ReceiptColumnFilter();
         delete this.receiptColumnFilter['printButton'];
         this.receiptColumnFilter.scholarNumber = false;
@@ -144,7 +148,7 @@ export class TotalCollectionComponent implements OnInit {
             let tempStudentSection = this.studentSectionList.find((studentSection) => {
                 return studentSection.parentStudent == studentId && studentSection.parentSession == sessionId;
             });
-            // checking tempStudentSeciton because cancelled receipt student could also be deleted.
+            // checking tempStudentSection because cancelled receipt student could also be deleted.
             return tempStudentSection && section.id == tempStudentSection.parentDivision;
         });
     }
@@ -162,6 +166,58 @@ export class TotalCollectionComponent implements OnInit {
         };
     }
 
+    selectAllEmployees(): void {
+        this.filteredEmployeeList.forEach((item) => {
+            item.selectedEmployee = true;
+        });
+    }
+    unselectAllEmployees(): void {
+        this.filteredEmployeeList.forEach((item) => {
+            item.selectedEmployee = false;
+        });
+    }
+    selectAllClassSection(): void {
+        this.filteredClassSectionList.forEach((item) => {
+            item.selectedClassSection = true;
+        });
+    }
+    unselectAllClassSection(): void {
+        this.filteredClassSectionList.forEach((item) => {
+            item.selectedClassSection = false;
+        });
+    }
+    selectAllSession(): void {
+        this.filteredSessionList.forEach((item) => {
+            item.selectedSession = true;
+        });
+    }
+    unselectAllSession(): void {
+        this.filteredSessionList.forEach((item) => {
+            item.selectedSession = false;
+        });
+    }
+    selectAllPaymentModes(): void {
+        this.filteredModeOfPaymentList.forEach((item) => {
+            item.selectedModeOfPayment = true;
+        });
+    }
+    unselectAllPaymentModes(): void {
+        this.filteredModeOfPaymentList.forEach((item) => {
+            item.selectedModeOfPayment = false;
+        });
+    }
+    selectAllFeeType(): void {
+        this.filteredFeeTypeList.forEach((item) => {
+            item.selectedFeeType = true;
+        });
+    }
+    unselectAllFeeType(): void {
+        this.filteredFeeTypeList.forEach((item) => {
+            item.selectedFeeType = false;
+        });
+    }
+
+
     detectChanges(): void {
         this.cdRef.detectChanges();
     }
@@ -171,54 +227,80 @@ export class TotalCollectionComponent implements OnInit {
     }
 
     getFilteredFeeReceiptList(): any {
+
         let tempList = this.feeReceiptList;
 
-        if (this.selectedEmployee) {
-            tempList = tempList.filter((feeReceipt) => {
-                return feeReceipt.parentEmployee == this.selectedEmployee.id;
-            });
-        }
+        // filter by selected employee
+        this.filteredEmployeeList.forEach((employee) => {
+            if (!employee.selectedEmployee) {
+                tempList = tempList.filter((feeReceipt) => {
+                    return feeReceipt.parentEmployee !== employee.id;
+                });
+            }
+        });
+
+        // filter by mode of payment
+        this.filteredModeOfPaymentList.forEach((myMode) => {
+            if (!myMode.selectedModeOfPayment) {
+                tempList = tempList.filter((feeReceipt) => {
+                    return feeReceipt.modeOfPayment !== myMode.mode;
+                });
+            }
+        });
+
+        // filter by fee receipt type
         if (this.selectedFeeReceiptType) {
             tempList = tempList.filter((feeReceipt) => {
                 return feeReceipt.cancelled == Boolean(this.selectedFeeReceiptType == 'Cancelled Receipts');
             });
         }
-        if (this.selectedModeOfPayment) {
-            tempList = tempList.filter((feeReceipt) => {
-                return feeReceipt.modeOfPayment == this.selectedModeOfPayment;
-            });
-        }
-        if (this.selectedClassSection) {
-            tempList = tempList.filter((feeReceipt) => {
-                let classSection = this.getClassAndSection(feeReceipt.parentStudent, feeReceipt.parentSession);
-                // checking classSection because cancelled receipt student could also be deleted.
-                return (
-                    classSection &&
-                    classSection.classs.id == this.selectedClassSection.classs.id &&
-                    classSection.section.id == this.selectedClassSection.section.id
-                );
-            });
+
+        // filter by class section
+        this.filteredClassSectionList.forEach((oneClassSection) => {
+            if (!oneClassSection.selectedClassSection) {
+                tempList = tempList.filter((feeReceipt) => {
+                    let classSection = this.getClassAndSection(feeReceipt.parentStudent, feeReceipt.parentSession);
+                    // checking classSection because cancelled receipt student could also be deleted.
+                    return (
+                        !classSection ||
+                        classSection.classs.id !== oneClassSection.classs.id ||
+                        classSection.section.id !== oneClassSection.section.id
+                    );
+                });
+            }
+        });
+
+        // filter by Fee Type
+        let filteredSubFeeReceiptList = [];
+        this.filteredFeeTypeList.forEach((feeType) => {
+            if (feeType.selectedFeeType) {
+                filteredSubFeeReceiptList = [...filteredSubFeeReceiptList, ...(this.subFeeReceiptList
+                    .filter((subFeeReceipt) => { return subFeeReceipt.parentFeeType == feeType.id; })
+                    .map((a) => a.parentFeeReceipt))];
+            }
+        });
+
+
+        let checkFeeType = false;
+        this.filteredFeeTypeList.forEach((feeType) => {
+            if (feeType.selectedFeeType) {
+                checkFeeType = true;
+                tempList = tempList.filter((feeReceipt) => filteredSubFeeReceiptList.includes(feeReceipt.id));
+            }
+        });
+
+        if (!checkFeeType) {
+            tempList = [];
         }
 
-        if (this.selectedFeeType) {
-            let filteredSubFeeList = this.subFeeReceiptList
-                .filter((subFeeRecipt) => {
-                    return subFeeRecipt.parentFeeType == this.selectedFeeType.id;
-                })
-                .map((a) => a.parentFeeReceipt);
-            tempList = tempList.filter((feeReceipt) => {
-                return (
-                    filteredSubFeeList.find((parentFeeId) => {
-                        return parentFeeId == feeReceipt.id;
-                    }) != undefined
-                );
-            });
-        }
-        if (this.selectedSession) {
-            tempList = tempList.filter((feeReceipt) => {
-                return feeReceipt.parentSession == this.selectedSession.id;
-            });
-        }
+        // filter by session
+        this.filteredSessionList.forEach((session) => {
+            if (!session.selectedSession) {
+                tempList = tempList.filter((feeReceipt) => {
+                    return feeReceipt.parentSession !== session.id;
+                });
+            }
+        });
 
         return tempList;
     }
