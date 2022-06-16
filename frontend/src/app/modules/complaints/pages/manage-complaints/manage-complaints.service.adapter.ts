@@ -306,6 +306,8 @@ export class ManageComplaintsServiceAdapter {
     /* Load Complaints */
     async loadComplaints() {
 
+        this.vm.isLoading = true;
+
         let filterData = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
@@ -381,15 +383,11 @@ export class ManageComplaintsServiceAdapter {
                 employeeComplaintQuery,   // 0
             ]);
 
-            console.log("Employee Complaint List: ", employeeComplaintList);
-
             let complaintIdList = [];
             employeeComplaintList.forEach((employeeComplaint) => {
                 complaintIdList.push(employeeComplaint.parentComplaint);
             });
-            if (complaintIdList.length) {
-                filterData["id__in"] = complaintIdList;
-            }
+            filterData["id__in"] = complaintIdList;
         }
 
         this.vm.isProgress = true;
@@ -409,6 +407,7 @@ export class ManageComplaintsServiceAdapter {
         ]);
 
         this.vm.addNewComplaints(complaintList);
+        this.vm.isLoading = false;
     }  // Ends: loadComplaints()
 
     async addNewAndRemoveEmployee(complaintId, idx, newlyAssignedEmployeeList, removeEmployeeList) {
