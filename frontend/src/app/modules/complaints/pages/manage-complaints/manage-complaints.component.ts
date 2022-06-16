@@ -187,8 +187,6 @@ export class ManageComplaintsComponent implements OnInit {
             complaintType["selected"] = false;
             this.complaintTypeList.push(complaintType);
         });
-
-        // this.filterComplaintTypeList = CommonFunctions.getInstance().deepCopy(this.complaintTypeList);
     }  // Ends: initializeComplaintTypeList()
 
     /* Initialize Address-TO-Employee List (If Complaint-Type is Null) */
@@ -244,10 +242,6 @@ export class ManageComplaintsComponent implements OnInit {
         if (complaintList.length < this.numberOfComplaintsPerPage) {
             this.isLoadMore = false;
         }
-
-        console.log("List: ", this.complaintList);
-        // this.searchedComplaintList = this.complaintList;
-        // this.startNewProgressBar();
     }  // Ends: initializeComplaintList()
 
     findComplaint(complaintId) {
@@ -304,11 +298,7 @@ export class ManageComplaintsComponent implements OnInit {
         if (complaintList.length < this.numberOfComplaintsPerPage) {
             this.isLoadMore = false;
         }
-
-        console.log("List: ", this.complaintList);
         this.progress = 0;
-        // this.searchedComplaintList = this.complaintList;
-        // this.startNewProgressBar();
     }  // Ends: addNewComplaints()
 
     /* Initialize Student Full Profile list */
@@ -337,7 +327,6 @@ export class ManageComplaintsComponent implements OnInit {
                 }
             }
         }
-
     }  // Ends: initializeStudentFullProfileList()
 
     /* Initialize Status list */
@@ -362,7 +351,6 @@ export class ManageComplaintsComponent implements OnInit {
             status["selected"] = false;
             this.statusList.push(status);
         });
-        // this.filterStatusList = CommonFunctions.getInstance().deepCopy(this.statusList);
     }  // Ends: initializeStatusList()
 
     /* Initialize Employee List */
