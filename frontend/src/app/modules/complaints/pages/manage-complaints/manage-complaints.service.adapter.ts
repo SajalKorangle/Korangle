@@ -381,6 +381,8 @@ export class ManageComplaintsServiceAdapter {
                 employeeComplaintQuery,   // 0
             ]);
 
+            console.log("Employee Complaint List: ", employeeComplaintList);
+
             let complaintIdList = [];
             employeeComplaintList.forEach((employeeComplaint) => {
                 complaintIdList.push(employeeComplaint.parentComplaint);

@@ -85,7 +85,7 @@ export class ManageComplaintsComponent implements OnInit {
             if (this.user.section.subRoute != "manage_complaints") {
                 clearInterval(this.progressInterval);
             } else {
-                this.progress++;
+                this.progress = this.progress + 0.01;
             }
         }
     }  // Ends: setProgressInterval()
@@ -94,7 +94,7 @@ export class ManageComplaintsComponent implements OnInit {
     startProgressBar() {
         this.pageName = "showTables";
         this.progress = 1;
-        this.progressInterval = setInterval(() => this.setProgressInterval(), 600);  /* 60 seconds full time */
+        this.progressInterval = setInterval(() => this.setProgressInterval(), 2);  /* 20 seconds full time */
     }  // Ends: startProgressBar()
 
     startNewProgressBar() {
@@ -244,8 +244,10 @@ export class ManageComplaintsComponent implements OnInit {
         if (complaintList.length < this.numberOfComplaintsPerPage) {
             this.isLoadMore = false;
         }
+
+        console.log("List: ", this.complaintList);
         // this.searchedComplaintList = this.complaintList;
-        this.startNewProgressBar();
+        // this.startNewProgressBar();
     }  // Ends: initializeComplaintList()
 
     findComplaint(complaintId) {
@@ -302,8 +304,11 @@ export class ManageComplaintsComponent implements OnInit {
         if (complaintList.length < this.numberOfComplaintsPerPage) {
             this.isLoadMore = false;
         }
+
+        console.log("List: ", this.complaintList);
+        this.progress = 0;
         // this.searchedComplaintList = this.complaintList;
-        this.startNewProgressBar();
+        // this.startNewProgressBar();
     }  // Ends: addNewComplaints()
 
     /* Initialize Student Full Profile list */

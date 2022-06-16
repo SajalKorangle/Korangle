@@ -11,7 +11,7 @@
         [statusList]="statusList"
         [complaintList]="complaintList"
         [searchString]="searchString"
-        (searchComplaints)="searchString = $event; getSearchedComplaintList()"
+        (searchComplaints)="searchString = $event; startNewProgressBar()"
         (doneIconClicked)="searchString = $event; doneIconClicked()"
         (sortNewestClicked)="sortNewestClicked()"
         (sortOldestClicked)="sortOldestClicked()"
