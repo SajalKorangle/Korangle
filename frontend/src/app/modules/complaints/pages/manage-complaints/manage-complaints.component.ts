@@ -85,7 +85,7 @@ export class ManageComplaintsComponent implements OnInit {
             if (this.user.section.subRoute != "manage_complaints") {
                 clearInterval(this.progressInterval);
             } else {
-                this.progress = this.progress + 0.01;
+                this.progress = this.progress + 0.1;
             }
         }
     }  // Ends: setProgressInterval()
@@ -93,8 +93,8 @@ export class ManageComplaintsComponent implements OnInit {
     /* Starts Progress Bar */
     startProgressBar() {
         this.pageName = "showTables";
-        this.progress = 1;
-        this.progressInterval = setInterval(() => this.setProgressInterval(), 2);  /* 20 seconds full time */
+        this.progress = 0;
+        this.progressInterval = setInterval(() => this.setProgressInterval(), 15);  /* 15 seconds full time */
     }  // Ends: startProgressBar()
 
     startNewProgressBar() {
