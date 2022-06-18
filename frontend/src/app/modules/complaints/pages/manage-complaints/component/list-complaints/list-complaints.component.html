@@ -1,10 +1,5 @@
 <div class="card-content">
     <!-- Starts: Search Bar -->
-    <!-- <div class="search-bar" (click)="closeFilterOptions()">
-        <input class="search-field" type="search" placeholder="Search by parent name, student name, title" [ngModel]="searchString" (ngModelChange)="searchString = $event; searchChanged()">
-        <button class="search-btn"><i class="material-icons search-icon" (click)="searchChanged()">search</i></button>
-    </div> -->
-
     <div class="example-form">
         <mat-form-field class="example-full-width">
             <input
@@ -16,7 +11,6 @@
             />
         </mat-form-field>
     </div>
-
     <br />
     <!-- Ends: Search Bar -->
 
@@ -142,51 +136,48 @@
             <!-- Starts: Table Body -->
             <tbody (click)="closeFilterOptions()">
 
-                <!-- <ng-container *ngIf="complaintList.length == 0">
+                <ng-container *ngIf="complaintList.length == 0">
                     <tr><td>No complaints</td></tr>
                 </ng-container>
 
                 <ng-container *ngIf="complaintList.length > 0">
-
-                </ng-container> -->
-
-                <ng-container *ngFor="let complaint of complaintList; let i = index">
-                    <tr>
-                        <td class="min-width">{{ complaint.parentStudent.name }}</td>
-                        <td class="min-width">{{ complaint.parentStudent.fathersName }}</td>
-                        <td class="min-width">{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
-                        <td class="min-width">{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "None" }}</td>
-                        <td class="min-width">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "None" }}</td>
-                        <td class="min-width">{{ complaint.parentStudent.mobileNumber ? complaint.parentStudent.mobileNumber : "Not Entered" }}</td>
-                        <td class="min-width">{{ complaint.commentList.length }}</td>
-                        <td *ngIf="userPermission" class="min-width">
-                            <div
-                                style="text-align: center; word-wrap: break-word;"
-                                *ngIf="complaint.employeeComplaintList.length"
-                            >
-                                {{ htmlRenderer.getAssignedEmployeeName(complaint.employeeComplaintList) }}
-                            </div>
-                            <div
+                    <ng-container *ngFor="let complaint of complaintList; let i = index">
+                        <tr>
+                            <td class="min-width">{{ complaint.parentStudent.name }}</td>
+                            <td class="min-width">{{ complaint.parentStudent.fathersName }}</td>
+                            <td class="min-width">{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
+                            <td class="min-width">{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "None" }}</td>
+                            <td class="min-width">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "None" }}</td>
+                            <td class="min-width">{{ complaint.parentStudent.mobileNumber ? complaint.parentStudent.mobileNumber : "Not Entered" }}</td>
+                            <td class="min-width">{{ complaint.commentList.length }}</td>
+                            <td *ngIf="userPermission" class="min-width">
+                                <div
+                                    style="text-align: center; word-wrap: break-word;"
+                                    *ngIf="complaint.employeeComplaintList.length"
+                                >
+                                    {{ htmlRenderer.getAssignedEmployeeName(complaint.employeeComplaintList) }}
+                                </div>
+                                <div
+                                    class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                                    style="text-align: center; cursor: pointer; text-decoration: underline;"
+                                    (click)="triggerOpenAssignEmployeeDialog(complaint, i)"
+                                >
+                                    Assign
+                                </div>
+                            </td>
+                            <td
                                 class="text-{{ user.activeSchool.secondaryThemeColor }}"
                                 style="text-align: center; cursor: pointer; text-decoration: underline;"
-                                (click)="triggerOpenAssignEmployeeDialog(complaint, i)"
+                                (click)="triggerOpenComplaint(complaint, i)"
                             >
-                                Assign
-                            </div>
-                        </td>
-                        <td
-                            class="text-{{ user.activeSchool.secondaryThemeColor }}"
-                            style="text-align: center; cursor: pointer; text-decoration: underline;"
-                            (click)="triggerOpenComplaint(complaint, i)"
-                        >
-                            Open
-                        </td>
-                        <td><i class="material-icons delete-icon" (click)="triggerDeleteComplaint(complaint, i);" style="text-align: center; color: red; cursor: pointer">delete_forever</i></td>
-                    </tr>
+                                Open
+                            </td>
+                            <td><i class="material-icons delete-icon" (click)="triggerDeleteComplaint(complaint, i);" style="text-align: center; color: red; cursor: pointer">delete_forever</i></td>
+                        </tr>
+                    </ng-container>
                 </ng-container>
 
                 <!-- Starts: Dummy Row -->
-
                     <!-- In column header, there are two dropdowns (Status Filter & Complaint Type Filter).
                          Those dropdowns won't be visible properly when there are not enough rows.
                          So in order to provide the needed height dummy row would be used. -->

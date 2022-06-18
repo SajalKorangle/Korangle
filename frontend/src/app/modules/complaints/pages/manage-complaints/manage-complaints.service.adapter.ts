@@ -406,7 +406,10 @@ export class ManageComplaintsServiceAdapter {
             complaintQuery,   // 0
         ]);
 
-        this.vm.addNewComplaints(complaintList);
+        if (this.vm.isLoadMoreClicked) this.vm.addNewComplaints(complaintList);
+        else this.vm.initializeComplaintList(complaintList);
+
+        this.vm.isLoadMoreClicked = false;
         this.vm.isLoading = false;
     }  // Ends: loadComplaints()
 
