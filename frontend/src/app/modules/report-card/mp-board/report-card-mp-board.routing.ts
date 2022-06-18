@@ -21,39 +21,39 @@ import { PrintStudentEleventhFinalReportListComponent } from './print/print-stud
 
 const routes: Routes = [
     {
-        path: 'update_cce_marks',
+        path: 'mp_rc_update_cce_marks',
         loadChildren: 'app/modules/report-card/mp-board/pages/update-cce-marks/update-cce-marks.module#UpdateCceMarksModule',
-        data: { moduleName: 'report_card_mp_board' },
+        data: { moduleName: 'deprecated' },
     },
     {
-        path: 'grade_student_fields',
+        path: 'mp_rc_grade_student_fields',
         loadChildren: 'app/modules/report-card/mp-board/pages/grade-student-fields/grade-student-fields.module#GradeStudentFieldsModule',
-        data: { moduleName: 'report_card_mp_board' },
+        data: { moduleName: 'deprecated' },
     },
     {
-        path: 'set_final_report',
+        path: 'mp_rc_set_final_report',
         loadChildren: 'app/modules/report-card/mp-board/pages/set-final-report/set-final-report.module#SetFinalReportModule',
-        data: { moduleName: 'report_card_mp_board' },
+        data: { moduleName: 'deprecated' },
     },
     {
-        path: 'generate_final_report',
+        path: 'mp_rc_generate_final_report',
         loadChildren: 'app/modules/report-card/mp-board/pages/generate-final-report/generate-final-report.module#GenerateFinalReportModule',
-        data: { moduleName: 'report_card_mp_board' },
+        data: { moduleName: 'deprecated' },
     },
     {
-        path: 'generate_patrak',
+        path: 'mp_rc_generate_patrak',
         loadChildren: 'app/modules/report-card/mp-board/pages/generate-patrak/generate-patrak.module#GeneratePatrakModule',
-        data: { moduleName: 'report_card_mp_board' },
+        data: { moduleName: 'deprecated' },
     },
     {
-        path: 'generate_goshwara',
+        path: 'mp_rc_generate_goshwara',
         loadChildren: 'app/modules/report-card/mp-board/pages/generate-goshwara/generate-goshwara.module#GenerateGoshwaraModule',
-        data: { moduleName: 'report_card_mp_board' },
+        data: { moduleName: 'deprecated' },
     },
     {
-        path: 'add_student_remarks',
+        path: 'mp_rc_add_student_remarks',
         loadChildren: 'app/modules/report-card/mp-board/pages/add-student-remarks/add-student-remarks.module#AddStudentRemarksModule',
-        data: { moduleName: 'report_card_mp_board' },
+        data: { moduleName: 'deprecated' },
     },
     {
         path: '',
