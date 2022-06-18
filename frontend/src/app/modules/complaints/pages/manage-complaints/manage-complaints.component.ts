@@ -139,7 +139,7 @@ export class ManageComplaintsComponent implements OnInit {
 
     /* Load Complaints */
     loadComplaints() {
-        this.complaintList = [];
+        // this.complaintList = [];
         this.startNumber = 1;
         this.endNumber = this.numberOfComplaintsPerPage;
         this.isLoadMore = true;
@@ -191,6 +191,7 @@ export class ManageComplaintsComponent implements OnInit {
 
     /* Initialize Address-TO-Employee List (If Complaint-Type is Null) */
     initializeEmployeeComplaintList(employeeComplaintList, idx) {
+        this.complaintList[idx]["employeeComplaintList"] = [];
         employeeComplaintList.forEach((employeeComplaint) => {
             let employee = this.getEmployee(employeeComplaint.parentEmployee);
             employee["selected"] = true;
@@ -503,9 +504,11 @@ export class ManageComplaintsComponent implements OnInit {
                 removeEmployeeList = data["removeEmployeeList"];
             }
 
-            complaint.employeeComplaintList = [];
+            // complaint.employeeComplaintList = [];
             this.serviceAdapter.addNewAndRemoveEmployee(complaint.id, idx, newlyAssignedEmployeeList, removeEmployeeList);
-            this.startProgressBar();
+            // this.startProgressBar();
+            this.progress = 0;
+            clearInterval(this.progressInterval);
         });
     }  // Ends: openAssignEmployeeDialog()
 

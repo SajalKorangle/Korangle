@@ -13,6 +13,7 @@ import { CommonFunctions } from "@classes/common-functions";
 })
 export class AssignEmployeeModalComponent implements OnInit {
     user: any;
+    isLoading: boolean = true;
 
     addressToSearchString: string = ""; /* Employee Search String */
 
