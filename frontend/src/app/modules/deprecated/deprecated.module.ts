@@ -5,11 +5,11 @@ import { ComponentsModule } from '../../components/components.module';
 import { DeprecatedComponent } from './deprecated.component';
 
 import { DeprecatedRoutingModule } from './deprecated.routing';
-import { ReportCardCbseRoutingModule } from '@modules/report-card/cbse/report-card-cbse.routing';
-import { ReportCardMpBoardRoutingModule } from '@modules/report-card/mp-board/report-card-mp-board.routing';
-import { ExpenseRoutingModule } from '@modules/expenses/expense.routing';
-import { StudentRoutingModule } from '@modules/students/student.routing';
-import { ExaminationRoutingModule } from '@modules/examination/examination.routing';
+import { ReportCardCbseModule } from '@modules/report-card/cbse/report-card-cbse.module';
+import { ReportCardMpBoardModule } from '@modules/report-card/mp-board/report-card-mp-board.module';
+import { ExpenseModule } from '@modules/expenses/expense.module';
+import { StudentModule } from '@modules/students/student.module';
+import { ExaminationModule } from '@modules/examination/examination.module';
 
 @NgModule({
     declarations: [DeprecatedComponent],
@@ -17,11 +17,11 @@ import { ExaminationRoutingModule } from '@modules/examination/examination.routi
     imports: [
         ComponentsModule, 
         DeprecatedRoutingModule,
-        ReportCardCbseRoutingModule,
-        ReportCardMpBoardRoutingModule,
-        ExpenseRoutingModule,
-        StudentRoutingModule,
-        ExaminationRoutingModule
+        ReportCardCbseModule,
+        ReportCardMpBoardModule,
+        ExpenseModule,
+        StudentModule,
+        ExaminationModule
     ],
     exports: [],
     providers: [],

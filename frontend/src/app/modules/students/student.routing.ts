@@ -34,11 +34,6 @@ const routes: Routes = [
         data: { moduleName: 'students' },
     },
     {
-        path: 'student_generate_tc',
-        loadChildren: 'app/modules/students/pages/generate-tc/generate-tc.module#GenerateTcModule',
-        data: { moduleName: 'deprecated' },
-    },
-    {
         path: 'add_student',
         loadChildren: 'app/modules/students/pages/add-student/add-student.module#AddStudentModule',
         data: { moduleName: 'students' },
@@ -57,11 +52,6 @@ const routes: Routes = [
         path: 'delete_student',
         loadChildren: 'app/modules/students/pages/delete-student/delete-student.module#DeleteStudentModule',
         data: { moduleName: 'students' },
-    },
-    {
-        path: 'student_i_cards',
-        loadChildren: 'app/modules/students/pages/i-cards/i-cards.module#ICardsModule',
-        data: { moduleName: 'deprecated' },
     },
     {
         path: 'print_profile',

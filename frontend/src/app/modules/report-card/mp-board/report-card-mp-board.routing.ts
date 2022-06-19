@@ -21,41 +21,6 @@ import { PrintStudentEleventhFinalReportListComponent } from './print/print-stud
 
 const routes: Routes = [
     {
-        path: 'mp_rc_update_cce_marks',
-        loadChildren: 'app/modules/report-card/mp-board/pages/update-cce-marks/update-cce-marks.module#UpdateCceMarksModule',
-        data: { moduleName: 'deprecated' },
-    },
-    {
-        path: 'mp_rc_grade_student_fields',
-        loadChildren: 'app/modules/report-card/mp-board/pages/grade-student-fields/grade-student-fields.module#GradeStudentFieldsModule',
-        data: { moduleName: 'deprecated' },
-    },
-    {
-        path: 'mp_rc_set_final_report',
-        loadChildren: 'app/modules/report-card/mp-board/pages/set-final-report/set-final-report.module#SetFinalReportModule',
-        data: { moduleName: 'deprecated' },
-    },
-    {
-        path: 'mp_rc_generate_final_report',
-        loadChildren: 'app/modules/report-card/mp-board/pages/generate-final-report/generate-final-report.module#GenerateFinalReportModule',
-        data: { moduleName: 'deprecated' },
-    },
-    {
-        path: 'mp_rc_generate_patrak',
-        loadChildren: 'app/modules/report-card/mp-board/pages/generate-patrak/generate-patrak.module#GeneratePatrakModule',
-        data: { moduleName: 'deprecated' },
-    },
-    {
-        path: 'mp_rc_generate_goshwara',
-        loadChildren: 'app/modules/report-card/mp-board/pages/generate-goshwara/generate-goshwara.module#GenerateGoshwaraModule',
-        data: { moduleName: 'deprecated' },
-    },
-    {
-        path: 'mp_rc_add_student_remarks',
-        loadChildren: 'app/modules/report-card/mp-board/pages/add-student-remarks/add-student-remarks.module#AddStudentRemarksModule',
-        data: { moduleName: 'deprecated' },
-    },
-    {
         path: '',
         component: ReportCardMpBoardComponent,
     },
