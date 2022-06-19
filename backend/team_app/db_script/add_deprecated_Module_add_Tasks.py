@@ -3,7 +3,7 @@ def add_deprecated_Module(apps, schema_editor):
 
     Module = apps.get_model('team_app', 'Module')
 
-    module_object = Module(path = 'deprecated', title = 'Deprecated', icon = 'work_off', orderNumber = 16, parentBoard = None)
+    module_object = Module(path = 'deprecated', title = 'Deprecated', icon = 'work_off', orderNumber = 50, parentBoard = None)
     module_object.save()
 
 def add_deprecated_Tasks(apps, schema_editor):
