@@ -136,11 +136,11 @@
             <!-- Starts: Table Body -->
             <tbody (click)="closeFilterOptions()">
 
-                <ng-container *ngIf="complaintList.length == 0">
+                <ng-container *ngIf="isComplaintListEmpty">
                     <tr><td>No complaints</td></tr>
                 </ng-container>
 
-                <ng-container *ngIf="complaintList.length > 0">
+                <ng-container *ngIf="!isComplaintListEmpty">
                     <ng-container *ngFor="let complaint of complaintList; let i = index">
                         <tr>
                             <td class="min-width">{{ complaint.parentStudent.name }}</td>

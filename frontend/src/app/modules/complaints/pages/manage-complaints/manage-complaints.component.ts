@@ -26,6 +26,7 @@ export class ManageComplaintsComponent implements OnInit {
     progressInterval: any;
     isLoadMore: boolean = true;
     isLoadMoreClicked: boolean = false;
+    isComplaintListEmpty: boolean = false;
 
     userPermission: boolean = false;  /* Admin or Employee */
     pageName: string = "showTables";
@@ -227,6 +228,12 @@ export class ManageComplaintsComponent implements OnInit {
             this.complaintList.push(complaint);
         });
 
+        if (this.complaintList.length == 0) {
+            this.isComplaintListEmpty = true;
+        } else {
+            this.isComplaintListEmpty = false;
+        }
+
         for (let i = 0; i < this.complaintList.length; i++) {
             this.serviceAdapter.getCommentComplaint(this.complaintList[i].id, i);
         }
@@ -283,6 +290,12 @@ export class ManageComplaintsComponent implements OnInit {
                 this.complaintList.push(complaint);
             }
         });
+
+        if (this.complaintList.length == 0) {
+            this.isComplaintListEmpty = true;
+        } else {
+            this.isComplaintListEmpty = false;
+        }
 
         for (let i = length; i < this.complaintList.length; i++) {
             this.serviceAdapter.getCommentComplaint(this.complaintList[i].id, i);

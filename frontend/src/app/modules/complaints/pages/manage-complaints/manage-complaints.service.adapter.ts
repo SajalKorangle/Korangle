@@ -361,11 +361,11 @@ export class ManageComplaintsServiceAdapter {
         }
 
         /* Search Check */
-        if (this.vm.searchString) {
+        if (this.vm.searchString.toString().trim()) {
             let searchList = [];
-            searchList.push({"parentStudent__name__icontains": this.vm.searchString});
-            searchList.push({"parentStudent__fathersName__icontains": this.vm.searchString});
-            searchList.push({"title__icontains": this.vm.searchString});
+            searchList.push({"parentStudent__name__icontains": this.vm.searchString.toString().trim()});
+            searchList.push({"parentStudent__fathersName__icontains": this.vm.searchString.toString().trim()});
+            searchList.push({"title__icontains": this.vm.searchString.toString().trim()});
             filterData["__or__searchList"] = searchList;
         }
 
@@ -409,7 +409,7 @@ export class ManageComplaintsServiceAdapter {
         if (this.vm.isLoadMoreClicked) this.vm.addNewComplaints(complaintList);
         else this.vm.initializeComplaintList(complaintList);
 
-        this.vm.isLoadMoreClicked = false;
+        this.isLoadMoreClicked = false;
         this.vm.isLoading = false;
     }  // Ends: loadComplaints()
 
