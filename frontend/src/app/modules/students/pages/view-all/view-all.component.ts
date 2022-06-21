@@ -609,13 +609,19 @@ export class ViewAllComponent implements OnInit {
             }
             
             // isLoggedIn Filter Check
-            if (this.isLogged && !(student.notification || student.secondNumberNotification)) {
-                student.show = false;
+            if(this.isLogged && this.isNotLogged){
+                student.show = true;
                 return;
-            }  
-            if (this.isNotLogged && (student.notification || student.secondNumberNotification)) {
-                student.show = false;
-                return;
+            }
+            else{
+                if (this.isLogged && !(student.notification || student.secondNumberNotification)) {
+                    student.show = false;
+                    return;
+                }  
+                if (this.isNotLogged && (student.notification || student.secondNumberNotification)) {
+                    student.show = false;
+                    return;
+                }
             }
 
             // Custom filters check
