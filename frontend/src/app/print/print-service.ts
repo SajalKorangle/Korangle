@@ -6,6 +6,8 @@ export class PrintService {
     private data: any;
     private isPrinting: boolean = false;
 
+    isSinglePagePrinting = false;
+
     constructor(private router: Router) {}
 
     public navigateToPrintRoute(routeName: string, data: any) {
@@ -18,6 +20,7 @@ export class PrintService {
     }
 
     public getData() {
+        this.data.value["printSingleReceipt"] = this.isSinglePagePrinting;
         return this.data;
     }
 
