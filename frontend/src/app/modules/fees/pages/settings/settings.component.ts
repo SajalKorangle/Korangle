@@ -12,6 +12,7 @@ import { SettingsHtmlRenderer } from './settings.html.renderer';
 
 import {CommonFunctions} from '@classes/common-functions';
 
+import { PrintService } from 'app/print/print-service';
 
 @Component({
     selector: 'lock-fees',
@@ -34,6 +35,9 @@ export class SettingsComponent implements OnInit {
     serviceAdapter: SettingsServiceAdapter;
     htmlRenderer = new SettingsHtmlRenderer(this);
 
+    isSinglePageFeePrint = false;
+    temp_singlePageFeeprint = localStorage.getItem("isSinglePageFeePrint");
+
     commonFunctions = CommonFunctions.getInstance();
 
     isActiveSession: boolean;
@@ -43,7 +47,8 @@ export class SettingsComponent implements OnInit {
         public schoolService: SchoolService,
         public feeService: FeeService,
         public accountsService: AccountsService,
-        private cdRef: ChangeDetectorRef
+        private cdRef: ChangeDetectorRef,
+        private printService: PrintService
     ) { }
 
     ngOnInit(): void {
@@ -55,6 +60,9 @@ export class SettingsComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
         console.log('this: ', this);
+        if(this.temp_singlePageFeeprint === "true"){
+            this.isSinglePageFeePrint = true;
+        }
     }
 
     detectChanges(): void { // what is this?
@@ -119,6 +127,16 @@ export class SettingsComponent implements OnInit {
             }
         }
         return dataValid;
+    }
+
+    toggleSinglePageFeePrinting(){
+        if(this.isSinglePageFeePrint){
+            localStorage.setItem('isSinglePageFeePrint', 'true');
+        }
+        else{
+            localStorage.setItem('isSinglePageFeePrint', 'false');
+        }
+        this.printService.isSinglePagePrinting = this.isSinglePageFeePrint;
     }
 }
 
