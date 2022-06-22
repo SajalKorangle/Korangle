@@ -36,7 +36,7 @@
         [openedComplaint]="openedComplaint"
         [commentList]="commentList"
         [commentMessage]="commentMessage"
-        (startNewProgressBar)="startNewProgressBar()"
+        (openComplaintPage)="openComplaintPage()"
         (updateStatus)="commentMessage = $event[0]; updateStatus($event[1])"
         (deleteComplaint)="commentMessage = $event[0]; deleteComplaint($event[1])"
         (sendCommentClicked)="commentMessage = $event; sendCommentClicked();"

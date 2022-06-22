@@ -78,6 +78,12 @@ export class ManageComplaintsComponent implements OnInit {
         this.serviceAdapter.initializeData();
     }
 
+    openComplaintPage() {
+        this.pageName = "showTables";
+        this.progress = 0;
+        clearInterval(this.progressInterval);
+    }
+
     /* Progress Bar Set-Interval Function */
     setProgressInterval() {
         if (this.progress >= 100) {
