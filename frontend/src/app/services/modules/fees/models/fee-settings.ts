@@ -6,6 +6,7 @@ export class FeeSettings {
     parentSchool: number;
     sessionLocked: boolean;
     accountingSettingsJSON: AccountingSettings;
+    printSingleReceipt: boolean;
 }
 
 export class AccountingSettings {

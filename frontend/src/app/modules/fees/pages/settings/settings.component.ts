@@ -35,9 +35,6 @@ export class SettingsComponent implements OnInit {
     serviceAdapter: SettingsServiceAdapter;
     htmlRenderer = new SettingsHtmlRenderer(this);
 
-    isSinglePageFeePrint = false;
-    temp_singlePageFeeprint = localStorage.getItem("isSinglePageFeePrint");
-
     commonFunctions = CommonFunctions.getInstance();
 
     isActiveSession: boolean;
@@ -51,18 +48,17 @@ export class SettingsComponent implements OnInit {
         private printService: PrintService
     ) { }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         this.user = DataStorage.getInstance().getUser();
 
         this.backendData = new SettingsBackendData(this);
 
         this.serviceAdapter = new SettingsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData();
+        await this.serviceAdapter.initializeData();
         console.log('this: ', this);
-        if(this.temp_singlePageFeeprint === "true"){
-            this.isSinglePageFeePrint = true;
-        }
+
+        this.printService.printSingleReceipt = this.backendData.feeSettings.printSingleReceipt;
     }
 
     detectChanges(): void { // what is this?
@@ -130,13 +126,9 @@ export class SettingsComponent implements OnInit {
     }
 
     toggleSinglePageFeePrinting(){
-        if(this.isSinglePageFeePrint){
-            localStorage.setItem('isSinglePageFeePrint', 'true');
-        }
-        else{
-            localStorage.setItem('isSinglePageFeePrint', 'false');
-        }
-        this.printService.isSinglePagePrinting = this.isSinglePageFeePrint;
+        this.serviceAdapter.updatePrintSingleReceipt();
+
+        this.printService.printSingleReceipt = this.backendData.feeSettings.printSingleReceipt;
     }
 }
 

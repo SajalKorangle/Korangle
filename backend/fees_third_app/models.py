@@ -597,6 +597,7 @@ class FeeSettings(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     sessionLocked = models.BooleanField(default=False)
     accountingSettingsJSON = models.TextField(null=True)  # json data
+    printSingleReceipt = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('parentSchool', 'parentSession')

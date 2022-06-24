@@ -127,4 +127,15 @@ export class SettingsServiceAdapter {
         this.vm.isLoading = false;
     }
 
+    async updatePrintSingleReceipt() {
+        this.vm.isLoading = true;
+
+        const newFeeSettings: any = { ...this.vm.backendData.feeSettings };
+        
+        await this.vm.feeService.updateObject(this.vm.feeService.fee_settings, newFeeSettings)
+        .then(res => this.vm.backendData.feeSettings = res);
+        
+        this.vm.isLoading = false;
+    }
+
 }
