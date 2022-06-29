@@ -1,11 +1,16 @@
 import { MODE_OF_PAYMENT_LIST } from "@modules/fees/classes/constants";
 
-export class FeeSettings {
+export class FeeSchoolSessionSettings {
     id: number;
     parentSession: number;
     parentSchool: number;
     sessionLocked: boolean;
     accountingSettingsJSON: AccountingSettings;
+}
+
+export class FeeSchoolSettings {
+    id: number;
+    parentSchool: number;
     printSingleReceipt: boolean;
 }
 

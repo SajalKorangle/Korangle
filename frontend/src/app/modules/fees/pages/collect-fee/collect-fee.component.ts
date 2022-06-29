@@ -21,7 +21,7 @@ import { SchoolService } from '../../../../services/modules/school/school.servic
 
 import { AccountsService } from '@services/modules/accounts/accounts.service';
 import { Account } from '@services/modules/accounts/models/account';
-import { FeeSettings } from '@services/modules/fees/models/fee-settings';
+import { FeeSchoolSessionSettings } from '@services/modules/fees/models/fee-settings';
 import { CollectFeeHTMLRenderer } from './collect-fee.html.renderer';
 import { SmsService } from '@services/modules/sms/sms.service';
 import { SmsOldService } from '@services/modules/sms/sms-old.service';
@@ -63,7 +63,7 @@ export class CollectFeeComponent implements OnInit {
     boardList = [];
 
     //accounting
-    feeSettings: FeeSettings;
+    feeSettings: FeeSchoolSessionSettings;
     accountsList: Array<Account>;
     studentFeePaymentAccount: number;
 

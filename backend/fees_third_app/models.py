@@ -592,15 +592,22 @@ def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
     studentFee.save()
 
 
-class FeeSettings(models.Model):
+class FeeSchoolSessionSettings(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     sessionLocked = models.BooleanField(default=False)
     accountingSettingsJSON = models.TextField(null=True)  # json data
-    printSingleReceipt = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('parentSchool', 'parentSession')
+
+
+class FeeSchoolSettings(models.Model):
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
+    printSingleReceipt = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('parentSchool', )
 
 
 class FeeReceiptOrder(models.Model):
@@ -631,7 +638,7 @@ def FeeReceiptOrderCompletionHandler(sender, instance, **kwargs):
             debitAccount = None
             creditAccount = None
             try:
-                feeSettings = FeeSettings.objects.get(parentSchool=activeSchoolId, parentSession=currentSession)
+                feeSettings = FeeSchoolSessionSettings.objects.get(parentSchool=activeSchoolId, parentSession=currentSession)
                 if(feeSettings.accountingSettingsJSON):
                     accountingSettings = json.loads(feeSettings.accountingSettingsJSON)
                     debitAccount = AccountSession.objects.get(id=accountingSettings['parentAccountFrom']).parentAccount

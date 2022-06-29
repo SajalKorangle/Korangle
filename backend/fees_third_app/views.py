@@ -130,16 +130,24 @@ class SubDiscountListView(CommonListView, APIView):
 
 
 ########### Fee Settings #############
-from .models import FeeSettings
+from .models import FeeSchoolSessionSettings, FeeSchoolSettings
 
 
 class FeeSettingsView(CommonView, APIView):
-    Model = FeeSettings
+    Model = FeeSchoolSessionSettings
     RelationsToSchool = ['parentSchool__id']
 
 
 class FeeSettingsListView(CommonListView, APIView):
-    Model = FeeSettings
+    Model = FeeSchoolSessionSettings
+    RelationsToSchool = ['parentSchool__id']
+
+class FeeSchoolSettingsView(CommonView, APIView):
+    Model = FeeSchoolSettings
+    RelationsToSchool = ['parentSchool__id']
+
+class FeeSchoolSettingsListView(CommonListView, APIView):
+    Model = FeeSchoolSettings
     RelationsToSchool = ['parentSchool__id']
 
 

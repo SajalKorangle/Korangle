@@ -1,9 +1,7 @@
-
 import { SettingsComponent } from './settings.component';
 import { Session } from '@services/modules/school/models/session';
 import { CommonFunctions } from '@modules/common/common-functions';
 import { Query } from '@services/generic/query';
-
 
 export class SettingsServiceAdapter {
 
@@ -30,6 +28,10 @@ export class SettingsServiceAdapter {
             'parentSession': activeSession.id,
         };
 
+        const fee_school_settings_request = {
+            'parentSchool': this.vm.user.activeSchool.dbId,
+        };
+
         const accounts_request = {
             accountType: 'ACCOUNT',
         };
@@ -40,16 +42,26 @@ export class SettingsServiceAdapter {
             parentAccount__accountType: 'ACCOUNT',
         };
 
-        const [feeSettingsList, accountSessionList, accountsList, schoolMerchantAccount] = await Promise.all([
+        const [feeSettingsList, accountSessionList, accountsList, schoolMerchantAccount, feeSchoolSettingsList] = await Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request), //0
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), // 1
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request),  // 2
-            new Query().filter({parentSchool: this.vm.user.activeSchool.dbId}).getObject({payment_app: 'SchoolMerchantAccount'})
+            new Query().filter({parentSchool: this.vm.user.activeSchool.dbId}).getObject({payment_app: 'SchoolMerchantAccount'}), // 3
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_school_settings, fee_school_settings_request), // 4
         ]);
 
         this.vm.backendData.accountSessionList = accountSessionList;
         this.vm.backendData.accountsList = accountsList;
         this.vm.backendData.schoolMerchantAccount = schoolMerchantAccount;
+
+        if(feeSchoolSettingsList.length == 0){
+            this.vm.backendData.applyDefaultSchoolSettings();
+        } else if (feeSchoolSettingsList.length == 1) {
+            this.vm.backendData.feeSchoolSettings = feeSchoolSettingsList[0];
+        } else {
+            alert('Error: Report admin');
+            return;
+        }
 
         if (feeSettingsList.length == 0) {
             this.vm.backendData.applyDefaultSettings();
@@ -130,10 +142,24 @@ export class SettingsServiceAdapter {
     async updatePrintSingleReceipt() {
         this.vm.isLoading = true;
 
-        const newFeeSettings: any = { ...this.vm.backendData.feeSettings };
-        
-        await this.vm.feeService.updateObject(this.vm.feeService.fee_settings, newFeeSettings)
-        .then(res => this.vm.backendData.feeSettings = res);
+        const fields_request = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+            fields__korangle: 'id',
+        };
+        const [feeSchoolSettingsList] = await Promise.all([
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_school_settings, fields_request),
+        ]);
+
+        const newFeeSchoolSettings: any = { ...this.vm.backendData.feeSchoolSettings };
+
+        if (feeSchoolSettingsList.length > 0) {
+            newFeeSchoolSettings.id = feeSchoolSettingsList[0].id;
+            await this.vm.feeService.updateObject(this.vm.feeService.fee_school_settings, newFeeSchoolSettings)
+                .then(res => this.vm.backendData.feeSchoolSettings = res)
+        } else {
+            await this.vm.feeService.createObject(this.vm.feeService.fee_school_settings, newFeeSchoolSettings)
+                .then(res => this.vm.backendData.feeSchoolSettings = res)
+        } 
         
         this.vm.isLoading = false;
     }

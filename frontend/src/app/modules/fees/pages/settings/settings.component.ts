@@ -58,7 +58,7 @@ export class SettingsComponent implements OnInit {
         await this.serviceAdapter.initializeData();
         console.log('this: ', this);
 
-        this.printService.printSingleReceipt = this.backendData.feeSettings.printSingleReceipt;
+        this.printService.printSingleReceipt = this.backendData.feeSchoolSettings.printSingleReceipt;
     }
 
     detectChanges(): void { // what is this?
@@ -128,7 +128,7 @@ export class SettingsComponent implements OnInit {
     toggleSinglePageFeePrinting(){
         this.serviceAdapter.updatePrintSingleReceipt();
 
-        this.printService.printSingleReceipt = this.backendData.feeSettings.printSingleReceipt;
+        this.printService.printSingleReceipt = this.backendData.feeSchoolSettings.printSingleReceipt;
     }
 }
 

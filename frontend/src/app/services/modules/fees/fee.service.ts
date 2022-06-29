@@ -18,6 +18,7 @@ export class FeeService extends ServiceObject {
     public sub_discounts = '/sub-discounts';
     public fee_features = '/fee-features';
     public fee_settings = '/fee-settings';
+    public fee_school_settings = '/fee-school-settings';
 
     public fee_receipt_order = '/fee-receipt-order';
 }
