@@ -50,6 +50,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
         let request_employee_data = {
             parentSchool: this.user.activeSchool.dbId,
+            isNonSalariedEmployee: false,
         };
 
         this.isInitialLoading = true;
@@ -67,7 +68,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
     initializeEmployeeList(employeeList: any): void {
         this.employeeList = employeeList.filter((employee) => {
-            return employee.dateOfLeaving === null;
+            return employee.dateOfLeaving === null && employee.isNonSalariedEmployee === false;
         });
     }
 

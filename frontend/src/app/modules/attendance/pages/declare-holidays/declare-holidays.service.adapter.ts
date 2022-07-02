@@ -22,6 +22,7 @@ export class DeclareHolidaysServiceAdapter {
 
         const request_employee_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
+            isNonSalariedEmployee: false,
         };
 
         Promise.all([
