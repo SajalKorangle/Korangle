@@ -83,7 +83,6 @@ export class FeeReceiptListComponent implements OnInit {
                });
             }
         });
-        console.log(currentList);
         let amount = 0;
         currentList.forEach((subFeeReceipt) => {
            amount += this.installmentList.reduce((totalInstallment, installment) => {
