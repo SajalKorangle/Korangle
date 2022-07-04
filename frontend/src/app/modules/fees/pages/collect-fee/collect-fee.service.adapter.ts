@@ -66,6 +66,7 @@ export class CollectFeeServiceAdapter {
             this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),  // 5
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request), //6
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), //7
+            this.vm.genericService.getObjectList({ fees_third_app: 'FeeSchoolSettings' }, {}), //8
         ]);
         this.vm.feeTypeList = value[0];
         this.vm.busStopList = value[1];
@@ -76,6 +77,8 @@ export class CollectFeeServiceAdapter {
             this.vm.feeSettings = value[5][0];
         this.vm.accountsList = value[6];
         this.vm.htmlRenderer.populateCustomAccountSessionList(this.vm.accountsList, value[7]);
+        this.vm.printSingleReceipt = value[8][0]["printSingleReceipt"];
+
         this.vm.handlePaymentAccountOnPaymentModeChange();
 
         this.vm.isLoading = false;

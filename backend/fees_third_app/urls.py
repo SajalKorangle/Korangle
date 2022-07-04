@@ -74,13 +74,11 @@ urlpatterns += [
 ]
 
 
-from .views import FeeSettingsView, FeeSettingsListView, FeeSchoolSettingsListView, FeeSchoolSettingsView
+from .views import FeeSettingsView, FeeSettingsListView
 
 urlpatterns += [
     url(r'^fee-settings/batch', FeeSettingsListView.as_view()),
     url(r'^fee-settings', FeeSettingsView.as_view()),
-    url(r'^fee-school-settings/batch', FeeSchoolSettingsListView.as_view()),
-    url(r'^fee-school-settings', FeeSchoolSettingsView.as_view()),
 ]
 
 from .views import FeeReceiptOrderView, FeeReceiptOrderListView

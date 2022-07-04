@@ -1,3 +1,4 @@
+from generic.generic_views import GenericListView, GenericView
 from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_3
 
@@ -130,24 +131,16 @@ class SubDiscountListView(CommonListView, APIView):
 
 
 ########### Fee Settings #############
-from .models import FeeSchoolSessionSettings, FeeSchoolSettings
+from .models import FeeSchoolSessionSettings as FeeSettings
 
 
 class FeeSettingsView(CommonView, APIView):
-    Model = FeeSchoolSessionSettings
+    Model = FeeSettings
     RelationsToSchool = ['parentSchool__id']
 
 
 class FeeSettingsListView(CommonListView, APIView):
-    Model = FeeSchoolSessionSettings
-    RelationsToSchool = ['parentSchool__id']
-
-class FeeSchoolSettingsView(CommonView, APIView):
-    Model = FeeSchoolSettings
-    RelationsToSchool = ['parentSchool__id']
-
-class FeeSchoolSettingsListView(CommonListView, APIView):
-    Model = FeeSchoolSettings
+    Model = FeeSettings
     RelationsToSchool = ['parentSchool__id']
 
 

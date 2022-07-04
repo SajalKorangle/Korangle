@@ -1,13 +1,12 @@
 import { SettingsComponent } from './settings.component';
 import { Account } from '@services/modules/accounts/models/account';
-import { FeeSchoolSessionSettings, AccountingSettings, FeeSchoolSettings } from '@services/modules/fees/models/fee-settings';
+import { FeeSettings, AccountingSettings } from '@services/modules/fees/models/fee-settings';
 import { AccountSession } from '@services/modules/accounts/models/account-session';
 
 export class SettingsBackendData {
     vm: SettingsComponent;
 
-    feeSettings: FeeSchoolSessionSettings;
-    feeSchoolSettings: FeeSchoolSettings;
+    feeSettings: FeeSettings;
     accountsList: Array<Account>;
     accountSessionList: Array<AccountSession>;
 
@@ -18,17 +17,11 @@ export class SettingsBackendData {
     }
 
     applyDefaultSettings(): void {
-        this.feeSettings = new FeeSchoolSessionSettings();
+        this.feeSettings = new FeeSettings();
         this.feeSettings.parentSchool = this.vm.user.activeSchool.dbId;
         this.feeSettings.parentSession = this.vm.activeSession.id;
         this.feeSettings.sessionLocked = false;
         this.feeSettings.accountingSettingsJSON = null; // null value signifies accounting is disabled
-    }
-
-    applyDefaultSchoolSettings(): void{
-        this.feeSchoolSettings = new FeeSchoolSettings();
-        this.feeSchoolSettings.printSingleReceipt = false;
-        this.feeSchoolSettings.parentSchool = this.vm.user.activeSchool.dbId;
     }
 
     initializeAccounting(): void {

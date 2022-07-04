@@ -11,14 +11,13 @@ import { SettingsBackendData } from './settings.backend.data';
 import { SettingsHtmlRenderer } from './settings.html.renderer';
 
 import {CommonFunctions} from '@classes/common-functions';
-
-import { PrintService } from 'app/print/print-service';
+import { GenericService } from '@services/generic/generic-service';
 
 @Component({
     selector: 'lock-fees',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.css'],
-    providers: [FeeService, SchoolService, AccountsService],
+    providers: [GenericService, FeeService, SchoolService, AccountsService],
 })
 
 export class SettingsComponent implements OnInit {
@@ -37,15 +36,18 @@ export class SettingsComponent implements OnInit {
 
     commonFunctions = CommonFunctions.getInstance();
 
+    printSingleReceipt: boolean;
+
     isActiveSession: boolean;
     isLoading = false;
+    isLoadingCustom = false;
 
     constructor(
+        public genericService: GenericService,
         public schoolService: SchoolService,
         public feeService: FeeService,
         public accountsService: AccountsService,
         private cdRef: ChangeDetectorRef,
-        private printService: PrintService
     ) { }
 
     async ngOnInit(): Promise<void> {
@@ -57,8 +59,6 @@ export class SettingsComponent implements OnInit {
         this.serviceAdapter.initializeAdapter(this);
         await this.serviceAdapter.initializeData();
         console.log('this: ', this);
-
-        this.printService.printSingleReceipt = this.backendData.feeSchoolSettings.printSingleReceipt;
     }
 
     detectChanges(): void { // what is this?
@@ -127,8 +127,6 @@ export class SettingsComponent implements OnInit {
 
     toggleSinglePageFeePrinting(){
         this.serviceAdapter.updatePrintSingleReceipt();
-
-        this.printService.printSingleReceipt = this.backendData.feeSchoolSettings.printSingleReceipt;
     }
 }
 

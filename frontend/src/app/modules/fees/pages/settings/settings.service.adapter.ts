@@ -28,10 +28,6 @@ export class SettingsServiceAdapter {
             'parentSession': activeSession.id,
         };
 
-        const fee_school_settings_request = {
-            'parentSchool': this.vm.user.activeSchool.dbId,
-        };
-
         const accounts_request = {
             accountType: 'ACCOUNT',
         };
@@ -47,21 +43,14 @@ export class SettingsServiceAdapter {
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), // 1
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request),  // 2
             new Query().filter({parentSchool: this.vm.user.activeSchool.dbId}).getObject({payment_app: 'SchoolMerchantAccount'}), // 3
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_school_settings, fee_school_settings_request), // 4
+            this.vm.genericService.getObjectList({ fees_third_app: 'FeeSchoolSettings' }, {}), // 4
         ]);
 
         this.vm.backendData.accountSessionList = accountSessionList;
         this.vm.backendData.accountsList = accountsList;
         this.vm.backendData.schoolMerchantAccount = schoolMerchantAccount;
+        this.vm.printSingleReceipt = feeSchoolSettingsList[0]["printSingleReceipt"];
 
-        if(feeSchoolSettingsList.length == 0){
-            this.vm.backendData.applyDefaultSchoolSettings();
-        } else if (feeSchoolSettingsList.length == 1) {
-            this.vm.backendData.feeSchoolSettings = feeSchoolSettingsList[0];
-        } else {
-            alert('Error: Report admin');
-            return;
-        }
 
         if (feeSettingsList.length == 0) {
             this.vm.backendData.applyDefaultSettings();
@@ -140,28 +129,22 @@ export class SettingsServiceAdapter {
     }
 
     async updatePrintSingleReceipt() {
-        this.vm.isLoading = true;
+        this.vm.isLoadingCustom = true;
 
-        const fields_request = {
-            parentSchool: this.vm.user.activeSchool.dbId,
-            fields__korangle: 'id',
-        };
         const [feeSchoolSettingsList] = await Promise.all([
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_school_settings, fields_request),
+            this.vm.genericService.getObjectList({ fees_third_app: 'FeeSchoolSettings' }, {}),
         ]);
 
-        const newFeeSchoolSettings: any = { ...this.vm.backendData.feeSchoolSettings };
+        const newFeeSchoolSettings: any = { printSingleReceipt: this.vm.printSingleReceipt, parentSchool: this.vm.user.activeSchool.dbId };
 
         if (feeSchoolSettingsList.length > 0) {
             newFeeSchoolSettings.id = feeSchoolSettingsList[0].id;
-            await this.vm.feeService.updateObject(this.vm.feeService.fee_school_settings, newFeeSchoolSettings)
-                .then(res => this.vm.backendData.feeSchoolSettings = res)
+            await this.vm.genericService.updateObject({ fees_third_app: 'FeeSchoolSettings' }, newFeeSchoolSettings)
         } else {
-            await this.vm.feeService.createObject(this.vm.feeService.fee_school_settings, newFeeSchoolSettings)
-                .then(res => this.vm.backendData.feeSchoolSettings = res)
+            await this.vm.genericService.createObject({ fees_third_app: 'FeeSchoolSettings' }, newFeeSchoolSettings)
         } 
         
-        this.vm.isLoading = false;
+        this.vm.isLoadingCustom = false;
     }
 
 }
