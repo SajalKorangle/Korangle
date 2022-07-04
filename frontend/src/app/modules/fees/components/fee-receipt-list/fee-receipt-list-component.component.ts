@@ -83,9 +83,9 @@ export class FeeReceiptListComponent implements OnInit {
                });
             }
         });
-        let amount = 0;
+        let filteredAmount = 0;
         currentList.forEach((subFeeReceipt) => {
-           amount += this.installmentList.reduce((totalInstallment, installment) => {
+           filteredAmount += this.installmentList.reduce((totalInstallment, installment) => {
                         return (
                             totalInstallment +
                             (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0) +
@@ -93,7 +93,7 @@ export class FeeReceiptListComponent implements OnInit {
                         );
                     }, 0);
         });
-        return amount;
+        return filteredAmount;
     }
 
     increaseNumber(): void {
