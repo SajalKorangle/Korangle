@@ -13,6 +13,7 @@ def get_employee_mini_profile_list(data):
             'employeeNumber': employee_object.employeeNumber,
             'mobileNumber': employee_object.mobileNumber,
             'dateOfLeaving': employee_object.dateOfLeaving,
+            'isNonSalariedEmployee': employee_object.isNonSalariedEmployee,
         }
         if employee_object.profileImage:
             tempEmployee['profileImage'] = employee_object.profileImage.url

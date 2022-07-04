@@ -22,6 +22,7 @@ class ColumnHandle {
 }
 
 const GENDER_LIST = ['Male', 'Female', 'Other'];
+const BOOLEAN_LIST = ['true', 'false'];
 
 @Component({
     selector: 'app-update-all',
@@ -58,6 +59,7 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Month Salary', 'monthlySalary', 'number', false, ''), // 21
         new ColumnHandle('Pran No.', 'pranNumber', 'number', false, ''), // 22
         new ColumnHandle('Remark', 'remark', 'text', false, ''), // 23
+        new ColumnHandle('Is Non-Salaried Employee', 'isNonSalariedEmployee', 'list', false, BOOLEAN_LIST), // 24
     ];
 
     employeeParameterList: any[] = [];
