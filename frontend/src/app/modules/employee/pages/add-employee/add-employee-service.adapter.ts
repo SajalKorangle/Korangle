@@ -164,6 +164,7 @@ export class AddEmployeeServiceAdapter {
 
         console.log("CREATE NEW EMPLOYEE CALLED");
 
+
         if (this.vm.newEmployee.name === undefined || this.vm.newEmployee.name === '') {
             alert('Name should be populated');
             return;
@@ -210,6 +211,10 @@ export class AddEmployeeServiceAdapter {
             && this.vm.newEmployee.aadharNumber.toString().length != 12) {
             alert("Aadhar No. should be 12 digits");
             return;
+        }
+
+        if (this.vm.newEmployee.isNonSalariedEmployee === undefined) {
+            this.vm.newEmployee.isNonSalariedEmployee = false;
         }
 
         this.vm.newEmployee.parentSchool = this.vm.user.activeSchool.dbId;
