@@ -17,6 +17,7 @@ import { FeeService } from '@services/modules/fees/fee.service';
 export class FeeReceiptListComponent implements OnInit {
     @Input() user;
     @Input() feeTypeList;
+    @Input() filteredFeeTypeList;
     @Input() feeReceiptList;
     @Input() subFeeReceiptList;
     @Input() studentList;
@@ -72,26 +73,28 @@ export class FeeReceiptListComponent implements OnInit {
     }
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {
-        return this.subFeeReceiptList
-            .filter((subFeeReceipt) => {
-                if (this.selectedFeeType) {
-                    return subFeeReceipt.parentFeeReceipt == feeReceipt.id && subFeeReceipt.parentFeeType == this.selectedFeeType.id;
-                } else {
-                    return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
-                }
-            })
-            .reduce((totalSubFeeReceipt, subFeeReceipt) => {
-                return (
-                    totalSubFeeReceipt +
-                    this.installmentList.reduce((totalInstallment, installment) => {
+        let currentList = [];
+        this.filteredFeeTypeList.forEach((feeType) => {
+            if (feeType.selectedFeeType) {
+               this.subFeeReceiptList.forEach((subFeeReceipt) => {
+                   if (subFeeReceipt.parentFeeType == feeType.id && subFeeReceipt.parentFeeReceipt == feeReceipt.id) {
+                       currentList.push(subFeeReceipt);
+                   }
+               });
+            }
+        });
+        console.log(currentList);
+        let amount = 0;
+        currentList.forEach((subFeeReceipt) => {
+           amount += this.installmentList.reduce((totalInstallment, installment) => {
                         return (
                             totalInstallment +
                             (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0) +
                             (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0)
                         );
-                    }, 0)
-                );
-            }, 0);
+                    }, 0);
+        });
+        return amount;
     }
 
     increaseNumber(): void {
