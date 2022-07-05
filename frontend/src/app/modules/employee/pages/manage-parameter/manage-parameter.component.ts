@@ -41,7 +41,8 @@ export class ManageParameterComponent implements OnInit {
         'Monthly Salary',
         'Paid Leave',
         'Address',
-        'Remark'
+        'Remark',
+        'Is Non-Salaried Employee'
     ];
 
     ADD_PARAMETER_STRING = '<Add New Parameter>';

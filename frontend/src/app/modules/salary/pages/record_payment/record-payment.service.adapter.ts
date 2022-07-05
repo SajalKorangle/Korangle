@@ -13,12 +13,13 @@ export class RecordPaymentServiceAdapter {
     public getEmployeeList(): void {
         let data = {
             parentSchool: this.vm.user.activeSchool.dbId,
+            isNonSalariedEmployee: false,
         };
         this.vm.isInitialLoading = true;
         this.vm.employeeService.getEmployeeMiniProfileList(data, this.vm.user.jwt).then(
             (employeeList) => {
                 this.vm.employeeList = employeeList.filter((employee) => {
-                    return employee.dateOfLeaving === null;
+                    return employee.dateOfLeaving === null && employee.isNonSalariedEmployee === false;
                 });
                 this.vm.isInitialLoading = false;
             },
