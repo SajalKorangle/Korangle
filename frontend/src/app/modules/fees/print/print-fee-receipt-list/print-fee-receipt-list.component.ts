@@ -62,24 +62,6 @@ export class PrintFeeReceiptListComponent implements OnInit, AfterViewChecked {
            }, 0);
         });
         return filteredAmount;
-
-
-        // return this.data.subFeeReceiptList
-        //     .filter((subFeeReceipt) => {
-        //         return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
-        //     })
-        //     .reduce((totalSubFeeReceipt, subFeeReceipt) => {
-        //         return (
-        //             totalSubFeeReceipt +
-        //             this.installmentList.reduce((totalInstallment, installment) => {
-        //                 return (
-        //                     totalInstallment +
-        //                     (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0) +
-        //                     (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0)
-        //                 );
-        //             }, 0)
-        //         );
-        //     }, 0);
     }
 
     getFeeReceiptListTotalAmount(): any {
