@@ -58,7 +58,6 @@ export class TotalCollectionComponent implements OnInit {
     selectedClassSection = null;
     filteredClassSectionList = [];
 
-    selectedFeeType = null;
     selectedFeeReceiptType = null;
     receiptTypeList = ['Valid Receipts', 'Cancelled Receipts'];
     filteredFeeTypeList = [];
@@ -103,7 +102,6 @@ export class TotalCollectionComponent implements OnInit {
         this.selectedEmployee = null;
         this.selectedClassSection = null;
         this.selectedModeOfPayment = null;
-        this.selectedFeeType = null;
         this.selectedFeeReceiptType = this.receiptTypeList[0];
         this.selectedSession = null;
         this.receiptColumnFilter = new ReceiptColumnFilter();
@@ -117,6 +115,7 @@ export class TotalCollectionComponent implements OnInit {
         let data = {
             receiptColumnFilter: this.receiptColumnFilter,
             feeTypeList: this.feeTypeList,
+            filteredFeeTypeList: this.filteredFeeTypeList,
             feeReceiptList: this.getFilteredFeeReceiptList(),
             subFeeReceiptList: this.subFeeReceiptList,
             studentList: this.studentList,
@@ -126,7 +125,6 @@ export class TotalCollectionComponent implements OnInit {
             sectionList: this.sectionList,
             selectedEmployee: this.selectedEmployee,
             selectedModeOfPayment: this.selectedModeOfPayment,
-            selectedFeeType: this.selectedFeeType,
             sessionList: this.filteredSessionList,
         };
 
@@ -314,11 +312,7 @@ export class TotalCollectionComponent implements OnInit {
     getFeeReceiptTotalAmount(feeReceipt: any): number {
         return this.subFeeReceiptList
             .filter((subFeeReceipt) => {
-                if (this.selectedFeeType) {
-                    return subFeeReceipt.parentFeeReceipt == feeReceipt.id && subFeeReceipt.parentFeeType == this.selectedFeeType.id;
-                } else {
-                    return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
-                }
+                return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
             })
             .reduce((totalSubFeeReceipt, subFeeReceipt) => {
                 return (

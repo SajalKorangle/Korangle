@@ -27,7 +27,6 @@ export class FeeReceiptListComponent implements OnInit {
     @Input() employeeList;
     @Input() receiptColumnFilter;
     @Input() number;
-    @Input() selectedFeeType;
     @Input() boardList;
     @Input() sessionList = [];
     @Input() isPrinting = false;
@@ -72,17 +71,19 @@ export class FeeReceiptListComponent implements OnInit {
         this.printService.navigateToPrintRoute(PRINT_FULL_FEE_RECIEPT_LIST, { user: this.user, value: data });
     }
 
-    getFeeReceiptTotalAmount(feeReceipt: any): number {
+    getFeeReceiptFilteredAmount(feeReceipt: any): number {
         let currentList = [];
-        this.filteredFeeTypeList.forEach((feeType) => {
-            if (feeType.selectedFeeType) {
-               this.subFeeReceiptList.forEach((subFeeReceipt) => {
-                   if (subFeeReceipt.parentFeeType == feeType.id && subFeeReceipt.parentFeeReceipt == feeReceipt.id) {
-                       currentList.push(subFeeReceipt);
-                   }
-               });
-            }
-        });
+        if (this.filteredFeeTypeList != undefined) {
+            this.filteredFeeTypeList.forEach((feeType) => {
+                if (feeType.selectedFeeType) {
+                    this.subFeeReceiptList.forEach((subFeeReceipt) => {
+                        if (subFeeReceipt.parentFeeType == feeType.id && subFeeReceipt.parentFeeReceipt == feeReceipt.id) {
+                            currentList.push(subFeeReceipt);
+                        }
+                    });
+                }
+            });
+        }
         let filteredAmount = 0;
         currentList.forEach((subFeeReceipt) => {
            filteredAmount += this.installmentList.reduce((totalInstallment, installment) => {
@@ -91,7 +92,7 @@ export class FeeReceiptListComponent implements OnInit {
                             (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0) +
                             (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0)
                         );
-                    }, 0);
+           }, 0);
         });
         return filteredAmount;
     }
@@ -167,7 +168,7 @@ export class FeeReceiptListComponent implements OnInit {
             data: {
                 user: this.user,
                 feeReceipt: feeReceipt,
-                totalAmount: this.getFeeReceiptTotalAmount(feeReceipt),
+                totalAmount: this.getFeeReceiptFilteredAmount(feeReceipt),
                 studentName: this.getStudent(feeReceipt.parentStudent).name,
                 classSection:
                     this.getClassName(feeReceipt.parentStudent, feeReceipt.parentSession) +
