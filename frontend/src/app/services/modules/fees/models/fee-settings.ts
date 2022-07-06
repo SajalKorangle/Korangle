@@ -8,12 +8,6 @@ export class FeeSettings {
     accountingSettingsJSON: AccountingSettings;
 }
 
-export class FeeSchoolSettings {
-    id: number;
-    parentSchool: number;
-    printSingleReceipt: boolean;
-}
-
 export class AccountingSettings {
     parentAccountFrom: number = null;
     toAccountsStructure: {

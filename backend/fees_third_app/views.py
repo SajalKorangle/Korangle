@@ -1,4 +1,3 @@
-from generic.generic_views import GenericListView, GenericView
 from common.common_views_3 import CommonView, CommonListView, APIView
 from decorators import user_permission_3
 

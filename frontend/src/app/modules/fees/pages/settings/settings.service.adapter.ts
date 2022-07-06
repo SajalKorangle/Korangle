@@ -43,14 +43,15 @@ export class SettingsServiceAdapter {
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), // 1
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request),  // 2
             new Query().filter({parentSchool: this.vm.user.activeSchool.dbId}).getObject({payment_app: 'SchoolMerchantAccount'}), // 3
-            this.vm.genericService.getObjectList({ fees_third_app: 'FeeSchoolSettings' }, {}), // 4
+            this.vm.genericService.getObjectList({ fees_third_app: 'FeeSchoolSettings' }, {filter: {parentSchool: this.vm.user.activeSchool.dbId}}), // 4
         ]);
 
         this.vm.backendData.accountSessionList = accountSessionList;
         this.vm.backendData.accountsList = accountsList;
         this.vm.backendData.schoolMerchantAccount = schoolMerchantAccount;
-        this.vm.printSingleReceipt = feeSchoolSettingsList[0]["printSingleReceipt"];
-
+        if(feeSchoolSettingsList.length == 1){
+            this.vm.printSingleReceipt = feeSchoolSettingsList[0]["printSingleReceipt"];
+        }
 
         if (feeSettingsList.length == 0) {
             this.vm.backendData.applyDefaultSettings();
@@ -129,7 +130,7 @@ export class SettingsServiceAdapter {
     }
 
     async updatePrintSingleReceipt() {
-        this.vm.isLoadingCustom = true;
+        this.vm.isLoadingPrintSingleReceiptSetting = true;
 
         const [feeSchoolSettingsList] = await Promise.all([
             this.vm.genericService.getObjectList({ fees_third_app: 'FeeSchoolSettings' }, {}),
@@ -144,7 +145,7 @@ export class SettingsServiceAdapter {
             await this.vm.genericService.createObject({ fees_third_app: 'FeeSchoolSettings' }, newFeeSchoolSettings)
         } 
         
-        this.vm.isLoadingCustom = false;
+        this.vm.isLoadingPrintSingleReceiptSetting = false;
     }
 
 }

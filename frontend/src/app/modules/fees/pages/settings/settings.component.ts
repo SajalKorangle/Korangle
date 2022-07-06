@@ -40,7 +40,7 @@ export class SettingsComponent implements OnInit {
 
     isActiveSession: boolean;
     isLoading = false;
-    isLoadingCustom = false;
+    isLoadingPrintSingleReceiptSetting = false;
 
     constructor(
         public genericService: GenericService,
@@ -123,10 +123,6 @@ export class SettingsComponent implements OnInit {
             }
         }
         return dataValid;
-    }
-
-    toggleSinglePageFeePrinting(){
-        this.serviceAdapter.updatePrintSingleReceipt();
     }
 }
 
