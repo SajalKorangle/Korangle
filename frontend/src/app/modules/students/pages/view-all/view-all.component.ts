@@ -71,7 +71,8 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService, TCService, NotificationService, UserService, SmsService,],
+    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService, TCService, 
+    NotificationService, UserService, SmsService],
 })
 export class ViewAllComponent implements OnInit {
     user;
@@ -113,7 +114,7 @@ export class ViewAllComponent implements OnInit {
     /* TC Options */
     noTC = true;
     yesTC = true;
-    
+
     /* Is Logged In? Options */
     messageService: any;
     isLogged = false;
@@ -180,9 +181,9 @@ export class ViewAllComponent implements OnInit {
 
         this.backendData = new ViewAllBackendData();
         this.backendData.initialize(this);
-        
+
         this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
-        
+
         this.serviceAdapter = new ViewAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
@@ -607,13 +608,14 @@ export class ViewAllComponent implements OnInit {
                 student.show = false;
                 return;
             }
-            
+ 
             // isLoggedIn Filter Check
-            if(!(this.isLogged && this.isNotLogged) && !(!this.isLogged && !this.isNotLogged)){
-                if ((this.isLogged && !(student.notification || student.secondNumberNotification)) || (this.isNotLogged && (student.notification || student.secondNumberNotification))) {
+            if (!(this.isLogged && this.isNotLogged) && !(!this.isLogged && !this.isNotLogged)) {
+                if ((this.isLogged && !(student.notification || student.secondNumberNotification)) || 
+                (this.isNotLogged && (student.notification || student.secondNumberNotification))) {
                     student.show = false;
                     return;
-                }  
+                }
             }
 
             // Custom filters check
