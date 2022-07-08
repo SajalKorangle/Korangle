@@ -47,18 +47,17 @@ export class SettingsComponent implements OnInit {
         public schoolService: SchoolService,
         public feeService: FeeService,
         public accountsService: AccountsService,
-        private cdRef: ChangeDetectorRef,
+        private cdRef: ChangeDetectorRef
     ) { }
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
         this.backendData = new SettingsBackendData(this);
 
         this.serviceAdapter = new SettingsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        await this.serviceAdapter.initializeData();
-        console.log('this: ', this);
+        this.serviceAdapter.initializeData();
     }
 
     detectChanges(): void { // what is this?

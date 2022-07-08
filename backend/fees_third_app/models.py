@@ -609,6 +609,9 @@ class FeeSchoolSettings(models.Model):
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']
 
+    class Meta:
+        unique_together = ('parentSchool', 'printSingleReceipt')
+
 
 class FeeReceiptOrder(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, related_name='feeReceiptOrderList')
