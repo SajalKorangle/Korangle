@@ -71,7 +71,7 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService, TCService, 
+    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService, TCService,
     NotificationService, UserService, SmsService],
 })
 export class ViewAllComponent implements OnInit {
@@ -608,10 +608,10 @@ export class ViewAllComponent implements OnInit {
                 student.show = false;
                 return;
             }
- 
+
             // isLoggedIn Filter Check
             if (!(this.isLogged && this.isNotLogged) && !(!this.isLogged && !this.isNotLogged)) {
-                if ((this.isLogged && !(student.notification || student.secondNumberNotification)) || 
+                if ((this.isLogged && !(student.notification || student.secondNumberNotification)) ||
                 (this.isNotLogged && (student.notification || student.secondNumberNotification))) {
                     student.show = false;
                     return;
