@@ -604,7 +604,7 @@ class FeeSchoolSessionSettings(models.Model):
 
 class FeeSchoolSettings(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
-    printSingleReceipt = models.BooleanField(default=False)
+    printSingleReceipt = models.BooleanField(default=False, unique = True)
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']
