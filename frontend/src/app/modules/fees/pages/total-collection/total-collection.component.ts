@@ -310,22 +310,29 @@ export class TotalCollectionComponent implements OnInit {
     }
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {
-        return this.subFeeReceiptList
-            .filter((subFeeReceipt) => {
-                return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
-            })
-            .reduce((totalSubFeeReceipt, subFeeReceipt) => {
-                return (
-                    totalSubFeeReceipt +
-                    this.installmentList.reduce((totalInstallment, installment) => {
+        let currentList = [];
+        if (this.filteredFeeTypeList != undefined) {
+            this.filteredFeeTypeList.forEach((feeType) => {
+                if (feeType.selectedFeeType) {
+                    this.subFeeReceiptList.forEach((subFeeReceipt) => {
+                        if (subFeeReceipt.parentFeeType == feeType.id && subFeeReceipt.parentFeeReceipt == feeReceipt.id) {
+                            currentList.push(subFeeReceipt);
+                        }
+                    });
+                }
+            });
+        }
+        let filteredAmount = 0;
+        currentList.forEach((subFeeReceipt) => {
+           filteredAmount += this.installmentList.reduce((totalInstallment, installment) => {
                         return (
                             totalInstallment +
                             (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0) +
                             (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0)
                         );
-                    }, 0)
-                );
-            }, 0);
+           }, 0);
+        });
+        return filteredAmount;
     }
 
     checkCancelledRemark(): void {
