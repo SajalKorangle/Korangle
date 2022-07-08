@@ -40,9 +40,11 @@ export class ViewAllServiceAdapter {
             fields__korangle: ['parentStudent'],
         };
 
-        let temp_classSectionList_1, temp_classSectionList_2, temp_studentFullProfileList, temp_studentParameterList, temp_studentParameterValueList, temp_busStopList, temp_session_list, temp_backendDataTcList;
+        let temp_classSectionList_1, temp_classSectionList_2, temp_studentFullProfileList, temp_studentParameterList, 
+        temp_studentParameterValueList, temp_busStopList, temp_session_list, temp_backendDataTcList;
 
-        [temp_classSectionList_1, temp_classSectionList_2, temp_studentFullProfileList, temp_studentParameterList, temp_studentParameterValueList, temp_busStopList, temp_session_list, temp_backendDataTcList] = await Promise.all([
+        [temp_classSectionList_1, temp_classSectionList_2, temp_studentFullProfileList, temp_studentParameterList, temp_studentParameterValueList, 
+        temp_busStopList, temp_session_list, temp_backendDataTcList] = await Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),    // 0
             this.vm.classService.getObjectList(this.vm.classService.division, {}),  // 1
             this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),   // 2
@@ -51,7 +53,7 @@ export class ViewAllServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, bus_stop_data), // 5
             this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 6
             this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data),   // 7
-        ])
+        ]);
 
         temp_classSectionList_1.forEach((classs) => {
             classs.sectionList = [];
