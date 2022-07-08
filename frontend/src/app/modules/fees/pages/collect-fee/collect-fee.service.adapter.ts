@@ -77,7 +77,7 @@ export class CollectFeeServiceAdapter {
             this.vm.feeSettings = value[5][0];
         this.vm.accountsList = value[6];
         this.vm.htmlRenderer.populateCustomAccountSessionList(this.vm.accountsList, value[7]);
-        if (value[8].length == 1){
+        if (value[8].length == 1) {
             this.vm.printSingleReceipt = value[8][0]["printSingleReceipt"];
         }
 

@@ -49,7 +49,7 @@ export class SettingsServiceAdapter {
         this.vm.backendData.accountSessionList = accountSessionList;
         this.vm.backendData.accountsList = accountsList;
         this.vm.backendData.schoolMerchantAccount = schoolMerchantAccount;
-        if(feeSchoolSettingsList.length == 1){
+        if (feeSchoolSettingsList.length == 1) {
             this.vm.printSingleReceipt = feeSchoolSettingsList[0]["printSingleReceipt"];
         }
 
@@ -140,11 +140,11 @@ export class SettingsServiceAdapter {
 
         if (feeSchoolSettingsList.length > 0) {
             newFeeSchoolSettings.id = feeSchoolSettingsList[0].id;
-            await this.vm.genericService.updateObject({ fees_third_app: 'FeeSchoolSettings' }, newFeeSchoolSettings)
+            await this.vm.genericService.updateObject({ fees_third_app: 'FeeSchoolSettings' }, newFeeSchoolSettings);
         } else {
-            await this.vm.genericService.createObject({ fees_third_app: 'FeeSchoolSettings' }, newFeeSchoolSettings)
-        } 
-        
+            await this.vm.genericService.createObject({ fees_third_app: 'FeeSchoolSettings' }, newFeeSchoolSettings);
+        }
+
         this.vm.isLoadingPrintSingleReceiptSetting = false;
     }
 
