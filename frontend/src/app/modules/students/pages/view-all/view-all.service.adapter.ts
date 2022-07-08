@@ -40,10 +40,10 @@ export class ViewAllServiceAdapter {
             fields__korangle: ['parentStudent'],
         };
 
-        let temp_classSectionList_1, temp_classSectionList_2, temp_studentFullProfileList, temp_studentParameterList, 
+        let temp_classSectionList_1, temp_classSectionList_2, temp_studentFullProfileList, temp_studentParameterList,
         temp_studentParameterValueList, temp_busStopList, temp_session_list, temp_backendDataTcList;
 
-        [temp_classSectionList_1, temp_classSectionList_2, temp_studentFullProfileList, temp_studentParameterList, temp_studentParameterValueList, 
+        [temp_classSectionList_1, temp_classSectionList_2, temp_studentFullProfileList, temp_studentParameterList, temp_studentParameterValueList,
         temp_busStopList, temp_session_list, temp_backendDataTcList] = await Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),    // 0
             this.vm.classService.getObjectList(this.vm.classService.division, {}),  // 1
