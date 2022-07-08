@@ -53,11 +53,10 @@ export class MessageService {
         };
 
         let temp_gcm_list, temp_user_list;
-        
         [temp_gcm_list, temp_user_list] = await Promise.all([
             this.notificationService.getObjectList(this.notificationService.gcm_device, gcm_data),
             this.userService.getObjectList(this.userService.user, user_data)
-        ])
+        ]);
 
         const notif_usernames = temp_user_list.filter((user) => {
             return (
