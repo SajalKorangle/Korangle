@@ -28,6 +28,11 @@ import { ViewAllHtmlRenderer } from './view-all.html.renderer';
 
 import { getAge } from "../../common/common-functions";
 
+import { MessageService } from '@services/message-service';
+import { NotificationService } from '@services/modules/notification/notification.service';
+import { UserService } from '@services/modules/user/user.service';
+import { SmsService } from '@services/modules/sms/sms.service';
+
 class ColumnFilter {
     showSerialNumber = true;
     showProfileImage = false;
@@ -66,7 +71,8 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService, TCService],
+    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService, TCService,
+    NotificationService, UserService, SmsService],
 })
 export class ViewAllComponent implements OnInit {
     user;
@@ -108,6 +114,11 @@ export class ViewAllComponent implements OnInit {
     /* TC Options */
     noTC = true;
     yesTC = true;
+
+    /* Is Logged In? Options */
+    messageService: any;
+    isLogged = false;
+    isNotLogged = false;
 
     displayStudentNumber = 0;
 
@@ -157,7 +168,10 @@ export class ViewAllComponent implements OnInit {
         public printService: PrintService,
         public busStopService: BusStopService,
         public tcService: TCService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        public notificationService: NotificationService,
+        public userService: UserService,
+        public smsService: SmsService,
     ) { }
 
     ngOnInit(): void {
@@ -167,6 +181,8 @@ export class ViewAllComponent implements OnInit {
 
         this.backendData = new ViewAllBackendData();
         this.backendData.initialize(this);
+
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
 
         this.serviceAdapter = new ViewAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
@@ -591,6 +607,15 @@ export class ViewAllComponent implements OnInit {
                 || (this.yesTC && (student.parentTransferCertificate || student.newTransferCertificate)))) {
                 student.show = false;
                 return;
+            }
+
+            // isLoggedIn Filter Check
+            if (!(this.isLogged && this.isNotLogged) && !(!this.isLogged && !this.isNotLogged)) {
+                if ((this.isLogged && !(student.notification || student.secondNumberNotification)) ||
+                (this.isNotLogged && (student.notification || student.secondNumberNotification))) {
+                    student.show = false;
+                    return;
+                }
             }
 
             // Custom filters check
