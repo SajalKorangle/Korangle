@@ -60,7 +60,6 @@ export class TotalCollectionComponent implements OnInit {
 
     selectedFeeReceiptType = null;
     receiptTypeList = ['Valid Receipts', 'Cancelled Receipts'];
-    filteredFeeTypeList = [];
 
     isInitialLoading = false;
     isLoading = false;
@@ -115,7 +114,6 @@ export class TotalCollectionComponent implements OnInit {
         let data = {
             receiptColumnFilter: this.receiptColumnFilter,
             feeTypeList: this.feeTypeList,
-            filteredFeeTypeList: this.filteredFeeTypeList,
             feeReceiptList: this.getFilteredFeeReceiptList(),
             subFeeReceiptList: this.subFeeReceiptList,
             studentList: this.studentList,
@@ -205,12 +203,12 @@ export class TotalCollectionComponent implements OnInit {
         });
     }
     selectAllFeeType(): void {
-        this.filteredFeeTypeList.forEach((item) => {
+        this.feeTypeList.forEach((item) => {
             item.selectedFeeType = true;
         });
     }
     unselectAllFeeType(): void {
-        this.filteredFeeTypeList.forEach((item) => {
+        this.feeTypeList.forEach((item) => {
             item.selectedFeeType = false;
         });
     }
@@ -270,7 +268,7 @@ export class TotalCollectionComponent implements OnInit {
 
         // filter by Fee Type
         let filteredSubFeeReceiptList = [];
-        this.filteredFeeTypeList.forEach((feeType) => {
+        this.feeTypeList.forEach((feeType) => {
             if (feeType.selectedFeeType) {
                 filteredSubFeeReceiptList = [...filteredSubFeeReceiptList, ...(this.subFeeReceiptList
                     .filter((subFeeReceipt) => { return subFeeReceipt.parentFeeType == feeType.id; })
@@ -280,7 +278,7 @@ export class TotalCollectionComponent implements OnInit {
 
 
         let checkFeeType = false;
-        this.filteredFeeTypeList.forEach((feeType) => {
+        this.feeTypeList.forEach((feeType) => {
             if (feeType.selectedFeeType) {
                 checkFeeType = true;
                 tempList = tempList.filter((feeReceipt) => filteredSubFeeReceiptList.includes(feeReceipt.id));
@@ -310,9 +308,10 @@ export class TotalCollectionComponent implements OnInit {
     }
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {
+        console.log(this.feeTypeList);
         let currentList = [];
-        if (this.filteredFeeTypeList != undefined) {
-            this.filteredFeeTypeList.forEach((feeType) => {
+        if (this.feeTypeList != undefined) {
+            this.feeTypeList.forEach((feeType) => {
                 if (feeType.selectedFeeType) {
                     this.subFeeReceiptList.forEach((subFeeReceipt) => {
                         if (subFeeReceipt.parentFeeType == feeType.id && subFeeReceipt.parentFeeReceipt == feeReceipt.id) {

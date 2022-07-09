@@ -17,7 +17,6 @@ import { FeeService } from '@services/modules/fees/fee.service';
 export class FeeReceiptListComponent implements OnInit {
     @Input() user;
     @Input() feeTypeList;
-    @Input() filteredFeeTypeList;
     @Input() feeReceiptList;
     @Input() subFeeReceiptList;
     @Input() studentList;
@@ -72,29 +71,21 @@ export class FeeReceiptListComponent implements OnInit {
     }
 
     getFeeReceiptFilteredAmount(feeReceipt: any): number {
-        let currentList = [];
-        if (this.filteredFeeTypeList != undefined) {
-            this.filteredFeeTypeList.forEach((feeType) => {
-                if (feeType.selectedFeeType) {
-                    this.subFeeReceiptList.forEach((subFeeReceipt) => {
-                        if (subFeeReceipt.parentFeeType == feeType.id && subFeeReceipt.parentFeeReceipt == feeReceipt.id) {
-                            currentList.push(subFeeReceipt);
-                        }
-                    });
-                }
-            });
-        }
-        let filteredAmount = 0;
-        currentList.forEach((subFeeReceipt) => {
-           filteredAmount += this.installmentList.reduce((totalInstallment, installment) => {
-                        return (
-                            totalInstallment +
-                            (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0) +
-                            (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0)
-                        );
-           }, 0);
-        });
-        return filteredAmount;
+        let selectedFeeTypeIdList = this.feeTypeList.filter(feeType => {return feeType.selectedFeeType}).map(feeType => {return feeType.id});
+        return this.subFeeReceiptList.filter((subFeeReceipt) => {
+        return subFeeReceipt.parentFeeReceipt == feeReceipt.id && selectedFeeTypeIdList.includes(subFeeReceipt.parentFeeType);
+        })
+        .reduce((totalSubFeeReceipt, subFeeReceipt) => {
+            return (
+                totalSubFeeReceipt + this.installmentList.reduce((totalInstallment, installment) => {
+                    return (
+                        totalInstallment +
+                        (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0) +
+                        (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0)
+                    );
+                }, 0)
+            );
+        }, 0);
     }
 
     increaseNumber(): void {

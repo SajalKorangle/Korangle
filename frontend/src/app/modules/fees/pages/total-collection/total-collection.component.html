@@ -123,7 +123,7 @@
                                 Clear All
                             </button>
                         </mat-option>
-                        <mat-option *ngFor="let feeType of filteredFeeTypeList">
+                        <mat-option *ngFor="let feeType of feeTypeList">
                             <mat-checkbox [(ngModel)]="feeType.selectedFeeType"
                             (click)="$event.stopPropagation();">
                                 {{ feeType.name }}
@@ -201,7 +201,6 @@
                     [employeeList]="filteredEmployeeList"
                     [classList]="classList"
                     [sectionList]="sectionList"
-                    [filteredFeeTypeList]="filteredFeeTypeList"
                     [sessionList]="filteredSessionList"
                     [boardList]="boardList"
                 ></app-fee-receipt-list>
