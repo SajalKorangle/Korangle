@@ -39,7 +39,7 @@ export class PrintFeeReceiptListComponent implements OnInit, AfterViewChecked {
     }
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {
-        let selectedFeeTypeIdList = this.data.feeTypeList.filter(feeType => {return feeType.selectedFeeType;}).map(feeType => {return feeType.id;});
+        let selectedFeeTypeIdList = this.data.feeTypeList.filter(feeType => { return feeType.selectedFeeType; }).map(feeType => { return feeType.id; });
         return this.data.subFeeReceiptList.filter((subFeeReceipt) => {
         return subFeeReceipt.parentFeeReceipt == feeReceipt.id && selectedFeeTypeIdList.includes(subFeeReceipt.parentFeeType);
         })
