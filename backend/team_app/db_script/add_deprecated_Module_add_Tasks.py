@@ -22,15 +22,18 @@ def add_deprecated_Tasks(apps, schema_editor):
     generate_tc_task.parentModule = deprecated_module
     generate_tc_task.path = 'student_generate_tc'
     generate_tc_task.title = 'Student - Generate TC'
+    generate_tc_task.orderNumber = 1
     generate_tc_task.save()
 
     i_cards_task.parentModule = deprecated_module
     i_cards_task.path = 'student_i_cards'
     i_cards_task.title = 'Student - Generate I-Card'
+    i_cards_task.orderNumber = 2
     i_cards_task.save()
 
     print_marksheet_task.parentModule = deprecated_module
     print_marksheet_task.path = 'examination_print_marksheet'
     print_marksheet_task.title = 'Examination - Print Marksheet'
+    print_marksheet_task.orderNumber = 3
     print_marksheet_task.save()
     
