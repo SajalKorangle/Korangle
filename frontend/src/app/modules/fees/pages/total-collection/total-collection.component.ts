@@ -308,7 +308,7 @@ export class TotalCollectionComponent implements OnInit {
     }
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {
-        let selectedFeeTypeIdList = this.feeTypeList.filter(feeType => {return feeType.selectedFeeType}).map(feeType => {return feeType.id});
+        let selectedFeeTypeIdList = this.feeTypeList.filter(feeType => {return feeType.selectedFeeType;}).map(feeType => {return feeType.id;});
         return this.subFeeReceiptList.filter((subFeeReceipt) => {
         return subFeeReceipt.parentFeeReceipt == feeReceipt.id && selectedFeeTypeIdList.includes(subFeeReceipt.parentFeeType);
         })
