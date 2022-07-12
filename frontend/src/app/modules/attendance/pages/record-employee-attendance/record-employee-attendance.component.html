@@ -39,7 +39,7 @@
             <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                 <tr>
                     <th>S No.</th>
-                    <th>Student</th>
+                    <th>Employee</th>
                     <th *ngIf="by === 'month'">Abs./Total</th>
                     <ng-container *ngFor="let date of getDateList()">
                         <th style="text-align: center" *ngIf="by === 'month'">{{ date.getDate() }}</th>
