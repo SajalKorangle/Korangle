@@ -1,5 +1,5 @@
 import { UpdateStudentFeesComponent } from './update-student-fees.component';
-import { CommonFunctions } from '../../../../classes/common-functions';
+import { CommonFunctions } from '@modules/common/common-functions';
 import { SchoolFeeRule } from '../../../../services/modules/fees/models/school-fee-rule';
 
 export class UpdateStudentFeesServiceAdapter {
@@ -148,6 +148,13 @@ export class UpdateStudentFeesServiceAdapter {
         this.vm.feeService.updateObject(this.vm.feeService.student_fees, this.vm.newStudentFee).then(
             (value) => {
                 alert('Student Fee updated successfully');
+
+                let parentEmployee = this.vm.user.activeSchool.employeeId;
+                let moduleName = this.vm.user.section.title;
+                let taskName = this.vm.user.section.subTitle;
+                let moduleList = this.vm.user.activeSchool.moduleList;
+                let actionString = " updated student fee of " + this.vm.selectedStudent.name;
+                CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
 
                 this.deleteFromStudentFee(this.vm.newStudentFee.id);
                 this.vm.studentFeeList.push(value);
