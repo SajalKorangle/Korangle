@@ -69,6 +69,15 @@ export class UpdateMarksComponent implements OnInit {
         this.cdRef.detectChanges();
     }
 
+    // Handle when the user selects subject from the dropdown on update marks page
+    onTestSelectChange(changedTest: any): void {
+        this.selectedExamination.selectedClass.selectedSection.testList.forEach((test) => {
+            if (test.id == changedTest.id) {
+                test.isSelected = !test.isSelected;
+            }
+        });
+    }
+
     getStudentName(studentId: any): any {
         let result = '';
         this.student_mini_profile_list.every((item) => {

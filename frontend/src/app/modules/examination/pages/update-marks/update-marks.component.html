@@ -52,17 +52,19 @@
 
                 <mat-form-field style="margin-top: 23px; margin-left: 20px">
                     <mat-select
-                        placeholder="Select Subject"
-                        id="selectSubject"
-                        [ngModel]="selectedExamination.selectedClass.selectedSection.selectedSubject"
-                        (ngModelChange)="selectedExamination.selectedClass.selectedSection.selectedSubject = $event; detectChanges()"
+                        placeholder="Select Test"
+                        id="selectTest"
                     >
-                        <mat-option
-                            *ngFor="let subject of selectedExamination.selectedClass.selectedSection.subjectList"
-                            testId="subject.id"
-                            [value]="subject"
-                        >
-                            {{ subject.name }}
+                        <mat-option *ngFor="let test of selectedExamination.selectedClass.selectedSection.testList">
+                            <mat-checkbox
+                                [checked]="test.isSelected"
+                                [value]="test"
+                                (change)="onTestSelectChange($event.source.value)"
+                                (click)="$event.stopPropagation()"
+                            >
+                                {{ test.name }}
+                            </mat-checkbox>
+                            <!-- {{ test.name }} -->
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -91,10 +93,9 @@
                         <th>S No.</th>
                         <th>Student</th>
                         <th>Roll No.</th>
-                        <ng-container *ngFor="let test of selectedExamination.selectedClass.selectedSection.selectedSubject.testDetails">
+                        <ng-container *ngFor="let test of selectedExamination.selectedClass.selectedSection.selectedTest">
                             <th>
-                                <span *ngIf="test.testType === null">Max. Marks {{ test.maximumMarks }}</span>
-                                <span *ngIf="test.testType !== null">{{ test.testType }} Out of {{ test.maximumMarks }}</span>
+                                <span>Max. Marks {{ test.maximumMarks }} ({{ test.name }})</span>
                             </th>
                             <th style="padding-left:4px;padding-right:4px;">Absent</th>
                         </ng-container>
@@ -104,15 +105,18 @@
                     <tr
                         *ngFor="
                             let student of getFilteredStudentList(
-                                selectedExamination.selectedClass.selectedSection.selectedSubject.studentList
+                                selectedExamination.selectedClass.selectedSection.selectedTest.studentList
                             );
                             let i = index
                         "
                     >
                         <td>{{ i + 1 }}.</td>
                         <td>{{ student.name }}</td>
-                        <td>{{ student.rollNumber }}</td>
-                        <ng-container *ngFor="let test of student.testDetails">
+                        <td>
+                            <span *ngIf="student.rollNumber != null">{{ student.rollNumber }}</span>
+                            <span *ngIf="student.rollNumber == null"> N/A </span>
+                        </td>
+                        <ng-container *ngFor="let test of student.testData">
                             <td>
                                 <input type="number" [disabled]="test.absent" [(ngModel)]="test.marksObtained" (change)="handleUpdate(test,$event)" placeholder="Type marks here" />
                             </td>
