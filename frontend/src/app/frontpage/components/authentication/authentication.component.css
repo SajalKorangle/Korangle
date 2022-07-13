@@ -33,6 +33,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-top: 10px;
 }
 
 label {
@@ -65,7 +66,7 @@ label {
     background-color: #F9F9F9 !important;
 }
 
-.example-container .mat-form-field + .mat-form-field {
+.example-container .mat-form-field+.mat-form-field {
     margin-left: 8px;
 }
 
@@ -130,6 +131,7 @@ label {
     border-top: 2px solid dimgrey;
     width: 18px;
     height: 18px;
-    -webkit-animation: spin 2s linear infinite; /* Safari */
+    -webkit-animation: spin 2s linear infinite;
+    /* Safari */
     animation: spin 2s linear infinite;
 }
