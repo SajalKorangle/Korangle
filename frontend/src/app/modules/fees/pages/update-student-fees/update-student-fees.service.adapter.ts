@@ -153,7 +153,7 @@ export class UpdateStudentFeesServiceAdapter {
                 let moduleName = this.vm.user.section.title;
                 let taskName = this.vm.user.section.subTitle;
                 let moduleList = this.vm.user.activeSchool.moduleList;
-                let actionString = " updated student fee of " + this.vm.selectedStudent.name;
+                let actionString = " updated student " + this.vm.selectedFeeType.name + " of " + this.vm.selectedStudent.name;
                 CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
 
                 this.deleteFromStudentFee(this.vm.newStudentFee.id);
