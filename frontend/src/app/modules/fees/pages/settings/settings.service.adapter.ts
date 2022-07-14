@@ -1,9 +1,7 @@
-
 import { SettingsComponent } from './settings.component';
 import { Session } from '@services/modules/school/models/session';
 import { CommonFunctions } from '@modules/common/common-functions';
 import { Query } from '@services/generic/query';
-
 
 export class SettingsServiceAdapter {
 
@@ -40,16 +38,20 @@ export class SettingsServiceAdapter {
             parentAccount__accountType: 'ACCOUNT',
         };
 
-        const [feeSettingsList, accountSessionList, accountsList, schoolMerchantAccount] = await Promise.all([
+        const [feeSettingsList, accountSessionList, accountsList, schoolMerchantAccount, feeSchoolSettingsList] = await Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request), //0
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), // 1
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request),  // 2
-            new Query().filter({parentSchool: this.vm.user.activeSchool.dbId}).getObject({payment_app: 'SchoolMerchantAccount'})
+            new Query().filter({parentSchool: this.vm.user.activeSchool.dbId}).getObject({payment_app: 'SchoolMerchantAccount'}), // 3
+            this.vm.genericService.getObjectList({ fees_third_app: 'FeeSchoolSettings' }, {filter: {parentSchool: this.vm.user.activeSchool.dbId}}), // 4
         ]);
 
         this.vm.backendData.accountSessionList = accountSessionList;
         this.vm.backendData.accountsList = accountsList;
         this.vm.backendData.schoolMerchantAccount = schoolMerchantAccount;
+        if (feeSchoolSettingsList.length == 1) {
+            this.vm.printSingleReceipt = feeSchoolSettingsList[0]["printSingleReceipt"];
+        }
 
         if (feeSettingsList.length == 0) {
             this.vm.backendData.applyDefaultSettings();
@@ -125,6 +127,25 @@ export class SettingsServiceAdapter {
 
         alert('fees accounting settings updated');
         this.vm.isLoading = false;
+    }
+
+    async updatePrintSingleReceipt() {
+        this.vm.isLoadingPrintSingleReceiptSetting = true;
+
+        const [feeSchoolSettingsList] = await Promise.all([
+            this.vm.genericService.getObjectList({ fees_third_app: 'FeeSchoolSettings' }, {}),
+        ]);
+
+        const newFeeSchoolSettings: any = { printSingleReceipt: this.vm.printSingleReceipt, parentSchool: this.vm.user.activeSchool.dbId };
+
+        if (feeSchoolSettingsList.length > 0) {
+            newFeeSchoolSettings.id = feeSchoolSettingsList[0].id;
+            await this.vm.genericService.updateObject({ fees_third_app: 'FeeSchoolSettings' }, newFeeSchoolSettings);
+        } else {
+            await this.vm.genericService.createObject({ fees_third_app: 'FeeSchoolSettings' }, newFeeSchoolSettings);
+        }
+
+        this.vm.isLoadingPrintSingleReceiptSetting = false;
     }
 
 }
