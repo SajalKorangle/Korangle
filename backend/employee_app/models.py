@@ -141,7 +141,7 @@ def admin_user_permission_manage_complaints_page(sender, instance, **kwargs):
     module_object = Module.objects.get(path = 'complaints')
     task_object = Task.objects.get(path = 'manage_complaints', parentModule = module_object)
 
-    if instance.parentTask == task_object:
+    if instance.parentTask == task_object and len(instance.configJSON) == 2:
         instance.configJSON = '{"userType":"admin"}'
 
 
