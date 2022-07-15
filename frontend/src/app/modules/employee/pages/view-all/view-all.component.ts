@@ -36,6 +36,7 @@ class ColumnFilter {
     showMonthlySalary = false;
     showPranNumber = false;
     showRemark = false;
+    showIsNonSalariedEmployee = false;
 }
 
 @Component({
@@ -195,6 +196,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showMonthlySalary ? headerValues.push('Monthly Salary') : '';
         this.columnFilter.showPranNumber ? headerValues.push('PRAN Number') : '';
         this.columnFilter.showRemark ? headerValues.push('Remark') : '';
+        this.columnFilter.showIsNonSalariedEmployee ? headerValues.push('Is Non-Salaried Employee') : '';
 
         return headerValues;
     }
@@ -225,6 +227,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showMonthlySalary ? employeeDisplay.push(employee.monthlySalary) : '';
         this.columnFilter.showPranNumber ? employeeDisplay.push(employee.pranNumber) : '';
         this.columnFilter.showRemark ? employeeDisplay.push(employee.remark) : '';
+        this.columnFilter.showIsNonSalariedEmployee ? employeeDisplay.push(employee.isNonSalariedEmployee) : '';
 
         return employeeDisplay;
     }

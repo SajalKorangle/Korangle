@@ -95,6 +95,9 @@ class Employee(models.Model):
     # School Id
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, related_name="employeeList")
 
+    # Is Employee a third party vendor
+    isNonSalariedEmployee = models.BooleanField(null=False, default=False)
+
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']
 
