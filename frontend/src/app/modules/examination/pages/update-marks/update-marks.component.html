@@ -57,9 +57,7 @@
                     >
                         <mat-option *ngFor="let test of selectedExamination.selectedClass.selectedSection.testList">
                             <mat-checkbox
-                                [checked]="test.isSelected"
-                                [value]="test"
-                                (change)="onTestSelectChange($event.source.value)"
+                                [(ngModel)]="test.isSelected"
                                 (click)="$event.stopPropagation()"
                             >
                                 {{ test.name }}
@@ -93,7 +91,7 @@
                         <th>S No.</th>
                         <th>Student</th>
                         <th>Roll No.</th>
-                        <ng-container *ngFor="let test of selectedExamination.selectedClass.selectedSection.selectedTest">
+                        <ng-container *ngFor="let test of selectedExamination.selectedClass.selectedSection.selectedTestList">
                             <th>
                                 <span>Max. Marks {{ test.maximumMarks }} ({{ test.name }})</span>
                             </th>
@@ -105,7 +103,7 @@
                     <tr
                         *ngFor="
                             let student of getFilteredStudentList(
-                                selectedExamination.selectedClass.selectedSection.selectedTest.studentList
+                                selectedExamination.selectedClass.selectedSection.selectedTestList.studentList
                             );
                             let i = index
                         "
