@@ -426,9 +426,13 @@ export class UpdateMarksServiceAdapter {
             }).then((response) => {
                 this.populateStudentTestList(response);
                 let subjectMap = new Map<number, string>();
+                let subjectMaxMarksMap = new Map<string, number>();
                 this.vm.selectedExamination.selectedClass.selectedSection.selectedTest.forEach((test) => {
                     if(!subjectMap.has(test.subject.id)) {
                         subjectMap.set(test.subject.id, test.name);
+                    }
+                    if(!subjectMaxMarksMap.has(test.name)) {
+                        subjectMaxMarksMap.set(test.name, test.maximumMarks);
                     }
                 }
                 );
@@ -437,6 +441,12 @@ export class UpdateMarksServiceAdapter {
                 this.vm.selectedExamination.selectedClass.selectedSection.selectedTest.studentList.forEach((student) => {
                     student.testData.forEach((testDataSingle) => {
                         testDataSingle['subjectName'] = subjectMap.get(testDataSingle.parentSubject);
+                        let subjectFullName = testDataSingle['subjectName'];
+                        if(testDataSingle.testType != null) {
+                            subjectFullName += ' - ' + testDataSingle.testType;
+                        }
+                        testDataSingle['maximumMarks'] = subjectMaxMarksMap.get(subjectFullName);
+                        testDataSingle['subjectFullName'] = subjectFullName;
                     }
                     );
                 }
@@ -459,16 +469,17 @@ export class UpdateMarksServiceAdapter {
         );
     }
 
+    sortSelectedTestBySubjectName(): void {
+        this.vm.selectedExamination.selectedClass.selectedSection.selectedTest.sort((a, b) => {
+            return a.name.localeCompare(b.name);
+        }
+        );
+    }
 
     sortTestDataBySubjectName() {
         this.vm.selectedExamination.selectedClass.selectedSection.selectedTest.studentList.forEach((student) => {
             student.testData.sort((a, b) => {
-                if (a.subjectName === null) {
-                    return 0;
-                } else if (b.subjectName === null) {
-                    return 1;
-                }
-                return a.subjectName.localeCompare(b.subjectName);
+                return a.subjectFullName.localeCompare(b.subjectFullName);
             });
         }
         );

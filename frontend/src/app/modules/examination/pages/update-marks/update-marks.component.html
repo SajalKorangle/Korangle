@@ -118,7 +118,7 @@
                         </td>
                         <ng-container *ngFor="let test of student.testData">
                             <td>
-                                <input type="number" [disabled]="test.absent" [(ngModel)]="test.marksObtained" (change)="handleUpdate(test,$event)" placeholder="Type marks here" />
+                                <input [ngClass]="{'invalidMarks': test.marksObtained > test.maximumMarks}" type="number" [disabled]="test.absent" [(ngModel)]="test.marksObtained" (change)="handleUpdate(test,$event)" placeholder="Type marks here" />
                             </td>
                             <td style="padding-left:4px;padding-right:4px;">
                                 <mat-checkbox style="margin-left: 14px" [(ngModel)]="test.absent" (ngModelChange)="handleUpdate(test)"></mat-checkbox>
