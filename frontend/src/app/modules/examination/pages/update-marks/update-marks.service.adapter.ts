@@ -274,21 +274,18 @@ export class UpdateMarksServiceAdapter {
                                     if (testDetails.length > 0) {
                                         for(let i = 0; i < testDetails.length; i++) {
                                             let test = testDetails[i];
-                                            let test_copy = this.copyObject(test);
-                                            test_copy['name'] = subject.name;
+                                            test['name'] = subject.name;
                                             if(test.testType) {
-                                                test_copy['name'] += ' - ' + test.testType;
+                                                test['name'] += ' - ' + test.testType;
                                             }
-                                            test_copy['isSelected'] = false;
-                                            test_copy['subject'] = subject;
-                                            tempSection['testList'].push(test_copy);
+                                            test['isSelected'] = false;
+                                            test['subject'] = subject;
+                                            tempSection['testList'].push(test);
                                         }
-                                        
-                                        let tempSubject = this.copyObject(subject);
 
-                                        tempSubject['testDetails'] = testDetails;
+                                        subject['testDetails'] = testDetails;
 
-                                        tempSection['subjectList'].push(tempSubject);
+                                        tempSection['subjectList'].push(subject);
                                     }
                                 });
 

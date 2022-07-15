@@ -53,7 +53,6 @@
                 <mat-form-field style="margin-top: 23px; margin-left: 20px">
                     <mat-select
                         placeholder="Select Test"
-                        id="selectTest"
                     >
                         <mat-option *ngFor="let test of selectedExamination.selectedClass.selectedSection.testList">
                             <mat-checkbox
@@ -93,7 +92,7 @@
                         <th>Roll No.</th>
                         <ng-container *ngFor="let test of selectedExamination.selectedClass.selectedSection.selectedTestList">
                             <th>
-                                <span>Max. Marks {{ test.maximumMarks }} ({{ test.name }})</span>
+                                <span>{{ test.name }} (Max: {{ test.maximumMarks }})</span>
                             </th>
                             <th style="padding-left:4px;padding-right:4px;">Absent</th>
                         </ng-container>
