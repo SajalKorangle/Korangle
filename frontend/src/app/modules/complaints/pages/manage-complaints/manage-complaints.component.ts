@@ -162,13 +162,13 @@ export class ManageComplaintsComponent implements OnInit {
     }  // Ends: loadMoreClick()
 
     /* Check User Permission (Admin / Not Admin) */
-    checkUserPermission(employeePermissionObject) {
+    checkUserPermission(employeePermissionObject, parentStudentIdList) {
         this.userPermission = employeePermissionObject.configJSON.includes("admin");
 
         if (this.userPermission) {
-            this.serviceAdapter.initializeComplaintDataAdmin();
+            this.serviceAdapter.initializeComplaintDataAdmin(parentStudentIdList);
         } else {
-            this.serviceAdapter.initializeComplaintDataEmployee();
+            this.serviceAdapter.initializeComplaintDataEmployee(parentStudentIdList);
         }
     }  // Ends: checkUserPermission()
 
