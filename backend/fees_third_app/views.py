@@ -130,7 +130,7 @@ class SubDiscountListView(CommonListView, APIView):
 
 
 ########### Fee Settings #############
-from .models import FeeSettings
+from .models import FeeSchoolSessionSettings as FeeSettings
 
 
 class FeeSettingsView(CommonView, APIView):
