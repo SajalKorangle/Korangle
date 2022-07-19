@@ -26,7 +26,6 @@ export class FeeReceiptListComponent implements OnInit {
     @Input() employeeList;
     @Input() receiptColumnFilter;
     @Input() number;
-    @Input() selectedFeeType;
     @Input() boardList;
     @Input() sessionList = [];
     @Input() isPrinting = false;
@@ -71,19 +70,16 @@ export class FeeReceiptListComponent implements OnInit {
         this.printService.navigateToPrintRoute(PRINT_FULL_FEE_RECIEPT_LIST, { user: this.user, value: data });
     }
 
-    getFeeReceiptTotalAmount(feeReceipt: any): number {
-        return this.subFeeReceiptList
-            .filter((subFeeReceipt) => {
-                if (this.selectedFeeType) {
-                    return subFeeReceipt.parentFeeReceipt == feeReceipt.id && subFeeReceipt.parentFeeType == this.selectedFeeType.id;
-                } else {
-                    return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
-                }
+    getFeeReceiptFilteredAmount(feeReceipt: any): number {
+        let selectedFeeTypeIdList = this.feeTypeList.filter(feeType => { return feeType.selectedFeeType; }).map(feeType => { return feeType.id; });
+        if (selectedFeeTypeIdList.length == 0)
+        {
+            return this.subFeeReceiptList.filter((subFeeReceipt) => {
+            return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
             })
             .reduce((totalSubFeeReceipt, subFeeReceipt) => {
                 return (
-                    totalSubFeeReceipt +
-                    this.installmentList.reduce((totalInstallment, installment) => {
+                    totalSubFeeReceipt + this.installmentList.reduce((totalInstallment, installment) => {
                         return (
                             totalInstallment +
                             (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0) +
@@ -92,6 +88,21 @@ export class FeeReceiptListComponent implements OnInit {
                     }, 0)
                 );
             }, 0);
+        }
+        return this.subFeeReceiptList.filter((subFeeReceipt) => {
+        return subFeeReceipt.parentFeeReceipt == feeReceipt.id && selectedFeeTypeIdList.includes(subFeeReceipt.parentFeeType);
+        })
+        .reduce((totalSubFeeReceipt, subFeeReceipt) => {
+            return (
+                totalSubFeeReceipt + this.installmentList.reduce((totalInstallment, installment) => {
+                    return (
+                        totalInstallment +
+                        (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0) +
+                        (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0)
+                    );
+                }, 0)
+            );
+        }, 0);
     }
 
     increaseNumber(): void {
@@ -165,7 +176,7 @@ export class FeeReceiptListComponent implements OnInit {
             data: {
                 user: this.user,
                 feeReceipt: feeReceipt,
-                totalAmount: this.getFeeReceiptTotalAmount(feeReceipt),
+                totalAmount: this.getFeeReceiptFilteredAmount(feeReceipt),
                 studentName: this.getStudent(feeReceipt.parentStudent).name,
                 classSection:
                     this.getClassName(feeReceipt.parentStudent, feeReceipt.parentSession) +
