@@ -13,6 +13,13 @@
   overflow: auto;
   max-height: 500px;
 }
+
+.select-all{
+  margin-left: 16px;
+  margin-top: 12px;
+  padding: 0.5rem 0px;
+}
+
 .print-download-buttons{
   text-align: center;
 }

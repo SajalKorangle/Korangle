@@ -41,12 +41,19 @@
             <div class="col-sm-3" *ngIf="selectedFilterType == filterTypeList[0]">
                 <div>
                     <mat-form-field>
-                        <mat-select
+                        <mat-select multiple
                             placeholder="Select Class"
-                            [ngModel]="selectedClassSection"
-                            (ngModelChange)="selectedClassSection = $event;applyFilters();"
+                            [(ngModel)]="selectedClassSectionList"
+                            (ngModelChange)="applyFilters();"
                         >
-                            <mat-option [value]="nullValue">All</mat-option>
+                            <div class="select-all">
+                                <mat-checkbox [(ngModel)]="selectAllClassSection"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (change)="toggleAllSelection()">
+                                    Select All
+                                </mat-checkbox>
+                            </div>
+                            
                             <mat-option *ngFor="let classSection of filteredClassSectionList" [value]="classSection">
                                 {{ classSection.class.name }}, {{ classSection.section.name }}
                             </mat-option>

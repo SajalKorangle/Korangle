@@ -96,7 +96,8 @@ export class ViewDefaultersComponent implements OnInit {
     maximumNumber = null;
     minimumNumber = null;
 
-    selectedClassSection = null;
+    selectedClassSectionList = null;
+    selectAllClassSection = true;
     filteredClassSectionList = [];
     dataForMapping =  {} as any;
 
@@ -166,8 +167,16 @@ export class ViewDefaultersComponent implements OnInit {
 
         const monthNumber = new Date().getMonth();
         this.installmentNumber = monthNumber > 2 ? monthNumber - 3 : monthNumber + 9;
+        this.toggleAllSelection();
     }
     applyFilters() {
+        // remove select all check if total length is less than total class section
+        if (this.selectedClassSectionList.length < this.filteredClassSectionList.length) {
+            this.selectAllClassSection = false;
+        } else if (this.selectedClassSectionList.length == this.filteredClassSectionList.length) {
+            this.selectAllClassSection = true;
+        }
+
         this.studentDataSource.data = this.getFilteredStudentList();
     }
 
@@ -518,6 +527,15 @@ export class ViewDefaultersComponent implements OnInit {
         }
     }
 
+    toggleAllSelection() {
+        if (this.selectAllClassSection) {
+            this.selectedClassSectionList = this.filteredClassSectionList;
+        } else {
+            this.selectedClassSectionList = [];
+        }
+        this.applyFilters();
+    }
+
     hasUnicode(message): boolean {
         for (let i = 0; i < message.length; ++i) {
             if (message.charCodeAt(i) > 127) {
@@ -566,10 +584,18 @@ export class ViewDefaultersComponent implements OnInit {
             }
             return true;
         });
-        if (this.selectedClassSection) {
+        if (this.selectedClassSectionList) {
+
             tempList = tempList.filter((student) => {
-                return student.class.id == this.selectedClassSection.class.id && student.section.id == this.selectedClassSection.section.id;
+                return this.selectedClassSectionList.find((classSection) => {
+                    return (
+                        student.class.id == classSection.class.id &&
+                        student.section.id == classSection.section.id
+                    );
+                }
+                );
             });
+
         }
         if ((this.maximumNumber && this.maximumNumber != '') || (this.minimumNumber && this.minimumNumber != '')) {
             tempList = tempList.filter((student) => {
