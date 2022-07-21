@@ -52,7 +52,7 @@
                                 <div class="col-sm-6" *ngFor="let filter of currentParameter.filterValues; let i = index">
                                     <mat-form-field style="margin-top: 0">
                                         <mat-label> Value #{{ i + 1 }} </mat-label>
-                                        <input matInput placeholder="Filter Name" [(ngModel)]="filter" disabled />
+                                        <input matInput placeholder="Filter Name" value="{{filter}}" disabled/>
                                         <mat-icon matSuffix style="cursor: pointer" (click)="deleteFilter(filter)">delete</mat-icon>
                                     </mat-form-field>
                                 </div>
