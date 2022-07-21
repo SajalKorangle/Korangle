@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-md-6">
                 <mat-form-field style="width: 100%;">
-                    <mat-select placeholder="Choose to add/edit/delete parameter/s" [ngModel]="currentParameter"
+                    <mat-select placeholder="Choose to add/edit/delete parameters" [ngModel]="currentParameter"
                         (ngModelChange)="chooseParameter($event)">
                         <mat-option [value]="ADD_PARAMETER_STRING">{{ADD_PARAMETER_STRING}}</mat-option>
                         <mat-option *ngFor="let parameter of customParameterList;" [value]="parameter">
@@ -62,7 +62,7 @@
                                         <mat-label>
                                             Value #{{i+1}}
                                         </mat-label>
-                                        <input matInput placeholder="Filter Name" [(ngModel)]="filter" disabled>
+                                        <input matInput placeholder="Filter Name" value="{{filter}}" disabled>
                                         <mat-icon matSuffix style="cursor: pointer;" (click)="deleteFilter(filter)">
                                             delete</mat-icon>
                                     </mat-form-field>
