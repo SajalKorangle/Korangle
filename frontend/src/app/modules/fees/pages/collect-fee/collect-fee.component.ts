@@ -89,6 +89,8 @@ export class CollectFeeComponent implements OnInit {
     serviceAdapter: CollectFeeServiceAdapter;
     htmlRenderer: CollectFeeHTMLRenderer;
 
+    printSingleReceipt: boolean;
+
     isLoading = false;
 
     isStudentListLoading = false;
@@ -318,6 +320,7 @@ export class CollectFeeComponent implements OnInit {
             employeeList: this.employeeList,
             boardList: this.boardList,
             sessionList: this.sessionList,
+            printSingleReceipt: this.printSingleReceipt
         };
 
         this.printService.navigateToPrintRoute(PRINT_FULL_FEE_RECIEPT_LIST, { user: this.user, value: data });
