@@ -225,7 +225,7 @@ export class TotalCollectionServiceAdapter {
         });
 
         //Filtered Fee Type list
-        this.vm.filteredFeeTypeList = this.vm.feeTypeList.filter((feeType) => {
+        this.vm.feeTypeList = this.vm.feeTypeList.filter((feeType) => {
             return (
                 this.vm.subFeeReceiptList.find((subFeeReceipt) => {
                     return subFeeReceipt.parentFeeType == feeType.id;
@@ -233,7 +233,7 @@ export class TotalCollectionServiceAdapter {
             );
         });
 
-        this.vm.filteredFeeTypeList.forEach((feeType) => {
+        this.vm.feeTypeList.forEach((feeType) => {
             feeType.selectedFeeType = true;
         });
 
