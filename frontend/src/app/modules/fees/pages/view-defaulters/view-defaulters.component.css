@@ -16,7 +16,7 @@
 
 .select-all{
   display: flex;
-  justify-content: center;
+  justify-content: left;
 }
 
 .print-download-buttons{
