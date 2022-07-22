@@ -11,13 +11,13 @@ import { SettingsBackendData } from './settings.backend.data';
 import { SettingsHtmlRenderer } from './settings.html.renderer';
 
 import {CommonFunctions} from '@classes/common-functions';
-
+import { GenericService } from '@services/generic/generic-service';
 
 @Component({
     selector: 'lock-fees',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.css'],
-    providers: [FeeService, SchoolService, AccountsService],
+    providers: [GenericService, FeeService, SchoolService, AccountsService],
 })
 
 export class SettingsComponent implements OnInit {
@@ -36,10 +36,14 @@ export class SettingsComponent implements OnInit {
 
     commonFunctions = CommonFunctions.getInstance();
 
+    printSingleReceipt: boolean;
+
     isActiveSession: boolean;
     isLoading = false;
+    isLoadingPrintSingleReceiptSetting = false;
 
     constructor(
+        public genericService: GenericService,
         public schoolService: SchoolService,
         public feeService: FeeService,
         public accountsService: AccountsService,
@@ -54,7 +58,6 @@ export class SettingsComponent implements OnInit {
         this.serviceAdapter = new SettingsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-        console.log('this: ', this);
     }
 
     detectChanges(): void { // what is this?

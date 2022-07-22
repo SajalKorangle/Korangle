@@ -58,10 +58,8 @@ export class TotalCollectionComponent implements OnInit {
     selectedClassSection = null;
     filteredClassSectionList = [];
 
-    selectedFeeType = null;
     selectedFeeReceiptType = null;
     receiptTypeList = ['Valid Receipts', 'Cancelled Receipts'];
-    filteredFeeTypeList = [];
 
     isInitialLoading = false;
     isLoading = false;
@@ -103,7 +101,6 @@ export class TotalCollectionComponent implements OnInit {
         this.selectedEmployee = null;
         this.selectedClassSection = null;
         this.selectedModeOfPayment = null;
-        this.selectedFeeType = null;
         this.selectedFeeReceiptType = this.receiptTypeList[0];
         this.selectedSession = null;
         this.receiptColumnFilter = new ReceiptColumnFilter();
@@ -126,7 +123,6 @@ export class TotalCollectionComponent implements OnInit {
             sectionList: this.sectionList,
             selectedEmployee: this.selectedEmployee,
             selectedModeOfPayment: this.selectedModeOfPayment,
-            selectedFeeType: this.selectedFeeType,
             sessionList: this.filteredSessionList,
         };
 
@@ -207,12 +203,12 @@ export class TotalCollectionComponent implements OnInit {
         });
     }
     selectAllFeeType(): void {
-        this.filteredFeeTypeList.forEach((item) => {
+        this.feeTypeList.forEach((item) => {
             item.selectedFeeType = true;
         });
     }
     unselectAllFeeType(): void {
-        this.filteredFeeTypeList.forEach((item) => {
+        this.feeTypeList.forEach((item) => {
             item.selectedFeeType = false;
         });
     }
@@ -272,7 +268,7 @@ export class TotalCollectionComponent implements OnInit {
 
         // filter by Fee Type
         let filteredSubFeeReceiptList = [];
-        this.filteredFeeTypeList.forEach((feeType) => {
+        this.feeTypeList.forEach((feeType) => {
             if (feeType.selectedFeeType) {
                 filteredSubFeeReceiptList = [...filteredSubFeeReceiptList, ...(this.subFeeReceiptList
                     .filter((subFeeReceipt) => { return subFeeReceipt.parentFeeType == feeType.id; })
@@ -282,7 +278,7 @@ export class TotalCollectionComponent implements OnInit {
 
 
         let checkFeeType = false;
-        this.filteredFeeTypeList.forEach((feeType) => {
+        this.feeTypeList.forEach((feeType) => {
             if (feeType.selectedFeeType) {
                 checkFeeType = true;
                 tempList = tempList.filter((feeReceipt) => filteredSubFeeReceiptList.includes(feeReceipt.id));
@@ -312,26 +308,21 @@ export class TotalCollectionComponent implements OnInit {
     }
 
     getFeeReceiptTotalAmount(feeReceipt: any): number {
-        return this.subFeeReceiptList
-            .filter((subFeeReceipt) => {
-                if (this.selectedFeeType) {
-                    return subFeeReceipt.parentFeeReceipt == feeReceipt.id && subFeeReceipt.parentFeeType == this.selectedFeeType.id;
-                } else {
-                    return subFeeReceipt.parentFeeReceipt == feeReceipt.id;
-                }
-            })
-            .reduce((totalSubFeeReceipt, subFeeReceipt) => {
-                return (
-                    totalSubFeeReceipt +
-                    this.installmentList.reduce((totalInstallment, installment) => {
-                        return (
-                            totalInstallment +
-                            (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0) +
-                            (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0)
-                        );
-                    }, 0)
-                );
-            }, 0);
+        let selectedFeeTypeIdList = this.feeTypeList.filter(feeType => { return feeType.selectedFeeType; }).map(feeType => { return feeType.id; });
+        return this.subFeeReceiptList.filter((subFeeReceipt) => {
+        return subFeeReceipt.parentFeeReceipt == feeReceipt.id && selectedFeeTypeIdList.includes(subFeeReceipt.parentFeeType);
+        })
+        .reduce((totalSubFeeReceipt, subFeeReceipt) => {
+            return (
+                totalSubFeeReceipt + this.installmentList.reduce((totalInstallment, installment) => {
+                    return (
+                        totalInstallment +
+                        (subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0) +
+                        (subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0)
+                    );
+                }, 0)
+            );
+        }, 0);
     }
 
     checkCancelledRemark(): void {

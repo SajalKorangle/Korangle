@@ -136,7 +136,23 @@
 
         <!-- Fees Accounting Settings Ends -->
 
+        <!-- Single Fee Receipt Printing Toggle Settings Starts -->
+
         <mat-divider style="margin: 20px 0px;"></mat-divider>
+
+        <div style="display: flex; flex-direction: row; align-items: center;">
+            <mat-icon style="font-size: 30px">print</mat-icon>
+            <h3 style="margin-left: 12px;">Single Fee Receipt Printing Toggle</h3>
+        </div>
+
+        <mat-slide-toggle style="margin-right: 16px; margin-left: auto;" [(ngModel)]="printSingleReceipt" (change) = "serviceAdapter.updatePrintSingleReceipt()">
+            Enable Single Fee Receipt Printing (Disable For Double Fee Receipts Printing)
+        </mat-slide-toggle>
+        <div *ngIf="isLoadingPrintSingleReceiptSetting" class="loader-custom"></div>
+
+        <mat-divider style="margin: 20px 0px;"></mat-divider>
+
+        <!-- Single Fee Receipt Printing Toggle Settings Ends -->
 
         <div style="display: flex; flex-direction: row; align-items: center;">
             <mat-icon style="font-size: 30px">lock</mat-icon>

@@ -13,6 +13,7 @@ export class ViewRecordServiceAdapter {
     public getEmployeeList(): void {
         let data = {
             parentSchool: this.vm.user.activeSchool.dbId,
+            isNonSalariedEmployee: false,
         };
         this.vm.isLoading = true;
         Promise.all([
@@ -23,7 +24,7 @@ export class ViewRecordServiceAdapter {
             (value) => {
                 console.log(value);
                 this.vm.employeeList = value[0].filter((employee) => {
-                    return employee.dateOfLeaving === null;
+                    return employee.dateOfLeaving === null && employee.isNonSalariedEmployee === false;
                 });
                 this.vm.employeeList.forEach((employee) => {
                     employee['recordList'] = [];
