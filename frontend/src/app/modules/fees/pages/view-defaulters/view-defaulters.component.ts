@@ -97,7 +97,6 @@ export class ViewDefaultersComponent implements OnInit {
     minimumNumber = null;
 
     selectedClassSectionList = null;
-    selectAllClassSection = true;
     filteredClassSectionList = [];
     dataForMapping =  {} as any;
 
@@ -167,16 +166,9 @@ export class ViewDefaultersComponent implements OnInit {
 
         const monthNumber = new Date().getMonth();
         this.installmentNumber = monthNumber > 2 ? monthNumber - 3 : monthNumber + 9;
-        this.toggleAllSelection();
+        this.selectAllClassSectionHandler();
     }
     applyFilters() {
-        // remove select all check if total length is less than total class section
-        if (this.selectedClassSectionList.length < this.filteredClassSectionList.length) {
-            this.selectAllClassSection = false;
-        } else if (this.selectedClassSectionList.length == this.filteredClassSectionList.length) {
-            this.selectAllClassSection = true;
-        }
-
         this.studentDataSource.data = this.getFilteredStudentList();
     }
 
@@ -527,12 +519,13 @@ export class ViewDefaultersComponent implements OnInit {
         }
     }
 
-    toggleAllSelection() {
-        if (this.selectAllClassSection) {
-            this.selectedClassSectionList = this.filteredClassSectionList;
-        } else {
-            this.selectedClassSectionList = [];
-        }
+    selectAllClassSectionHandler() {
+        this.selectedClassSectionList = this.filteredClassSectionList;
+        this.applyFilters();
+    }
+
+    clearAllClassSectionHandler() {
+        this.selectedClassSectionList = [];
         this.applyFilters();
     }
 

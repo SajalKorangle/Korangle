@@ -47,11 +47,8 @@
                             (ngModelChange)="applyFilters();"
                         >
                             <div class="select-all">
-                                <mat-checkbox [(ngModel)]="selectAllClassSection"
-                                    [ngModelOptions]="{standalone: true}"
-                                    (change)="toggleAllSelection()">
-                                    Select All
-                                </mat-checkbox>
+                                <button class="btn" style="padding: 4px 7px" (click)="selectAllClassSectionHandler(); $event.stopPropagation()">Select All</button>
+                                <button class="btn" style="padding: 4px 7px" (click)="clearAllClassSectionHandler(); $event.stopPropagation()">Clear All</button>
                             </div>
                             
                             <mat-option *ngFor="let classSection of filteredClassSectionList" [value]="classSection">

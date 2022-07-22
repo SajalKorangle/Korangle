@@ -15,9 +15,8 @@
 }
 
 .select-all{
-  margin-left: 16px;
-  margin-top: 12px;
-  padding: 0.5rem 0px;
+  display: flex;
+  justify-content: center;
 }
 
 .print-download-buttons{

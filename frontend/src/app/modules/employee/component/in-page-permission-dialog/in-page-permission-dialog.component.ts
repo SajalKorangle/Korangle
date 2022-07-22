@@ -69,7 +69,7 @@ export class InPagePermissionDialogComponent implements OnInit {
 
     isSelectRemoveAllButtonAvailable(permissionKey, groupName): Boolean {
         let permissionKeyList = this.getGroupPermissionKeys(groupName);
-        if (permissionKeyList[0] == permissionKey && this.inPagePermissionMappedByKey[permissionKey].inputType === 'groupOfCheckBox') {
+        if (permissionKeyList[0] == permissionKey && this.inPagePermissionMappedByKey[permissionKey].inputType === 'groupOfCheckBox' && this.inPagePermissionMappedByKey[permissionKey].checkBoxValues.length > 1) {
             return true;
         }
         return false;
