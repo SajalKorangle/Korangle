@@ -16,7 +16,8 @@
 
 .select-all{
   display: flex;
-  justify-content: center;
+  justify-content: left;
+  padding-left: 16px;
 }
 
 .print-download-buttons{

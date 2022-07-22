@@ -96,7 +96,7 @@ export class ViewDefaultersComponent implements OnInit {
     maximumNumber = null;
     minimumNumber = null;
 
-    selectedClassSectionList = null;
+    selectedClassSectionList = [];
     filteredClassSectionList = [];
     dataForMapping =  {} as any;
 
