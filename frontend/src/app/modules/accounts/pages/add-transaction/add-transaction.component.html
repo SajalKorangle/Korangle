@@ -63,7 +63,7 @@
                         </div>
                         <div class="row col-md-12" *ngIf="htmlRenderer.isTransactionSimple(transaction) && !htmlRenderer.isMobile()">
                             <customized-number-input [placeHolder]="'Amount'"
-                                                    [minimum]="0.01"
+                                                    [minimum]="0.00"
                                                     [maximumDecimal]="2"
                                                     [inputValue]="account.amount"
                                                     (outputValue)="account.amount=$event; handleAmountChange(transaction, $event)">
