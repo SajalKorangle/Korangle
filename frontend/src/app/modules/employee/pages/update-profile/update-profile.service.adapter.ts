@@ -117,6 +117,8 @@ export class UpdateProfileServiceAdapter {
 
     updateEmployeeProfile(): void {
 
+        console.log(this.vm.currentEmployeeProfile);
+
         if (this.vm.currentEmployeeProfile.name === undefined || this.vm.currentEmployeeProfile.name === '') {
             alert('Name should be populated');
             return;
@@ -170,7 +172,7 @@ export class UpdateProfileServiceAdapter {
 
         const employee_form_data = new FormData();
         const data = { ...this.vm.currentEmployeeProfile, content: JSON.stringify(this.vm.currentEmployeeProfile) };
-        // console.log(data);
+        console.log(data);
         Object.keys(data).forEach(key => {
             if (key === 'profileImage') {
                 if (this.vm.profileImage !== null) {

@@ -146,7 +146,7 @@ export class GenericService extends RestApiGateway {
 }
 
 export interface APP_MODEL_STRUCTURE_INTERFACE {
-    fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder' | 'StudentFee';
+    fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder' | 'StudentFee' | 'FeeSchoolSettings';
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
     activity_record_app: 'ActivityRecord';
