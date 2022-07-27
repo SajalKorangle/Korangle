@@ -13,6 +13,7 @@ import { CommonFunctions } from "@classes/common-functions";
 })
 export class AssignEmployeeModalComponent implements OnInit {
     user: any;
+    isLoading: boolean = true;
 
     addressToSearchString: string = ""; /* Employee Search String */
 
@@ -57,8 +58,15 @@ export class AssignEmployeeModalComponent implements OnInit {
     /* Save Modal */
     saveClicked() {
         let data = {};
+        let newlyAssignedEmployeeList = [];
+        this.newlyAssignedEmployeeList.forEach((employee) => {
+            if (employee.selected) {
+                newlyAssignedEmployeeList.push(employee);
+            }
+        });
+
         if (this.newlyAssignedEmployeeList.length > 0) {
-            data["newlyAssignedEmployeeList"] = this.newlyAssignedEmployeeList;
+            data["newlyAssignedEmployeeList"] = newlyAssignedEmployeeList;
         }
 
         if (this.removeEmployeeList.length > 0) {
