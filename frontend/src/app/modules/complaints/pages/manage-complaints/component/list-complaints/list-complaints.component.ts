@@ -20,6 +20,7 @@ export class ListComplaintsComponent implements OnInit {
     @Input() statusList;
     @Input() complaintList;
     @Input() searchString;
+    @Input() isComplaintListEmpty;
     @Output() searchComplaints = new EventEmitter<any>();
     @Output() doneIconClicked = new EventEmitter<any>();
     @Output() sortNewestClicked = new EventEmitter<any>();
