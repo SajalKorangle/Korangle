@@ -1,4 +1,5 @@
 import { ListComplaintsComponent } from './list-complaints.component';
+import { isMobile } from '@classes/common';
 
 export class ListComplaintsHtmlRenderer {
 
@@ -71,4 +72,17 @@ export class ListComplaintsHtmlRenderer {
         }
         return dateInfo;
     }  // Ends: getDateInfo()
+
+    /* For mobile-browser */
+    isMobileBrowser(): boolean {
+        if (window.innerWidth > 991) {
+            return false;
+        }
+        return true;
+    }
+
+    /* For mobile-application */
+    isMobileApplication(): boolean {
+        return isMobile();
+    }
 }

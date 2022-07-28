@@ -34,7 +34,7 @@
 
         <!-- Starts: Select Complaint Type -->
         <div class="common-section">
-            <span class="text-{{ user.activeSchool.secondaryThemeColor }} header">Select Complaint type : </span>
+            <span class="text-{{ user.activeSchool.secondaryThemeColor }} header">Select Complaint Type : </span>
             <mat-form-field>
                 <mat-select placeholder="{{ complaintTypeName }}" style="width: 100%">
                     <mat-option (click)="complaintTypeName = nullComplaintType.name; complaintType = nullComplaintType;">Cancel Selection</mat-option>
@@ -48,7 +48,7 @@
 
         <!-- Starts: Title -->
         <div class="common-section">
-            <span class="text-{{ user.activeSchool.secondaryThemeColor }} header"> Enter title : </span><br />
+            <span class="text-{{ user.activeSchool.secondaryThemeColor }} header"> Enter Title : </span><br />
             <input class="title-input" type="text" placeholder="Enter Title" [(ngModel)]="complaintTitle">
         </div>
         <br />
