@@ -6,6 +6,7 @@ import { PrintService } from '../../../../print/print-service';
 import { PRINT_ENQUIRY_LIST } from '../../../../print/print-routes.constants';
 import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import { DataStorage } from '../../../../classes/data-storage';
+import {CommonFunctions} from '@classes/common-functions';
 
 @Component({
     selector: 'view-all',
@@ -52,6 +53,10 @@ export class ViewAllComponent implements OnInit {
             this.classList = res[0];
             this.employeeList = res[1];
         });
+    }
+
+    isMobile(): boolean {
+        return CommonFunctions.getInstance().isMobileMenu();
     }
 
     todaysDate(): string {
