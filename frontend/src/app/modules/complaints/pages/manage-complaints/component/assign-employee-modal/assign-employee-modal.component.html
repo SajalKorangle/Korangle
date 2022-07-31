@@ -1,26 +1,32 @@
 <mat-dialog-content class="assign-employee-modal-container">
+    <!-- Starts: Spinner -->
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+    <!-- Ends: Spinner -->
+
     <!-- Starts: Header -->
-    <div class="header">
+    <div *ngIf="!isLoading" class="header">
         <div class="title">Parent Support >> Assign Employee</div>
         <div><i class="material-icons close-btn" (click)="closeClicked()">highlight_off</i></div>
     </div>
-    <br />
+    <br *ngIf="!isLoading" />
     <!-- Ends: Header -->
 
     <!-- Starts: Assign Employees -->
     <div>
-        <div class="field-title">Address to :</div>
+        <div *ngIf="!isLoading" class="field-title">Address to :</div>
 
         <!-- Starts: Search Bar -->
         <app-employee-filter
             [user]="user"
             (employee)="selectedEmployee = $event; initializeEmployeeData(selectedEmployee)"
-            (emitEmployeeList)="tempEmployeeList = $event;"
+            (emitEmployeeList)="tempEmployeeList = $event; isLoading = false;"
         ></app-employee-filter>
         <!-- Ends: Search Bar -->
 
         <!-- Starts: List of Already Assigned Employees -->
-        <ng-container *ngIf="selectedEmployeeList.length">
+        <ng-container *ngIf="selectedEmployeeList.length && !isLoading">
             <b>Already Assigned Employees</b><br />
             <ng-container *ngFor="let employee of selectedEmployeeList; let idx = index">
                 <div class="flex-box">
@@ -46,7 +52,7 @@
         <!-- Ends: List of Already Assigned Employees -->
 
         <!-- Starts: List of Newly Added Employees -->
-        <ng-container *ngIf="newlyAssignedEmployeeList.length">
+        <ng-container *ngIf="newlyAssignedEmployeeList.length && !isLoading">
             <b>Newly Assigned Employees</b><br />
             <ng-container *ngFor="let employee of newlyAssignedEmployeeList; let idx = index">
                 <mat-checkbox
@@ -60,12 +66,12 @@
         </ng-container>
         <!-- Ends: List of Newly Added Employees -->
     </div>
-    <br />
+    <br *ngIf="!isLoading" />
     <!-- Ends: Assign Employees -->
 </mat-dialog-content>
 
 <!-- Starts: Bottom Buttons -->
-<div class="bottom-btns">
+<div *ngIf="!isLoading" class="bottom-btns">
     <button
         type="button"
         class="btn btn-{{ user.activeSchool.secondaryThemeColor }} save-btn"
