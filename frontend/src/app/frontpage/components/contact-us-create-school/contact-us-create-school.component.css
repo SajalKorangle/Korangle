@@ -4,29 +4,29 @@
     vertical-align: middle;
 }
 
-/deep/ .mat-tab-label {
+:host ::ng-deep .mat-tab-label {
     font-size: 18px;
     padding: 0 !important;
     text-align: left !important;
     justify-content: normal !important;
 }
 
-/deep/ .mat-tab-group {
+:host ::ng-deep .mat-tab-group {
     flex-direction: column !important;
     align-content: center !important;
     flex-wrap: wrap !important;
 }
 
-/deep/ .mat-tab-label-active {
+:host ::ng-deep .mat-tab-label-active {
     color: #FF7131 !important;
     opacity: 0.6 !important;
 }
 
-/deep/ .mat-tab-label {
+:host ::ng-deep .mat-tab-label {
     color: #000000;
 }
 
-/deep/ .mat-form-field-appearance-outline .mat-form-field-outline {
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
     background-color: #F9F9F9 !important;
 }
 
@@ -34,7 +34,7 @@
     margin-left: 8px;
 }
 
-/deep/ .wrapper {
+:host ::ng-deep .wrapper {
     height: fit-content !important;
 }
 
@@ -42,11 +42,11 @@
     padding: 9px 20px !important;
 }
 
-/deep/ .mat-form-field {
+:host ::ng-deep .mat-form-field {
     font-size: 12px;
 }
 
-/deep/ .otp-input {
+:host ::ng-deep .otp-input {
     font-size: 16px !important;
     width: 35px !important;
     height: 35px !important;
@@ -54,11 +54,11 @@
     background-color: #F9F9F9 !important;
 }
 
-/deep/ #desktop-version .mat-tab-header {
+:host ::ng-deep #desktop-version .mat-tab-header {
     margin-top: 5%;
 }
 
-/deep/ #desktop-version #contact .mat-tab-header {
+:host ::ng-deep #desktop-version #contact .mat-tab-header {
     width: 600px;
 }
 
@@ -99,7 +99,7 @@
     align-items: center;
 }
 
-/deep/ .btn {
+:host ::ng-deep .btn {
     background-color: #FF7131 !important;
 }
 
@@ -107,7 +107,7 @@ label {
     color: black;
 }
 
-/deep/ mat-form-field {
+:host ::ng-deep mat-form-field {
     width: 100%;
 }
 
