@@ -63,6 +63,7 @@
                         </div>
                         <div class="row col-md-12" *ngIf="htmlRenderer.isTransactionSimple(transaction) && !htmlRenderer.isMobile()">
                             <customized-number-input [placeHolder]="'Amount'"
+                                                    [minimum]="0.01"
                                                     [maximumDecimal]="2"
                                                     [inputValue]="account.amount"
                                                     (outputValue)="account.amount=$event; handleAmountChange(transaction, $event)">
@@ -70,6 +71,7 @@
                         </div>
                         <div class="row col-md-12" *ngIf="!htmlRenderer.isTransactionSimple(transaction)">
                             <customized-number-input [placeHolder]="'Amount'" [disabled]="transaction.creditAccountList.length==1 && transaction.debitAccountList.length>1"
+                                                    [minimum]="0.01"                   
                                                     [maximumDecimal]="2"
                                                     [inputValue]="account.amount"
                                                     (outputValue)="account.amount=$event; handleAmountChange(transaction, $event)">
@@ -112,6 +114,7 @@
                         </div>
                         <div class="row col-md-12" *ngIf="htmlRenderer.isTransactionSimple(transaction) && htmlRenderer.isMobile()">
                             <customized-number-input [placeHolder]="'Amount'"
+                                                    [minimum]="0.01"
                                                     [maximumDecimal]="2"
                                                     [inputValue]="account.amount"
                                                     (outputValue)="account.amount=$event; handleAmountChange(transaction, $event)">
@@ -119,6 +122,7 @@
                         </div>
                         <div class="row col-md-12" *ngIf="!htmlRenderer.isTransactionSimple(transaction)">
                             <customized-number-input [placeHolder]="'Amount'" [disabled]="transaction.debitAccountList.length==1 && transaction.creditAccountList.length>1"
+                                                    [minimum]="0.01"                    
                                                     [maximumDecimal]="2"
                                                     [inputValue]="account.amount"
                                                     (outputValue)="account.amount=$event; handleAmountChange(transaction, $event)">
