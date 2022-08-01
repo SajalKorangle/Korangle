@@ -84,13 +84,3 @@ input {
 .Error {
     background-color: red;
 }
-
-.example-viewport {
-    height: 80vh;
-    width: 100%;
-    border: none;
-}
-
-td {
-    position: relative;
-}

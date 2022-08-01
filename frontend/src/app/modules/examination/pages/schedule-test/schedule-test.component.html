@@ -70,7 +70,6 @@
 
             <!--New Structure of Test List grouped by subject, testType, maximumMarks, Test Date and Start & End Time-->
             <ng-container *ngIf="newTestList.length > 0">
-                <cdk-virtual-scroll-viewport itemSize="12" class="example-viewport">
                 <table class="table table-hover">
                     <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                         <tr>
@@ -85,8 +84,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *cdkVirtualFor="let test of newTestList; let i = index">
-                        <tr>
+                        <tr *ngFor="let test of newTestList; let i = index">
                             <td testId="count" [class.lowOpacity]="test.deleted">{{ i + 1 }}.</td>
                             <td [class.lowOpacity]="test.deleted">{{ test.subjectName }}</td>
                             <td [class.lowOpacity]="test.deleted">
@@ -159,10 +157,8 @@
                                 </button>
                             </td>
                         </tr>
-                        </ng-container>
                     </tbody>
                 </table>
-            </cdk-virtual-scroll-viewport>
 
                 <button
                     type="submit"
