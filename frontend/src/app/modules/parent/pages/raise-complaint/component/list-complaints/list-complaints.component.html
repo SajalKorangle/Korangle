@@ -1,93 +1,113 @@
 <div class="card-content">
-    <!-- Starts: Search Bar -->
-    <!-- <div class="search-bar">
-        <input class="search-field" type="search" placeholder="Search by student name, complaint type, title" [(ngModel)]="searchString">
-        <button class="search-btn"><i class="material-icons search-icon">search</i></button>
-    </div>
-    <br /> -->
+    <ng-container *ngIf="(complaintList.length == 0) || (complaintList.length > 0 && (htmlRenderer.isMobileApplication() || htmlRenderer.isMobileBrowser()))">
+        <!-- Starts: Add Compalint Button -->
+        <button
+            type="button"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 12px 15px; margin-left: 1rem"
+            matTooltip="Add Complaint"
+            tooltip-position="left"
+            (click)="changePage()"
+        >
+            <i class="material-icons">add</i> Add Complaint
+        </button>
+        <!-- Ends: Add Compalint Button -->
+        <br />
+    </ng-container>
 
-    <div class="example-form">
-        <mat-form-field class="example-full-width">
-            <input
-                type="text"
-                placeholder="Search by parent name, student name, title"
-                matInput
-                [(ngModel)]="searchString"
-            />
-        </mat-form-field>
-    </div>
+    <ng-container *ngIf="complaintList.length == 0">
+        <br />
+        <div>No Complaints</div>
+    </ng-container>
 
-    <br />
-    <!-- Ends: Search Bar -->
+    <ng-container *ngIf="complaintList.length > 0">
+        <div class="flex-box">
+            <!-- Starts: Search Bar -->
+            <div class="example-form">
+                <mat-form-field class="example-full-width">
+                    <input
+                        type="text"
+                        placeholder="Search by student name, title"
+                        matInput
+                        [(ngModel)]="searchString"
+                    />
+                </mat-form-field>
+            </div>
+            <!-- Ends: Search Bar -->
 
-    <!-- Starts: Complaint List Table -->
-    <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
-        <div class="table-container">
-            <!-- Starts: Table Title -->
-            <div style="border-bottom: 2px solid #909090;">Complaints</div>
-            <!-- Ends: Table Title -->
-
-            <!-- Starts: Table -->
-            <table class="table table-hover table-responsive">
-
-                <!-- Starts: Table Header -->
-                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                    <tr>
-                        <th class="min-width">Child Name</th>
-                        <th class="min-width">Date Sent</th>
-                        <th class="min-width">Complaint Type</th>
-                        <th class="min-width">Status</th>
-                        <th class="min-width">Comments</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <!-- Ends: Table Header -->
-
-                <!-- Starts: Table Body -->
-                <tbody>
-                    <ng-container *ngIf="htmlRenderer.getSearchedComplaintList().length == 0">
-                        <tr><td>No complaints</td></tr>
-                    </ng-container>
-
-                    <ng-container *ngIf="htmlRenderer.getSearchedComplaintList().length > 0">
-                        <ng-container *ngFor="let complaint of htmlRenderer.getSearchedComplaintList()">
-                            <tr>
-                                <td class="min-width">{{ complaint.parentStudent.name }}</td>
-                                <td class="min-width">{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
-                                <td class="min-width">{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "None" }}</td>
-                                <td class="min-width">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "None" }}</td>
-                                <td class="min-width" style="text-align: center">{{ complaint.commentList.length }}</td>
-                                <td
-                                    (click)="triggerOpenComplaint(complaint)"
-                                    class="text-{{ user.activeSchool.secondaryThemeColor }}"
-                                    style="text-align: center; text-decoration: underline; cursor: pointer;"
-                                >
-                                    Open
-                                </td>
-                                <td style="text-align: center; cursor: pointer;"><i class="material-icons delete-icon" (click)="triggerDeleteComplaint(complaint)">delete_forever</i></td>
-                            </tr>
-                        </ng-container>
-                    </ng-container>
-                </tbody>
-                <!-- Ends: Table Body -->
-            </table>
-            <!-- Ends: Table -->
+            <!-- Starts: Add Compalint Button -->
+            <button
+                *ngIf="!htmlRenderer.isMobileApplication() && !htmlRenderer.isMobileBrowser()"
+                type="button"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                style="padding: 12px 15px; margin-left: 1rem"
+                matTooltip="Add Complaint"
+                tooltip-position="left"
+                (click)="changePage()"
+            >
+                <i class="material-icons">add</i> Add Complaint
+            </button>
+            <!-- Ends: Add Compalint Button -->
         </div>
-    </cdk-virtual-scroll-viewport>
-    <!-- Ends: Complaint List Table -->
+        <br />
 
-    <!-- Starts: Send New Compalint Button -->
-    <br />
-    <button
-        type="button"
-        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-        style="padding: 12px 15px; margin-left: 1rem"
-        matTooltip="Send New Complaint"
-        tooltip-position="left"
-        (click)="changePage()"
-    >
-        <i class="material-icons">add</i> Send New
-    </button>
-    <!-- Ends: Send New Compalint Button -->
+        <!-- Starts: Complaint List Table -->
+        <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+            <div class="table-container">
+                <!-- Starts: Table Title -->
+                <div style="border-bottom: 2px solid #909090;">Complaints</div>
+                <!-- Ends: Table Title -->
+
+                <!-- Starts: Table -->
+                <table class="table table-hover table-responsive">
+
+                    <!-- Starts: Table Header -->
+                    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                        <tr>
+                            <th class="min-width">Child Name</th>
+                            <th class="min-width">Date Sent</th>
+                            <th class="min-width">Complaint Title</th>
+                            <th class="min-width">Complaint Type</th>
+                            <th class="min-width">Status</th>
+                            <th class="min-width">Comments</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <!-- Ends: Table Header -->
+
+                    <!-- Starts: Table Body -->
+                    <tbody>
+                        <ng-container *ngIf="htmlRenderer.getSearchedComplaintList().length == 0">
+                            <tr><td>No complaints</td></tr>
+                        </ng-container>
+
+                        <ng-container *ngIf="htmlRenderer.getSearchedComplaintList().length > 0">
+                            <ng-container *ngFor="let complaint of htmlRenderer.getSearchedComplaintList()">
+                                <tr>
+                                    <td class="min-width">{{ complaint.parentStudent.name }}</td>
+                                    <td class="min-width">{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
+                                    <td class="min-width">{{ complaint.title }}</td>
+                                    <td class="min-width">{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "None" }}</td>
+                                    <td class="min-width">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "None" }}</td>
+                                    <td class="min-width" style="text-align: center">{{ complaint.commentList.length }}</td>
+                                    <td
+                                        (click)="triggerOpenComplaint(complaint)"
+                                        class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                                        style="text-align: center; text-decoration: underline; cursor: pointer;"
+                                    >
+                                        Open
+                                    </td>
+                                    <td style="text-align: center; cursor: pointer;"><i class="material-icons delete-icon" (click)="triggerDeleteComplaint(complaint)">delete_forever</i></td>
+                                </tr>
+                            </ng-container>
+                        </ng-container>
+                    </tbody>
+                    <!-- Ends: Table Body -->
+                </table>
+                <!-- Ends: Table -->
+            </div>
+        </cdk-virtual-scroll-viewport>
+        <!-- Ends: Complaint List Table -->
+    </ng-container>
 </div>

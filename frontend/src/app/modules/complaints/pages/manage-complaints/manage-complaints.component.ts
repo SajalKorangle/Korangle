@@ -25,6 +25,8 @@ export class ManageComplaintsComponent implements OnInit {
     isProgress: boolean = true;
     progressInterval: any;
     isLoadMore: boolean = true;
+    isLoadMoreClicked: boolean = false;
+    isComplaintListEmpty: boolean = false;
 
     userPermission: boolean = false;  /* Admin or Employee */
     pageName: string = "showTables";
@@ -76,6 +78,12 @@ export class ManageComplaintsComponent implements OnInit {
         this.serviceAdapter.initializeData();
     }
 
+    openComplaintPage() {
+        this.pageName = "showTables";
+        this.progress = 0;
+        clearInterval(this.progressInterval);
+    }
+
     /* Progress Bar Set-Interval Function */
     setProgressInterval() {
         if (this.progress >= 100) {
@@ -85,7 +93,7 @@ export class ManageComplaintsComponent implements OnInit {
             if (this.user.section.subRoute != "manage_complaints") {
                 clearInterval(this.progressInterval);
             } else {
-                this.progress++;
+                this.progress = this.progress + 0.1;
             }
         }
     }  // Ends: setProgressInterval()
@@ -93,8 +101,8 @@ export class ManageComplaintsComponent implements OnInit {
     /* Starts Progress Bar */
     startProgressBar() {
         this.pageName = "showTables";
-        this.progress = 1;
-        this.progressInterval = setInterval(() => this.setProgressInterval(), 600);  /* 60 seconds full time */
+        this.progress = 0;
+        this.progressInterval = setInterval(() => this.setProgressInterval(), 15);  /* 15 seconds full time */
     }  // Ends: startProgressBar()
 
     startNewProgressBar() {
@@ -139,7 +147,6 @@ export class ManageComplaintsComponent implements OnInit {
 
     /* Load Complaints */
     loadComplaints() {
-        this.complaintList = [];
         this.startNumber = 1;
         this.endNumber = this.numberOfComplaintsPerPage;
         this.isLoadMore = true;
@@ -148,19 +155,20 @@ export class ManageComplaintsComponent implements OnInit {
 
     /* Load More Clicked */
     loadMoreClick() {
+        this.isLoadMoreClicked = true;
         this.startNumber += this.numberOfComplaintsPerPage;
         this.endNumber += this.numberOfComplaintsPerPage;
         this.serviceAdapter.loadComplaints();
     }  // Ends: loadMoreClick()
 
     /* Check User Permission (Admin / Not Admin) */
-    checkUserPermission(employeePermissionObject) {
+    checkUserPermission(employeePermissionObject, parentStudentIdList) {
         this.userPermission = employeePermissionObject.configJSON.includes("admin");
 
         if (this.userPermission) {
-            this.serviceAdapter.initializeComplaintDataAdmin();
+            this.serviceAdapter.initializeComplaintDataAdmin(parentStudentIdList);
         } else {
-            this.serviceAdapter.initializeComplaintDataEmployee();
+            this.serviceAdapter.initializeComplaintDataEmployee(parentStudentIdList);
         }
     }  // Ends: checkUserPermission()
 
@@ -187,12 +195,11 @@ export class ManageComplaintsComponent implements OnInit {
             complaintType["selected"] = false;
             this.complaintTypeList.push(complaintType);
         });
-
-        // this.filterComplaintTypeList = CommonFunctions.getInstance().deepCopy(this.complaintTypeList);
     }  // Ends: initializeComplaintTypeList()
 
     /* Initialize Address-TO-Employee List (If Complaint-Type is Null) */
     initializeEmployeeComplaintList(employeeComplaintList, idx) {
+        this.complaintList[idx]["employeeComplaintList"] = [];
         employeeComplaintList.forEach((employeeComplaint) => {
             let employee = this.getEmployee(employeeComplaint.parentEmployee);
             employee["selected"] = true;
@@ -227,6 +234,12 @@ export class ManageComplaintsComponent implements OnInit {
             this.complaintList.push(complaint);
         });
 
+        if (this.complaintList.length == 0) {
+            this.isComplaintListEmpty = true;
+        } else {
+            this.isComplaintListEmpty = false;
+        }
+
         for (let i = 0; i < this.complaintList.length; i++) {
             this.serviceAdapter.getCommentComplaint(this.complaintList[i].id, i);
         }
@@ -244,8 +257,7 @@ export class ManageComplaintsComponent implements OnInit {
         if (complaintList.length < this.numberOfComplaintsPerPage) {
             this.isLoadMore = false;
         }
-        // this.searchedComplaintList = this.complaintList;
-        this.startNewProgressBar();
+        this.progress = 0;
     }  // Ends: initializeComplaintList()
 
     findComplaint(complaintId) {
@@ -285,6 +297,12 @@ export class ManageComplaintsComponent implements OnInit {
             }
         });
 
+        if (this.complaintList.length == 0) {
+            this.isComplaintListEmpty = true;
+        } else {
+            this.isComplaintListEmpty = false;
+        }
+
         for (let i = length; i < this.complaintList.length; i++) {
             this.serviceAdapter.getCommentComplaint(this.complaintList[i].id, i);
         }
@@ -302,8 +320,7 @@ export class ManageComplaintsComponent implements OnInit {
         if (complaintList.length < this.numberOfComplaintsPerPage) {
             this.isLoadMore = false;
         }
-        // this.searchedComplaintList = this.complaintList;
-        this.startNewProgressBar();
+        this.progress = 0;
     }  // Ends: addNewComplaints()
 
     /* Initialize Student Full Profile list */
@@ -332,7 +349,6 @@ export class ManageComplaintsComponent implements OnInit {
                 }
             }
         }
-
     }  // Ends: initializeStudentFullProfileList()
 
     /* Initialize Status list */
@@ -357,7 +373,6 @@ export class ManageComplaintsComponent implements OnInit {
             status["selected"] = false;
             this.statusList.push(status);
         });
-        // this.filterStatusList = CommonFunctions.getInstance().deepCopy(this.statusList);
     }  // Ends: initializeStatusList()
 
     /* Initialize Employee List */
@@ -510,9 +525,11 @@ export class ManageComplaintsComponent implements OnInit {
                 removeEmployeeList = data["removeEmployeeList"];
             }
 
-            complaint.employeeComplaintList = [];
+            // complaint.employeeComplaintList = [];
             this.serviceAdapter.addNewAndRemoveEmployee(complaint.id, idx, newlyAssignedEmployeeList, removeEmployeeList);
-            this.startProgressBar();
+            // this.startProgressBar();
+            this.progress = 0;
+            clearInterval(this.progressInterval);
         });
     }  // Ends: openAssignEmployeeDialog()
 
