@@ -141,8 +141,8 @@
 
         <div class="row col-md-12" *ngIf="!isLedgerLoading">
             <span>{{ledgerAccount.title}}</span>
-            <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 20px" (click)="printTransactionsList()">Print<i class="material-icons" style="vertical-align: -7px; padding-left:4px;">print</i></button>
-            <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="downloadAsSheet()">Sheet <i class="material-icons" style="vertical-align: -7px; padding-left:4px;">download</i></button>
+            <button *ngIf="!isMobile()" class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 20px" (click)="printTransactionsList()">Print<i class="material-icons" style="vertical-align: -7px; padding-left:4px;">print</i></button>
+            <button *ngIf="!isMobile()" class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="downloadAsSheet()">Sheet <i class="material-icons" style="vertical-align: -7px; padding-left:4px;">download</i></button>
             <mat-form-field style="float: right;">
                 <mat-select placeholder="Select Columns">
                     <mat-option *ngFor="let filter of filterColumnsList">
