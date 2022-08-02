@@ -7,6 +7,7 @@ import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import { EmployeeService } from 'app/services/modules/employee/employee.service';
 import { ImagePdfPreviewDialogComponent } from 'app/components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 import { MatDialog } from '@angular/material';
+import { CommonFunctions } from '@classes/common-functions';
 
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver';
@@ -515,6 +516,10 @@ export class ViewAllComponent implements OnInit {
     fn(event: any) {
         console.log('changed event');
         console.log(event);
+    }
+
+    isMobile(): boolean {
+        return CommonFunctions.getInstance().isMobileMenu();
     }
 
 }
