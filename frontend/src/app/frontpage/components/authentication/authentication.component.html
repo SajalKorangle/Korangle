@@ -33,15 +33,12 @@
         <img src="/assets/img/korangleLogo.png" width="30" height="30" class="mobile-logo" alt="korangle logo">
         <span class="mobile-logo-name">Korangle</span>
     </div>
-    <div class="centered-div" style="margin-bottom: 60px;margin-top:5%;min-height: 75vh">
+    <div class="centered-div" style="margin-bottom: 60px;margin-top:5%;min-height: 75vh; display: flex; flex-direction: column;">
         <mat-card style="border:1px solid #c4c4c4;width: 85vw">
             <br>
             <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
         </mat-card>
         <br>
-        <a href="https://korangle.com"
-           style="color:black;text-decoration: underline;bottom:6%;font-size:16px;position: absolute;cursor:pointer">Back
-            to HomePage</a>
     </div>
     <div class="footer"></div>
 </div>

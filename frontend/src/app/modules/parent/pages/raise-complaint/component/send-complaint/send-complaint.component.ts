@@ -52,7 +52,7 @@ export class SendComplaintComponent implements OnInit {
     initializeStudentData(student) {
         this.complaintStudent = student;
         this.complaintStudentName = this.complaintStudent.name;
-        this.complaintStudent["dbId"] = student.id;
+        this.complaintStudent["dbId"] = student.dbId;
     }  // Ends: initializeStudentData()
 
     /* Change Page */
