@@ -67,3 +67,13 @@ i {
 .example-full-width {
     width: 100%;
 }*/
+
+.example-viewport {
+    height: 80vh;
+    width: 100%;
+    border: none;
+}
+
+td {
+    position: relative;
+}
