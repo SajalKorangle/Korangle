@@ -1,5 +1,6 @@
 <div class="card-content">
     <ng-container *ngIf="!isLoading">
+        <cdk-virtual-scroll-viewport itemSize="12" class="example-viewport">
         <table class="table table-hover" *ngIf="examinationList && examinationList.length > 0">
             <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                 <tr>
@@ -10,7 +11,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let examination of examinationList; let i = index">
+                <ng-container *cdkVirtualFor="let examination of examinationList; let i = index">
+                <tr>
                     <td>{{ i + 1 }}.</td>
                     <td>
                         <input type="text" [(ngModel)]="examination.newName" [disabled]="examination.updating" />
@@ -40,9 +42,10 @@
                         <div *ngIf="examination.updating" class="loader-custom"></div>
                     </td>
                 </tr>
+                </ng-container>
             </tbody>
         </table>
-
+        </cdk-virtual-scroll-viewport>
         <br /><br /><br />
 
         <table class="table table-hover">

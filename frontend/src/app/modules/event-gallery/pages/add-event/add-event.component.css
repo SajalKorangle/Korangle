@@ -20,7 +20,7 @@
     border-color: black;
 }
 
-/deep/ .mat-option-pseudo-checkbox {
+:host ::ng-deep .mat-option-pseudo-checkbox {
     margin-right: 8px;
     background-color: #ffff;
 }
