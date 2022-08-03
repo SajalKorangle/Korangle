@@ -101,6 +101,7 @@ export class UpdateTransactionServiceAdapter {
             }
             else {
                 this.vm.isLoadingTransaction = false;
+                this.vm.loadMoreTransaction = false;
             }
         });
     }

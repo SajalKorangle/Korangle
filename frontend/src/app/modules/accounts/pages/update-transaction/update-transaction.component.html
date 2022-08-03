@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12" *ngIf="transactionsList.length == 0 && isLoadingTransaction == false && loadMoreTransactions == false">
+        <div class="col-md-12" *ngIf="transactionsList.length == 0 && isLoadingTransaction == false && loadMoreTransaction == false">
             <span>No Transaction Avaliable</span>
         </div>
         <div class="col-md-12" *ngFor="let transaction of transactionsList">
