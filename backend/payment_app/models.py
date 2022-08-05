@@ -11,7 +11,7 @@ class SchoolMerchantAccount(models.Model):
     parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE, related_name='SchoolMerchantAccountList')
     vendorId = models.CharField(max_length=20, unique=True)
     isEnabled = models.BooleanField(default=True)
-    percentageOfPlatformFeeOnSchool = models.PositiveIntegerField(default=100, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    percentageOfPlatformFeeOnSchool = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']
