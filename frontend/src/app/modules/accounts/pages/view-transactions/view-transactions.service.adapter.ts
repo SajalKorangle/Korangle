@@ -186,6 +186,7 @@ export class ViewTransactionsServiceAdapter {
                 this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_details_data),
             ]).then(data => {
                 this.initialiseTransactionData(value[0], data[0], data[1]);
+                this.vm.getFilteredTransactionList();
                 this.vm.isLoading = false;
             });
 

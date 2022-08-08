@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import { DataStorage } from "../../../../classes/data-storage";
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
 import { EmployeeService } from './../../../../services/modules/employee/employee.service';
@@ -116,6 +116,7 @@ export class ViewTransactionsComponent implements OnInit {
 
 
     transactionsList: any;
+    filteredTransactionsList: any;
     employeeList = [];
     accountsList: any;
     groupsList: any;
@@ -132,6 +133,8 @@ export class ViewTransactionsComponent implements OnInit {
 
     lockAccounts: any;
 
+    count = 0;
+
     constructor(
         public accountsService: AccountsService,
         public employeeService: EmployeeService,
@@ -139,6 +142,7 @@ export class ViewTransactionsComponent implements OnInit {
         public printService: PrintService,
         public excelService: ExcelService,
         public schoolService: SchoolService,
+        private cdr: ChangeDetectorRef,
     ) { }
 
     // Server Handling - Initial
@@ -178,11 +182,14 @@ export class ViewTransactionsComponent implements OnInit {
 
     getFilteredTransactionList(): any {
         let tempList = [];
+        this.count += 1;
         tempList = this.applyAccountFilter(this.transactionsList);
         tempList = this.applyEmployeeFilter(tempList);
         tempList = this.applyHeadFilter(tempList);
         tempList = this.applyGroupFilter(tempList);
-        return tempList;
+        this.filteredTransactionsList = tempList;
+        console.log(this.count);
+        
     }
 
     applyAccountFilter(list): any {
@@ -337,12 +344,14 @@ export class ViewTransactionsComponent implements OnInit {
         list.forEach(item => {
             item[value] = true;
         });
+        this.getFilteredTransactionList();
     }
 
     deSelectAll(list: any, value: any) {
         list.forEach(item => {
             item[value] = false;
         });
+        this.getFilteredTransactionList();
     }
 
     isAccountLocked() {

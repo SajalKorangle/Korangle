@@ -68,7 +68,7 @@
                         </button>
                     </mat-option>
                 <mat-option *ngFor="let account of filterAccountsList">
-                    <mat-checkbox [(ngModel)]="account.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{account.title}}&nbsp;A/c</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="account.selected" (ngModelChange)="getFilteredTransactionList();">{{account.title}}&nbsp;A/c</mat-checkbox>
                 </mat-option>   
                     <mat-option>
                         <button class="btn"
@@ -96,7 +96,7 @@
                         </button>
                     </mat-option>
                 <mat-option *ngFor="let employee of filterEmployeeList">
-                    <mat-checkbox [(ngModel)]="employee.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{employee.name}}</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="employee.selected" (ngModelChange)="getFilteredTransactionList();">{{employee.name}}</mat-checkbox>
                 </mat-option>   
                     <mat-option>
                         <button class="btn"
@@ -124,7 +124,7 @@
                         </button>
                             </mat-option>
                 <mat-option *ngFor="let head of filterHeadsList">
-                    <mat-checkbox [(ngModel)]="head.selected" (click)="getFilteredTransactionList();$event.stopPropagation()">{{head.title}}</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="head.selected" (ngModelChange)="getFilteredTransactionList();">{{head.title}}</mat-checkbox>
                 </mat-option>   
                     <mat-option>
                         <button class="btn"
@@ -167,7 +167,7 @@
             </mat-select>
         </mat-form-field>
 
-        <mat-slide-toggle [(ngModel)]="showSelectedOnly" (click)="getFilteredTransactionList();" style="margin-top:20px; margin-left: auto;" >Only Selected Accounts <mat-icon style="vertical-align: middle;" matTooltip="only transactions between selected accounts">help</mat-icon></mat-slide-toggle>
+        <mat-slide-toggle [(ngModel)]="showSelectedOnly" (ngModelChange)="getFilteredTransactionList();" style="margin-top:20px; margin-left: auto;" >Only Selected Accounts <mat-icon style="vertical-align: middle;" matTooltip="only transactions between selected accounts">help</mat-icon></mat-slide-toggle>
 
     </div>
 
@@ -186,7 +186,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let transaction of getFilteredTransactionList()">
+            <tr *ngFor="let transaction of filteredTransactionsList">
                 
                 <td *ngIf="columnFilter.voucherNumber.value" class="text-left" style="vertical-align: top;"><span>{{transaction.voucherNumber}}</span></td>
                 <td *ngIf="columnFilter.date.value" class="text-left" style="vertical-align: top;"><span>{{getDisplayDateFormat(transaction.transactionDate)}}</span></td>
