@@ -41,10 +41,7 @@
                 <div class="col-md-12"></div>
             </div>
 
-            <table class="table table-hover">
-                <tbody>
-                    <tr>
-                        <td>
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
                             <mat-form-field>
                                 <mat-select
                                     placeholder="Select Subject"
@@ -56,8 +53,6 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </td>
-                        <td>
                             <mat-form-field>
                                 <mat-select
                                     placeholder="Select Teacher"
@@ -69,7 +64,6 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </td>
                         <!-- td>
                         <input type="number" [(ngModel)]="orderNumber"/>
                     </td>
@@ -83,18 +77,15 @@
                             Only Grade
                         </mat-checkbox>
                     </td -->
-                        <td>
                             <button
                                 type="submit"
                                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                                 (click)="serviceAdapter.addSubject()"
+                                style="margin-right: 17px;"
                             >
                                 Add
                             </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            </div>
 
             <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px">
                 <div class="col-md-12"></div>
@@ -104,6 +95,7 @@
                 <span style="margin-top: 30px"> No Subjects added yet! </span>
             </ng-container>
 
+            <cdk-virtual-scroll-viewport itemSize="12" class="example-viewport">
             <table class="table table-hover" *ngIf="selectedClass.selectedSection.subjectList.length > 0">
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                     <tr>
@@ -117,7 +109,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let subject of selectedClass.selectedSection.subjectList">
+                    <ng-container *cdkVirtualFor="let subject of selectedClass.selectedSection.subjectList">
+                    <tr>
                         <td>{{ getSubjectName(subject) }}</td>
                         <td>
                             <mat-form-field>
@@ -167,8 +160,10 @@
                             </button>
                         </td>
                     </tr>
+                    </ng-container>
                 </tbody>
             </table>
+            </cdk-virtual-scroll-viewport>
         </ng-container>
     </ng-container>
 

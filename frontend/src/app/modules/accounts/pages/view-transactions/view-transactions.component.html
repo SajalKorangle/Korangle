@@ -20,8 +20,8 @@
 
         <button class="custom-button" style="background:rgba(255, 152, 0, 1); color: white; padding: 6px 4px 2px 5px" (click)="serviceAdapter.loadTransactions(); "><i class="material-icons">search</i></button>
         <ng-container *ngIf="!isLoading && transactionsList && transactionsList.length>0">
-            <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="serviceAdapter.loadAllTransactions('print')"><i class="material-icons">print</i></button>
-            <button class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="serviceAdapter.loadAllTransactions('download')"><i class="material-icons">download</i></button>
+            <button *ngIf="!isMobile()" class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="serviceAdapter.loadAllTransactions('print')"><i class="material-icons">print</i></button>
+            <button *ngIf="!isMobile()" class="custom-button" style="padding: 6px 4px 2px 5px; float: right; margin-left: 10px" (click)="serviceAdapter.loadAllTransactions('download')"><i class="material-icons">download</i></button>
         </ng-container>
     </div>
 

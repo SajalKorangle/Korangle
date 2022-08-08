@@ -362,4 +362,8 @@ export class ViewTransactionsComponent implements OnInit {
         }
     }
 
+    isMobile(): boolean {
+        return CommonFunctions.getInstance().isMobileMenu();
+    }
+
 }

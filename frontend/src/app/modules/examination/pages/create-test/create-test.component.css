@@ -63,8 +63,8 @@ input {
     border-left: none;
     border-right: none;
     border-bottom: 1px solid lightgrey;
-    width: 90%;
     margin-left: 5px;
+    margin-bottom: 21.5px;
 }
 
 /*.example-form {
@@ -80,4 +80,14 @@ input {
 .lowOpacity {
     pointer-events: none;
     opacity: 0.2;
+}
+
+.example-viewport {
+    height: 80vh;
+    width: 100%;
+    border: none;
+}
+
+td {
+    position: relative;
 }
