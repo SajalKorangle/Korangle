@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { DataStorage } from "../../../../classes/data-storage";
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
 import { EmployeeService } from './../../../../services/modules/employee/employee.service';
@@ -142,7 +142,6 @@ export class ViewTransactionsComponent implements OnInit {
         public printService: PrintService,
         public excelService: ExcelService,
         public schoolService: SchoolService,
-        private cdr: ChangeDetectorRef,
     ) { }
 
     // Server Handling - Initial
