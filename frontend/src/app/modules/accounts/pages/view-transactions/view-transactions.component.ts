@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "../../../../classes/data-storage";
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
 import { EmployeeService } from './../../../../services/modules/employee/employee.service';
