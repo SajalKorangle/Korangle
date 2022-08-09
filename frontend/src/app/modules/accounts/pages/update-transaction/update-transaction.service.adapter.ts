@@ -222,20 +222,20 @@ export class UpdateTransactionServiceAdapter {
             transactionAccounts.forEach(account => {
                 if (account.parentTransaction == transaction.id) {
                     let tempAccount = this.vm.accountsList.find(acccount => acccount.parentAccount == account.parentAccount);
-                        let temp = {
-                            dbId: tempAccount.id,
-                            accountDbId: tempAccount.parentAccount,
-                            account: tempAccount.title,
-                            amount: account.amount,
-                            transactionAccountDbId: account.id,
-                            balance: tempAccount.balance,
-                        };
-                        if (account.transactionType == 'DEBIT') {
-                            tempData.debitAccounts.push(temp);
-                        }
-                        else {
-                            tempData.creditAccounts.push(temp);
-                        }
+                    let temp = {
+                        dbId: tempAccount.id,
+                        accountDbId: tempAccount.parentAccount,
+                        account: tempAccount.title,
+                        amount: account.amount,
+                        transactionAccountDbId: account.id,
+                        balance: tempAccount.balance,
+                    };
+                    if (account.transactionType == 'DEBIT') {
+                        tempData.debitAccounts.push(temp);
+                    }
+                    else {
+                        tempData.creditAccounts.push(temp);
+                    }
                 }
             });
             transactionImages.forEach(image => {
