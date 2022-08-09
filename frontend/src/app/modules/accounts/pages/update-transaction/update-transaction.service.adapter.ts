@@ -82,6 +82,7 @@ export class UpdateTransactionServiceAdapter {
             voucherNumber: vNumber,
             transactionDate__gte: this.vm.minimumDate,
             transactionDate__lte: this.vm.maximumDate,
+            parentSchool: this.vm.user.activeSchool.dbId,
         };
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, data),
@@ -221,7 +222,6 @@ export class UpdateTransactionServiceAdapter {
             transactionAccounts.forEach(account => {
                 if (account.parentTransaction == transaction.id) {
                     let tempAccount = this.vm.accountsList.find(acccount => acccount.parentAccount == account.parentAccount);
-                    if (tempAccount) {
                         let temp = {
                             dbId: tempAccount.id,
                             accountDbId: tempAccount.parentAccount,
@@ -236,7 +236,6 @@ export class UpdateTransactionServiceAdapter {
                         else {
                             tempData.creditAccounts.push(temp);
                         }
-                    }
                 }
             });
             transactionImages.forEach(image => {
