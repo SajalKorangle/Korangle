@@ -56,3 +56,23 @@ mat-icon {
     flex-direction: row;
     align-items: center;
 }
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.mobile-margin {
+    margin-left: 5px;
+}
+
+@media screen and (max-width: 600px) {
+    .flex-mobile {
+        flex-direction: column;
+    }
+    .mobile-margin {
+        margin-left: 0px;
+    }
+}
