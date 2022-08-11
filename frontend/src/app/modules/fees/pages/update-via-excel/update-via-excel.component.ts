@@ -55,6 +55,8 @@ export class UpdateViaExcelComponent implements OnInit {
 
     serviceAdapter: UpdateViaExcelServiceAdapter;
 
+    monthList = [];
+
     constructor(public studentService: StudentService, public classService: ClassService, public feeService: FeeService) {}
 
     ngOnInit() {
@@ -62,6 +64,7 @@ export class UpdateViaExcelComponent implements OnInit {
         this.serviceAdapter = new UpdateViaExcelServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+        this.initializeMonthList();
 
         this.reader.onload = (e: any) => {
             this.isLoading = true;
@@ -185,11 +188,46 @@ export class UpdateViaExcelComponent implements OnInit {
         return isMobile();
     }
 
-    downloadSheetTemplate(): void {
-        let headerRowPlusStudentListToBeDownloaded = []; // to be downloaded
+    getSelectedMonthCount(): number {
+        let count = 0;
+        this.monthList.forEach((item) => {
+            if(item.checked) {
+                count += 1;
+            }
+        })
+        return count;
+    }
 
+    downloadSheetTemplate(): void {
+        let monthSelected = false;
+        let classSectionSelected = false;
+        this.monthList.some((item) => {
+            if(item.checked) {
+                monthSelected = true;
+                return true;
+            }
+        })
+
+        this.classList.forEach((Class) => {
+            this.divisionList.forEach((Division) => {
+                if (this.studentListMappedByClassIdDivisionId[Class.id][Division.id]) {
+                    if(this.classDivisionSelectionMappedByClassIdDivisionId[Class.id][Division.id])
+                    classSectionSelected = true;
+                }
+            });
+        });
+        
+        if(monthSelected && classSectionSelected) {
+        let headerRowPlusStudentListToBeDownloaded = []; // to be downloaded
+        let selectedMonthCount = this.getSelectedMonthCount();
         let headersRow = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
-        this.feeTypeList.forEach((feeType) => headersRow.push(feeType.name));
+        this.feeTypeList.forEach((feeType) => {
+            this.monthList.forEach((item) => {
+                if(item.checked) {
+                    headersRow.push(feeType.name + '-' + item.month)
+                }
+            })
+        });
         headerRowPlusStudentListToBeDownloaded.push(headersRow);
 
         this.classList.forEach((Class) => {
@@ -211,14 +249,15 @@ export class UpdateViaExcelComponent implements OnInit {
                             }
                             if (studentFee) {
                                 let feeTypeExcelColumnIndex = this.feeTypeExcelColumnIndexMappedByFeeTypeId[studentFee.parentFeeType];
-                                if (studentFee.isAnnually) {
-                                    row[feeTypeExcelColumnIndex] = studentFee.aprilAmount;
-                                } else {
-                                    //   if not annually compute total
-                                    row[feeTypeExcelColumnIndex] = INSTALLMENT_LIST.reduce((total, month) => {
-                                        return total + studentFee[month + 'Amount'];
-                                    }, 0);
-                                }
+                                let index = 0;
+                                this.monthList.forEach((item) => {
+                                    if(item.checked) {
+                                        console.log(index + this.NUM_OF_COLUMNS_FOR_STUDENT_INFO + (selectedMonthCount)*(feeTypeExcelColumnIndex-this.NUM_OF_COLUMNS_FOR_STUDENT_INFO));
+                                        
+                                        row[index + this.NUM_OF_COLUMNS_FOR_STUDENT_INFO + (selectedMonthCount)*(feeTypeExcelColumnIndex-this.NUM_OF_COLUMNS_FOR_STUDENT_INFO)] = studentFee[item.month + 'Amount'];
+                                        index += 1;
+                                    }
+                                })
                             }
                         });
                         headerRowPlusStudentListToBeDownloaded.push(row);
@@ -231,6 +270,9 @@ export class UpdateViaExcelComponent implements OnInit {
         let wb = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
         xlsx.writeFile(wb, 'Sheet.xlsx');
+    } else {
+        alert("Please Select a Class and a Month");
+    }
     }
 
     uploadSheet(event: any): void {
@@ -393,5 +435,17 @@ export class UpdateViaExcelComponent implements OnInit {
                 }
             });
         });
+    }
+
+    initializeMonthList(): void {
+        INSTALLMENT_LIST.forEach((month) => {
+            this.monthList.push({"month":month,"checked":false});
+        })
+    }
+
+    updateMonthSelection(selectionStatus: boolean): void {
+        this.monthList.forEach((item) => {
+            item.checked = selectionStatus;
+        })
     }
 }

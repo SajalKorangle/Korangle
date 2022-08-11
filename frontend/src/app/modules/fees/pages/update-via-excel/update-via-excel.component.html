@@ -114,6 +114,42 @@
             </mat-select>
         </mat-form-field>
 
+        <!-- Month Filter -->
+        <mat-form-field style="margin-right: 25px">
+            <mat-select placeholder="Select Month" id="select-class" style="width: 100%">
+                <mat-option>
+                    <button
+                        class="btn"
+                        style="padding: 4px 7px"
+                        id="select-all-classes"
+                        (click)="updateMonthSelection(true); $event.stopPropagation()"
+                    >
+                        Select All
+                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="updateMonthSelection(false); $event.stopPropagation()">
+                        Clear All
+                    </button>
+                </mat-option>
+
+                <ng-container *ngFor="let value of monthList">
+                    <mat-option style="width: 100%">
+                        <mat-checkbox [(ngModel)]="value.checked" (click)="$event.stopPropagation()">
+                            {{ value.month.toUpperCase() }}
+                        </mat-checkbox>
+                    </mat-option>
+                </ng-container>
+
+                <mat-option>
+                    <button class="btn" style="padding: 4px 7px" (click)="updateMonthSelection(true); $event.stopPropagation()">
+                        Select All
+                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="updateMonthSelection(false); $event.stopPropagation()">
+                        Clear All
+                    </button>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
         <button type="submit" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="downloadSheetTemplate()">
             Download Template
         </button>
