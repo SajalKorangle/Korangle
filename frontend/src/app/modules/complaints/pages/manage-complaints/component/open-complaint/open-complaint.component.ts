@@ -15,7 +15,7 @@ export class OpenComplaintComponent implements OnInit {
     @Input() openedComplaint;
     @Input() commentList;
     @Input() commentMessage;
-    @Output() startNewProgressBar = new EventEmitter<any>();
+    @Output() openComplaintPage = new EventEmitter<any>();
     @Output() updateStatus = new EventEmitter<any>();
     @Output() deleteComplaint = new EventEmitter<any>();
     @Output() sendCommentClicked = new EventEmitter<any>();
@@ -32,8 +32,8 @@ export class OpenComplaintComponent implements OnInit {
         this.htmlRenderer.initializeRenderer(this);
     }
 
-    triggerStartProgressBar() {
-        this.startNewProgressBar.emit();
+    triggerOpenComplaintPage() {
+        this.openComplaintPage.emit();
     }
 
     triggerUpdateStatus(status) {

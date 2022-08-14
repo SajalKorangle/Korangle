@@ -26,16 +26,6 @@ export class ManageComplaintsServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        const employee_permission_filter = {
-            parentEmployee: this.vm.user.activeSchool.employeeId,
-            parentTask: this.getParentTask(),
-        };
-
-
-        const complaintTypeQuery = new Query()
-            .filter({ parentSchool: this.vm.user.activeSchool.dbId })
-            .getObjectList({ complaints_app: 'SchoolComplaintType' });
-
         const studentQuery = new Query()
             .filter(student_full_profile_request_filter)
             .getObjectList({student_app: 'Student'});
@@ -43,6 +33,30 @@ export class ManageComplaintsServiceAdapter {
         const studentSectionQuery = new Query()
             .filter(student_section_filter)
             .getObjectList({student_app: 'StudentSection'});
+
+        let studentList = [];
+        let studentSectionList = [];
+        [
+            studentList,   // 0
+            studentSectionList,   // 1
+        ] = await Promise.all([
+            studentQuery,   // 0
+            studentSectionQuery,   // 1
+        ]);
+
+        let parentStudentIdList = [];
+        for (let i = 0; i < studentSectionList.length; i++) {
+            parentStudentIdList.push(studentSectionList[i].parentStudent);
+        }
+
+        const employee_permission_filter = {
+            parentEmployee: this.vm.user.activeSchool.employeeId,
+            parentTask: this.getParentTask(),
+        };
+
+        const complaintTypeQuery = new Query()
+            .filter({ parentSchool: this.vm.user.activeSchool.dbId })
+            .getObjectList({ complaints_app: 'SchoolComplaintType' });
 
         const statusQuery = new Query()
             .filter({ parentSchool: this.vm.user.activeSchool.dbId })
@@ -57,41 +71,36 @@ export class ManageComplaintsServiceAdapter {
             .getObject({ employee_app: 'EmployeePermission' });
 
 
-        let studentList = [];
         let complaintTypeList = [];
-        let studentSectionList = [];
         let statusList = [];
         let employeeList = [];
         let employeePermissionObject = {};
         [
-            studentList,   // 0
-            studentSectionList,   // 1
-            complaintTypeList,   // 2
-            statusList,   // 3
-            employeeList,   // 4
-            employeePermissionObject,   // 5
+            complaintTypeList,   // 0
+            statusList,   // 1
+            employeeList,   // 2
+            employeePermissionObject,   // 3
         ] = await Promise.all([
-            studentQuery,   // 0
-            studentSectionQuery,   // 1
-            complaintTypeQuery,   // 2
-            statusQuery,   // 3
-            employeeQuery,   // 4
-            employeePermissionQuery,   // 5
+            complaintTypeQuery,   // 0
+            statusQuery,   // 1
+            employeeQuery,   // 2
+            employeePermissionQuery,   // 3
         ]);
 
         this.vm.initializeStatusList(statusList);
         this.vm.initializeEmployeeList(employeeList);
         this.vm.initializeStudentFullProfileList(studentList, studentSectionList);
         this.vm.initializeComplaintTypeList(complaintTypeList);
-        this.vm.checkUserPermission(employeePermissionObject);
+        this.vm.checkUserPermission(employeePermissionObject, parentStudentIdList);
         this.vm.isLoading = false;
     }  // Ends: initializeData()
 
-    async initializeComplaintDataAdmin() {
+    async initializeComplaintDataAdmin(parentStudentIdList) {
         this.vm.isLoading = true;
 
         let complaint_filter = {
             parentSchool: this.vm.user.activeSchool.dbId,
+            parentStudent__in: parentStudentIdList,
         };
 
         const complaintQuery = new Query()
@@ -114,7 +123,7 @@ export class ManageComplaintsServiceAdapter {
     }
 
     /* Initialize Complaint Data */
-    async initializeComplaintDataEmployee() {
+    async initializeComplaintDataEmployee(parentStudentIdList) {
         this.vm.isLoading = true;
 
         /* Get Assigned EmployeeComplaint */
@@ -140,6 +149,7 @@ export class ManageComplaintsServiceAdapter {
         let complaint_filter = {
             parentSchool: this.vm.user.activeSchool.dbId,
             id__in: complaintIdList,
+            parentStudent__in: parentStudentIdList,
         };
 
         const complaintQuery = new Query()
@@ -306,6 +316,8 @@ export class ManageComplaintsServiceAdapter {
     /* Load Complaints */
     async loadComplaints() {
 
+        this.vm.isLoading = true;
+
         let filterData = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
@@ -359,11 +371,11 @@ export class ManageComplaintsServiceAdapter {
         }
 
         /* Search Check */
-        if (this.vm.searchString) {
+        if (this.vm.searchString.toString().trim()) {
             let searchList = [];
-            searchList.push({"parentStudent__name__icontains": this.vm.searchString});
-            searchList.push({"parentStudent__fathersName__icontains": this.vm.searchString});
-            searchList.push({"title__icontains": this.vm.searchString});
+            searchList.push({"parentStudent__name__icontains": this.vm.searchString.toString().trim()});
+            searchList.push({"parentStudent__fathersName__icontains": this.vm.searchString.toString().trim()});
+            searchList.push({"title__icontains": this.vm.searchString.toString().trim()});
             filterData["__or__searchList"] = searchList;
         }
 
@@ -385,9 +397,7 @@ export class ManageComplaintsServiceAdapter {
             employeeComplaintList.forEach((employeeComplaint) => {
                 complaintIdList.push(employeeComplaint.parentComplaint);
             });
-            if (complaintIdList.length) {
-                filterData["id__in"] = complaintIdList;
-            }
+            filterData["id__in"] = complaintIdList;
         }
 
         this.vm.isProgress = true;
@@ -406,7 +416,11 @@ export class ManageComplaintsServiceAdapter {
             complaintQuery,   // 0
         ]);
 
-        this.vm.addNewComplaints(complaintList);
+        if (this.vm.isLoadMoreClicked) this.vm.addNewComplaints(complaintList);
+        else this.vm.initializeComplaintList(complaintList);
+
+        this.vm.isLoadMoreClicked = false;
+        this.vm.isLoading = false;
     }  // Ends: loadComplaints()
 
     async addNewAndRemoveEmployee(complaintId, idx, newlyAssignedEmployeeList, removeEmployeeList) {

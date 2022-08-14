@@ -11,6 +11,7 @@ import { PrintService } from '../../../../print/print-service';
 import { PRINT_LEDGER } from './../../../../print/print-routes.constants';
 import { HEADS_LIST } from '@services/modules/accounts/models/head';
 import { customAccount, customGroupStructure } from './../../classes/constants';
+import { CommonFunctions } from './../../../../classes/common-functions';
 import xlsx = require('xlsx');
 
 @Component({
@@ -365,6 +366,10 @@ export class ViewBalanceComponent implements OnInit {
     let wb = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
     xlsx.writeFile(wb, this.ledgerAccount.title + '.xlsx');
+  }
+
+  isMobile(): boolean {
+    return CommonFunctions.getInstance().isMobileMenu();
   }
 
 }

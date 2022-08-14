@@ -33,43 +33,44 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-top: 10px;
 }
 
 label {
     color: black;
 }
 
-/deep/ .mat-tab-label {
+:host ::ng-deep .mat-tab-label {
     font-size: 18px;
     padding: 0 !important;
     text-align: left !important;
     justify-content: normal !important;
 }
 
-/deep/ .mat-tab-group {
+:host ::ng-deep .mat-tab-group {
     flex-direction: column !important;
     align-content: center !important;
     flex-wrap: wrap !important;
 }
 
-/deep/ .mat-tab-label-active {
+:host ::ng-deep .mat-tab-label-active {
     color: #FF7131 !important;
     opacity: 0.6 !important;
 }
 
-/deep/ .mat-tab-label {
+:host ::ng-deep .mat-tab-label {
     color: #000000;
 }
 
-/deep/ .mat-form-field-appearance-outline .mat-form-field-outline {
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
     background-color: #F9F9F9 !important;
 }
 
-.example-container .mat-form-field + .mat-form-field {
+.example-container .mat-form-field+.mat-form-field {
     margin-left: 8px;
 }
 
-/deep/ .wrapper {
+:host ::ng-deep .wrapper {
     height: fit-content !important;
 }
 
@@ -77,11 +78,11 @@ label {
     padding: 9px 20px !important;
 }
 
-/deep/ .mat-form-field {
+:host ::ng-deep .mat-form-field {
     font-size: 12px;
 }
 
-/deep/ .otp-input {
+:host ::ng-deep .otp-input {
     font-size: 16px !important;
     width: 35px !important;
     height: 35px !important;
@@ -89,7 +90,7 @@ label {
     background-color: #F9F9F9 !important;
 }
 
-/deep/ .btn {
+:host ::ng-deep .btn {
     background-color: #FF7131 !important;
 }
 
@@ -118,7 +119,7 @@ label {
     position: relative;
 }
 
-/deep/ mat-form-field {
+:host ::ng-deep mat-form-field {
     width: 100%;
 }
 
@@ -130,6 +131,7 @@ label {
     border-top: 2px solid dimgrey;
     width: 18px;
     height: 18px;
-    -webkit-animation: spin 2s linear infinite; /* Safari */
+    -webkit-animation: spin 2s linear infinite;
+    /* Safari */
     animation: spin 2s linear infinite;
 }

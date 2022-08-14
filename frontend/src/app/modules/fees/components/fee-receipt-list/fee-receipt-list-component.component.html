@@ -38,7 +38,7 @@
                     <ng-container *ngIf="feeReceipt.parentStudent">{{ getStudentScholarNumber(feeReceipt.parentStudent) }}</ng-container>
                 </td>
                 <td *ngIf="receiptColumnFilter.amount" style="padding-right: 15px" align="right">
-                    {{ getFeeReceiptTotalAmount(feeReceipt) }}
+                    {{ getFeeReceiptFilteredAmount(feeReceipt) }}
                 </td>
                 <td *ngIf="receiptColumnFilter.mobileNumber" style="padding-right: 15px" align="right">
                     <ng-container *ngIf="!feeReceipt.parentStudent">-</ng-container>
