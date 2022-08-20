@@ -120,7 +120,7 @@ export class LoginSignupServiceAdapter {
                         this.vm.notificationService.gcm_device,
                 });
             }
-            this.vm.router.navigate([Constants.dashBoardRoute + '/notification/view_notification']);
+            await this.vm.router.navigate([Constants.dashBoardRoute + '/notification/view_notification']);
         } else if (otpResponse.status === 'failure') {
             alert(otpResponse.message);
         }
