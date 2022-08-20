@@ -120,4 +120,13 @@ export class UpdateMarksComponent implements OnInit {
     hasAdminPermission(): boolean {
         return this.inPagePermissionMappedByKey[USER_PERMISSION_KEY] == ADMIN_PERMSSION;
     }
+
+    isDisabled(): boolean {
+        for(let test of this.selectedExamination.selectedClass.selectedSection.testList){
+            if(test.isSelected){
+                return false;
+            }
+        }
+        return true;
+    }
 }

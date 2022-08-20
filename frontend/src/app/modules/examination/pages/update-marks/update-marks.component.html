@@ -71,6 +71,7 @@
                     style="margin-left: 20px"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                     (click)="serviceAdapter.getStudentTestDetails()"
+                    [disabled]="isDisabled()"
                 >
                     GET
                 </button>
