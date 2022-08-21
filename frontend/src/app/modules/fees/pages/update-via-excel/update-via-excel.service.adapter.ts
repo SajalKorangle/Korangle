@@ -79,7 +79,9 @@ export class UpdateViaExcelServiceAdapter {
             .forEach((feeType, index) => {
                 this.vm.feeTypeExcelColumnIndexMappedByFeeTypeId[feeType.id] = index + this.vm.NUM_OF_COLUMNS_FOR_STUDENT_INFO;
                 this.vm.feeTypeIdMappedByFeeTypeExcelColumnIndex[index + this.vm.NUM_OF_COLUMNS_FOR_STUDENT_INFO] = feeType.id;
+                feeTypeList[index].checked = false;
             });
+        console.log(feeTypeList);
     }
 
     structuringForStudents(classList: any, divisionList: any): void {

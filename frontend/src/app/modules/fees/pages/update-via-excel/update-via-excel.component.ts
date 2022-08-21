@@ -222,11 +222,13 @@ export class UpdateViaExcelComponent implements OnInit {
         let selectedMonthCount = this.getSelectedMonthCount();
         let headersRow = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
         this.feeTypeList.forEach((feeType) => {
+            if (feeType.checked) {
             this.monthList.forEach((item) => {
                 if(item.checked) {
                     headersRow.push(feeType.name + '-' + item.month)
                 }
             })
+        }
         });
         headerRowPlusStudentListToBeDownloaded.push(headersRow);
 
@@ -445,6 +447,12 @@ export class UpdateViaExcelComponent implements OnInit {
 
     updateMonthSelection(selectionStatus: boolean): void {
         this.monthList.forEach((item) => {
+            item.checked = selectionStatus;
+        })
+    }
+
+    updateFeeTypeSelection(selectionStatus: boolean): void {
+        this.feeTypeList.forEach((item) => {
             item.checked = selectionStatus;
         })
     }
