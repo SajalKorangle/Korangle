@@ -116,7 +116,6 @@ export class ViewTransactionsComponent implements OnInit {
 
 
     transactionsList: any;
-    filteredTransactionsList: any;
     employeeList = [];
     accountsList: any;
     groupsList: any;
@@ -132,8 +131,6 @@ export class ViewTransactionsComponent implements OnInit {
     maximumPermittedAmount: any;
 
     lockAccounts: any;
-
-    count = 0;
 
     constructor(
         public accountsService: AccountsService,
@@ -181,14 +178,11 @@ export class ViewTransactionsComponent implements OnInit {
 
     getFilteredTransactionList(): any {
         let tempList = [];
-        this.count += 1;
         tempList = this.applyAccountFilter(this.transactionsList);
         tempList = this.applyEmployeeFilter(tempList);
         tempList = this.applyHeadFilter(tempList);
         tempList = this.applyGroupFilter(tempList);
-        this.filteredTransactionsList = tempList;
-        console.log(this.count);
-        
+        return tempList;
     }
 
     applyAccountFilter(list): any {
@@ -343,14 +337,12 @@ export class ViewTransactionsComponent implements OnInit {
         list.forEach(item => {
             item[value] = true;
         });
-        this.getFilteredTransactionList();
     }
 
     deSelectAll(list: any, value: any) {
         list.forEach(item => {
             item[value] = false;
         });
-        this.getFilteredTransactionList();
     }
 
     isAccountLocked() {
