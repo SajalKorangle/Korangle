@@ -11,12 +11,13 @@
         <div class="col-md-9" *ngIf="searchType == searchTypeList[0];">
             <mat-form-field style="width: 50%;">
                 <input #vNumber type="text" matInput (keypress)="$event.key=='Enter'?serviceAdapter.findTransactionByVNumber($event.target.value):null"
-                    placeholder="Enter Voucher Number">
+                    placeholder="Enter Voucher Number" (input)="isVNumberEmpty=false ">
             </mat-form-field>
             <button type="submit"
                         style="margin-left: 20px;"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                        (click)="serviceAdapter.findTransactionByVNumber(vNumber.value)">GET</button>
+                        (click)="serviceAdapter.findTransactionByVNumber(vNumber.value)"
+                        [disabled]="isVNumberEmpty">GET</button>
         </div>
         <div class="col-md-9" *ngIf="searchType == searchTypeList[1];">
             <account-search [user]="user"
@@ -26,7 +27,7 @@
         <div class="col-md-3">
             <mat-form-field style="width: 100%;">
                 <mat-select placeholder="Search By" [ngModel]="searchType"
-                    (ngModelChange)="searchType = $event">
+                    (ngModelChange)="handleSelection($event)">
                     <mat-option *ngFor="let type of searchTypeList"
                         [value]="type">
                         {{type}}
@@ -36,8 +37,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12" *ngIf="transactionsList.length == 0 && isLoadingTransaction == false && loadMoreTransaction == false">
-            <span>No Transaction Avaliable</span>
+        <div class="col-md-12" *ngIf="transactionsList.length == 0 && isLoadingTransaction == false && loadMoreTransaction == false && shouldTransactionsBeEmpty">
+            <p style="font-size: 16px;">No Transaction Available</p>
         </div>
         <div class="col-md-12" *ngFor="let transaction of transactionsList">
             <div class="row col-md-12">
@@ -103,7 +104,7 @@
                             </div>
                         </div>
                        <div style="text-align: right;">
-                            <span style="color: rgba(255, 152, 0, 1);" (click)="serviceAdapter.deleteTransaction(transaction); $event.stopPropagation();"><u>delete</u></span>
+                            <span style="color: rgba(255, 152, 0, 1);" (click)="serviceAdapter.deleteTransaction(transaction); $event.stopPropagation();"><u>Delete</u></span>
                         </div>
                     </mat-card-content>
                 </mat-card>

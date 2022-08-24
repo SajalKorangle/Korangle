@@ -33,6 +33,9 @@ export class UpdateTransactionComponent implements OnInit {
   loadMoreTransaction: boolean;
   loadingCount = 15;
   maximumPermittedAmount: any;
+  shouldTransactionsBeEmpty: boolean;
+
+  isVNumberEmpty = true;
 
   transactionsList: any;
   accountsList: any;
@@ -55,8 +58,11 @@ export class UpdateTransactionComponent implements OnInit {
     this.serviceAdapter.initializeData();
   }
 
-  handleSelection($event) {
-
+  handleSelection(selectedSearchType:any) {
+    console.log(selectedSearchType);
+    
+    this.searchType = selectedSearchType;
+    this.shouldTransactionsBeEmpty = false;
   }
 
   getDisplayDateFormat(str: any) {
@@ -107,5 +113,9 @@ export class UpdateTransactionComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
     });
+  }
+
+  func(): void {
+    
   }
 }

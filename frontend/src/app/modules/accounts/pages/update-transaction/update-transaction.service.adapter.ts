@@ -99,10 +99,12 @@ export class UpdateTransactionServiceAdapter {
                     this.initialiseTransactionData(val[0], data[0], data[1]);
                     this.vm.isLoadingTransaction = false;
                 });
+                this.vm.shouldTransactionsBeEmpty = false;
             }
             else {
                 this.vm.isLoadingTransaction = false;
                 this.vm.loadMoreTransaction = false;
+                this.vm.shouldTransactionsBeEmpty = true;
             }
         });
     }
@@ -157,11 +159,13 @@ export class UpdateTransactionServiceAdapter {
                         this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_data),
                     ]).then(data => {
                         this.initialiseTransactionData(val[0], data[0], data[1]);
+                        this.vm.shouldTransactionsBeEmpty = false;
                         this.vm.isLoadingTransaction = false;
                     });
                 }
                 else {
                     this.vm.isLoadingTransaction = false;
+                    this.vm.shouldTransactionsBeEmpty = true;
                 }
             });
         });
