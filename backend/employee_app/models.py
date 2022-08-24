@@ -2,10 +2,13 @@ from django.db import models
 from common.common import BasePermission
 
 from school_app.model.models import School, Session
-from team_app.models import Task
+from team_app.models import Task, Module
 import os
 from django.utils.timezone import now
 from common.common import BasePermission
+
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 
 def upload_avatar_to(instance, filename):
@@ -134,6 +137,16 @@ class EmployeePermission(models.Model):
     class Permissions(BasePermission):
         RelationsToSchool = ['parentEmployee__parentSchool__id']
         RelationsToStudent = []
+
+
+@receiver(pre_save, sender = EmployeePermission)
+def admin_user_permission_manage_complaints_page(sender, instance, **kwargs):
+    module_object = Module.objects.get(path = 'complaints')
+    task_object = Task.objects.get(path = 'manage_complaints', parentModule = module_object)
+
+    if instance.parentTask == task_object and len(instance.configJSON) == 2:
+        instance.configJSON = '{"userType":"admin"}'
+
 
 class EmployeeParameter(models.Model):
 

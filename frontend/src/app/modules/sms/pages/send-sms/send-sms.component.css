@@ -92,11 +92,11 @@ ngx-datatable-column:hover {
     background-color: #c4c4c4 !important;
 }
 
-/deep/ .datatable-body-cell {
+:host ::ng-deep .datatable-body-cell {
     margin-top: 15px;
 }
 
-/deep/ .highlight {
+:host ::ng-deep .highlight {
     background: yellow;
 }
 

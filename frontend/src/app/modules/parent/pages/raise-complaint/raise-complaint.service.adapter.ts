@@ -241,7 +241,6 @@ export class RaiseComplaintServiceAdapter {
         this.vm.commentMessage = "";
         this.vm.addNewComplaint(complaint);
         this.vm.initializeComplaintData();
-        this.vm.pageName = "list-of-complaints";
         alert("Complaint sent successfully.");
         this.vm.isLoading = false;
     }  // Ends: sendComplaint()
