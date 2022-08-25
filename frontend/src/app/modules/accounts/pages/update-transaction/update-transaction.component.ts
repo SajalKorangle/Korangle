@@ -115,7 +115,12 @@ export class UpdateTransactionComponent implements OnInit {
     });
   }
 
-  func(): void {
-    
+  onVnumberChange(vNumber:any): void {
+    if(vNumber == "" || vNumber == null) {
+      this.isVNumberEmpty = true;
+    } else {
+      this.isVNumberEmpty = false;
+    }
   }
+
 }
