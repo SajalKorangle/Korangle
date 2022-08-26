@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <form class="example-form" *ngIf="!isLoading">
+        <form class="example-form">
             <mat-form-field
                     class="example-full-width"
                     floatPlaceholder="never">
@@ -12,9 +12,14 @@
                 <mat-autocomplete #autoAccount="matAutocomplete"
                                   (optionSelected)="handleAccountSelection($event.option.value)"
                                   [displayWith]="displayAccountFunction">
-                    <mat-option *ngFor="let account of filteredAccountList | async" [value]="account">
-                        {{account.title}}&nbsp;A/c
+                    <mat-option disabled *ngIf="isLoading">
+                        <mat-spinner diameter="20"></mat-spinner>
                     </mat-option>
+                    <ng-container *ngIf="!isLoading">
+                        <mat-option *ngFor="let account of filteredAccountList | async" [value]="account">
+                            {{account.title}}&nbsp;A/c
+                        </mat-option>
+                    </ng-container>
                     <!-- <mat-option *ngFor="let group of groupsList" [value]="group">
                         {{group.title}}
                     </mat-option> -->
