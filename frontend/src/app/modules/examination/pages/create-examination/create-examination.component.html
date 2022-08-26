@@ -1,5 +1,24 @@
 <div class="card-content">
     <ng-container *ngIf="!isLoading">
+        <table class="table table-hover">
+            <tbody>
+                <tr>
+                    <td>
+                        <input type="text" placeholder="Type examination name here ...." [(ngModel)]="examinationNameToBeAdded" />
+                    </td>
+                    <td>
+                        <button
+                            type="submit"
+                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                            style="padding: 3px 8px"
+                            (click)="serviceAdapter.createExamination()"
+                        >
+                            Add
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         <cdk-virtual-scroll-viewport itemSize="12" class="example-viewport">
         <table class="table table-hover" *ngIf="examinationList && examinationList.length > 0">
             <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
@@ -47,26 +66,6 @@
         </table>
         </cdk-virtual-scroll-viewport>
         <br /><br /><br />
-
-        <table class="table table-hover">
-            <tbody>
-                <tr>
-                    <td>
-                        <input type="text" placeholder="Type examination name here ...." [(ngModel)]="examinationNameToBeAdded" />
-                    </td>
-                    <td>
-                        <button
-                            type="submit"
-                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                            style="padding: 3px 8px"
-                            (click)="serviceAdapter.createExamination()"
-                        >
-                            Add
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </ng-container>
 
     <ng-container *ngIf="isLoading">
