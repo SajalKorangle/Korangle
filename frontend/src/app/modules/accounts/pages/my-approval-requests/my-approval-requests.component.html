@@ -1,6 +1,6 @@
 <div class="card-content table-responsive ">
 <ng-container *ngIf="!isLoading else loadingSpinner">
-    <div *ngIf="!accountsLockedForSession && inActiveSession() else notAllowedDescription">
+    <div *ngIf="!accountsLockedForSession && !inActiveSession() else notAllowedDescription">
         <h4 style="color: blue;"><b>New Approval Request</b></h4>
         
         <ng-container *ngFor="let approval of newApprovalList, let i = index;">
@@ -38,7 +38,6 @@
                         <div class="row col-md-12" style="width: auto;">
                                 <customized-number-input [placeHolder]="'Amount'" 
                                         [disabled]="approval.payFrom.length==1 && approval.payTo.length>1"
-                                        [minimum]="0.01"
                                         [maximumDecimal]="2"
                                         [inputValue]="payFrom.amount"
                                         (outputValue)="payFrom.amount=$event; handleAmountChange(approval, $event);"></customized-number-input>
@@ -190,7 +189,7 @@
     </div>
 
     <ng-template #notAllowedDescription>
-        <div *ngIf="!inActiveSession()">
+        <div *ngIf="inActiveSession()">
         <span style="color: red;">Not in Active Session</span><span> (Request can only be made in active Session)</span>
         </div>
         <div *ngIf="accountsLockedForSession">

@@ -76,3 +76,17 @@ mat-icon {
         margin-left: 0px;
     }
 }
+
+.error-icon{
+    font-size: 15px;
+    display: table-cell;
+    padding-right: 5px;
+    position: relative;
+    top: 3px;
+}
+
+.error-container{
+    color: rgb(243, 59, 59);
+    display: table;
+    font-weight: 550;
+}

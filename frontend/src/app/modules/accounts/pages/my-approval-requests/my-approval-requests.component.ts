@@ -197,18 +197,21 @@ export class MyApprovalRequestsComponent implements OnInit {
     }
 
     isAccountNotMentioned(approval: NewCustomApproval): boolean {
+        let temp = false;
         approval.payFrom.forEach(acc => {
             if (acc.account == null) {
-                return true;
+                temp = true;
+                return;
             }
         });
 
         approval.payTo.forEach(acc => {
             if (acc.account == null) {
-                return true;
+                temp = true;
+                return;
             }
         });
-        return false;
+        return temp;
     }
 
     isAmountUnEqual(approval: NewCustomApproval): boolean {
