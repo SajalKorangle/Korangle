@@ -7,8 +7,8 @@
                 All Accounts has been locked for this session . No further transctions can be updated. </b></h4></span>
     </div>
     <div *ngIf="!lockAccounts">
-    <div>
-        <div *ngIf="searchType == searchTypeList[0];">
+    <div class="row">
+        <div class="col-md-9" *ngIf="searchType == searchTypeList[0];">
             <mat-form-field style="width: 50%;">
                 <input [(ngModel)]="vNumber" type="number" matInput (keypress)="$event.key=='Enter'?serviceAdapter.findTransactionByVNumber($event.target.value):null"
                     placeholder="Enter Voucher Number" (ngModelChange)="onVnumberChange(vNumber)"  (keypress)="$event.charCode >= 48 && $event.charCode <= 57">
@@ -19,12 +19,12 @@
                         (click)="serviceAdapter.findTransactionByVNumber(vNumber)"
                         [disabled]="isVNumberEmpty">GET</button>
         </div>
-        <div *ngIf="searchType == searchTypeList[1];">
+        <div class="col-md-9" *ngIf="searchType == searchTypeList[1];">
             <account-search [user]="user"
                             [includeGroup]="false"
                             (onSelection)="serviceAdapter.findTransactionByAccount($event)"></account-search>
         </div>
-        <div>
+        <div class="col-md-3">
             <mat-form-field style="width: 100%;">
                 <mat-select placeholder="Search By" [ngModel]="searchType"
                     (ngModelChange)="handleSelection($event)">
@@ -36,8 +36,8 @@
             </mat-form-field>
         </div>
     </div>
-    <div>
-        <div *ngIf="transactionsList.length == 0 && isLoadingTransaction == false && loadMoreTransaction == false && shouldTransactionsBeEmpty">
+    <div class="row">
+        <div class="col-md-12" *ngIf="transactionsList.length == 0 && isLoadingTransaction == false && loadMoreTransaction == false && shouldTransactionsBeEmpty">
             <p style="font-size: 16px;">No Transaction Available</p>
         </div>
         <div *ngFor="let transaction of transactionsList">

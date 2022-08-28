@@ -8,7 +8,7 @@
     width: 100%;
 }
 
-::ng-deep .mat-option-text {
+::ng-deep .loading .mat-option-text {
     display: flex;
     justify-content: center;
 }

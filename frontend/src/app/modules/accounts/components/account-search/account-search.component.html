@@ -12,7 +12,7 @@
                 <mat-autocomplete #autoAccount="matAutocomplete"
                                   (optionSelected)="handleAccountSelection($event.option.value)"
                                   [displayWith]="displayAccountFunction">
-                    <mat-option disabled *ngIf="isLoading">
+                    <mat-option class="loading" disabled *ngIf="isLoading">
                         <mat-spinner diameter="20"></mat-spinner>
                     </mat-option>
                     <ng-container *ngIf="!isLoading">
