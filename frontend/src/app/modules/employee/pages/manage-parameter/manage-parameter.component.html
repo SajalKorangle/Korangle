@@ -62,7 +62,7 @@
                                         <mat-label>
                                             Value #{{i+1}}
                                         </mat-label>
-                                        <input matInput placeholder="Filter Name" value="{{filter}}" disabled>
+                                        <input matInput placeholder="Filter Name" [(ngModel)]="filter" disabled>
                                         <mat-icon matSuffix style="cursor: pointer;" (click)="deleteFilter(filter)">
                                             delete</mat-icon>
                                     </mat-form-field>
