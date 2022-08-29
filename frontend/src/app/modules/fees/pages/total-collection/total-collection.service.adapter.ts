@@ -6,6 +6,7 @@ export class TotalCollectionServiceAdapter {
     constructor() { }
 
     // Data
+    feeTypeList = [];
 
     initializeAdapter(vm: TotalCollectionComponent): void {
         this.vm = vm;
@@ -38,7 +39,7 @@ export class TotalCollectionServiceAdapter {
             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, employee_permission_data), // 6
         ]).then(
             (value) => {
-                this.vm.feeTypeList = value[0];
+                this.feeTypeList = value[0];
                 this.vm.employeeList = value[1];
                 this.vm.classList = value[2];
                 this.vm.sectionList = value[3];
@@ -225,7 +226,7 @@ export class TotalCollectionServiceAdapter {
         });
 
         //Filtered Fee Type list
-        this.vm.feeTypeList = this.vm.feeTypeList.filter((feeType) => {
+        this.vm.feeTypeList = this.feeTypeList.filter((feeType) => {
             return (
                 this.vm.subFeeReceiptList.find((subFeeReceipt) => {
                     return subFeeReceipt.parentFeeType == feeType.id;
