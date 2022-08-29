@@ -1,10 +1,5 @@
 <div class="card-content">
     <!-- Starts: Search Bar -->
-    <!-- <div class="search-bar" (click)="closeFilterOptions()">
-        <input class="search-field" type="search" placeholder="Search by parent name, student name, title" [ngModel]="searchString" (ngModelChange)="searchString = $event; searchChanged()">
-        <button class="search-btn"><i class="material-icons search-icon" (click)="searchChanged()">search</i></button>
-    </div> -->
-
     <div class="example-form">
         <mat-form-field class="example-full-width">
             <input
@@ -16,7 +11,6 @@
             />
         </mat-form-field>
     </div>
-
     <br />
     <!-- Ends: Search Bar -->
 
@@ -62,6 +56,7 @@
                             <!-- Ends: Date Sent Sort Type Filter -->
                         </div>
                     </th>
+                    <th (click)="closeFilterOptions()" class="min-width">Title</th>
                     <th class="min-width">
                         <div class="filter-column">
                             <div (click)="closeFilterOptions()">Type</div>
@@ -142,16 +137,17 @@
             <!-- Starts: Table Body -->
             <tbody (click)="closeFilterOptions()">
 
-                <ng-container *ngIf="complaintList.length == 0">
+                <ng-container *ngIf="isComplaintListEmpty">
                     <tr><td>No complaints</td></tr>
                 </ng-container>
 
-                <ng-container *ngIf="complaintList.length > 0">
+                <ng-container *ngIf="!isComplaintListEmpty">
                     <ng-container *ngFor="let complaint of complaintList; let i = index">
                         <tr>
                             <td class="min-width">{{ complaint.parentStudent.name }}</td>
                             <td class="min-width">{{ complaint.parentStudent.fathersName }}</td>
                             <td class="min-width">{{ htmlRenderer.getDateInfo(complaint.dateSent) }}</td>
+                            <td class="min-width">{{ complaint.title }}</td>
                             <td class="min-width">{{ complaint.parentSchoolComplaintType["name"] ? complaint.parentSchoolComplaintType.name : "None" }}</td>
                             <td class="min-width">{{ complaint.parentSchoolComplaintStatus["name"] ? complaint.parentSchoolComplaintStatus.name : "None" }}</td>
                             <td class="min-width">{{ complaint.parentStudent.mobileNumber ? complaint.parentStudent.mobileNumber : "Not Entered" }}</td>
@@ -184,11 +180,11 @@
                 </ng-container>
 
                 <!-- Starts: Dummy Row -->
-
                     <!-- In column header, there are two dropdowns (Status Filter & Complaint Type Filter).
                          Those dropdowns won't be visible properly when there are not enough rows.
                          So in order to provide the needed height dummy row would be used. -->
                 <tr *ngIf="complaintList.length <= 4">
+                    <td class="dummyRow" clsss="min-width"></td>
                     <td class="dummyRow" clsss="min-width"></td>
                     <td class="dummyRow" clsss="min-width"></td>
                     <td class="dummyRow" clsss="min-width"></td>
