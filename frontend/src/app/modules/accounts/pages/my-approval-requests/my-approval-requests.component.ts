@@ -227,17 +227,18 @@ export class MyApprovalRequestsComponent implements OnInit {
     }
 
     isAmountLessThanMinimum(approval: NewCustomApproval): boolean {
+        let temp = false;
         approval.payFrom.forEach(acc => {
             if (acc.amount < 0.01 && acc.account != null) {
-                return true;
+                temp = true;
             }
         });
         approval.payTo.forEach(acc => {
             if (acc.amount < 0.01 && acc.account != null) {
-                return true;
+                temp = true;
             }
         });
-        return false;
+        return temp;
     }
 
     isAccountRepeated(approval: NewCustomApproval): boolean {
