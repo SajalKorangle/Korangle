@@ -11,13 +11,13 @@
         <div class="col-md-9" *ngIf="searchType == searchTypeList[0];">
             <mat-form-field style="width: 50%;">
                 <input [(ngModel)]="vNumber" type="number" matInput (keypress)="$event.key=='Enter'?serviceAdapter.findTransactionByVNumber($event.target.value):null"
-                    placeholder="Enter Voucher Number" (ngModelChange)="onVnumberChange(vNumber)"  (keypress)="$event.charCode >= 48 && $event.charCode <= 57">
+                    placeholder="Enter Voucher Number" (ngModelChange)="onVnumberChange(vNumber)"  (keypress)="isNumber($event.key)">
             </mat-form-field>
             <button type="submit"
                         style="margin-left: 20px;"
                         class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                         (click)="serviceAdapter.findTransactionByVNumber(vNumber)"
-                        [disabled]="isVNumberEmpty">GET</button>
+                        [disabled]="isVNumberEmpty || isLoadingTransaction">GET</button>
         </div>
         <div class="col-md-9" *ngIf="searchType == searchTypeList[1];">
             <account-search [user]="user"

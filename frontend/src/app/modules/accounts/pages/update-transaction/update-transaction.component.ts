@@ -123,4 +123,8 @@ export class UpdateTransactionComponent implements OnInit {
     }
   }
 
+  isNumber(number:any): boolean {
+    return /[0-9]/.test(number);
+  }
+
 }
