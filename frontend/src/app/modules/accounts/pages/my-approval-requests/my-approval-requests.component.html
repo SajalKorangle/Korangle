@@ -1,6 +1,6 @@
 <div class="card-content table-responsive ">
 <ng-container *ngIf="!isLoading else loadingSpinner">
-    <div *ngIf="!accountsLockedForSession && !inActiveSession() else notAllowedDescription">
+    <div *ngIf="!accountsLockedForSession && inActiveSession() else notAllowedDescription">
         <h4 style="color: blue;"><b>New Approval Request</b></h4>
         
         <ng-container *ngFor="let approval of newApprovalList, let i = index;">
@@ -189,7 +189,7 @@
     </div>
 
     <ng-template #notAllowedDescription>
-        <div *ngIf="inActiveSession()">
+        <div *ngIf="!inActiveSession()">
         <span style="color: red;">Not in Active Session</span><span> (Request can only be made in active Session)</span>
         </div>
         <div *ngIf="accountsLockedForSession">
@@ -253,29 +253,33 @@
                             <span style="color: rgba(255, 152, 0, 1);">Remark: </span>
                             <span style="margin-left: 60px;">{{approval.remark}}</span>
                         </div>
-                        <div class="row" style="margin-bottom: 15px;">
-                            <div class="col-md-6">
-                                <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Bill :</span></div>
+                        <div class="row flex-row" style="margin-bottom: 15px;">
+                            <div>
+                                <div class="custom-font"><span style="color: rgba(255, 152, 0, 1);">Bill :</span></div>
 
                                 <div style="display: inline-block;" *ngFor="let image of approval.billImages; let i = index">
                                     <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(approval.billImages, i, 0)">
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Quotation :</span></div>
+                            <div>
+                                <div class="custom-font"><span style="color: rgba(255, 152, 0, 1);">Quotation :</span></div>
 
                                 <div style="display: inline-block;" *ngFor="let image of approval.quotationImages; let i = index">
                                     <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(approval.quotationImages, i, 0)" >
                                 </div>
                             </div>
                         </div>
-
+                        <div *ngIf="isMobile()" class="col-md-2" style="align-items:center">
+                            <div class="row col-md-12" style="display: flex; justify-content:center; align-items:center; margin-top: 40px">
+                                <button class="custom-button" style="width:90px; cursor: default; pointer-events: none;" [ngStyle]="getButtonStyle(approval)">{{getButtonString(approval)}}</button>
+                            </div>
+                        </div>
                     </mat-card-content>
 
                 </mat-card>
 
             </div>
-            <div class="col-md-2" style="align-items:center">
+            <div *ngIf="!isMobile()" class="col-md-2" style="align-items:center">
                 <div class="row col-md-12" style="display: flex; justify-content:center; align-items:center; margin-top: 40px">
                     <button class="custom-button" style="width:90px; cursor: default; pointer-events: none;" [ngStyle]="getButtonStyle(approval)">{{getButtonString(approval)}}</button>
                 </div>
