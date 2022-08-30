@@ -15,7 +15,7 @@ import { ExaminationModule } from '@modules/examination/examination.module';
     declarations: [DeprecatedComponent],
 
     imports: [
-        ComponentsModule, 
+        ComponentsModule,
         DeprecatedRoutingModule,
         ReportCardCbseModule,
         ReportCardMpBoardModule,

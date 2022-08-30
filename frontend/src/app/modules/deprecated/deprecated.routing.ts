@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
-import { 
-    PRINT_EXPENSES, 
-    PRINT_STUDENT_CLASSIC_FINAL_REPORT, 
-    PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT, 
-    PRINT_STUDENT_ELEGANT_FINAL_REPORT, 
-    PRINT_STUDENT_ELEVENTH_FINAL_REPORT, 
-    PRINT_STUDENT_JUNIOR_REPORT, 
-    PRINT_STUDENT_NINTH_FINAL_REPORT, 
-    PRINT_STUDENT_NINTH_FINAL_REPORT_2019, 
-    PRINT_STUDENT_SENIOR_REPORT 
-} from '../../print/print-routes.constants'
+import {
+    PRINT_EXPENSES,
+    PRINT_STUDENT_CLASSIC_FINAL_REPORT,
+    PRINT_STUDENT_COMPREHENSIVE_FINAL_REPORT,
+    PRINT_STUDENT_ELEGANT_FINAL_REPORT,
+    PRINT_STUDENT_ELEVENTH_FINAL_REPORT,
+    PRINT_STUDENT_JUNIOR_REPORT,
+    PRINT_STUDENT_NINTH_FINAL_REPORT,
+    PRINT_STUDENT_NINTH_FINAL_REPORT_2019,
+    PRINT_STUDENT_SENIOR_REPORT
+} from '../../print/print-routes.constants';
 import { PrintExpensesComponent } from '@modules/expenses/print/print-expenses/print-expenses.component';
 import { ReportCardCbseComponent } from '@modules/report-card/cbse/report-card-cbse.component';
 import { PrintStudentJuniorReportListComponent } from '@modules/report-card/cbse/print/print-student-junior-report-list/print-student-junior-report-list.component';
