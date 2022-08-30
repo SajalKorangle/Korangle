@@ -232,8 +232,8 @@
                             <div>
                                 <span style="color: rgba(255, 152, 0, 1);">Paid To:</span>
                             </div>
-                            <div class="mobile-margin">
-                                <div *ngFor = "let account of approval.debitAccounts" style="margin-bottom: 5px; display:inline-block;">
+                            <div>
+                                <div class="mobile-margin" *ngFor = "let account of approval.debitAccounts" style="margin-bottom: 5px; display:inline-block;">
                                     <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color: rgba(76, 175, 80, 1);font-size: 14px;">{{account.amount}}</span>
                                 </div>
                             </div>
@@ -242,26 +242,26 @@
                             <div>
                                 <span style="color: rgba(255, 152, 0, 1);">Paid From:</span>
                             </div>
-                            <div class="mobile-margin">
-                                <div *ngFor = "let account of approval.creditAccounts" style="margin-bottom: 5px; display:inline-block;">
+                            <div>
+                                <div class="mobile-margin" *ngFor = "let account of approval.creditAccounts" style="margin-bottom: 5px; display:inline-block;">
                                     <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color:rgba(86, 142, 174, 1);font-size: 14px;">{{account.amount}}</span>
                                 </div>
                             </div>
                             </div>
                         </div>
-                        <div class="row col-md-12" style="margin-bottom: 15px;">
+                        <div class="flex-row" style="margin-bottom: 15px;">
                             <span style="color: rgba(255, 152, 0, 1);">Remark: </span>
                             <span style="margin-left: 60px;">{{approval.remark}}</span>
                         </div>
-                        <div class="row flex-row" style="margin-bottom: 15px;">
-                            <div>
+                        <div style="margin-bottom: 15px;">
+                            <div style="display: inline-block;">
                                 <div class="custom-font"><span style="color: rgba(255, 152, 0, 1);">Bill :</span></div>
 
                                 <div style="display: inline-block;" *ngFor="let image of approval.billImages; let i = index">
                                     <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(approval.billImages, i, 0)">
                                 </div>
                             </div>
-                            <div>
+                            <div style="float: right; display: inline-block;">
                                 <div class="custom-font"><span style="color: rgba(255, 152, 0, 1);">Quotation :</span></div>
 
                                 <div style="display: inline-block;" *ngFor="let image of approval.quotationImages; let i = index">
