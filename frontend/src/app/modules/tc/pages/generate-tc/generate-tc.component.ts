@@ -244,6 +244,11 @@ export class GenerateTCComponent implements OnInit {
         if (!this.sanityCheck()) {
             return;
         }
+
+        if(!confirm("Are you sure you want to generate tc in 2022-23 session ?")){
+            return;
+        }
+        
         this.isLoading = true;
         const serviceList = [];
 
