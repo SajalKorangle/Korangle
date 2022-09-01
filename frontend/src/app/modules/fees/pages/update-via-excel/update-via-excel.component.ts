@@ -243,14 +243,15 @@ export class UpdateViaExcelComponent implements OnInit {
                             student.fathersName,
                             `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`,
                         ];
-
+                        let feeTypeExcelColumnIndex = 5;
                         this.feeTypeList.forEach((feeType) => {
+                            if(feeType.checked) {
                             let studentFee;
                             if (this.studentFeeListMappedByStudentIdFeeTypeId[student.id]) {
                                 studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student.id][feeType.id];
                             }
                             if (studentFee) {
-                                let feeTypeExcelColumnIndex = this.feeTypeExcelColumnIndexMappedByFeeTypeId[studentFee.parentFeeType];
+                                // let feeTypeExcelColumnIndex = this.feeTypeExcelColumnIndexMappedByFeeTypeId[studentFee.parentFeeType];
                                 let index = 0;
                                 this.monthList.forEach((item) => {
                                     if(item.checked) {
@@ -261,6 +262,8 @@ export class UpdateViaExcelComponent implements OnInit {
                                     }
                                 })
                             }
+                            feeTypeExcelColumnIndex++;
+                        }
                         });
                         headerRowPlusStudentListToBeDownloaded.push(row);
                     });
