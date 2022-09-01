@@ -91,5 +91,5 @@
 
 </mat-dialog-content>
 <div mat-dialog-actions>
-    <button [disabled]="isAmountMoreThanApproved() || isAmountUnequal() || isAmountLessThanMinimum()" mat-button class="custom-button" (click)="addTransaction()">Add</button>
+    <button [disabled]="isAmountMoreThanApproved() || isAmountUnequal() || isAmountLessThanMinimum()" class="btn btn-warning" (click)="addTransaction()">Add</button>
 </div>
