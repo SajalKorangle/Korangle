@@ -240,15 +240,34 @@ export class GenerateTCComponent implements OnInit {
         return true;
     }
 
+    getSessionByDate(date): string {
+        let finalSession = 'Session 2022-23';
+        const currentDate = Date.parse(date);
+        const sessionList = this.DATA.data.sessionList;
+        for (let session of sessionList) {
+            const endDate = Date.parse(session.endDate);
+            const startDate = Date.parse(session.startDate);
+
+            if (currentDate >= startDate && currentDate <= endDate) {
+                finalSession = session.name;
+                break;
+            }
+        }
+
+        return finalSession;
+    }
+
     async generateTC() {
         if (!this.sanityCheck()) {
             return;
         }
 
-        if (!confirm("Are you sure you want to generate tc in 2022-23 session ?")) {
+        let leavingSession = this.getSessionByDate(this.DATA.leavingDate);
+
+        if (!confirm("Are you sure you want to generate T.C. in " + leavingSession + " ?")) {
             return;
-        } 
-        
+        }
+
         this.isLoading = true;
         const serviceList = [];
 
