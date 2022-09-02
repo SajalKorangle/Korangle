@@ -755,6 +755,9 @@ export class CollectFeeComponent implements OnInit {
 
     getStudentFeeFeesDue(studentFee: any, includeNewSubFeeReceipt = true): number {
         let amount = 0;
+        if(studentFee.isAnnually) {
+            return this.getStudentFeeInstallmentFeesDue(studentFee,"april",includeNewSubFeeReceipt);
+        }
         this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
             amount += this.getStudentFeeInstallmentFeesDue(studentFee, installment, includeNewSubFeeReceipt);
         });
@@ -763,6 +766,9 @@ export class CollectFeeComponent implements OnInit {
 
     getStudentFeeTotalFees(studentFee: any): number {
         let amount = 0;
+        if(studentFee.isAnnually) {
+            return studentFee.aprilAmount;
+        }
         this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
             amount += this.getStudentFeeInstallmentTotalFees(studentFee, installment);
         });
