@@ -291,10 +291,13 @@ export class UpdateViaExcelComponent implements OnInit {
         const headers = this.excelDataFromUser[0];
         let actualHeader = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
         this.feeTypeList.forEach((feeType) => actualHeader.push(feeType.name));
-        const len = actualHeader.length;
+        const len = headers.length;
         for (let i = 0; i < len; i += 1) {
-            if (headers[i] !== actualHeader[i]) {
-                this.newErrorCell(0, i, `Header Mismatch: Expected ${actualHeader[i]}`);
+            // if (headers[i] !== actualHeader[i]) {
+            //     this.newErrorCell(0, i, `Header Mismatch: Expected ${actualHeader[i]}`);
+            // }
+            if (!actualHeader.includes(headers[i].split("-")[0])) {
+                this.newErrorCell(0, i, 'Fee type does not exist');
             }
         }
     }
@@ -414,6 +417,8 @@ export class UpdateViaExcelComponent implements OnInit {
 
     studentPreviousFeeSanityCheck(): void {
         let excelFeeColumnList = this.excelDataFromUser[0].map((_, i) => i).slice(this.NUM_OF_COLUMNS_FOR_STUDENT_INFO);
+        console.log(excelFeeColumnList);
+        
         this.excelDataFromUser.slice(1).forEach((uploadedRow, row) => {
             let [student_id] = uploadedRow;
             excelFeeColumnList.forEach((colIndex) => {

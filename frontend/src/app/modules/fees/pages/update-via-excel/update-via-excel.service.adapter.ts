@@ -205,7 +205,7 @@ export class UpdateViaExcelServiceAdapter {
 
                 console.log(studentFeeListToBeUploaded);
                 console.log(schoolFeeRuleListToBeUploaded);
-                if (schoolFeeRuleListToBeUploaded.length > 0) {
+                if (false) {
                     // Creating School Fee Rules
                     this.vm.feeService.createObjectList(this.vm.feeService.school_fee_rules, schoolFeeRuleListToBeUploaded).then(
                         (schoolFeeRuleListCreated) => {
