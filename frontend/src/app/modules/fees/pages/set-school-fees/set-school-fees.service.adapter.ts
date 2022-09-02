@@ -151,6 +151,12 @@ export class SetSchoolFeesServiceAdapter {
             return;
         }
 
+        let number_of_students = this.vm.getExpectedStudentList().length;
+
+        if (!confirm("This fee group is going to be added to " + number_of_students + " students")) {
+            return;
+        }
+
         let school_fee_rule_data = CommonFunctions.getInstance().copyObject(this.vm.newSchoolFeeRule);
 
         school_fee_rule_data['parentFeeType'] = this.vm.selectedFeeType.id;
