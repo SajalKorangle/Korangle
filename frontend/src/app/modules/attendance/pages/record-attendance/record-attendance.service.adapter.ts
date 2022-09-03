@@ -168,16 +168,27 @@ export class RecordAttendanceServiceAdapter {
                     dbId: studentDetails.id,
                     scholarNumber: studentDetails.scholarNumber,
                     mobileNumber: studentDetails.mobileNumber,
+                    rollNumber: studentSection.rollNumber
                 };
                 this.vm.classSectionStudentList[classIndex].sectionList[divisionIndex].studentList.push(tempData);
             }
         });
         // ------------------- Populating  classSectionStudentList Ends ---------------------
 
-        // ------------------- Sorting Students with names (A-Z), Sections and Classes with DbId Starts ---------------------
+        // ------------------- Sorting Students with Roll Number, Sections and Classes with DbId Starts ---------------------
         this.vm.classSectionStudentList.forEach((classs) => {
             classs.sectionList.forEach((section) => {
-                section.studentList.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+                const isNumeric = (num: any) => (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num as number);
+                if (section.studentList.length==0) return;
+                else {
+                    const check = isNumeric(section.studentList[0].rollNumber);
+                    if (check) {
+                        section.studentList.sort((a, b) => (parseInt(a.rollNumber) < parseInt(b.rollNumber) ? -1 : parseInt(a.rollNumber) > parseInt(b.rollNumber) ? 1 : 0));
+                    }
+                    else {
+                        section.studentList.sort((a, b) => (a.rollNumber < b.rollNumber ? -1 : a.rollNumber > b.rollNumber ? 1 : 0));
+                    }
+                }
             });
             classs.sectionList.sort((a, b) => (a.dbId < b.dbId ? -1 : a.dbId > b.dbId ? 1 : 0));
         });
@@ -186,7 +197,7 @@ export class RecordAttendanceServiceAdapter {
             this.vm.selectedClass = this.vm.classSectionStudentList[0];
             this.vm.changeSelectedSectionToFirst();
         }
-        // ------------------- Sorting Students with names (A-Z), Sections and Classes with DbId Ends ---------------------
+        // ------------------- Sorting Students with Roll Number, Sections and Classes with DbId Ends ---------------------
     }
 
     getStudentsAttendanceStatusList(): void {
