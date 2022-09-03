@@ -150,12 +150,14 @@ export class SetSchoolFeesServiceAdapter {
             alert('Rule Name already exists');
             return;
         }
-
+        
+        // -------------------- Confirming the number of students affected starts -----------------------
         let number_of_students = this.vm.getExpectedStudentList().length;
 
         if (!confirm("This fee group is going to be added to " + number_of_students + " students")) {
             return;
         }
+        // -------------------- Confirming the number of students affected ends -------------------------
 
         let school_fee_rule_data = CommonFunctions.getInstance().copyObject(this.vm.newSchoolFeeRule);
 
