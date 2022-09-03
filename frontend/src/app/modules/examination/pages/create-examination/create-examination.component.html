@@ -1,6 +1,7 @@
 <div class="card-content">
     <ng-container *ngIf="!isLoading">
-        <cdk-virtual-scroll-viewport itemSize="12" class="example-viewport" *ngIf="examinationList && examinationList.length > 0">
+        <div [style.height]="calculateContainerHeight()">
+        <cdk-virtual-scroll-viewport #scrollViewport itemSize="12" class="example-viewport" *ngIf="examinationList && examinationList.length > 0">
         <table class="table table-hover">
             <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                 <tr>
@@ -46,6 +47,7 @@
             </tbody>
         </table>
         </cdk-virtual-scroll-viewport>
+    </div>
         <br /><br /><br />
         <table class="table table-hover">
             <tbody>
