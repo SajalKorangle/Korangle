@@ -55,6 +55,13 @@ export class RecordAttendanceComponent implements OnInit {
 
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
+    // ---------- variables for sorting studentAttendanceStatusList ---------
+    sortAscendingByRoll: boolean = true;
+    sortDescendingByRoll: boolean = false;
+    sortAscendingByName: boolean = true;
+    sortDescendingByName: boolean = false;
+
+
     mobileNumberList = [];
 
     studentList: any;
@@ -90,6 +97,35 @@ export class RecordAttendanceComponent implements OnInit {
         public employeeService: EmployeeService,
         public tcService: TCService
     ) {}
+
+    // ----------------- Starts : Triggers for sorting ---------------
+
+    triggerSortAscendingByRoll(): void {
+        this.sortDescendingByRoll = true;
+        this.sortAscendingByRoll = false;
+        this.studentAttendanceStatusList.sort((a, b) => (a.rollNumber < b.rollNumber ? -1 : a.rollNumber > b.rollNumber ? 1 : 0));
+        
+    }
+
+    triggerSortDescendingByRoll(): void {
+        this.sortDescendingByRoll = false;
+        this.sortAscendingByRoll = true;
+        this.studentAttendanceStatusList.sort((a, b) => (a.rollNumber > b.rollNumber ? -1 : a.rollNumber < b.rollNumber ? 1 : 0))
+    }
+
+    triggerSortAscendingByName(): void {
+        this.sortDescendingByName = true;
+        this.sortAscendingByName = false;
+        this.studentAttendanceStatusList.sort((a, b) => (a.name.toUpperCase() < b.name.toUpperCase() ? -1 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : 0))
+    }
+
+    triggerSortDescendingByName(): void {
+        this.sortDescendingByName = false;
+        this.sortAscendingByName = true;
+        this.studentAttendanceStatusList.sort((a, b) => (a.name.toUpperCase() > b.name.toUpperCase() ? -1 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : 0))
+    }
+
+    // ----------------- Ends : Triggers for sorting ---------------
 
     changeSelectedSectionToFirst(): void {
         this.selectedSection = this.selectedClass.sectionList[0];

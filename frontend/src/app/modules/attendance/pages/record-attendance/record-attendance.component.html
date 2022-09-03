@@ -65,8 +65,25 @@
             <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                 <tr>
                     <th>S No.</th>
-                    <th>Student</th>
-                    <th>Roll No.</th>
+                    <th style="filter-column">
+                        <div>Student</div>
+                        <!-- Starts: Date Sent Sort Type Filter -->
+                        <div style="cursor: pointer;">
+                            <span *ngIf="sortAscendingByName" style="color: black; font-size: 12px;" (click)="triggerSortAscendingByName()" class="material-icons">north</span>
+                            <span *ngIf="sortDescendingByName" style="color: black; font-size: 12px;" (click)="triggerSortDescendingByName()" class="material-icons">south</span>
+                        </div>
+                        <!-- Ends: Date Sent Sort Type Filter -->
+                    </th>
+                    <th>
+                        Roll No.
+                        <!-- Starts: Date Sent Sort Type Filter -->
+                        <div style="cursor: pointer;">
+                            <span *ngIf="sortAscendingByRoll" style="color: black; font-size: 12px;" (click)="triggerSortAscendingByRoll()" class="material-icons">north</span>
+                            <span *ngIf="sortDescendingByRoll" style="color: black; font-size: 12px;" (click)="triggerSortDescendingByRoll()" class="material-icons">south</span>
+                        </div>
+                        <!-- Ends: Date Sent Sort Type Filter -->
+                    </th>
+
                     <th *ngIf="by === 'month'">Abs./Total</th>
                     <ng-container *ngFor="let date of getDateList()">
                         <th style="text-align: center" *ngIf="by === 'month'">{{ date.getDate() }}</th>
