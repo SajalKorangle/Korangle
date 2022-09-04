@@ -240,21 +240,14 @@ export class GenerateTCComponent implements OnInit {
         return true;
     }
 
-    getSessionByDate(date): string {
-        let finalSession = 'Session 2022-23';
-        const currentDate = Date.parse(date);
+    getSessionNameByCurrentSession(sessionId): string {
         const sessionList = this.DATA.data.sessionList;
         for (let session of sessionList) {
-            const endDate = Date.parse(session.endDate);
-            const startDate = Date.parse(session.startDate);
-
-            if (currentDate >= startDate && currentDate <= endDate) {
-                finalSession = session.name;
-                break;
+            if (session.id == sessionId) {
+                return session.name;
             }
         }
-
-        return finalSession;
+        return '';
     }
 
     async generateTC() {
@@ -262,7 +255,7 @@ export class GenerateTCComponent implements OnInit {
             return;
         }
 
-        let leavingSession = this.getSessionByDate(this.DATA.leavingDate);
+        let leavingSession = this.getSessionNameByCurrentSession(this.DATA.currentSession);
 
         if (!confirm("Are you sure you want to generate T.C. in " + leavingSession + " ?")) {
             return;
