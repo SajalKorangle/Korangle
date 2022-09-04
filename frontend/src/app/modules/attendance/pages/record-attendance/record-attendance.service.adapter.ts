@@ -1,13 +1,13 @@
 import { RecordAttendanceComponent } from './record-attendance.component';
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
-import {CommonFunctions} from '@classes/common-functions';
-import {getValidStudentSectionList} from '@modules/classes/valid-student-section-service';
-import {CommonFunctions as moduleCommonFunctions} from '@modules/common/common-functions';
+import { CommonFunctions } from '@classes/common-functions';
+import { getValidStudentSectionList } from '@modules/classes/valid-student-section-service';
+import { CommonFunctions as moduleCommonFunctions } from '@modules/common/common-functions';
 
 export class RecordAttendanceServiceAdapter {
     vm: RecordAttendanceComponent;
 
-    constructor() {}
+    constructor() { }
 
     initializeAdapter(vm: RecordAttendanceComponent): void {
         this.vm = vm;
@@ -24,8 +24,8 @@ export class RecordAttendanceServiceAdapter {
             parentEmployee: this.vm.user.activeSchool.employeeId,
         };
 
-         this.vm.inPagePermissionMappedByKey = (await
-             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
+        this.vm.inPagePermissionMappedByKey = (await
+            this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
 
         const sms_count_request_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -178,15 +178,17 @@ export class RecordAttendanceServiceAdapter {
         // ------------------- Sorting Students with Roll Number, Sections and Classes with DbId Starts ---------------------
         this.vm.classSectionStudentList.forEach((classs) => {
             classs.sectionList.forEach((section) => {
-                const isNumeric = (num: any) => (typeof(num) === 'number' || typeof(num) === "string" && num.trim() !== '') && !isNaN(num as number);
-                if (section.studentList.length==0) return;
+                const isNumeric = (num: any) => (typeof (num) === 'number' || typeof (num) === "string" && num.trim() !== '') && !isNaN(num as number);
+                if (section.studentList.length == 0) return;
                 else {
                     const check = isNumeric(section.studentList[0].rollNumber);
                     if (check) {
-                        section.studentList.sort((a, b) => (parseInt(a.rollNumber) < parseInt(b.rollNumber) ? -1 : parseInt(a.rollNumber) > parseInt(b.rollNumber) ? 1 : 0));
+                        section.studentList.sort((a, b) =>
+                            (parseInt(a.rollNumber) < parseInt(b.rollNumber) ? -1 : parseInt(a.rollNumber) > parseInt(b.rollNumber) ? 1 : 0));
                     }
                     else {
-                        section.studentList.sort((a, b) => (a.rollNumber < b.rollNumber ? -1 : a.rollNumber > b.rollNumber ? 1 : 0));
+                        section.studentList.sort((a, b) =>
+                            (a.rollNumber < b.rollNumber ? -1 : a.rollNumber > b.rollNumber ? 1 : 0));
                     }
                 }
             });
@@ -231,7 +233,7 @@ export class RecordAttendanceServiceAdapter {
             classs.sectionList.forEach((section) => {
                 if (this.vm.selectedSection.dbId === section.dbId && classs.dbId === this.vm.selectedClass.dbId) {
                     section.studentList.forEach((student) => {
-                        let tempStudent =  CommonFunctions.getInstance().copyObject(student);
+                        let tempStudent = CommonFunctions.getInstance().copyObject(student);
                         tempStudent['attendanceStatusList'] = [];
                         let dateList = this.vm.getDateList();
                         dateList.forEach((date) => {
@@ -310,7 +312,7 @@ export class RecordAttendanceServiceAdapter {
                         if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
                             if (this.vm.currentAttendanceList[previousAttendanceIndex].status !== null) {
                                 updatedStudentList.push(tempData);
-                            }else {
+                            } else {
                                 createdStudentList.push(tempData);
                             }
                         }
@@ -318,7 +320,7 @@ export class RecordAttendanceServiceAdapter {
                             if (this.vm.currentAttendanceList[previousAttendanceIndex].status !== null &&
                                 updatedSettings.receiverType == this.vm.receiverList[0]) {
                                 updatedStudentList.push(tempData);
-                            }else if (createdSettings.receiverType == this.vm.receiverList[0]) {
+                            } else if (createdSettings.receiverType == this.vm.receiverList[0]) {
                                 createdStudentList.push(tempData);
                             }
                         }
@@ -332,9 +334,9 @@ export class RecordAttendanceServiceAdapter {
 
             if (createdStudentList.length > 0) {
                 console.log(createdStudentList);
-                this.vm.dataForMapping['studentList'] =  createdStudentList;
+                this.vm.dataForMapping['studentList'] = createdStudentList;
                 await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
-                   this.vm.dataForMapping,
+                    this.vm.dataForMapping,
                     ['student'],
                     this.vm.ATTENDANCE_CREATION_EVENT_DBID,
                     this.vm.user.activeSchool.dbId,
@@ -345,7 +347,7 @@ export class RecordAttendanceServiceAdapter {
             if (updatedStudentList.length > 0) {
                 console.log(updatedStudentList);
                 this.vm.dataForMapping['studentList'] = updatedStudentList;
-                console.log( this.vm.dataForMapping);
+                console.log(this.vm.dataForMapping);
                 this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
                     this.vm.dataForMapping,
                     ['student'],

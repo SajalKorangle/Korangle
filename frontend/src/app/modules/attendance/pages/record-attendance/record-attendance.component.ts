@@ -15,11 +15,11 @@ import { RecordAttendanceServiceAdapter } from './record-attendance.service.adap
 import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
-import {MessageService} from '@services/message-service';
-import {valueType} from '@modules/common/in-page-permission';
-import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './record-attendance.permissions';
-import {EmployeeService} from '@services/modules/employee/employee.service';
-import {TCService} from '@services/modules/tc/tc.service';
+import { MessageService } from '@services/message-service';
+import { valueType } from '@modules/common/in-page-permission';
+import { ADMIN_PERMSSION, USER_PERMISSION_KEY } from './record-attendance.permissions';
+import { EmployeeService } from '@services/modules/employee/employee.service';
+import { TCService } from '@services/modules/tc/tc.service';
 import { isMobile } from '../../../../classes/common';
 
 @Component({
@@ -38,7 +38,7 @@ export class RecordAttendanceComponent implements OnInit {
 
     selectedSection: any;
 
-    dataForMapping =  {} as any;
+    dataForMapping = {} as any;
 
     by = 'date';
 
@@ -96,7 +96,7 @@ export class RecordAttendanceComponent implements OnInit {
         public classService: ClassService,
         public employeeService: EmployeeService,
         public tcService: TCService
-    ) {}
+    ) { }
 
     // ----------------- Starts : Triggers for sorting ---------------
 
@@ -104,25 +104,26 @@ export class RecordAttendanceComponent implements OnInit {
         this.sortDescendingByRoll = true;
         this.sortAscendingByRoll = false;
         this.studentAttendanceStatusList.sort((a, b) => (a.rollNumber < b.rollNumber ? -1 : a.rollNumber > b.rollNumber ? 1 : 0));
-        
-    }
+    } 
 
     triggerSortDescendingByRoll(): void {
         this.sortDescendingByRoll = false;
         this.sortAscendingByRoll = true;
-        this.studentAttendanceStatusList.sort((a, b) => (a.rollNumber > b.rollNumber ? -1 : a.rollNumber < b.rollNumber ? 1 : 0))
+        this.studentAttendanceStatusList.sort((a, b) => (a.rollNumber > b.rollNumber ? -1 : a.rollNumber < b.rollNumber ? 1 : 0));
     }
 
     triggerSortAscendingByName(): void {
         this.sortDescendingByName = true;
         this.sortAscendingByName = false;
-        this.studentAttendanceStatusList.sort((a, b) => (a.name.toUpperCase() < b.name.toUpperCase() ? -1 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : 0))
+        this.studentAttendanceStatusList.sort((a, b) => 
+            (a.name.toUpperCase() < b.name.toUpperCase() ? -1 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : 0));
     }
 
     triggerSortDescendingByName(): void {
         this.sortDescendingByName = false;
         this.sortAscendingByName = true;
-        this.studentAttendanceStatusList.sort((a, b) => (a.name.toUpperCase() > b.name.toUpperCase() ? -1 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : 0))
+        this.studentAttendanceStatusList.sort((a, b) => 
+            (a.name.toUpperCase() > b.name.toUpperCase() ? -1 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : 0));
     }
 
     // ----------------- Ends : Triggers for sorting ---------------
