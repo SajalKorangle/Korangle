@@ -15,11 +15,11 @@ import { RecordAttendanceServiceAdapter } from './record-attendance.service.adap
 import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
-import { MessageService } from '@services/message-service';
-import { valueType } from '@modules/common/in-page-permission';
-import { ADMIN_PERMSSION, USER_PERMISSION_KEY } from './record-attendance.permissions';
-import { EmployeeService } from '@services/modules/employee/employee.service';
-import { TCService } from '@services/modules/tc/tc.service';
+import {MessageService} from '@services/message-service';
+import {valueType} from '@modules/common/in-page-permission';
+import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './record-attendance.permissions';
+import {EmployeeService} from '@services/modules/employee/employee.service';
+import {TCService} from '@services/modules/tc/tc.service';
 import { isMobile } from '../../../../classes/common';
 
 @Component({
@@ -38,7 +38,7 @@ export class RecordAttendanceComponent implements OnInit {
 
     selectedSection: any;
 
-    dataForMapping = {} as any;
+    dataForMapping =  {} as any;
 
     by = 'date';
 
@@ -55,11 +55,12 @@ export class RecordAttendanceComponent implements OnInit {
 
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
-    // ---------- variables for sorting studentAttendanceStatusList ---------
+    // ---------- Start : variables for sorting studentAttendanceStatusList ---------
     sortAscendingByRoll: boolean = true;
     sortDescendingByRoll: boolean = false;
     sortAscendingByName: boolean = true;
     sortDescendingByName: boolean = false;
+    // ---------- Ends : variables for sorting studentAttendanceStatusList ---------
 
 
     mobileNumberList = [];
