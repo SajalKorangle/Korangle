@@ -1,13 +1,13 @@
 import { RecordAttendanceComponent } from './record-attendance.component';
 import { ATTENDANCE_STATUS_LIST } from '../../classes/constants';
-import { CommonFunctions } from '@classes/common-functions';
-import { getValidStudentSectionList } from '@modules/classes/valid-student-section-service';
-import { CommonFunctions as moduleCommonFunctions } from '@modules/common/common-functions';
+import {CommonFunctions} from '@classes/common-functions';
+import {getValidStudentSectionList} from '@modules/classes/valid-student-section-service';
+import {CommonFunctions as moduleCommonFunctions} from '@modules/common/common-functions';
 
 export class RecordAttendanceServiceAdapter {
     vm: RecordAttendanceComponent;
 
-    constructor() { }
+    constructor() {}
 
     initializeAdapter(vm: RecordAttendanceComponent): void {
         this.vm = vm;
@@ -24,8 +24,8 @@ export class RecordAttendanceServiceAdapter {
             parentEmployee: this.vm.user.activeSchool.employeeId,
         };
 
-        this.vm.inPagePermissionMappedByKey = (await
-            this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
+         this.vm.inPagePermissionMappedByKey = (await
+             this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, in_page_permission_request)).configJSON;
 
         const sms_count_request_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -312,7 +312,7 @@ export class RecordAttendanceServiceAdapter {
                         if (attendanceStatus.status === ATTENDANCE_STATUS_LIST[1]) {
                             if (this.vm.currentAttendanceList[previousAttendanceIndex].status !== null) {
                                 updatedStudentList.push(tempData);
-                            } else {
+                            }else {
                                 createdStudentList.push(tempData);
                             }
                         }
@@ -320,7 +320,7 @@ export class RecordAttendanceServiceAdapter {
                             if (this.vm.currentAttendanceList[previousAttendanceIndex].status !== null &&
                                 updatedSettings.receiverType == this.vm.receiverList[0]) {
                                 updatedStudentList.push(tempData);
-                            } else if (createdSettings.receiverType == this.vm.receiverList[0]) {
+                            }else if (createdSettings.receiverType == this.vm.receiverList[0]) {
                                 createdStudentList.push(tempData);
                             }
                         }
@@ -334,9 +334,9 @@ export class RecordAttendanceServiceAdapter {
 
             if (createdStudentList.length > 0) {
                 console.log(createdStudentList);
-                this.vm.dataForMapping['studentList'] = createdStudentList;
+                this.vm.dataForMapping['studentList'] =  createdStudentList;
                 await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
-                    this.vm.dataForMapping,
+                   this.vm.dataForMapping,
                     ['student'],
                     this.vm.ATTENDANCE_CREATION_EVENT_DBID,
                     this.vm.user.activeSchool.dbId,
@@ -345,7 +345,7 @@ export class RecordAttendanceServiceAdapter {
             }
 
             if (updatedStudentList.length > 0) {
-                console.log(updatedStudentList);
+                console.log( updatedStudentList);
                 this.vm.dataForMapping['studentList'] = updatedStudentList;
                 console.log(this.vm.dataForMapping);
                 this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
