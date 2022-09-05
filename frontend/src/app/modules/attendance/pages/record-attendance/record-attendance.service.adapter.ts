@@ -178,6 +178,7 @@ export class RecordAttendanceServiceAdapter {
         // ------------------- Sorting Students with Roll Number, Sections and Classes with DbId Starts ---------------------
         this.vm.classSectionStudentList.forEach((classs) => {
             classs.sectionList.forEach((section) => {
+                section.studentList.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
                 const isNumeric = (num: any) => (typeof (num) === 'number' || typeof (num) === "string" && num.trim() !== '') && !isNaN(num as number);
                 if (section.studentList.length == 0) return;
                 else {
