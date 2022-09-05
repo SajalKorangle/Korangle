@@ -233,7 +233,7 @@ export class RecordAttendanceServiceAdapter {
             classs.sectionList.forEach((section) => {
                 if (this.vm.selectedSection.dbId === section.dbId && classs.dbId === this.vm.selectedClass.dbId) {
                     section.studentList.forEach((student) => {
-                        let tempStudent = CommonFunctions.getInstance().copyObject(student);
+                        let tempStudent =  CommonFunctions.getInstance().copyObject(student);
                         tempStudent['attendanceStatusList'] = [];
                         let dateList = this.vm.getDateList();
                         dateList.forEach((date) => {
@@ -345,9 +345,9 @@ export class RecordAttendanceServiceAdapter {
             }
 
             if (updatedStudentList.length > 0) {
-                console.log( updatedStudentList);
+                console.log(updatedStudentList);
                 this.vm.dataForMapping['studentList'] = updatedStudentList;
-                console.log(this.vm.dataForMapping);
+                console.log( this.vm.dataForMapping);
                 this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
                     this.vm.dataForMapping,
                     ['student'],
