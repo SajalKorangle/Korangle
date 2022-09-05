@@ -65,8 +65,8 @@
             <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                 <tr>
                     <th>S No.</th>
-                    <th style="filter-column">
-                        <div>Student</div>
+                    <th style="margin: 0 left;">
+                        <div style="float: left;">Student &nbsp;</div>
                         <!-- Starts: Name Sort Type Filter -->
                         <div style="cursor: pointer;">
                             <span *ngIf="sortAscendingByName" style="color: black; font-size: 12px;" (click)="triggerSortAscendingByName()" class="material-icons">north</span>
@@ -74,8 +74,8 @@
                         </div>
                         <!-- Ends: Name Sort Type Filter -->
                     </th>
-                    <th>
-                        Roll No.
+                    <th style="margin: 0 left;">
+                        <div style="float: left;">Roll No. &nbsp;</div>
                         <!-- Starts: Roll Number Sort Type Filter -->
                         <div style="cursor: pointer;">
                             <span *ngIf="sortAscendingByRoll" style="color: black; font-size: 12px;" (click)="triggerSortAscendingByRoll()" class="material-icons">north</span>
