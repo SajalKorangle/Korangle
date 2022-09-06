@@ -6,7 +6,8 @@
                 <tr>
                     <th>S No.</th>
                     <th>Examination</th>
-                    <th>Status</th>
+                    <th>Exam Status</th>
+                    <th>Marks Updation Status</th>
                     <th>-</th>
                 </tr>
             </thead>
@@ -20,7 +21,7 @@
                     <td>
                         <mat-form-field>
                             <mat-select
-                                placeholder="Select Status"
+                                placeholder="Select Exam Status"
                                 [ngModel]="examination.newStatus"
                                 (ngModelChange)="examination.newStatus = $event"
                             >
@@ -29,6 +30,20 @@
                             </mat-select>
                         </mat-form-field>
                     </td>
+                    <!-- Starts : Dropdown for updating marks modify policy -->
+                    <td>
+                        <mat-form-field>
+                            <mat-select
+                                placeholder="Select Marks Status"
+                                [ngModel]="examination.newMarksUpdationStatus"
+                                (ngModelChange)="examination.newMarksUpdationStatus = $event"
+                            >
+                                <mat-option value="Locked">Locked</mat-option>
+                                <mat-option value="Unlocked">Unlocked</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <!-- Ends : Dropdown for updating marks modify policy -->
                     <td>
                         <button
                             type="submit"

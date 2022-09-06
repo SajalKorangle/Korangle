@@ -91,6 +91,9 @@ export class UpdateMarksComponent implements OnInit {
     }
 
     handleUpdate(studentTest: any, event: any): void {
+        if (this.selectedExamination.marksUpdationStatus == 'Locked') {
+            return;
+        }
         if (studentTest.absent) {
             studentTest.marksObtained = null;
         }

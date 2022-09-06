@@ -35,6 +35,7 @@ export class CreateExaminationServiceAdapter {
         this.vm.examinationList = examinationList;
         this.vm.examinationList.forEach((examination) => {
             examination['newName'] = examination['name'];
+            examination['newMarksUpdationStatus'] = examination['marksUpdationStatus'];
             examination['newStatus'] = examination['status'];
             examination['updating'] = false;
         });
@@ -70,6 +71,7 @@ export class CreateExaminationServiceAdapter {
         let data = {
             name: this.vm.examinationNameToBeAdded,
             status: 'Created', // this.vm.examinationStatusToBeAdded,
+            marksUpdationStatus: 'Unlocked',
             parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
@@ -92,6 +94,7 @@ export class CreateExaminationServiceAdapter {
     addToExaminationList(examination: any): void {
         examination['newName'] = examination['name'];
         examination['newStatus'] = examination['status'];
+        examination['newMarksUpdationStatus'] = examination['marksUpdationStatus'];
         examination['updating'] = false;
         this.vm.examinationList.push(examination);
     }
@@ -125,10 +128,15 @@ export class CreateExaminationServiceAdapter {
             examination.newStatus = null;
         }
 
+        if (examination.newMarksUpdationStatus == 'None') {
+            examination.newMarksUpdationStatus = null;
+        }
+
         let data = {
             id: examination.id,
             name: examination.newName,
             status: examination.newStatus,
+            marksUpdationStatus: examination.newMarksUpdationStatus,
             parentSchool: examination.parentSchool,
             parentSession: examination.parentSession,
         };
@@ -138,6 +146,7 @@ export class CreateExaminationServiceAdapter {
                 alert('Examination updated successfully');
                 examination.name = value.name;
                 examination.status = value.status;
+                examination.marksUpdationStatus = value.marksUpdationStatus;
                 examination.updating = false;
                 this.vm.isLoading = false;
             },
