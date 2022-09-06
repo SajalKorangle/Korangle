@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonFunctions } from '../../../../../../classes/common-functions';
+import { DataStorage } from '@classes/data-storage';
 
 @Component({
   selector: 'app-use-for-transaction-dialog',
@@ -9,6 +10,7 @@ import { CommonFunctions } from '../../../../../../classes/common-functions';
 })
 export class UseFortransactionDialogComponent implements OnInit {
 
+  user;
 
   constructor(
     public dialogRef: MatDialogRef<UseFortransactionDialogComponent>,
@@ -19,6 +21,7 @@ export class UseFortransactionDialogComponent implements OnInit {
 
   ngOnInit() {
     // console.log(this.data);
+    this.user = DataStorage.getInstance().getUser();
   }
 
   readURL(event, str): void {
