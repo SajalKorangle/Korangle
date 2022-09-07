@@ -27,6 +27,7 @@ export class UpdateViaExcelComponent implements OnInit {
     feeTypeList = [];
     feeTypeExcelColumnIndexMappedByFeeTypeId = {};
     feeTypeIdMappedByFeeTypeExcelColumnIndex = {};
+    feeTypeIdMappedByFeeTypeName = {};
     studentSectionList = []; // student data available in student session with key 'student'
 
     studentListMappedByClassIdDivisionId = {}; // structure: {classsid: {divisionId: [student1,...], ...}, ...}
@@ -416,31 +417,31 @@ export class UpdateViaExcelComponent implements OnInit {
     }
 
     studentPreviousFeeSanityCheck(): void {
-        let excelFeeColumnList = this.excelDataFromUser[0].map((_, i) => i).slice(this.NUM_OF_COLUMNS_FOR_STUDENT_INFO);
+        let excelFeeColumnList = this.excelDataFromUser[0].map((value, i) => [value,i]).slice(this.NUM_OF_COLUMNS_FOR_STUDENT_INFO);
         console.log(excelFeeColumnList);
         
         this.excelDataFromUser.slice(1).forEach((uploadedRow, row) => {
             let [student_id] = uploadedRow;
-            excelFeeColumnList.forEach((colIndex) => {
+            excelFeeColumnList.forEach((column) => {
                 let studentFee;
                 if (
                     this.studentFeeListMappedByStudentIdFeeTypeId[student_id] &&
-                    this.studentFeeListMappedByStudentIdFeeTypeId[student_id][this.feeTypeIdMappedByFeeTypeExcelColumnIndex[colIndex]]
+                    this.studentFeeListMappedByStudentIdFeeTypeId[student_id][this.feeTypeIdMappedByFeeTypeExcelColumnIndex[column[1]]]
                 ) {
                     studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][
-                        this.feeTypeIdMappedByFeeTypeExcelColumnIndex[colIndex]
+                        this.feeTypeIdMappedByFeeTypeName[column[0].split("-")[0]]
                     ];
-                    let annual_total;
-                    if (studentFee.isAnnually) {
-                        annual_total = studentFee.aprilAmount;
-                    } else {
-                        annual_total = INSTALLMENT_LIST.reduce((total, month) => {
-                            return total + studentFee[month + 'Amount'];
-                        }, 0);
-                    }
-                    if (parseInt(uploadedRow[colIndex]) != annual_total) {
+                    // let annual_total;
+                    // if (studentFee.isAnnually) {
+                    //     annual_total = studentFee.aprilAmount;
+                    // } else {
+                    //     annual_total = INSTALLMENT_LIST.reduce((total, month) => {
+                    //         return total + studentFee[month + 'Amount'];
+                    //     }, 0);
+                    // }
+                    if (parseInt(uploadedRow[column[1]]) != studentFee[column[0].split("-")[1] + "Amount"]) {
                         // What happens if parseInt gives error: It will not give error, handled in previous sanity check
-                        this.newErrorCell(row + 1, colIndex, 'Student Fee inconsistent with previous student fee');
+                        this.newErrorCell(row + 1, column[1], 'Student Fee inconsistent with previous student fee');
                     }
                 }
             });

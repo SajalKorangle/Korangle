@@ -80,8 +80,9 @@ export class UpdateViaExcelServiceAdapter {
                 this.vm.feeTypeExcelColumnIndexMappedByFeeTypeId[feeType.id] = index + this.vm.NUM_OF_COLUMNS_FOR_STUDENT_INFO;
                 this.vm.feeTypeIdMappedByFeeTypeExcelColumnIndex[index + this.vm.NUM_OF_COLUMNS_FOR_STUDENT_INFO] = feeType.id;
                 feeTypeList[index].checked = false;
+                this.vm.feeTypeIdMappedByFeeTypeName[feeType.name] = feeType.id;
             });
-        console.log(feeTypeList);
+        console.log(this.vm.feeTypeIdMappedByFeeTypeName);
     }
 
     structuringForStudents(classList: any, divisionList: any): void {
