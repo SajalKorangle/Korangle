@@ -27,8 +27,8 @@ export class UpdateMarksComponent implements OnInit {
     showTestDetails = false;
 
     // --- starts : variables for marks lock status ---
-    MARKS_UPDATION_LOCKED_STATUS_BACKEND='Locked'
-    MARKS_UPDATION_UNLOCKED_STATUS_BACKEND='Unlocked'
+    MARKS_UPDATION_LOCKED_STATUS_BACKEND = 'Locked';
+    MARKS_UPDATION_UNLOCKED_STATUS_BACKEND = 'Unlocked';
     // --- ends : variables for marks lock status ---
 
     selectedExamination: any;
