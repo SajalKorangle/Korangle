@@ -33,8 +33,8 @@ export class CreateExaminationComponent implements OnInit {
     }
 
     isExaminationUpdateDisabled(examination: any): boolean {
-        if ((examination.newName == examination.name && 
-                examination.newStatus == examination.status && 
+        if ((examination.newName == examination.name &&
+                examination.newStatus == examination.status &&
                     examination.newMarksUpdationStatus == examination.marksUpdationStatus) || examination.updating) {
             return true;
         }
