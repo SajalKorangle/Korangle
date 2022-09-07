@@ -26,6 +26,11 @@ export class UpdateMarksComponent implements OnInit {
 
     showTestDetails = false;
 
+    // --- starts : variables for marks lock status ---
+    MARKS_UPDATION_LOCKED_STATUS_BACKEND='Locked'
+    MARKS_UPDATION_UNLOCKED_STATUS_BACKEND='Unlocked'
+    // --- ends : variables for marks lock status ---
+
     selectedExamination: any;
     examinationClassSectionSubjectList: any;
 
@@ -91,7 +96,7 @@ export class UpdateMarksComponent implements OnInit {
     }
 
     handleUpdate(studentTest: any, event: any): void {
-        if (this.selectedExamination.marksUpdationStatus == 'Locked') {
+        if (this.selectedExamination.marksUpdationStatus == this.MARKS_UPDATION_LOCKED_STATUS_BACKEND) {
             return;
         }
         if (studentTest.absent) {
