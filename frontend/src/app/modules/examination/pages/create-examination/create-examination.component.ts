@@ -45,9 +45,9 @@ export class CreateExaminationComponent implements OnInit {
     calculateContainerHeight(): string {
         const numberOfItems = this.examinationList.length;
         // This should be the height of your item in pixels
-        const itemHeight = 83;
+        let itemHeight = 10;
         // The final number of items you want to keep visible
-        const visibleItems = 7;
+        const visibleItems = 6;
       
         setTimeout(() => {
       
@@ -55,9 +55,10 @@ export class CreateExaminationComponent implements OnInit {
         }, 300);
       
         if (numberOfItems <= visibleItems) {
-          return `${itemHeight * (numberOfItems)}px`;
+          itemHeight = 15;
+          return `${itemHeight * (numberOfItems)}vh`;
         }
       
-        return `${itemHeight * visibleItems}px`;
+        return `${itemHeight * visibleItems}vh`;
       }
 }
