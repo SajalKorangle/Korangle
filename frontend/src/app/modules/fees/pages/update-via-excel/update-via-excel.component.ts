@@ -441,7 +441,7 @@ export class UpdateViaExcelComponent implements OnInit {
                     // }
                     try {
                     let currentFee = studentFee[column[0].split("-")[1] + "Amount"] ? studentFee[column[0].split("-")[1] + "Amount"] : 0;
-                    if (parseInt(uploadedRow[column[1]]) != currentFee) {
+                    if (uploadedRow[column[1]] && parseInt(uploadedRow[column[1]]) != currentFee) {
                         // What happens if parseInt gives error: It will not give error, handled in previous sanity check
                         this.newErrorCell(row + 1, column[1], 'Student Fee inconsistent with previous student fee');
                     }
