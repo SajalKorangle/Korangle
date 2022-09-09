@@ -65,7 +65,7 @@ mat-icon {
 }
 
 .mobile-margin {
-    margin-left: 5px;
+    margin-left: 10px;
 }
 
 @media screen and (max-width: 600px) {
@@ -73,7 +73,7 @@ mat-icon {
         flex-direction: column;
     }
     .mobile-margin {
-        margin-left: 0px;
+        margin-left: 5px;
     }
 }
 
