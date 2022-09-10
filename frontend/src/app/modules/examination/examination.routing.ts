@@ -35,11 +35,6 @@ const routes: Routes = [
         data: { moduleName: 'examinations' },
     },
     {
-        path: 'print_marksheet',
-        loadChildren: 'app/modules/examination/pages/print-marksheet/print-marksheet.module#PrintMarksheetModule',
-        data: { moduleName: 'examinations' },
-    },
-    {
         path: 'view_marks',
         loadChildren: 'app/modules/examination/pages/view-marks/view-marks.module#ViewMarksModule',
         data: { moduleName: 'examinations' },
