@@ -150,7 +150,6 @@ export class SetSchoolFeesServiceAdapter {
             alert('Rule Name already exists');
             return;
         }
-        
         // -------------------- Confirming the number of students affected starts -----------------------
         let number_of_students = this.vm.getExpectedStudentList().length;
 
