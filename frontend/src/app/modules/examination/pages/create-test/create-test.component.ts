@@ -328,6 +328,7 @@ export class CreateTestComponent implements OnInit {
             }
         }
 
+        this.serviceAdapter.UpdateHelper()
         this.handleUpdate('', '');
     }
 
