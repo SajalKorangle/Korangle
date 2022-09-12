@@ -45,11 +45,6 @@ const routes: Routes = [
                 // loadChildren: () => import('app/modules/fees/fee.module').then(m => m.FeeModule),
             },
             {
-                path: 'id_card',
-                loadChildren: 'app/modules/id-card/id-card.module#IdCardModule',
-                // loadChildren: () => import('app/modules/fees/fee.module').then(m => m.FeeModule),
-            },
-            {
                 path: 'activity',
                 loadChildren: 'app/modules/activity/activity.module#ActivityModule',
             },
@@ -84,14 +79,6 @@ const routes: Routes = [
             {
                 path: 'examinations',
                 loadChildren: 'app/modules/examination/examination.module#ExaminationModule',
-            },
-            {
-                path: 'report_card_mp_board',
-                loadChildren: 'app/modules/report-card/mp-board/report-card-mp-board.module#ReportCardMpBoardModule',
-            },
-            {
-                path: 'report_card_cbse',
-                loadChildren: 'app/modules/report-card/cbse/report-card-cbse.module#ReportCardCbseModule',
             },
             {
                 path: 'report_card_3.0',
@@ -153,6 +140,10 @@ const routes: Routes = [
             {
                 path: 'online_classes',
                 loadChildren: 'app/modules/online-classes/online-classes.module#OnlineClassesModule',
+            },
+            {
+                path: 'deprecated',
+                loadChildren: 'app/modules/deprecated/deprecated.module#DeprecatedModule',
             }
         ]
     },
@@ -168,17 +159,12 @@ const routes: Routes = [
             { path: 'attendance', loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule' },
             { path: 'employees', loadChildren: 'app/modules/employee/employee.module#EmployeeModule' },
             { path: 'examinations', loadChildren: 'app/modules/examination/examination.module#ExaminationModule' },
-            {
-                path: 'report_card_mp_board',
-                loadChildren: 'app/modules/report-card/mp-board/report-card-mp-board.module#ReportCardMpBoardModule',
-            },
-            { path: 'report_card_cbse', loadChildren: 'app/modules/report-card/cbse/report-card-cbse.module#ReportCardCbseModule' },
             { path: 'salary', loadChildren: 'app/modules/salary/salary.module#SalaryModule' },
-            { path: 'expenses', loadChildren: 'app/modules/expenses/expense.module#ExpenseModule' },
             { path: 'enquiries', loadChildren: 'app/modules/enquiry/enquiry.module#EnquiryModule' },
             { path: 'accounts', loadChildren: 'app/modules/accounts/accounts.module#AccountsModule' },
             { path: 'parent', loadChildren: 'app/modules/parent/parent.module#ParentModule' },
             { path: 'complaints', loadChildren: 'app/modules/complaints/complaints.module#ComplaintsModule' },
+            { path: 'deprecated', loadChildren: 'app/modules/deprecated/deprecated.module#DeprecatedModule' }
         ],
     },
     // ----- Routes For Print Pages Ends -------
