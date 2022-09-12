@@ -98,6 +98,12 @@
                 <span> Test Template Created </span>
             </ng-container>
 
+            <!--Starts : Displaying a message if data is updated -->
+            <ng-container *ngIf="isUpdated">
+                <span style="margin-top: 30px">** Please Click on UPDATE to save your changes ! </span>
+            </ng-container>
+            <!--Ends : Displaying a message if data is updated -->
+
             <!--New Structure of Test List grouped by subject, testType and maximumMarks-->
             <ng-container *ngIf="newTestList.length > 0">
                 <cdk-virtual-scroll-viewport itemSize="12" class="example-viewport">

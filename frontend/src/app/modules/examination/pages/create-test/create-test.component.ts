@@ -315,11 +315,12 @@ export class CreateTestComponent implements OnInit {
             };
 
             if (subIdx === -1) {
-                this.newTestList.push(tempSubject);
+                this.newTestList = [...this.newTestList, tempSubject];
             } else if (classIdx === -1) {
-                this.newTestList[subIdx].classList.push(tempClass);
+                this.newTestList[subIdx].classList = [...this.newTestList[subIdx].classList, tempClass];
             } else if (sectionIdx === -1) {
-                this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
+                this.newTestList[subIdx].classList[classIdx].sectionList
+                    = [...this.newTestList[subIdx].classList[classIdx].sectionList, tempSection];
             } else {
                 alert('Test already exists!!');
                 this.selectedTestType = null;
@@ -328,7 +329,6 @@ export class CreateTestComponent implements OnInit {
             }
         }
 
-        this.serviceAdapter.UpdateHelper()
         this.handleUpdate('', '');
     }
 
