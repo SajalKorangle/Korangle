@@ -82,7 +82,6 @@ export class UpdateViaExcelServiceAdapter {
                 feeTypeList[index].checked = false;
                 this.vm.feeTypeIdMappedByFeeTypeName[feeType.name] = feeType.id;
             });
-        console.log(this.vm.feeTypeIdMappedByFeeTypeName);
     }
 
     structuringForStudents(classList: any, divisionList: any): void {
@@ -204,7 +203,7 @@ export class UpdateViaExcelServiceAdapter {
                     });
                 });
 
-                if (false) {
+                if (schoolFeeRuleListToBeUploaded.length > 0) {
                     // Creating School Fee Rules
                     this.vm.feeService.createObjectList(this.vm.feeService.school_fee_rules, schoolFeeRuleListToBeUploaded).then(
                         (schoolFeeRuleListCreated) => {

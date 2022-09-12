@@ -9,7 +9,12 @@ import { ClassService } from './../../../../services/modules/class/class.service
 import { FeeService } from './../../../../services/modules/fees/fee.service';
 import { INSTALLMENT_LIST } from '../../classes/constants';
 import { isMobile } from '../../../../classes/common';
+import { StringNullableChain } from 'lodash';
 
+interface month {
+    month:string;
+    checked:boolean;
+}
 
 @Component({
     selector: 'app-update-via-excel',
@@ -27,7 +32,7 @@ export class UpdateViaExcelComponent implements OnInit {
     feeTypeList = [];
     feeTypeExcelColumnIndexMappedByFeeTypeId = {};
     feeTypeIdMappedByFeeTypeExcelColumnIndex = {};
-    feeTypeIdMappedByFeeTypeName = {};
+    feeTypeIdMappedByFeeTypeName: {[feeTypeName:string]:number} = {};
     studentSectionList = []; // student data available in student session with key 'student'
 
     studentListMappedByClassIdDivisionId = {}; // structure: {classsid: {divisionId: [student1,...], ...}, ...}
@@ -56,7 +61,7 @@ export class UpdateViaExcelComponent implements OnInit {
 
     serviceAdapter: UpdateViaExcelServiceAdapter;
 
-    monthList = [];
+    monthList: Array<month> = [];
 
     constructor(public studentService: StudentService, public classService: ClassService, public feeService: FeeService) {}
 
@@ -219,63 +224,60 @@ export class UpdateViaExcelComponent implements OnInit {
         });
         
         if(monthSelected && classSectionSelected) {
-        let headerRowPlusStudentListToBeDownloaded = []; // to be downloaded
-        let selectedMonthCount = this.getSelectedMonthCount();
-        let headersRow = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
-        this.feeTypeList.forEach((feeType) => {
-            if (feeType.checked) {
-            this.monthList.forEach((item) => {
-                if(item.checked) {
-                    headersRow.push(feeType.name + '-' + item.month)
-                }
-            })
-        }
-        });
-        headerRowPlusStudentListToBeDownloaded.push(headersRow);
-
-        this.classList.forEach((Class) => {
-            this.divisionList.forEach((Division) => {
-                if (this.classDivisionSelectionMappedByClassIdDivisionId[Class.id][Division.id]) {
-                    this.studentListMappedByClassIdDivisionId[Class.id][Division.id].forEach(({ student }) => {
-                        let row = [
-                            student.id,
-                            student.scholarNumber,
-                            student.name,
-                            student.fathersName,
-                            `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`,
-                        ];
-                        let feeTypeExcelColumnIndex = 5;
-                        this.feeTypeList.forEach((feeType) => {
-                            if(feeType.checked) {
-                            let studentFee;
-                            if (this.studentFeeListMappedByStudentIdFeeTypeId[student.id]) {
-                                studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student.id][feeType.id];
-                            }
-                            if (studentFee) {
-                                // let feeTypeExcelColumnIndex = this.feeTypeExcelColumnIndexMappedByFeeTypeId[studentFee.parentFeeType];
-                                let index = 0;
-                                this.monthList.forEach((item) => {
-                                    if(item.checked) {
-                                        console.log(index + this.NUM_OF_COLUMNS_FOR_STUDENT_INFO + (selectedMonthCount)*(feeTypeExcelColumnIndex-this.NUM_OF_COLUMNS_FOR_STUDENT_INFO));
-                                        
-                                        row[index + this.NUM_OF_COLUMNS_FOR_STUDENT_INFO + (selectedMonthCount)*(feeTypeExcelColumnIndex-this.NUM_OF_COLUMNS_FOR_STUDENT_INFO)] = studentFee[item.month + 'Amount'];
-                                        index += 1;
-                                    }
-                                })
-                            }
-                            feeTypeExcelColumnIndex++;
-                        }
-                        });
-                        headerRowPlusStudentListToBeDownloaded.push(row);
-                    });
-                }
+            let headerRowPlusStudentListToBeDownloaded = []; // to be downloaded
+            let selectedMonthCount = this.getSelectedMonthCount();
+            let headersRow = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
+            this.feeTypeList.forEach((feeType) => {
+                if (feeType.checked) {
+                this.monthList.forEach((item) => {
+                    if(item.checked) {
+                        headersRow.push(feeType.name + '-' + item.month)
+                    }
+                })
+            }
             });
-        });
+            headerRowPlusStudentListToBeDownloaded.push(headersRow);
 
-        let ws = xlsx.utils.aoa_to_sheet(headerRowPlusStudentListToBeDownloaded);
-        let wb = xlsx.utils.book_new();
-        xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
-        xlsx.writeFile(wb, 'Sheet.xlsx');
+            this.classList.forEach((Class) => {
+                this.divisionList.forEach((Division) => {
+                    if (this.classDivisionSelectionMappedByClassIdDivisionId[Class.id][Division.id]) {
+                        this.studentListMappedByClassIdDivisionId[Class.id][Division.id].forEach(({ student }) => {
+                            let row = [
+                                student.id,
+                                student.scholarNumber,
+                                student.name,
+                                student.fathersName,
+                                `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`,
+                            ];
+                            let feeTypeExcelColumnIndex = 5;
+                            this.feeTypeList.forEach((feeType) => {
+                                if(feeType.checked) {
+                                    let studentFee;
+                                    if (this.studentFeeListMappedByStudentIdFeeTypeId[student.id]) {
+                                        studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student.id][feeType.id];
+                                    }
+                                    if (studentFee) {
+                                        let index = 0;
+                                        this.monthList.forEach((item) => {
+                                            if(item.checked) {
+                                                row[index + this.NUM_OF_COLUMNS_FOR_STUDENT_INFO + (selectedMonthCount)*(feeTypeExcelColumnIndex-this.NUM_OF_COLUMNS_FOR_STUDENT_INFO)] = studentFee[item.month + 'Amount'];
+                                                index += 1;
+                                            }
+                                        })
+                                    }
+                                    feeTypeExcelColumnIndex++;
+                            }
+                            });
+                            headerRowPlusStudentListToBeDownloaded.push(row);
+                        });
+                    }
+                });
+            });
+
+            let ws = xlsx.utils.aoa_to_sheet(headerRowPlusStudentListToBeDownloaded);
+            let wb = xlsx.utils.book_new();
+            xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
+            xlsx.writeFile(wb, 'Sheet.xlsx');
     } else {
         alert("Please Select a Class and a Month");
     }
@@ -290,14 +292,17 @@ export class UpdateViaExcelComponent implements OnInit {
 
     headersSanityCheck(): void {
         const headers = this.excelDataFromUser[0];
-        let actualHeader = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
-        this.feeTypeList.forEach((feeType) => actualHeader.push(feeType.name));
+        let basicHeaders = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
+        for (let i=0; i < basicHeaders.length; i += 1) {
+        if (headers[i] !== basicHeaders[i]) {
+            this.newErrorCell(0, i, `Header Mismatch: Expected ${basicHeaders[i]}`);
+        }
+        }
+        let feeTypeHeaders = []   
+        this.feeTypeList.forEach((feeType) => feeTypeHeaders.push(feeType.name));
         const len = headers.length;
         for (let i = 0; i < len; i += 1) {
-            // if (headers[i] !== actualHeader[i]) {
-            //     this.newErrorCell(0, i, `Header Mismatch: Expected ${actualHeader[i]}`);
-            // }
-            if (!actualHeader.includes(headers[i].split("-")[0])) {
+            if (!feeTypeHeaders.includes(headers[i].split("-")[0])) {
                 this.newErrorCell(0, i, 'Fee type does not exist');
             }
         }
@@ -431,14 +436,6 @@ export class UpdateViaExcelComponent implements OnInit {
                     studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][
                         this.feeTypeIdMappedByFeeTypeName[column[0].split("-")[0]]
                     ];
-                    // let annual_total;
-                    // if (studentFee.isAnnually) {
-                    //     annual_total = studentFee.aprilAmount;
-                    // } else {
-                    //     annual_total = INSTALLMENT_LIST.reduce((total, month) => {
-                    //         return total + studentFee[month + 'Amount'];
-                    //     }, 0);
-                    // }
                     try {
                     let currentFee = studentFee[column[0].split("-")[1] + "Amount"] ? studentFee[column[0].split("-")[1] + "Amount"] : 0;
                     if (uploadedRow[column[1]] && parseInt(uploadedRow[column[1]]) != currentFee) {
