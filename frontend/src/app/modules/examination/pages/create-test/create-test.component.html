@@ -99,7 +99,7 @@
             </ng-container>
 
             <!--Starts : Displaying a message if data is updated -->
-            <ng-container *ngIf="isUpdated">
+            <ng-container *ngIf="isUpdated && fetchedList !== 0">
                 <span style="margin-top: 30px">** Please Click on UPDATE to save your changes ! </span>
             </ng-container>
             <!--Ends : Displaying a message if data is updated -->
