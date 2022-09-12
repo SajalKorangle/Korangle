@@ -103,3 +103,11 @@ li.active[data-color='indigo'] a {
 .simple-text {
     text-transform: none !important;
 }
+
+.task {
+    display:inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 18ch;
+}
