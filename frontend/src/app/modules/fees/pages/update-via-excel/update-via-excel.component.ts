@@ -301,7 +301,7 @@ export class UpdateViaExcelComponent implements OnInit {
         let feeTypeHeaders = []   
         this.feeTypeList.forEach((feeType) => feeTypeHeaders.push(feeType.name));
         const len = headers.length;
-        for (let i = 0; i < len; i += 1) {
+        for (let i = basicHeaders.length; i < len; i += 1) {
             if (!feeTypeHeaders.includes(headers[i].split("-")[0])) {
                 this.newErrorCell(0, i, 'Fee type does not exist');
             }
@@ -423,6 +423,7 @@ export class UpdateViaExcelComponent implements OnInit {
 
     studentPreviousFeeSanityCheck(): void {
         let excelFeeColumnList = this.excelDataFromUser[0].map((value, i) => [value,i]).slice(this.NUM_OF_COLUMNS_FOR_STUDENT_INFO);
+        excelFeeColumnList = this.usefulFeeTypeExcelColumnIndexList.map((value) => [this.excelDataFromUser[0][value],value]);
         
         this.excelDataFromUser.slice(1).forEach((uploadedRow, row) => {
             let [student_id] = uploadedRow;
@@ -438,7 +439,7 @@ export class UpdateViaExcelComponent implements OnInit {
                     ];
                     try {
                     let currentFee = studentFee[column[0].split("-")[1] + "Amount"] ? studentFee[column[0].split("-")[1] + "Amount"] : 0;
-                    if (uploadedRow[column[1]] && parseInt(uploadedRow[column[1]]) != currentFee) {
+                    if (parseInt(uploadedRow[column[1]]) != currentFee) {
                         // What happens if parseInt gives error: It will not give error, handled in previous sanity check
                         this.newErrorCell(row + 1, column[1], 'Student Fee inconsistent with previous student fee');
                     }
