@@ -755,6 +755,9 @@ export class CollectFeeComponent implements OnInit {
 
     getStudentFeeFeesDue(studentFee: any, includeNewSubFeeReceipt = true): number {
         let amount = 0;
+        if (studentFee.isAnnually) {
+            return this.getStudentFeeInstallmentFeesDue(studentFee, "april", includeNewSubFeeReceipt);
+        }
         this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
             amount += this.getStudentFeeInstallmentFeesDue(studentFee, installment, includeNewSubFeeReceipt);
         });
@@ -763,6 +766,9 @@ export class CollectFeeComponent implements OnInit {
 
     getStudentFeeTotalFees(studentFee: any): number {
         let amount = 0;
+        if (studentFee.isAnnually) {
+            return studentFee.aprilAmount;
+        }
         this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
             amount += this.getStudentFeeInstallmentTotalFees(studentFee, installment);
         });
@@ -771,6 +777,9 @@ export class CollectFeeComponent implements OnInit {
 
     getStudentFeeLateFeesDue(studentFee: any, includeNewSubFeeReceipt = true): number {
         let amount = 0;
+        if (studentFee.isAnnually) {
+            return this.getStudentFeeInstallmentLateFeesDue(studentFee, 'april', includeNewSubFeeReceipt);
+        }
         this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
             amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment, includeNewSubFeeReceipt);
         });
@@ -779,6 +788,9 @@ export class CollectFeeComponent implements OnInit {
 
     getStudentFeeLateFeeTotal(studentFee: any): number {
         let amount = 0;
+        if (studentFee.isAnnually) {
+            return this.getStudentFeeInstallmentLateFeeTotal(studentFee, 'april');
+        }
         this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
             amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
         });
@@ -807,6 +819,9 @@ export class CollectFeeComponent implements OnInit {
 
     getStudentFeeFeesDueTillMonth(studentFee: any, includeNewSubFeeReceipt = true): number {
         let amount = 0;
+        if (studentFee.isAnnually) {
+            return this.getStudentFeeInstallmentFeesDue(studentFee, 'april', includeNewSubFeeReceipt);
+        }
         this.getFilteredInstallmentListByStudentFeeTillMonth(studentFee).forEach((installment) => {
             amount += this.getStudentFeeInstallmentFeesDue(studentFee, installment, includeNewSubFeeReceipt);
         });
@@ -815,6 +830,9 @@ export class CollectFeeComponent implements OnInit {
 
     getStudentFeeLateFeesDueTillMonth(studentFee: any, includeNewSubFeeReceipt = true): number {
         let amount = 0;
+        if (studentFee.isAnnually) {
+            return this.getStudentFeeInstallmentLateFeesDue(studentFee, 'april', includeNewSubFeeReceipt);
+        }
         this.getFilteredInstallmentListByStudentFeeTillMonth(studentFee).forEach((installment) => {
             amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment, includeNewSubFeeReceipt);
         });
@@ -823,6 +841,9 @@ export class CollectFeeComponent implements OnInit {
 
     getStudentFeePayment(studentFee: any): number {
         let amount = 0;
+        if (studentFee.isAnnually) {
+            return this.getStudentFeeInstallmentPayment(studentFee, 'april');
+        }
         this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
             amount += this.getStudentFeeInstallmentPayment(studentFee, installment);
         });
@@ -861,6 +882,9 @@ export class CollectFeeComponent implements OnInit {
 
     getStudentFeeLateFeePayment(studentFee: any): number {
         let amount = 0;
+        if (studentFee.isAnnually) {
+            return this.getStudentFeeInstallmentLateFeePayment(studentFee, 'april');
+        }
         this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
             amount += this.getStudentFeeInstallmentLateFeePayment(studentFee, installment);
         });
