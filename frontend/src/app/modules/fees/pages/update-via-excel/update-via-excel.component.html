@@ -170,7 +170,7 @@
                     </button>
                 </mat-option>
 
-                <!-- FeeType Filter Start -->
+                <!-- FeeType Filter Options Start -->
                 <ng-container *ngFor="let value of feeTypeList">
                     <mat-option style="width: 100%">
                         <mat-checkbox [(ngModel)]="value.checked" (click)="$event.stopPropagation()">
@@ -178,7 +178,7 @@
                         </mat-checkbox>
                     </mat-option>
                 </ng-container>
-                <!-- FeeType Filter End -->
+                <!-- FeeType Filter Options End -->
 
                 <mat-option>
                     <button class="btn" style="padding: 4px 7px" (click)="updateFeeTypeSelection(true); $event.stopPropagation()">
