@@ -51,19 +51,19 @@
                                 <tr *ngIf="disableNewStudentFeeInstallmentChange(installment)">
                                     <td>{{ installment | titlecase }}</td>
                                     <td>
-                                        {{ newStudentFee[installment + 'Amount'] }}
+                                        {{ newStudentFee[installment + 'Amount'] || 0 }}
                                     </td>
                                     <td>
-                                        {{ newStudentFee[installment + 'LastDate'] | date: 'dd - MMM - yyyy' }}
+                                        {{ (newStudentFee[installment + 'LastDate'] != null) ? (newStudentFee[installment + 'LastDate'] | date: 'dd - MMM - yyyy') : "NA" }}
                                     </td>
                                     <td>
-                                        {{ newStudentFee[installment + 'LateFee'] }}
+                                        {{ newStudentFee[installment + 'LateFee'] || "0" }}
                                     </td>
                                     <td>
-                                        {{ newStudentFee[installment + 'MaximumLateFee'] }}
+                                        {{ newStudentFee[installment + 'MaximumLateFee'] || "0" }}
                                     </td>
                                     <td>
-                                        {{ newStudentFee[installment + 'ClearanceDate'] | date: 'dd - MMM - yyyy' }}
+                                        {{ (newStudentFee[installment + 'ClearanceDate'] != null) ? (newStudentFee[installment + 'ClearanceDate'] | date: 'dd - MMM - yyyy') : "NA" }}
                                     </td>
                                 </tr>
                                 <tr *ngIf="!disableNewStudentFeeInstallmentChange(installment)">
@@ -139,29 +139,31 @@
                     <table class="table table-hover">
                         <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                             <tr>
+                                <th>Installment</th>
                                 <th>Amount</th>
                                 <th>Last Date</th>
                                 <th>Late Fee per day</th>
                                 <th>Max. Late Fee</th>
+                                <th>Subimission Date</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngIf="disableNewStudentFeeInstallmentChange('april')">
                                 <td>April</td>
                                 <td>
-                                    {{ newStudentFee['aprilAmount'] }}
+                                    {{ newStudentFee['aprilAmount'] || "0" }}
                                 </td>
                                 <td>
-                                    {{ newStudentFee['aprilLastDate'] | date: 'dd - MMM - yyyy' }}
+                                    {{ (newStudentFee['aprilLastDate'] != null) ? (newStudentFee['aprilLastDate'] | date: 'dd - MMM - yyyy') : "NA" }}
                                 </td>
                                 <td>
-                                    {{ newStudentFee['aprilLateFee'] }}
+                                    {{ newStudentFee['aprilLateFee'] || "0" }}
                                 </td>
                                 <td>
-                                    {{ newStudentFee['aprilMaximumLateFee'] }}
+                                    {{ newStudentFee['aprilMaximumLateFee'] || "0" }}
                                 </td>
                                 <td>
-                                    {{ newStudentFee['aprilClearanceDate'] | date: 'dd - MMM - yyyy' }}
+                                    {{ (newStudentFee['aprilClearanceDate'] != null) ? (newStudentFee['aprilClearanceDate'] | date: 'dd - MMM - yyyy') : "NA" }}
                                 </td>
                             </tr>
                             <tr *ngIf="!disableNewStudentFeeInstallmentChange('april')">
