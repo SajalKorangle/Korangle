@@ -188,6 +188,11 @@ export class SetSchoolFeesServiceAdapter {
                 'cleared': false,
             };
             this.vm.installmentList.forEach(installment => {
+                // --- Starts : not updating other months if isannually is true --
+                if (school_fee_rule_data['isAnnually'] && installment != 'april') {
+                    return;
+                }
+                // --- Ends : not updating other months if isannually is true --
                 tempObject[installment + 'Amount'] = school_fee_rule_data[installment + 'Amount'];
                 tempObject[installment + 'LastDate'] = school_fee_rule_data[installment + 'LastDate'];
                 tempObject[installment + 'LateFee'] = school_fee_rule_data[installment + 'LateFee'];
