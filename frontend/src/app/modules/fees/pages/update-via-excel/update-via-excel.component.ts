@@ -16,6 +16,14 @@ interface month {
     checked:boolean;
 }
 
+interface feeType {
+    id:number;
+    name:string;
+    orderNumber:number;
+    parentSchool:number;
+    checked:boolean;
+}
+
 @Component({
     selector: 'app-update-via-excel',
     templateUrl: './update-via-excel.component.html',
@@ -29,7 +37,7 @@ export class UpdateViaExcelComponent implements OnInit {
 
     classList = [];
     divisionList = [];
-    feeTypeList = [];
+    feeTypeList: Array<feeType> = [];
     feeTypeExcelColumnIndexMappedByFeeTypeId = {};
     feeTypeIdMappedByFeeTypeExcelColumnIndex = {};
     feeTypeIdMappedByFeeTypeName: {[feeTypeName:string]:number} = {};
@@ -278,8 +286,8 @@ export class UpdateViaExcelComponent implements OnInit {
             let wb = xlsx.utils.book_new();
             xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
             xlsx.writeFile(wb, 'Sheet.xlsx');
-    } else {
-        alert("Please Select a Class and a Month");
+        } else {
+            alert("Please Select a Class and a Month");
     }
     }
 
@@ -303,7 +311,7 @@ export class UpdateViaExcelComponent implements OnInit {
         const len = headers.length;
         for (let i = basicHeaders.length; i < len; i += 1) {
             if (!feeTypeHeaders.includes(headers[i].split("-")[0])) {
-                this.newErrorCell(0, i, 'Fee type does not exist');
+                this.newErrorCell(0, i, 'Header should be in FeeType-Installment format');
             }
         }
     }
@@ -437,16 +445,11 @@ export class UpdateViaExcelComponent implements OnInit {
                     studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][
                         this.feeTypeIdMappedByFeeTypeName[column[0].split("-")[0]]
                     ];
-                    try {
                     let currentFee = studentFee[column[0].split("-")[1] + "Amount"] ? studentFee[column[0].split("-")[1] + "Amount"] : 0;
                     if (parseInt(uploadedRow[column[1]]) != currentFee) {
                         // What happens if parseInt gives error: It will not give error, handled in previous sanity check
                         this.newErrorCell(row + 1, column[1], 'Student Fee inconsistent with previous student fee');
                     }
-                } catch {
-                    console.log(studentFee);
-                    
-                }
                 }
             });
         });
