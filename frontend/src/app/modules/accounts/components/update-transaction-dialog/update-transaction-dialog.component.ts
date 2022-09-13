@@ -279,6 +279,7 @@ export class UpdateTransactionDialogComponent implements OnInit {
         amount: this.transaction.debitAccounts[index].amount,
         dbId: account.id,
         balance: account.balance,
+        parentHead: account.parentHead,
       };
     }
     else {
@@ -288,6 +289,7 @@ export class UpdateTransactionDialogComponent implements OnInit {
         amount: this.transaction.creditAccounts[index].amount,
         dbId: account.id,
         balance: account.balance,
+        parentHead: account.parentHead,
       };
     }
 
