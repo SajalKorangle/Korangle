@@ -96,9 +96,6 @@ export class UpdateMarksComponent implements OnInit {
     }
 
     handleUpdate(studentTest: any, event: any): void {
-        if (this.selectedExamination.marksUpdationStatus == this.MARKS_UPDATION_LOCKED_STATUS_BACKEND) {
-            return;
-        }
         if (studentTest.absent) {
             studentTest.marksObtained = null;
         }
