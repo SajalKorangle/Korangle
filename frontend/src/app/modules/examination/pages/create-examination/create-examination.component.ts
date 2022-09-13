@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 
@@ -22,9 +22,6 @@ export class CreateExaminationComponent implements OnInit {
 
     isLoading = false;
 
-    @ViewChild('scrollViewport',{static:false})
-    private cdkVirtualScrollViewport;
-
     constructor(public examinationService: ExaminationService) {}
 
     ngOnInit(): void {
@@ -41,24 +38,4 @@ export class CreateExaminationComponent implements OnInit {
         }
         return false;
     }
-
-    calculateContainerHeight(): string {
-        const numberOfItems = this.examinationList.length;
-        // This should be the height of your item in pixels
-        let itemHeight = 10;
-        // The final number of items you want to keep visible
-        const visibleItems = 6;
-      
-        setTimeout(() => {
-      
-          this.cdkVirtualScrollViewport.checkViewportSize();
-        }, 300);
-      
-        if (numberOfItems <= visibleItems) {
-          itemHeight = 15;
-          return `${itemHeight * (numberOfItems)}vh`;
-        }
-      
-        return `${itemHeight * visibleItems}vh`;
-      }
 }
