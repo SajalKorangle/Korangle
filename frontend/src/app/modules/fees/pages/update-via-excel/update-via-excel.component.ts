@@ -9,7 +9,6 @@ import { ClassService } from './../../../../services/modules/class/class.service
 import { FeeService } from './../../../../services/modules/fees/fee.service';
 import { INSTALLMENT_LIST } from '../../classes/constants';
 import { isMobile } from '../../../../classes/common';
-import { StringNullableChain } from 'lodash';
 
 interface month {
     month:string;
@@ -40,7 +39,7 @@ export class UpdateViaExcelComponent implements OnInit {
     feeTypeList: Array<feeType> = [];
     feeTypeExcelColumnIndexMappedByFeeTypeId = {};
     feeTypeIdMappedByFeeTypeExcelColumnIndex = {};
-    feeTypeIdMappedByFeeTypeName: {[feeTypeName:string]:number} = {};
+    feeTypeIdMappedByFeeTypeName: {[feeTypeName:string]:number} = {}; //structure: {feeTypeName: feeType,...}
     studentSectionList = []; // student data available in student session with key 'student'
 
     studentListMappedByClassIdDivisionId = {}; // structure: {classsid: {divisionId: [student1,...], ...}, ...}
@@ -202,6 +201,7 @@ export class UpdateViaExcelComponent implements OnInit {
         return isMobile();
     }
 
+    //Counts how many months are selected to use in feeType headercell index formula
     getSelectedMonthCount(): number {
         let count = 0;
         this.monthList.forEach((item) => {
@@ -215,13 +215,18 @@ export class UpdateViaExcelComponent implements OnInit {
     downloadSheetTemplate(): void {
         let monthSelected = false;
         let classSectionSelected = false;
+        let feeTypeSelected = false;
+
+        //Start Month selected check
         this.monthList.some((item) => {
             if(item.checked) {
                 monthSelected = true;
                 return true;
             }
         })
+        //Month selected check ends
 
+        //Start ClassSection selected check
         this.classList.forEach((Class) => {
             this.divisionList.forEach((Division) => {
                 if (this.studentListMappedByClassIdDivisionId[Class.id][Division.id]) {
@@ -230,10 +235,27 @@ export class UpdateViaExcelComponent implements OnInit {
                 }
             });
         });
+        //End ClassSection selected check
+
+        //Start feeType selected check
+        this.feeTypeList.forEach((item) => {
+            if (item.checked) {
+                feeTypeSelected = true;
+                return;
+            }
+        })
+        //End feeType selected check
         
-        if(monthSelected && classSectionSelected) {
+        if(!classSectionSelected) {
+            alert("Please Select a Class");
+        } else if(!monthSelected) {
+            alert("Please Select a Installment type");
+        } else if(!feeTypeSelected) {
+            alert("Please Select a Fee Type.");
+        } else {
             let headerRowPlusStudentListToBeDownloaded = []; // to be downloaded
-            let selectedMonthCount = this.getSelectedMonthCount();
+            //Start Populating Excel sheet headers
+            let selectedMonthCount = this.getSelectedMonthCount(); // used in feeType cell formula
             let headersRow = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
             this.feeTypeList.forEach((feeType) => {
                 if (feeType.checked) {
@@ -245,7 +267,9 @@ export class UpdateViaExcelComponent implements OnInit {
             }
             });
             headerRowPlusStudentListToBeDownloaded.push(headersRow);
+            //End Populating Excel sheet headers
 
+            //Start Populating Excel sheet data
             this.classList.forEach((Class) => {
                 this.divisionList.forEach((Division) => {
                     if (this.classDivisionSelectionMappedByClassIdDivisionId[Class.id][Division.id]) {
@@ -268,6 +292,7 @@ export class UpdateViaExcelComponent implements OnInit {
                                         let index = 0;
                                         this.monthList.forEach((item) => {
                                             if(item.checked) {
+                                                //formula to decide where to put studentFee because of Installment filter and feetype filter
                                                 row[index + this.NUM_OF_COLUMNS_FOR_STUDENT_INFO + (selectedMonthCount)*(feeTypeExcelColumnIndex-this.NUM_OF_COLUMNS_FOR_STUDENT_INFO)] = studentFee[item.month + 'Amount'];
                                                 index += 1;
                                             }
@@ -281,14 +306,14 @@ export class UpdateViaExcelComponent implements OnInit {
                     }
                 });
             });
+            //End Populating Excel sheet data
 
             let ws = xlsx.utils.aoa_to_sheet(headerRowPlusStudentListToBeDownloaded);
             let wb = xlsx.utils.book_new();
             xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
             xlsx.writeFile(wb, 'Sheet.xlsx');
-        } else {
-            alert("Please Select a Class and a Month");
-    }
+
+        }
     }
 
     uploadSheet(event: any): void {
@@ -301,11 +326,15 @@ export class UpdateViaExcelComponent implements OnInit {
     headersSanityCheck(): void {
         const headers = this.excelDataFromUser[0];
         let basicHeaders = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
+        
+        //Checking if basicHeaders are present at correct position
         for (let i=0; i < basicHeaders.length; i += 1) {
         if (headers[i] !== basicHeaders[i]) {
             this.newErrorCell(0, i, `Header Mismatch: Expected ${basicHeaders[i]}`);
         }
         }
+
+        //Checking if feeType Headers are in correct position
         let feeTypeHeaders = []   
         this.feeTypeList.forEach((feeType) => feeTypeHeaders.push(feeType.name));
         const len = headers.length;
@@ -430,8 +459,7 @@ export class UpdateViaExcelComponent implements OnInit {
     }
 
     studentPreviousFeeSanityCheck(): void {
-        let excelFeeColumnList = this.excelDataFromUser[0].map((value, i) => [value,i]).slice(this.NUM_OF_COLUMNS_FOR_STUDENT_INFO);
-        excelFeeColumnList = this.usefulFeeTypeExcelColumnIndexList.map((value) => [this.excelDataFromUser[0][value],value]);
+        let excelFeeColumnList = this.usefulFeeTypeExcelColumnIndexList.map((value) => [this.excelDataFromUser[0][value],value]);
         
         this.excelDataFromUser.slice(1).forEach((uploadedRow, row) => {
             let [student_id] = uploadedRow;
