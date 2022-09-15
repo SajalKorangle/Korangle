@@ -56,10 +56,10 @@ export class RecordAttendanceComponent implements OnInit {
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
     // ---------- Start : variables for sorting studentAttendanceStatusList ---------
-    sortAscendingByRoll: boolean = true;
-    sortDescendingByRoll: boolean = false;
-    sortAscendingByName: boolean = true;
-    sortDescendingByName: boolean = false;
+    sortAscendingByRoll: boolean = false;
+    sortDescendingByRoll: boolean = true;
+    sortAscendingByName: boolean = false;
+    sortDescendingByName: boolean = true;
     // ---------- Ends : variables for sorting studentAttendanceStatusList ---------
 
 
