@@ -45,6 +45,8 @@ export class UpdateTransactionComponent implements OnInit {
 
   lockAccounts: any;
 
+  vNumber: string;
+
   constructor(
     public accountsService: AccountsService,
     public schoolService: SchoolService,
@@ -123,8 +125,10 @@ export class UpdateTransactionComponent implements OnInit {
     }
   }
 
-  isNumber(number:any): boolean {
-    return /[0-9]/.test(number);
+  isNumber(): void {
+    if ( /[^0-9]+/.test(this.vNumber) ){
+      this.vNumber = this.vNumber.replace(/[^0-9]*/g,"")
+   }
   }
 
 }
