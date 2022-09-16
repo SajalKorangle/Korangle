@@ -60,6 +60,9 @@ export class RecordAttendanceComponent implements OnInit {
     sortDescendingByRoll: boolean = true;
     sortAscendingByName: boolean = false;
     sortDescendingByName: boolean = true;
+
+    sortingOptions = [{name: 'sortAscendingByRoll', value: 'Roll No. ( Increasing )'}, {name: 'sortDescendingByRoll', value: 'Roll No. ( Decreasing )'}, {name: 'sortAscendingByName', value: 'Name ( A-Z )'}, {name: 'sortDescendingByName', value: 'Name ( Z-A )'}];
+    selectedSort = this.sortingOptions[0];
     // ---------- Ends : variables for sorting studentAttendanceStatusList ---------
 
 
@@ -128,6 +131,20 @@ export class RecordAttendanceComponent implements OnInit {
     }
 
     // ----------------- Ends : Triggers for sorting ---------------
+
+    changeSortType(): void {
+        console.log(this.selectedSort);
+        if (this.selectedSort.name === 'sortAscendingByRoll') {
+            this.triggerSortAscendingByRoll();
+        } else if (this.selectedSort.name === 'sortDescendingByRoll') {
+            this.triggerSortDescendingByRoll();
+        } else if (this.selectedSort.name === 'sortAscendingByName') {
+            this.triggerSortAscendingByName();
+        } else if (this.selectedSort.name === 'sortDescendingByName') {
+            this.triggerSortDescendingByName();
+        }
+    }
+
 
     changeSelectedSectionToFirst(): void {
         this.selectedSection = this.selectedClass.sectionList[0];

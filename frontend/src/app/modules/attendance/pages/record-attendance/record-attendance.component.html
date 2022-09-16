@@ -59,8 +59,24 @@
     </div>
 
     <ng-container *ngIf="!isLoading && showStudentList && studentAttendanceStatusList">
-        <button type="submit" style="padding: 3px 8px" class="btn" (click)="declareAllPresent()">All Present</button>
-
+        <div style="width: 100%; float: left;">
+        <div style="width: 50%;">
+        <button type="submit" style="padding: 3px 8px;float: left;" class="btn" (click)="declareAllPresent()">All Present</button>
+        </div>
+        <div style="width: 50%;margin-right: auto;margin-top: 12px;float: right;">
+            Sort By :
+            <select
+                [ngModel]="selectedSort"
+                (ngModelChange)="selectedSort = $event; changeSortType(); "
+                style="margin-right: 15px; margin-bottom: 10px"
+            >
+                <option *ngFor="let sort of sortingOptions" [ngValue]="sort">
+                    {{ sort.value }}
+                </option>
+            </select>
+        </div>
+        </div>
+        <br class="visible-sm visible-xs" />
         <table class="table table-hover">
             <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                 <tr>
