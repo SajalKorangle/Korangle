@@ -56,12 +56,16 @@ export class RecordAttendanceComponent implements OnInit {
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
     // ---------- Start : variables for sorting studentAttendanceStatusList ---------
-    sortAscendingByRoll: boolean = false;
-    sortDescendingByRoll: boolean = true;
-    sortAscendingByName: boolean = false;
-    sortDescendingByName: boolean = true;
+    SORT_BY_ROLL_INC: string = 'sortAscendingByRoll';
+    SORT_BY_ROLL_DEC: string = 'sortDescendingByRoll';
+    SORT_BY_NAME_INC: string = 'sortAscendingByName';
+    SORT_BY_NAME_DEC: string = 'sortDescendingByName';
 
-    sortingOptions = [{name: 'sortAscendingByRoll', value: 'Roll No. ( Increasing )'}, {name: 'sortDescendingByRoll', value: 'Roll No. ( Decreasing )'}, {name: 'sortAscendingByName', value: 'Name ( A-Z )'}, {name: 'sortDescendingByName', value: 'Name ( Z-A )'}];
+    sortingOptions = [{name: this.SORT_BY_ROLL_INC, value: 'Roll No. ( Increasing )'}, 
+        {name: this.SORT_BY_ROLL_DEC, value: 'Roll No. ( Decreasing )'}, 
+        {name: this.SORT_BY_NAME_INC, value: 'Name ( A-Z )'}, 
+        {name: this.SORT_BY_NAME_DEC, value: 'Name ( Z-A )'}];
+
     selectedSort = this.sortingOptions[0];
     // ---------- Ends : variables for sorting studentAttendanceStatusList ---------
 
@@ -105,45 +109,37 @@ export class RecordAttendanceComponent implements OnInit {
     // ----------------- Starts : Triggers for sorting ---------------
 
     triggerSortAscendingByRoll(): void {
-        this.sortDescendingByRoll = true;
-        this.sortAscendingByRoll = false;
         this.studentAttendanceStatusList.sort((a, b) => (a.rollNumber < b.rollNumber ? -1 : a.rollNumber > b.rollNumber ? 1 : 0));
     } 
 
     triggerSortDescendingByRoll(): void {
-        this.sortDescendingByRoll = false;
-        this.sortAscendingByRoll = true;
         this.studentAttendanceStatusList.sort((a, b) => (a.rollNumber > b.rollNumber ? -1 : a.rollNumber < b.rollNumber ? 1 : 0));
     }
 
     triggerSortAscendingByName(): void {
-        this.sortDescendingByName = true;
-        this.sortAscendingByName = false;
         this.studentAttendanceStatusList.sort((a, b) => 
             (a.name.toUpperCase() < b.name.toUpperCase() ? -1 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : 0));
     }
 
     triggerSortDescendingByName(): void {
-        this.sortDescendingByName = false;
-        this.sortAscendingByName = true;
         this.studentAttendanceStatusList.sort((a, b) => 
             (a.name.toUpperCase() > b.name.toUpperCase() ? -1 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : 0));
     }
 
-    // ----------------- Ends : Triggers for sorting ---------------
-
     changeSortType(): void {
         console.log(this.selectedSort);
-        if (this.selectedSort.name === 'sortAscendingByRoll') {
+        if (this.selectedSort.name === this.SORT_BY_ROLL_INC) {
             this.triggerSortAscendingByRoll();
-        } else if (this.selectedSort.name === 'sortDescendingByRoll') {
+        } else if (this.selectedSort.name === this.SORT_BY_ROLL_DEC) {
             this.triggerSortDescendingByRoll();
-        } else if (this.selectedSort.name === 'sortAscendingByName') {
+        } else if (this.selectedSort.name === this.SORT_BY_NAME_INC) {
             this.triggerSortAscendingByName();
-        } else if (this.selectedSort.name === 'sortDescendingByName') {
+        } else if (this.selectedSort.name === this.SORT_BY_NAME_DEC) {
             this.triggerSortDescendingByName();
         }
     }
+
+    // ----------------- Ends : Triggers for sorting ---------------
 
 
     changeSelectedSectionToFirst(): void {

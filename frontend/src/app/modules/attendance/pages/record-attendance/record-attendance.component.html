@@ -63,7 +63,7 @@
         <div style="width: 50%;">
         <button type="submit" style="padding: 3px 8px;float: left;" class="btn" (click)="declareAllPresent()">All Present</button>
         </div>
-        <div style="width: 50%;margin-right: auto;margin-top: 12px;float: right;">
+        <div style="margin-right: auto;margin-top: 12px;float: right;">
             Sort By :
             <select
                 [ngModel]="selectedSort"
@@ -83,21 +83,9 @@
                     <th>S No.</th>
                     <th style="margin: 0 left;">
                         <div style="float: left;">Student &nbsp;</div>
-                        <!-- Starts: Name Sort Type Filter -->
-                        <div style="cursor: pointer;">
-                            <span *ngIf="sortAscendingByName" style="color: black; font-size: 12px;" (click)="triggerSortAscendingByName()" class="material-icons">north</span>
-                            <span *ngIf="sortDescendingByName" style="color: black; font-size: 12px;" (click)="triggerSortDescendingByName()" class="material-icons">south</span>
-                        </div>
-                        <!-- Ends: Name Sort Type Filter -->
                     </th>
                     <th style="margin: 0 left;">
                         <div style="float: left;">Roll No. &nbsp;</div>
-                        <!-- Starts: Roll Number Sort Type Filter -->
-                        <div style="cursor: pointer;">
-                            <span *ngIf="sortAscendingByRoll" style="color: black; font-size: 12px;" (click)="triggerSortAscendingByRoll()" class="material-icons">north</span>
-                            <span *ngIf="sortDescendingByRoll" style="color: black; font-size: 12px;" (click)="triggerSortDescendingByRoll()" class="material-icons">south</span>
-                        </div>
-                        <!-- Ends: Roll Number Sort Type Filter -->
                     </th>
 
                     <th *ngIf="by === 'month'">Abs./Total</th>
