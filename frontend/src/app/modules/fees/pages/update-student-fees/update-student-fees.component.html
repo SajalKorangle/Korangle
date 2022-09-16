@@ -51,7 +51,7 @@
                                 <tr *ngIf="disableNewStudentFeeInstallmentChange(installment)">
                                     <td>{{ installment | titlecase }}</td>
                                     <td>
-                                        {{ newStudentFee[installment + 'Amount'] || 0 }}
+                                        {{ newStudentFee[installment + 'Amount'] }}
                                     </td>
                                     <td>
                                         {{ (newStudentFee[installment + 'LastDate'] != null) ? (newStudentFee[installment + 'LastDate'] | date: 'dd - MMM - yyyy') : "NA" }}
@@ -151,7 +151,7 @@
                             <tr *ngIf="disableNewStudentFeeInstallmentChange('april')">
                                 <td>April</td>
                                 <td>
-                                    {{ newStudentFee['aprilAmount'] || "0" }}
+                                    {{ newStudentFee['aprilAmount'] }}
                                 </td>
                                 <td>
                                     {{ (newStudentFee['aprilLastDate'] != null) ? (newStudentFee['aprilLastDate'] | date: 'dd - MMM - yyyy') : "NA" }}
