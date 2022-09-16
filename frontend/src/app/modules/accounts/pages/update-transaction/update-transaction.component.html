@@ -11,7 +11,7 @@
         <div class="col-md-9" *ngIf="searchType == searchTypeList[0];">
             <mat-form-field style="width: 50%;">
                 <input [(ngModel)]="vNumber" type="text" matInput (keypress)="$event.key=='Enter'?serviceAdapter.findTransactionByVNumber($event.target.value):null"
-                    placeholder="Enter Voucher Number" (ngModelChange)="onVnumberChange(vNumber)"  (keyup)="isNumber(vNumber)">
+                    placeholder="Enter Voucher Number" (ngModelChange)="onVnumberChange(vNumber)"  (keypress)="isNumber($event.key)">
             </mat-form-field>
             <button type="submit"
                         style="margin-left: 20px;"
