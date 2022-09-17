@@ -229,10 +229,8 @@ export class UpdateViaExcelComponent implements OnInit {
         //Start ClassSection selected check
         this.classList.forEach((Class) => {
             this.divisionList.forEach((Division) => {
-                if (this.studentListMappedByClassIdDivisionId[Class.id][Division.id]) {
-                    if(this.classDivisionSelectionMappedByClassIdDivisionId[Class.id][Division.id])
-                        classSectionSelected = true;
-                }
+                if(this.classDivisionSelectionMappedByClassIdDivisionId[Class.id][Division.id])
+                    classSectionSelected = true;
             });
         });
         //End ClassSection selected check
