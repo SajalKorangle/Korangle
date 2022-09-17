@@ -85,7 +85,7 @@ export class DesignReportCardCanvasAdapter extends CanvasAdapterHTMLMixin implem
         this.metaDrawings = false;
         this.canvasSizing(fullHeight, fullWidth, true);
         setTimeout(() => {
-            let doc = new jsPDF({ orientation: 'p', unit: 'pt', format: [this.canvasHeight, this.canvasWidth] });
+            let doc = new jsPDF({ orientation: this.actualresolution.orientation, unit: 'pt', format: [this.canvasHeight, this.canvasWidth] });
             let dataurl = this.canvas.toDataURL('image/jpeg', 1.0);
             doc.addImage(dataurl, 'JPEG', 0, 0, this.canvasWidth, this.canvasHeight);
             doc.save(this.vm.currentLayout.name + '.pdf');
