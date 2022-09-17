@@ -231,7 +231,7 @@ export class UpdateViaExcelComponent implements OnInit {
             this.divisionList.forEach((Division) => {
                 if (this.studentListMappedByClassIdDivisionId[Class.id][Division.id]) {
                     if(this.classDivisionSelectionMappedByClassIdDivisionId[Class.id][Division.id])
-                    classSectionSelected = true;
+                        classSectionSelected = true;
                 }
             });
         });
@@ -248,72 +248,75 @@ export class UpdateViaExcelComponent implements OnInit {
         
         if(!classSectionSelected) {
             alert("Please Select a Class");
+            return;
         } else if(!monthSelected) {
             alert("Please Select a Installment type");
+            return;
         } else if(!feeTypeSelected) {
             alert("Please Select a Fee Type.");
-        } else {
-            let headerRowPlusStudentListToBeDownloaded = []; // to be downloaded
-            //Start Populating Excel sheet headers
-            let selectedMonthCount = this.getSelectedMonthCount(); // used in feeType cell formula
-            let headersRow = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
-            this.feeTypeList.forEach((feeType) => {
-                if (feeType.checked) {
-                this.monthList.forEach((item) => {
-                    if(item.checked) {
-                        headersRow.push(feeType.name + '-' + item.month)
-                    }
-                })
-            }
-            });
-            headerRowPlusStudentListToBeDownloaded.push(headersRow);
-            //End Populating Excel sheet headers
-
-            //Start Populating Excel sheet data
-            this.classList.forEach((Class) => {
-                this.divisionList.forEach((Division) => {
-                    if (this.classDivisionSelectionMappedByClassIdDivisionId[Class.id][Division.id]) {
-                        this.studentListMappedByClassIdDivisionId[Class.id][Division.id].forEach(({ student }) => {
-                            let row = [
-                                student.id,
-                                student.scholarNumber,
-                                student.name,
-                                student.fathersName,
-                                `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`,
-                            ];
-                            let feeTypeExcelColumnIndex = 5;
-                            this.feeTypeList.forEach((feeType) => {
-                                if(feeType.checked) {
-                                    let studentFee;
-                                    if (this.studentFeeListMappedByStudentIdFeeTypeId[student.id]) {
-                                        studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student.id][feeType.id];
-                                    }
-                                    if (studentFee) {
-                                        let index = 0;
-                                        this.monthList.forEach((item) => {
-                                            if(item.checked) {
-                                                //formula to decide where to put studentFee because of Installment filter and feetype filter
-                                                row[index + this.NUM_OF_COLUMNS_FOR_STUDENT_INFO + (selectedMonthCount)*(feeTypeExcelColumnIndex-this.NUM_OF_COLUMNS_FOR_STUDENT_INFO)] = studentFee[item.month + 'Amount'];
-                                                index += 1;
-                                            }
-                                        })
-                                    }
-                                    feeTypeExcelColumnIndex++;
-                            }
-                            });
-                            headerRowPlusStudentListToBeDownloaded.push(row);
-                        });
-                    }
-                });
-            });
-            //End Populating Excel sheet data
-
-            let ws = xlsx.utils.aoa_to_sheet(headerRowPlusStudentListToBeDownloaded);
-            let wb = xlsx.utils.book_new();
-            xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
-            xlsx.writeFile(wb, 'Sheet.xlsx');
-
+            return;
         }
+        let headerRowPlusStudentListToBeDownloaded = []; // to be downloaded
+        //Start Populating Excel sheet headers
+        let selectedMonthCount = this.getSelectedMonthCount(); // used in feeType cell formula
+        let headersRow = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
+        this.feeTypeList.forEach((feeType) => {
+            if (feeType.checked) {
+            this.monthList.forEach((item) => {
+                if(item.checked) {
+                    headersRow.push(feeType.name + '-' + item.month)
+                }
+            })
+        }
+        });
+        headerRowPlusStudentListToBeDownloaded.push(headersRow);
+        //End Populating Excel sheet headers
+
+        //Start Populating Excel sheet data
+        this.classList.forEach((Class) => {
+            this.divisionList.forEach((Division) => {
+                if (this.classDivisionSelectionMappedByClassIdDivisionId[Class.id][Division.id]) {
+                    this.studentListMappedByClassIdDivisionId[Class.id][Division.id].forEach(({ student }) => {
+                        let row = [
+                            student.id,
+                            student.scholarNumber,
+                            student.name,
+                            student.fathersName,
+                            `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`,
+                        ];
+                        let feeTypeExcelColumnIndex = 5;
+                        this.feeTypeList.forEach((feeType) => {
+                            if(feeType.checked) {
+                                let studentFee;
+                                if (this.studentFeeListMappedByStudentIdFeeTypeId[student.id]) {
+                                    studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student.id][feeType.id];
+                                }
+                                if (studentFee) {
+                                    let index = 0;
+                                    this.monthList.forEach((item) => {
+                                        if(item.checked) {
+                                            //formula to decide where to put studentFee because of Installment filter and feetype filter
+                                            row[index + this.NUM_OF_COLUMNS_FOR_STUDENT_INFO + (selectedMonthCount)*(feeTypeExcelColumnIndex-this.NUM_OF_COLUMNS_FOR_STUDENT_INFO)] = studentFee[item.month + 'Amount'];
+                                            index += 1;
+                                        }
+                                    })
+                                }
+                                feeTypeExcelColumnIndex++;
+                        }
+                        });
+                        headerRowPlusStudentListToBeDownloaded.push(row);
+                    });
+                }
+            });
+        });
+        //End Populating Excel sheet data
+
+        let ws = xlsx.utils.aoa_to_sheet(headerRowPlusStudentListToBeDownloaded);
+        let wb = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
+        xlsx.writeFile(wb, 'Sheet.xlsx');
+
+        
     }
 
     uploadSheet(event: any): void {
@@ -329,9 +332,9 @@ export class UpdateViaExcelComponent implements OnInit {
         
         //Checking if basicHeaders are present at correct position
         for (let i=0; i < basicHeaders.length; i += 1) {
-        if (headers[i] !== basicHeaders[i]) {
-            this.newErrorCell(0, i, `Header Mismatch: Expected ${basicHeaders[i]}`);
-        }
+            if (headers[i] !== basicHeaders[i]) {
+                this.newErrorCell(0, i, `Header Mismatch: Expected ${basicHeaders[i]}`);
+            }
         }
 
         //Checking if feeType Headers are in correct position
