@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setPluginState(WebSettings.PluginState.OFF);
         webview.getSettings().setLoadWithOverviewMode(true);
-        webview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         webview.getSettings().setUseWideViewPort(true);
         // webview.getSettings().setUserAgentString("Android Mozilla/5.0 AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
         webview.getSettings().setAllowFileAccess(true);
