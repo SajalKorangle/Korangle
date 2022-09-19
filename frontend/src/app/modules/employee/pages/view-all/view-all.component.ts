@@ -7,7 +7,7 @@ import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import { EmployeeService } from 'app/services/modules/employee/employee.service';
 import { ImagePdfPreviewDialogComponent } from 'app/components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 import { MatDialog } from '@angular/material';
-import { isMobile } from '../../../../classes/common.js'
+import { isMobile } from '../../../../classes/common.js';
 
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver';
