@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     private long pressedTime;
 
-    public String webapp_url = "https://app.korangle.com";
+    public String webapp_url = "https://test.korangle.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if(BuildConfig.DEBUG) {
-            webapp_url="https://test.korangle.com";
+            webapp_url="https://app.korangle.com";
         }
 
         // Check App updates
