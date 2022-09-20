@@ -209,77 +209,78 @@
             <div class="col-md-10">
                 <mat-card style="width: 100%;margin-bottom: 20px">
                     <mat-card-title style="margin-bottom: 15px;">
-                        <div class="flex-row">
-                            <span style="font-size: 14px;">Approval ID: {{approval.approvalId}}</span>
-                            <span *ngIf="approval.parentTransaction == null && approval.requestStatus == 'APPROVED'" style="font-size: 14px;float:right;color: rgba(255, 152, 0, 1); cursor: pointer" (click)="openUseForPaymentDialog(approval)"><u>Use For Payment</u></span>
+                        <div class="row col-md-12">
+                            <div class="col-md-6">
+                                <span style="font-size: 14px;">Approval ID: {{approval.approvalId}}</span>
+                            </div>
+                            <div class="col-md-6">
+                                <span *ngIf="approval.parentTransaction == null && approval.requestStatus == 'APPROVED'" style="font-size: 14px;float:right;color: rgba(255, 152, 0, 1); cursor: pointer" (click)="openUseForPaymentDialog(approval)"><u>Use For Payment</u></span>
+                            </div>
                         </div>
                     </mat-card-title>
                     <mat-card-content>
-                        <div class="flex-row" style="margin-bottom:15px;">
-                            <div>
+                        
+                        <div class="row col-md-12" style="margin-bottom:15px;">
                             <span style="color: rgba(255, 152, 0, 1);">Requested On: </span><span>{{approval.requestedGenerationDateTime | localDate }}</span>
-                            </div>
-                            <div>
-                            <span *ngIf="approval.approvedGenerationDateTime != null">
+                            <span *ngIf="approval.approvedGenerationDateTime != null" style="float:right;">
                                 <span *ngIf="approval.requestStatus == 'APPROVED'" style="color: rgba(255, 152, 0, 1)"> Approved On: </span>
                                 <span *ngIf="approval.requestStatus == 'DECLINED'" style="color: rgba(255, 152, 0, 1)"> Declined On: </span>
                                 {{approval.approvedGenerationDateTime | localDate}}
                             </span>
-                            </div>
                         </div>
-                        <div class="flex-row" style="margin-bottom: 15px;">
-                            <div class="flex-row flex-mobile">
-                            <div>
-                                <span style="color: rgba(255, 152, 0, 1);">Paid To:</span>
-                            </div>
-                            <div>
-                                <div class="mobile-margin" *ngFor = "let account of approval.debitAccounts" style="margin-bottom: 5px; display:inline-block;">
-                                    <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color: rgba(76, 175, 80, 1);font-size: 14px;">{{account.amount}}</span>
+                        <div class="row" style="margin-bottom: 15px;">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="padding-right: 0px;">
+                                        <span style="color: rgba(255, 152, 0, 1);">Paid To</span>
+                                    </div>
+                                    <div class="col-md-9" style="padding: 0px;">
+                                        <div *ngFor = "let account of approval.debitAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
+                                            <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color: rgba(76, 175, 80, 1);font-size: 14px;">{{account.amount}}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            </div>
-                            <div class="flex-row flex-mobile">
-                            <div>
-                                <span style="color: rgba(255, 152, 0, 1);">Paid From:</span>
-                            </div>
-                            <div>
-                                <div class="mobile-margin" *ngFor = "let account of approval.creditAccounts" style="margin-bottom: 5px; display:inline-block;">
-                                    <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color:rgba(86, 142, 174, 1);font-size: 14px;">{{account.amount}}</span>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-3" style="padding-right: 0px;">
+                                        <span style="color: rgba(255, 152, 0, 1);">Paid From</span>
+                                    </div>
+                                    <div class="col-md-9" style="padding: 0px;">
+                                        <div *ngFor = "let account of approval.creditAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
+                                            <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color:rgba(86, 142, 174, 1);font-size: 14px;">{{account.amount}}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            </div>
                         </div>
-                        <div class="flex-row" style="margin-bottom: 15px;">
+                        <div class="row col-md-12" style="margin-bottom: 15px;">
                             <span style="color: rgba(255, 152, 0, 1);">Remark: </span>
                             <span style="margin-left: 60px;">{{approval.remark}}</span>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                            <div style="display: inline-block;">
-                                <div class="custom-font"><span style="color: rgba(255, 152, 0, 1);">Bill :</span></div>
+                        <div class="row" style="margin-bottom: 15px;">
+                            <div class="col-md-6">
+                                <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Bill :</span></div>
 
                                 <div style="display: inline-block;" *ngFor="let image of approval.billImages; let i = index">
                                     <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(approval.billImages, i, 0)">
                                 </div>
                             </div>
-                            <div style="float: right; display: inline-block;">
-                                <div class="custom-font"><span style="color: rgba(255, 152, 0, 1);">Quotation :</span></div>
+                            <div class="col-md-6">
+                                <div class="row col-md-12 custom-font"><span style="color: rgba(255, 152, 0, 1);">Quotation :</span></div>
 
                                 <div style="display: inline-block;" *ngFor="let image of approval.quotationImages; let i = index">
                                     <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(approval.quotationImages, i, 0)" >
                                 </div>
                             </div>
                         </div>
-                        <div *ngIf="isMobile()" class="col-md-2" style="align-items:center">
-                            <div class="row col-md-12" style="display: flex; justify-content:center; align-items:center; margin-top: 40px">
-                                <button class="custom-button" style="width:90px; cursor: default; pointer-events: none;" [ngStyle]="getButtonStyle(approval)">{{getButtonString(approval)}}</button>
-                            </div>
-                        </div>
+
                     </mat-card-content>
 
                 </mat-card>
 
             </div>
-            <div *ngIf="!isMobile()" class="col-md-2" style="align-items:center">
+            <div class="col-md-2" style="align-items:center">
                 <div class="row col-md-12" style="display: flex; justify-content:center; align-items:center; margin-top: 40px">
                     <button class="custom-button" style="width:90px; cursor: default; pointer-events: none;" [ngStyle]="getButtonStyle(approval)">{{getButtonString(approval)}}</button>
                 </div>
