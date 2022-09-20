@@ -77,6 +77,11 @@ export class UpdateTransactionServiceAdapter {
 
     findTransactionByVNumber(vNumber: any) {
         this.vm.transactionsList = [];
+        if(!/^[0-9]+$/.test(vNumber)) {
+            alert("Please use a valid Voucher Number.");
+            return;
+        }
+        this.vm.transactionsList = [];
         this.vm.isLoadingTransaction = true;
         let data = {
             voucherNumber: vNumber,

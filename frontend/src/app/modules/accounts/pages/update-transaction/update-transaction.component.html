@@ -44,14 +44,14 @@
             <div>
                 <mat-card style="width: 100%;margin-bottom: 20px; cursor: pointer" (click)="openUpdateTransactionDialog(transaction)">
                     <mat-card-title style="margin-bottom: 15px;">
-                        <div>
+                        <div class="flex-row">
                             <div style="font-size: 14px; display: inline-block;">
                                 <span>Voucher Number: {{transaction.voucherNumber}}</span>
                             </div>
                             <div style="display: inline-block;">
                                 <span *ngIf="transaction.approvalId != null" style="font-size: 14px;">Approval ID: {{transaction.approvalId}}</span>
                             </div>
-                            <div style="display: inline-block;float:right">
+                            <div style="display: inline-block;">
                                 <span style="font-size: 14px;" >Date: {{getDisplayDateFormat(transaction.transactionDate)}}</span>
                             </div>
                         </div>
