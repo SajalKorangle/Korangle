@@ -141,17 +141,19 @@ export class UpdateViaExcelServiceAdapter {
                 // Preparing student fee & school fee rules for uploading
                 let studentFeeListToBeUploaded = [];
                 let schoolFeeRuleListToBeUploaded = [];
+                //create list of usefulFeeTypes in the form (feeName-month, index)
+                let excelFeeColumnList = this.vm.usefulFeeTypeExcelColumnIndexList.map((value) => [this.vm.excelDataFromUser[0][value], value]);
 
                 this.vm.excelDataFromUser.slice(1).forEach((uploadedRow, rowIndex) => {
                     let student_id = uploadedRow[0];
-                    this.vm.usefulFeeTypeExcelColumnIndexList.forEach((colIndex) => {
-                        let feeTypeId = this.vm.feeTypeIdMappedByFeeTypeExcelColumnIndex[colIndex];
+                    excelFeeColumnList.forEach((column) => {
+                        let feeTypeId = this.vm.feeTypeIdMappedByFeeTypeName[column[0].split("-")[0]];
                         if (
                             !(
                                 this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id] &&
                                 this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId]
                             ) &&
-                            this.vm.excelDataFromUser[rowIndex + 1][colIndex] != 0
+                            this.vm.excelDataFromUser[rowIndex + 1][column[1]] != 0
                         ) {
                             studentFeeListToBeUploaded.push({
                                 parentStudent: student_id,
@@ -161,7 +163,7 @@ export class UpdateViaExcelServiceAdapter {
                                 isAnnually: true,
                                 cleared: false,
 
-                                aprilAmount: this.vm.excelDataFromUser[rowIndex + 1][colIndex],
+                                aprilAmount: this.vm.excelDataFromUser[rowIndex + 1][column[1]],
                             });
                             if (
                                 schoolFeeRuleListToBeUploaded.find((schoolFeeRule) => {
