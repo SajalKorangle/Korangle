@@ -292,7 +292,8 @@ export class UpdateViaExcelComponent implements OnInit {
                                     this.monthList.forEach((item) => {
                                         if (item.checked) {
                                             //formula to decide where to put studentFee because of Installment filter and feetype filter
-                                            row[index + this.NUM_OF_COLUMNS_FOR_STUDENT_INFO + (selectedMonthCount) * (feeTypeExcelColumnIndex - this.NUM_OF_COLUMNS_FOR_STUDENT_INFO)] = studentFee[item.month + 'Amount'];
+                                            row[index + this.NUM_OF_COLUMNS_FOR_STUDENT_INFO + (selectedMonthCount) * 
+                                                (feeTypeExcelColumnIndex - this.NUM_OF_COLUMNS_FOR_STUDENT_INFO)] = studentFee[item.month + 'Amount'];
                                             index += 1;
                                         }
                                     });
