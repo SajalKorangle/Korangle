@@ -77,8 +77,6 @@ export class UpdateViaExcelServiceAdapter {
         feeTypeList
             .sort((a, b) => a.orderNumber - b.orderNumber)
             .forEach((feeType, index) => {
-                this.vm.feeTypeExcelColumnIndexMappedByFeeTypeId[feeType.id] = index + this.vm.NUM_OF_COLUMNS_FOR_STUDENT_INFO;
-                this.vm.feeTypeIdMappedByFeeTypeExcelColumnIndex[index + this.vm.NUM_OF_COLUMNS_FOR_STUDENT_INFO] = feeType.id;
                 feeTypeList[index].checked = false;
                 this.vm.feeTypeIdMappedByFeeTypeName[feeType.name] = feeType.id;
             });

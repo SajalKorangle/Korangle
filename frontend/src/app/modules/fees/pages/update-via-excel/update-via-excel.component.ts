@@ -37,8 +37,6 @@ export class UpdateViaExcelComponent implements OnInit {
     classList = [];
     divisionList = [];
     feeTypeList: Array<feeType> = [];
-    feeTypeExcelColumnIndexMappedByFeeTypeId = {};
-    feeTypeIdMappedByFeeTypeExcelColumnIndex = {};
     feeTypeIdMappedByFeeTypeName: {[feeTypeName:string]:number} = {}; //structure: {feeTypeName: feeType,...}
     studentSectionList = []; // student data available in student session with key 'student'
 
@@ -259,13 +257,13 @@ export class UpdateViaExcelComponent implements OnInit {
         let selectedMonthCount = this.getSelectedMonthCount(); // used in feeType cell formula
         let headersRow = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
         this.feeTypeList.forEach((feeType) => {
-            if (feeType.checked) {
-            this.monthList.forEach((item) => {
-                if(item.checked) {
-                    headersRow.push(feeType.name + '-' + item.month)
+                if (feeType.checked) {
+                    this.monthList.forEach((item) => {
+                        if(item.checked) {
+                            headersRow.push(feeType.name + '-' + item.month)
+                        }
+                    })
                 }
-            })
-        }
         });
         headerRowPlusStudentListToBeDownloaded.push(headersRow);
         //End Populating Excel sheet headers
@@ -312,9 +310,7 @@ export class UpdateViaExcelComponent implements OnInit {
         let ws = xlsx.utils.aoa_to_sheet(headerRowPlusStudentListToBeDownloaded);
         let wb = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
-        xlsx.writeFile(wb, 'Sheet.xlsx');
-
-        
+        xlsx.writeFile(wb, 'Sheet.xlsx'); 
     }
 
     uploadSheet(event: any): void {
