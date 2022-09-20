@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     private long pressedTime;
 
-    public String webapp_url = "https://app.korangle.com";
+    public String webapp_url = "https://test.korangle.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if(BuildConfig.DEBUG) {
-            webapp_url="https://test.korangle.com";
+            webapp_url="https://app.korangle.com";
         }
 
         // Check App updates
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setPluginState(WebSettings.PluginState.OFF);
         webview.getSettings().setLoadWithOverviewMode(true);
-        webview.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         webview.getSettings().setUseWideViewPort(true);
         // webview.getSettings().setUserAgentString("Android Mozilla/5.0 AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30");
         webview.getSettings().setAllowFileAccess(true);
