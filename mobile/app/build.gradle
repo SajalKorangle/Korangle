@@ -7,7 +7,7 @@ android {
         applicationId "com.korangle.www.korangle"
         minSdkVersion 15
         targetSdkVersion 30
-        versionCode 65
+        versionCode 66
         versionName "1.1"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
