@@ -58,9 +58,7 @@ export class UpdateTransactionComponent implements OnInit {
     this.serviceAdapter.initializeData();
   }
 
-  handleSelection(selectedSearchType:any) {
-    console.log(selectedSearchType);
-    
+  handleSelection(selectedSearchType: any) {
     this.searchType = selectedSearchType;
     this.shouldTransactionsBeEmpty = false;
   }
@@ -115,8 +113,8 @@ export class UpdateTransactionComponent implements OnInit {
     });
   }
 
-  onVnumberChange(vNumber:any): void {
-    if(vNumber == "" || vNumber == null) {
+  onVnumberChange(vNumber: any): void {
+    if (vNumber == "" || vNumber == null) {
       this.isVNumberEmpty = true;
     } else {
       this.isVNumberEmpty = false;
