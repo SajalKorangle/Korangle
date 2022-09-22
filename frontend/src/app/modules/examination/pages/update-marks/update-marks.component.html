@@ -53,15 +53,11 @@
                 <mat-form-field style="margin-top: 23px; margin-left: 20px">
                     <mat-select
                         placeholder="Select Test"
+                        [(ngModel)]="selectedExamination.selectedClass.selectedSection.selectedTestList"
+                        multiple
                     >
-                        <mat-option *ngFor="let test of selectedExamination.selectedClass.selectedSection.testList">
-                            <mat-checkbox
-                                [(ngModel)]="test.isSelected"
-                                (click)="$event.stopPropagation()"
-                            >
-                                {{ test.name }}
-                            </mat-checkbox>
-                            <!-- {{ test.name }} -->
+                        <mat-option *ngFor="let test of selectedExamination.selectedClass.selectedSection.testList" [value]="test">
+                            {{ test.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -71,7 +67,7 @@
                     style="margin-left: 20px"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                     (click)="serviceAdapter.getStudentTestDetails()"
-                    [disabled]="isDisabled()"
+                    [disabled]="selectedExamination.selectedClass.selectedSection.selectedTestList.length <= 0"
                 >
                     GET
                 </button>

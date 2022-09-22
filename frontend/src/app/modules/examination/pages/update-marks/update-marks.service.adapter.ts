@@ -377,22 +377,12 @@ export class UpdateMarksServiceAdapter {
     getStudentTestDetails(): void {
         this.vm.isLoading = true;
         this.vm.isUpdated = false;
-
-        this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList = [];
         this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.studentList = [];
-        this.vm.selectedExamination.selectedClass.selectedSection.testList.forEach((test) => {
-            if(test.isSelected) {
-                this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.push(test);
-            }
-        }
-        );
 
         let selectedSubjectIDList = [];
-        this.vm.selectedExamination.selectedClass.selectedSection['testList'].forEach((test) => {
-            if(test.isSelected) {
-                if(selectedSubjectIDList.indexOf(test.subject.id) === -1) {
-                    selectedSubjectIDList.push(test.subject.id);
-                }
+        this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.forEach((test) => {
+            if(selectedSubjectIDList.indexOf(test.subject.id) === -1) {
+                selectedSubjectIDList.push(test.subject.id);
             }
         });
 

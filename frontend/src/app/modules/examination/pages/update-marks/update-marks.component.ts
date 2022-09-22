@@ -69,15 +69,6 @@ export class UpdateMarksComponent implements OnInit {
         this.cdRef.detectChanges();
     }
 
-    // Handle when the user selects subject from the dropdown on update marks page
-    onTestSelectChange(changedTest: any): void {
-        this.selectedExamination.selectedClass.selectedSection.testList.forEach((test) => {
-            if (test.id == changedTest.id) {
-                test.isSelected = !test.isSelected;
-            }
-        });
-    }
-
     getStudentName(studentId: any): any {
         let result = '';
         this.student_mini_profile_list.every((item) => {
@@ -119,14 +110,5 @@ export class UpdateMarksComponent implements OnInit {
 
     hasAdminPermission(): boolean {
         return this.inPagePermissionMappedByKey[USER_PERMISSION_KEY] == ADMIN_PERMSSION;
-    }
-
-    isDisabled(): boolean {
-        for(let test of this.selectedExamination.selectedClass.selectedSection.testList){
-            if(test.isSelected){
-                return false;
-            }
-        }
-        return true;
     }
 }
