@@ -155,19 +155,22 @@ export class UpdateViaExcelServiceAdapter {
                             ) &&
                             this.vm.excelDataFromUser[rowIndex + 1][column[1]] != 0
                         ) {
-                            if (studentFeeListToBeUploaded.find(e=>e.parentStudent == student_id && e.parentFeeType == feeTypeId)) {
-                                let studentFee = studentFeeListToBeUploaded.find(e=>e.parentStudent == student_id && e.parentFeeType == feeTypeId);
-                                studentFee[column[0].split("-")[1]+"Amount"] = this.vm.excelDataFromUser[rowIndex + 1][column[1]];
+                            let studentFee;
+                            studentFee = studentFeeListToBeUploaded.find(e => e.parentStudent == student_id && e.parentFeeType == feeTypeId);
+                            if (studentFee) {
+                                studentFee[column[0].split("-")[1] + "Amount"] = this.vm.excelDataFromUser[rowIndex + 1][column[1]];
                                 return;
-                            };
-                            let studentFee = {};
+                            }
+                            else {
+                                studentFee = {};
+                            }
                             studentFee['parentStudent'] = student_id;
                             studentFee['parentSchoolFeeRule'] = null; // We will populate this after we have created the school fee rule in backend.
                             studentFee['parentFeeType'] = feeTypeId;
                             studentFee['parentSession'] = this.vm.user.activeSchool.currentSessionDbId;
                             studentFee['isAnnually'] = false;
                             studentFee['cleared'] = false;
-                            studentFee[column[0].split("-")[1]+"Amount"] = this.vm.excelDataFromUser[rowIndex + 1][column[1]];
+                            studentFee[column[0].split("-")[1] + "Amount"] = this.vm.excelDataFromUser[rowIndex + 1][column[1]];
                             studentFeeListToBeUploaded.push(studentFee);
                             if (
                                 schoolFeeRuleListToBeUploaded.find((schoolFeeRule) => {

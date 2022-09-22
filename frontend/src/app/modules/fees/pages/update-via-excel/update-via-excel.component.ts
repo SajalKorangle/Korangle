@@ -292,7 +292,7 @@ export class UpdateViaExcelComponent implements OnInit {
                                     this.monthList.forEach((item) => {
                                         if (item.checked) {
                                             //formula to decide where to put studentFee because of Installment filter and feetype filter
-                                            row[index + this.NUM_OF_COLUMNS_FOR_STUDENT_INFO + (selectedMonthCount) * 
+                                            row[index + this.NUM_OF_COLUMNS_FOR_STUDENT_INFO + (selectedMonthCount) *
                                                 (feeTypeExcelColumnIndex - this.NUM_OF_COLUMNS_FOR_STUDENT_INFO)] = studentFee[item.month + 'Amount'];
                                             index += 1;
                                         }
@@ -464,15 +464,16 @@ export class UpdateViaExcelComponent implements OnInit {
             let [student_id] = uploadedRow;
             excelFeeColumnList.forEach((column) => {
                 let studentFee;
+                let feeTypeId = this.feeTypeIdMappedByFeeTypeName[column[0].split("-")[0]];
                 if (
                     this.studentFeeListMappedByStudentIdFeeTypeId[student_id] &&
-                    this.studentFeeListMappedByStudentIdFeeTypeId[student_id][
-                        this.feeTypeIdMappedByFeeTypeName[column[0].split("-")[0]]]
+                    this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId] &&
+                    this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId][column[0].split("-")[1] + "Amount"]
                 ) {
                     studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][
                         this.feeTypeIdMappedByFeeTypeName[column[0].split("-")[0]]
                     ];
-                    let currentFee = studentFee[column[0].split("-")[1] + "Amount"] ? studentFee[column[0].split("-")[1] + "Amount"] : 0;
+                    let currentFee = studentFee[column[0].split("-")[1] + "Amount"];
                     if (parseInt(uploadedRow[column[1]]) != currentFee) {
                         // What happens if parseInt gives error: It will not give error, handled in previous sanity check
                         this.newErrorCell(row + 1, column[1], 'Student Fee inconsistent with previous student fee');
