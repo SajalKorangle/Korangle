@@ -254,7 +254,7 @@ export class GenerateTCComponent implements OnInit {
         if (!this.sanityCheck()) {
             return;
         }
-        
+
         let leavingSession = this.getSessionNameByCurrentSession(this.DATA.currentSession);
 
         if (!confirm("Are you sure you want to generate T.C. in " + leavingSession + " ?")) {
