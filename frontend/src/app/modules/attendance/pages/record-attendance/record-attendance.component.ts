@@ -127,7 +127,6 @@ export class RecordAttendanceComponent implements OnInit {
     }
 
     changeSortType(): void {
-        console.log(this.selectedSort);
         if (this.selectedSort.name === this.SORT_BY_ROLL_INC) {
             this.triggerSortAscendingByRoll();
         } else if (this.selectedSort.name === this.SORT_BY_ROLL_DEC) {

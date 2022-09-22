@@ -239,8 +239,7 @@ export class GenerateTCComponent implements OnInit {
         }
         return true;
     }
-    
-    // ------------- getting session name by ID starts ---------
+
     getSessionNameByCurrentSession(sessionId): string {
         const sessionList = this.DATA.data.sessionList;
         for (let session of sessionList) {
@@ -250,20 +249,17 @@ export class GenerateTCComponent implements OnInit {
         }
         return '';
     }
-    // ------------- getting session name by ID ends ---------
 
     async generateTC() {
         if (!this.sanityCheck()) {
             return;
         }
         
-        // -------------- alerting for correct session starts -----------------
         let leavingSession = this.getSessionNameByCurrentSession(this.DATA.currentSession);
 
         if (!confirm("Are you sure you want to generate T.C. in " + leavingSession + " ?")) {
             return;
         }
-        // -------------- alerting for correct session ends -----------------
 
         this.isLoading = true;
         const serviceList = [];
