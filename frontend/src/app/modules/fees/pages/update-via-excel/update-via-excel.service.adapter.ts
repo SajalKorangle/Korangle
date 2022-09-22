@@ -151,7 +151,8 @@ export class UpdateViaExcelServiceAdapter {
                         if (
                             !(
                                 this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id] &&
-                                this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId]
+                                this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId] &&
+                                this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId][column[0].split("-")[1] + "Amount"]
                             ) &&
                             this.vm.excelDataFromUser[rowIndex + 1][column[1]] != 0
                         ) {
