@@ -155,15 +155,20 @@ export class UpdateViaExcelServiceAdapter {
                             ) &&
                             this.vm.excelDataFromUser[rowIndex + 1][column[1]] != 0
                         ) {
+                            if (studentFeeListToBeUploaded.find(e=>e.parentStudent == student_id && e.parentFeeType == feeTypeId)) {
+                                let studentFee = studentFeeListToBeUploaded.find(e=>e.parentStudent == student_id && e.parentFeeType == feeTypeId);
+                                studentFee[column[0].split("-")[1]+"Amount"] = this.vm.excelDataFromUser[rowIndex + 1][column[1]];
+                                return;
+                            };
                             let studentFee = {};
                             studentFee['parentStudent'] = student_id;
                             studentFee['parentSchoolFeeRule'] = null; // We will populate this after we have created the school fee rule in backend.
                             studentFee['parentFeeType'] = feeTypeId;
                             studentFee['parentSession'] = this.vm.user.activeSchool.currentSessionDbId;
-                            studentFee['isAnnually'] = true;
+                            studentFee['isAnnually'] = false;
                             studentFee['cleared'] = false;
-                            studentFee[column[1].split("-")[1]+"Amount"] = this.vm.excelDataFromUser[rowIndex + 1][column[1]];
-                            studentFeeListToBeUploaded.push({studentFee});
+                            studentFee[column[0].split("-")[1]+"Amount"] = this.vm.excelDataFromUser[rowIndex + 1][column[1]];
+                            studentFeeListToBeUploaded.push(studentFee);
                             if (
                                 schoolFeeRuleListToBeUploaded.find((schoolFeeRule) => {
                                     return schoolFeeRule.parentFeeType === feeTypeId;
@@ -184,7 +189,7 @@ export class UpdateViaExcelServiceAdapter {
                                 newSchoolFeeRule.isBusStopFilter = false;
                                 newSchoolFeeRule.onlyNewAdmission = false;
                                 newSchoolFeeRule.includeRTE = false;
-                                newSchoolFeeRule.isAnnually = true;
+                                newSchoolFeeRule.isAnnually = false;
 
                                 newSchoolFeeRule.name = 'Excel Sheet - ' + new Date();
                                 newSchoolFeeRule.parentFeeType = feeTypeId;
