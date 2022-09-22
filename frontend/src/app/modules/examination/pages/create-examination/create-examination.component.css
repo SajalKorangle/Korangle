@@ -84,3 +84,7 @@ input {
 .example-full-width {
     width: 100%;
 }*/
+
+td {
+    position: relative;
+}
