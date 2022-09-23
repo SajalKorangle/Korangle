@@ -57,46 +57,42 @@
                         </div>
                     </mat-card-title>
                     <mat-card-content>
-                        <div style="margin-bottom: 15px;">
-                            <div>
-                                <div>
-                                    <div style="padding-right: 0px;">
-                                        <span style="color: rgba(255, 152, 0, 1);">Paid To</span>
-                                    </div>
-                                    <div style="padding: 0px;">
-                                        <div *ngFor = "let account of transaction.debitAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
-                                            <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color: rgba(76, 175, 80, 1);font-size: 14px;">{{account.amount}}</span>
-                                        </div>
+                        <div class="row" style="margin-bottom: 15px;">
+                            <div class="col-md-6" style="padding-left: 0px;">
+                                <div class="col-md-2" style="padding-right: 10px;">
+                                    <span style="color: rgba(255, 152, 0, 1);">Paid To</span>
+                                </div>
+                                <div class="col-md-9">
+                                    <div *ngFor = "let account of transaction.debitAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
+                                        <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color: rgba(76, 175, 80, 1);font-size: 14px;">{{account.amount}}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <div>
-                                    <div style="padding-right: 0px;">
-                                        <span style="color: rgba(255, 152, 0, 1);">Paid From</span>
-                                    </div>
-                                    <div style="padding: 0px;">
-                                        <div *ngFor = "let account of transaction.creditAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
-                                            <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color:rgba(86, 142, 174, 1);font-size: 14px;">{{account.amount}}</span>
-                                        </div>
+                            <div class="col-md-6" style="padding-left: 0px;">
+                                <div class="col-md-2" style="padding-right: 10px;">
+                                    <span style="color: rgba(255, 152, 0, 1);">Paid From</span>
+                                </div>
+                                <div class="col-md-9">
+                                    <div *ngFor = "let account of transaction.creditAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
+                                        <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color:rgba(86, 142, 174, 1);font-size: 14px;">{{account.amount}}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div style="margin-bottom: 15px;">
+                        <div class="col-md-12" style="margin-bottom: 15px; padding-left: 0px;">
                             <span style="color: rgba(255, 152, 0, 1);">Remark: </span>
                             <span style="margin-left: 60px;">{{transaction.remark}}</span>
                         </div>
                         <div style="margin-bottom: 15px;">
-                            <div>
-                                <div class="custom-font"><span style="color: rgba(255, 152, 0, 1);">Bill :</span></div>
+                            <div class="col-md-6" style="padding-left: 0px;">
+                                <div class="col-md-12 custom-font" style="padding-left: 0px;"><span style="color: rgba(255, 152, 0, 1);">Bill :</span></div>
 
                                 <div style="display: inline-block;" *ngFor="let image of transaction.billImages; let i = index">
                                     <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(transaction.billImages, i, 0); $event.stopPropagation();">
                                 </div>
                             </div>
-                            <div>
-                                <div class="custom-font"><span style="color: rgba(255, 152, 0, 1);">Quotation :</span></div>
+                            <div class="col-md-6" style="padding-left: 0px;">
+                                <div class="col-md-12 custom-font" style="padding-left: 0px;"><span style="color: rgba(255, 152, 0, 1);">Quotation :</span></div>
 
                                 <div style="display: inline-block;" *ngFor="let image of transaction.quotationImages; let i = index">
                                     <img src="{{image.imageURL}}" class="image-column" (click)="openImagePreviewDialog(transaction.quotationImages, i, 0); $event.stopPropagation()" >
