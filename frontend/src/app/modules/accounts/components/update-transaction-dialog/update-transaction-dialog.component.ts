@@ -299,6 +299,9 @@ export class UpdateTransactionDialogComponent implements OnInit {
 
 
   addTransaction() {
+    if(this.vm.isLoading) {
+      return;
+    }
     this.vm.isLoading = true;
     let transaction_data = {
       id: this.transaction.dbId,
@@ -463,6 +466,9 @@ export class UpdateTransactionDialogComponent implements OnInit {
       Promise.all(service).then(data => {
         this.populateOriginalTransaction();
         alert('Transaction Updated Successfully');
+        this.vm.isLoading = false;
+      }).catch((err) => {
+        alert('Updating Transaction Failed');
         this.vm.isLoading = false;
       });
     });
