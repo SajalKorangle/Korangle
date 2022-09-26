@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonFunctions } from '../../../../../../classes/common-functions';
+import { DataStorage } from '@classes/data-storage';
 
 @Component({
   selector: 'app-use-for-transaction-dialog',
@@ -9,6 +10,7 @@ import { CommonFunctions } from '../../../../../../classes/common-functions';
 })
 export class UseFortransactionDialogComponent implements OnInit {
 
+  user;
 
   constructor(
     public dialogRef: MatDialogRef<UseFortransactionDialogComponent>,
@@ -19,6 +21,7 @@ export class UseFortransactionDialogComponent implements OnInit {
 
   ngOnInit() {
     // console.log(this.data);
+    this.user = DataStorage.getInstance().getUser();
   }
 
   readURL(event, str): void {
@@ -48,7 +51,6 @@ export class UseFortransactionDialogComponent implements OnInit {
 
   isAmountMoreThanApproved(): boolean {
     let flag = false;
-
     this.data.approval.creditAccounts.forEach(account => {
       const approvalAccountDeatils = this.data.originalApproval.creditAccounts.find(el => el.accountDbId == account.accountDbId);
       if (!approvalAccountDeatils || account.amount > approvalAccountDeatils.amount) {
@@ -79,6 +81,24 @@ export class UseFortransactionDialogComponent implements OnInit {
       return true;
     }
     return false;
+  }
+
+  isAmountLessThanMinimum(): boolean {
+    let flag = false;
+
+    this.data.approval.creditAccounts.forEach(account => {
+      if (account.amount < 0.01 || account.amount == null) {
+        flag = true;
+      }
+    });
+
+    this.data.approval.debitAccounts.forEach(account => {
+      if (account.amount < 0.01 || account.amount == null) {
+        flag = true;
+      }
+    });
+
+    return flag;
   }
 
   handleAmountChange(newAmount: number) {
