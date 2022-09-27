@@ -299,7 +299,7 @@ export class UpdateViaExcelComponent implements OnInit {
                                     });
                                 }
                                 feeTypeExcelColumnIndex++;
-                        }
+                            }
                         });
                         headerRowPlusStudentListToBeDownloaded.push(row);
                     });
@@ -473,7 +473,7 @@ export class UpdateViaExcelComponent implements OnInit {
                         if (uploadedRow[column[1]]) {
                             this.newErrorCell(row + 1, column[1], 'error');
                         }
-                        return
+                        return;
                     }
                     studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][
                         this.feeTypeIdMappedByFeeTypeName[column[0].split("-")[0]]
