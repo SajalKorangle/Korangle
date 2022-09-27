@@ -467,9 +467,14 @@ export class UpdateViaExcelComponent implements OnInit {
                 let feeTypeId = this.feeTypeIdMappedByFeeTypeName[column[0].split("-")[0]];
                 if (
                     this.studentFeeListMappedByStudentIdFeeTypeId[student_id] &&
-                    this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId] &&
-                    this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId][column[0].split("-")[1] + "Amount"]
+                    this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId]
                 ) {
+                    if (!this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId][column[0].split("-")[1] + "Amount"]) {
+                        if (uploadedRow[column[1]]) {
+                            this.newErrorCell(row + 1, column[1], 'error');
+                        }
+                        return
+                    }
                     studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][
                         this.feeTypeIdMappedByFeeTypeName[column[0].split("-")[0]]
                     ];

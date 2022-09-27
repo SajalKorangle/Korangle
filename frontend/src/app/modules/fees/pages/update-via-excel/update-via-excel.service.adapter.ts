@@ -32,7 +32,7 @@ export class UpdateViaExcelServiceAdapter {
             (value) => {
                 this.vm.classList = value[1];
                 this.vm.divisionList = value[2];
-                this.populateFeeType(value[3]);
+                this.prepareFeeType(value[3]);
 
                 //structuring for student's class and division
                 this.structuringForStudents(value[1], value[2]);
@@ -72,7 +72,7 @@ export class UpdateViaExcelServiceAdapter {
         );
     }
 
-    populateFeeType(feeTypeList: any): void {
+    prepareFeeType(feeTypeList: any): void {
         this.vm.feeTypeList = feeTypeList.sort((a, b) => a.orderNumber - b.orderNumber);
         feeTypeList
             .sort((a, b) => a.orderNumber - b.orderNumber)
