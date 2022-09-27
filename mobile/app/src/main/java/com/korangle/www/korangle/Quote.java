@@ -61,7 +61,6 @@ public class Quote {
             "Knowledge will bring you the opportunity to make a difference. \n- Claire Fagin",
             "When you take the free will out of education, that turns it into schooling. \n- John Taylor Gatto",
             "Only the educated are free.” \n- Epictetus",
-            "A woman with an education may be able to spend more time sitting in a chair instead of lying on her back. A sound advantage, I should think.” \n- Anne Bishop",
             "Proper teaching is recognized with ease. You can know it without fail because it awakens within you that sensation which tells you this is something you have always known.” \n- Frank Herbert",
             "I think you learn more if you’re laughing at the same time. \n- Mary Ann Shaffer & Annie Barrows",
             "It is personal. That’s what an education does. It makes the world personal. \n- Cormac McCarthy",
