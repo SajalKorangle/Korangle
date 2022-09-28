@@ -46,6 +46,7 @@
         <div class="col-md-4">
             <span *ngIf="isAmountMoreThanApproved()" style="font-size:13px; color: rgb(243, 59, 59); margin-bottom: 10px">Amount Exceeds Maximum Approval Amount</span><br>
             <span *ngIf="isAmountUnequal()" style="font-size:13px; color: rgb(243, 59, 59); margin-bottom: 10px">Debit And Credit Amount Should Be Equal</span>
+            <span *ngIf="isAmountLessThanMinimum()" style="font-size:13px; color: rgb(243, 59, 59); margin-bottom: 10px">Minimum Amount should be 0.01</span>
         </div>
     </div>
 
@@ -90,5 +91,5 @@
 
 </mat-dialog-content>
 <div mat-dialog-actions>
-    <button [disabled]="isAmountMoreThanApproved() || isAmountUnequal()" mat-button class="custom-button" (click)="addTransaction()">Add</button>
+    <button [disabled]="isAmountMoreThanApproved() || isAmountUnequal() || isAmountLessThanMinimum()" class="btn btn-{{user.activeSchool.secondaryThemeColor}}" (click)="addTransaction()">Add</button>
 </div>
