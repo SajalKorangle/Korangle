@@ -32,8 +32,6 @@ export class GenerateReportCardCanvasAdapter extends CanvasAdapterBase implement
         doc.addPage([this.virtualCanvas.width, this.virtualCanvas.height]);
         let dataurl = this.virtualCanvas.toDataURL('image/jpeg', 1.0);
         doc.addImage(dataurl, 'JPEG', 0, 0, this.virtualCanvas.width, this.virtualCanvas.height);
-
-        console.log(doc);
         return;
     }
 }
