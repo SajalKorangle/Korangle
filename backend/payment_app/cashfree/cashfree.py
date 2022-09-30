@@ -111,7 +111,7 @@ def createAndSignCashfreeOrderForKorangle(data, orderId):
     orderData.update({
         'appId': CASHFREE_APP_ID,
         'orderId': str(orderId),
-        'orderAmount': round(data['orderAmount'] * (1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE / 100), 2), # adding korangle's commission
+        'orderAmount': str(round(data['orderAmount'] * (1 + KORANGLE_PAYMENT_COMMISSION_PERCENTAGE / 100), 2)), # adding korangle's commission
     })
 
     orderData.update({
