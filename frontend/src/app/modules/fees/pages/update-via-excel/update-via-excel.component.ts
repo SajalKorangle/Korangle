@@ -68,6 +68,8 @@ export class UpdateViaExcelComponent implements OnInit {
 
     monthList: Array<month> = [];
 
+    basicHeadersList = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
+
     constructor(public studentService: StudentService, public classService: ClassService, public feeService: FeeService) {}
 
     ngOnInit() {
@@ -255,7 +257,7 @@ export class UpdateViaExcelComponent implements OnInit {
         let headerRowPlusStudentListToBeDownloaded = []; // to be downloaded
         //Start Populating Excel sheet headers
         let selectedMonthCount = this.getSelectedMonthCount(); // used in feeType cell formula
-        let headersRow = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
+        let headersRow = [...this.basicHeadersList];
         this.feeTypeList.forEach((feeType) => {
                 if (feeType.checked) {
                     this.monthList.forEach((item) => {
@@ -323,24 +325,26 @@ export class UpdateViaExcelComponent implements OnInit {
 
     headersSanityCheck(): void {
         const headers = this.excelDataFromUser[0];
-        let basicHeaders = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
-
         //Checking if basicHeaders are present at correct position
-        for (let i = 0; i < basicHeaders.length; i += 1) {
-            if (headers[i] !== basicHeaders[i]) {
-                this.newErrorCell(0, i, `Header Mismatch: Expected ${basicHeaders[i]}`);
+        for (let i = 0; i < this.basicHeadersList.length; i += 1) {
+            if (headers[i] !== this.basicHeadersList[i]) {
+                this.newErrorCell(0, i, `Header Mismatch: Expected ${this.basicHeadersList[i]}`);
             }
         }
 
-        //Checking if feeType Headers are in correct position
+        //Checking if feeType Headers are in correct format and Installment types are correct
         let feeTypeHeaders = [];
         this.feeTypeList.forEach((feeType) => feeTypeHeaders.push(feeType.name));
         const len = headers.length;
-        for (let i = basicHeaders.length; i < len; i += 1) {
+        for (let i = this.basicHeadersList.length; i < len; i += 1) {
             if (!feeTypeHeaders.includes(headers[i].split("-")[0])) {
                 this.newErrorCell(0, i, 'Header should be in FeeType-Installment format');
             }
+            if (this.monthList.findIndex( value => { return value.month == headers[i].split("-")[1]; })) {
+                this.newErrorCell(0, i, 'Invalid Installment name');
+            }
         }
+
     }
 
     removingEmptyOrAllZeroFeeTypeColumns(): void {
@@ -462,26 +466,26 @@ export class UpdateViaExcelComponent implements OnInit {
 
         this.excelDataFromUser.slice(1).forEach((uploadedRow, row) => {
             let [student_id] = uploadedRow;
-            excelFeeColumnList.forEach((column) => {
+            excelFeeColumnList.forEach((feeColumn) => {
                 let studentFee;
-                let feeTypeId = this.feeTypeIdMappedByFeeTypeName[column[0].split("-")[0]];
+                let feeTypeId = this.feeTypeIdMappedByFeeTypeName[feeColumn[0].split("-")[0]];
                 if (
                     this.studentFeeListMappedByStudentIdFeeTypeId[student_id] &&
                     this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId]
                 ) {
-                    if (!this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId][column[0].split("-")[1] + "Amount"]) {
-                        if (uploadedRow[column[1]]) {
-                            this.newErrorCell(row + 1, column[1], 'error');
+                    if (!this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId][feeColumn[0].split("-")[1] + "Amount"]) {
+                        if (uploadedRow[feeColumn[1]]) {
+                            this.newErrorCell(row + 1, feeColumn[1], 'error');
                         }
                         return;
                     }
                     studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][
-                        this.feeTypeIdMappedByFeeTypeName[column[0].split("-")[0]]
+                        this.feeTypeIdMappedByFeeTypeName[feeColumn[0].split("-")[0]]
                     ];
-                    let currentFee = studentFee[column[0].split("-")[1] + "Amount"];
-                    if (parseInt(uploadedRow[column[1]]) != currentFee) {
+                    let currentFee = studentFee[feeColumn[0].split("-")[1] + "Amount"];
+                    if (parseInt(uploadedRow[feeColumn[1]]) != currentFee) {
                         // What happens if parseInt gives error: It will not give error, handled in previous sanity check
-                        this.newErrorCell(row + 1, column[1], 'Student Fee inconsistent with previous student fee');
+                        this.newErrorCell(row + 1, feeColumn[1], 'Student Fee inconsistent with previous student fee');
                     }
                 }
             });
