@@ -54,16 +54,16 @@
                                         {{ newStudentFee[installment + 'Amount'] }}
                                     </td>
                                     <td>
-                                        {{ (newStudentFee[installment + 'LastDate'] != null) ? (newStudentFee[installment + 'LastDate'] | date: 'dd - MMM - yyyy') : "NA" }}
+                                        {{ (newStudentFee[installment + 'LastDate'] != null) ? (newStudentFee[installment + 'LastDate'] | date: 'dd - MMM - yyyy') : "-" }}
                                     </td>
                                     <td>
-                                        {{ newStudentFee[installment + 'LateFee'] || "0" }}
+                                        {{ newStudentFee[installment + 'LateFee'] || "-" }}
                                     </td>
                                     <td>
-                                        {{ newStudentFee[installment + 'MaximumLateFee'] || "0" }}
+                                        {{ newStudentFee[installment + 'MaximumLateFee'] || "-" }}
                                     </td>
                                     <td>
-                                        {{ (newStudentFee[installment + 'ClearanceDate'] != null) ? (newStudentFee[installment + 'ClearanceDate'] | date: 'dd - MMM - yyyy') : "NA" }}
+                                        {{ (newStudentFee[installment + 'ClearanceDate'] != null) ? (newStudentFee[installment + 'ClearanceDate'] | date: 'dd - MMM - yyyy') : "-" }}
                                     </td>
                                 </tr>
                                 <tr *ngIf="!disableNewStudentFeeInstallmentChange(installment)">
@@ -154,16 +154,16 @@
                                     {{ newStudentFee['aprilAmount'] }}
                                 </td>
                                 <td>
-                                    {{ (newStudentFee['aprilLastDate'] != null) ? (newStudentFee['aprilLastDate'] | date: 'dd - MMM - yyyy') : "NA" }}
+                                    {{ (newStudentFee['aprilLastDate'] != null) ? (newStudentFee['aprilLastDate'] | date: 'dd - MMM - yyyy') : "-" }}
                                 </td>
                                 <td>
-                                    {{ newStudentFee['aprilLateFee'] || "0" }}
+                                    {{ newStudentFee['aprilLateFee'] || "-" }}
                                 </td>
                                 <td>
-                                    {{ newStudentFee['aprilMaximumLateFee'] || "0" }}
+                                    {{ newStudentFee['aprilMaximumLateFee'] || "-" }}
                                 </td>
                                 <td>
-                                    {{ (newStudentFee['aprilClearanceDate'] != null) ? (newStudentFee['aprilClearanceDate'] | date: 'dd - MMM - yyyy') : "NA" }}
+                                    {{ (newStudentFee['aprilClearanceDate'] != null) ? (newStudentFee['aprilClearanceDate'] | date: 'dd - MMM - yyyy') : "-" }}
                                 </td>
                             </tr>
                             <tr *ngIf="!disableNewStudentFeeInstallmentChange('april')">
