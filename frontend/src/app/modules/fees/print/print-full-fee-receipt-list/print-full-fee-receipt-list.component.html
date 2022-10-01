@@ -20,16 +20,17 @@
                             z-index: 10;
                         " />
 
-                    <!-- Reg. No. , Dise Code -->
+                    <!-- Aff. No. or Reg. No. , Dise Code -->
                     <div class="row" style="margin-top: 0px">
-                        <div class="col-xs-6">Dise code : {{ user.activeSchool.diseCode }}</div>
-                        <div class="col-xs-6 d-flex custom-padding" align="end">
-                            <ng-container *ngIf="user.activeSchool.parentBoard == boardList[0].id"> School Code :
-                            </ng-container>
-                            <ng-container *ngIf="user.activeSchool.parentBoard == boardList[1].id"> Affiliation No. :
-                            </ng-container>
-                            {{ user.activeSchool.affiliationNumber }}
+                        <div *ngIf="user.activeSchool.affiliationNumber && user.activeSchool.affiliationNumber.length > 4"
+                            class="col-xs-6">
+                            Aff. No. : {{ user.activeSchool.affiliationNumber }}
                         </div>
+                        <div *ngIf="!user.activeSchool.affiliationNumber || user.activeSchool.affiliationNumber.length <= 4"
+                            class="col-xs-6">
+                            Reg. No. : {{ user.activeSchool.registrationNumber }}
+                        </div>
+                        <div class="col-xs-6" align="end">Dise code : {{ user.activeSchool.diseCode }}</div>
                     </div>
 
                     <!-- School Name -->
@@ -244,7 +245,7 @@
                             z-index: 10;
                         " />
 
-                    <!-- Reg. No. , Dise Code -->
+                    <!-- Aff. No. or Reg. No. , Dise Code -->
                     <div class="row" style="margin-top: 0px">
                         <div *ngIf="user.activeSchool.affiliationNumber && user.activeSchool.affiliationNumber.length > 4"
                             class="col-xs-6">
