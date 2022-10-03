@@ -299,7 +299,7 @@ export class UpdateTransactionDialogComponent implements OnInit {
 
 
   addTransaction() {
-    if(this.vm.isLoading) {
+    if (this.vm.isLoading) {
       return;
     }
     this.vm.isLoading = true;
