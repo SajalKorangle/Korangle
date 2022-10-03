@@ -343,6 +343,9 @@ export class UpdateViaExcelComponent implements OnInit {
             if (this.monthList.findIndex( value => { return value.month == headers[i].split("-")[1]; })) {
                 this.newErrorCell(0, i, 'Invalid Installment name');
             }
+            if (feeTypeHeaders.indexOf(headers[i]) != i) {
+                this.newErrorCell(0, i, 'Duplicate Header');
+            }
         }
 
     }
@@ -473,7 +476,8 @@ export class UpdateViaExcelComponent implements OnInit {
                     this.studentFeeListMappedByStudentIdFeeTypeId[student_id] &&
                     this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId]
                 ) {
-                    if (!this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId][feeColumn[0].split("-")[1] + "Amount"]) {
+                    let studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId]
+                    if (!studentFee[feeColumn[0].split("-")[1] + "Amount"]) {
                         if (uploadedRow[feeColumn[1]]) {
                             this.newErrorCell(row + 1, feeColumn[1], 'error');
                         }
