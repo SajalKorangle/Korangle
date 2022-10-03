@@ -76,12 +76,20 @@ export class UpdateTransactionServiceAdapter {
     }
 
     findTransactionByVNumber(vNumber: any) {
+        if (this.vm.isLoadingTransaction) {
+            return;
+        }
         this.vm.transactionsList = [];
+        if (!/^[0-9]+$/.test(vNumber)) {
+            alert("Please use a valid Voucher Number.");
+            return;
+        }
         this.vm.isLoadingTransaction = true;
         let data = {
             voucherNumber: vNumber,
             transactionDate__gte: this.vm.minimumDate,
             transactionDate__lte: this.vm.maximumDate,
+            parentSchool: this.vm.user.activeSchool.dbId,
         };
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.transaction, data),
@@ -98,9 +106,12 @@ export class UpdateTransactionServiceAdapter {
                     this.initialiseTransactionData(val[0], data[0], data[1]);
                     this.vm.isLoadingTransaction = false;
                 });
+                this.vm.shouldTransactionsBeEmpty = false;
             }
             else {
                 this.vm.isLoadingTransaction = false;
+                this.vm.loadMoreTransaction = false;
+                this.vm.shouldTransactionsBeEmpty = true;
             }
         });
     }
@@ -155,11 +166,13 @@ export class UpdateTransactionServiceAdapter {
                         this.vm.accountsService.getObjectList(this.vm.accountsService.transaction_images, transaction_data),
                     ]).then(data => {
                         this.initialiseTransactionData(val[0], data[0], data[1]);
+                        this.vm.shouldTransactionsBeEmpty = false;
                         this.vm.isLoadingTransaction = false;
                     });
                 }
                 else {
                     this.vm.isLoadingTransaction = false;
+                    this.vm.shouldTransactionsBeEmpty = true;
                 }
             });
         });

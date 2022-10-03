@@ -15,7 +15,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
-import { MatTabsModule } from '@angular/material';
+import { MatProgressSpinnerModule, MatTabsModule } from '@angular/material';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material';
@@ -102,6 +102,7 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
         BasicComponentsModule,
 
         DragDropModule,
+        MatProgressSpinnerModule,
     ],
     exports: [
         BasicComponentsModule,
@@ -147,6 +148,7 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
         MatSlideToggleModule,
 
         DragDropModule,
+        MatProgressSpinnerModule,
     ],
 })
 export class ComponentsModule { }
