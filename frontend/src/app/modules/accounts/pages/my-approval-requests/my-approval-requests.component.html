@@ -38,7 +38,6 @@
                         <div class="row col-md-12" style="width: auto;">
                                 <customized-number-input [placeHolder]="'Amount'" 
                                         [disabled]="approval.payFrom.length==1 && approval.payTo.length>1"
-                                        [minimum]="0.01"
                                         [maximumDecimal]="2"
                                         [inputValue]="payFrom.amount"
                                         (outputValue)="payFrom.amount=$event; handleAmountChange(approval, $event);"></customized-number-input>
@@ -210,23 +209,24 @@
             <div class="col-md-10">
                 <mat-card style="width: 100%;margin-bottom: 20px">
                     <mat-card-title style="margin-bottom: 15px;">
-                        <div class="row">
-                            <div class="col-md-2">
+                        <div style="padding-left: 0px;">
+                            <div class="flex-row">
+                            <div style="padding-right: 10px;">
                                 <span style="font-size: 14px;">Approval ID: {{approval.approvalId}}</span>
                             </div>
-                            <div class="col-md-3">
-                                <!-- <span style="font-size: 14px;">{{approval.requestedGenerationDateTime}}</span> -->
-                            </div>
-                            <div class="col-md-7">
+                            <div>
                                 <span *ngIf="approval.parentTransaction == null && approval.requestStatus == 'APPROVED'" style="font-size: 14px;float:right;color: rgba(255, 152, 0, 1); cursor: pointer" (click)="openUseForPaymentDialog(approval)"><u>Use For Payment</u></span>
                             </div>
+                        </div>
                         </div>
                     </mat-card-title>
                     <mat-card-content>
                         
-                        <div class="row col-md-12" style="margin-bottom:15px;">
-                            <span style="color: rgba(255, 152, 0, 1);">Requested On: </span><span>{{approval.requestedGenerationDateTime | localDate }}</span>
-                            <span *ngIf="approval.approvedGenerationDateTime != null" style="float:right;">
+                        <div style="margin-bottom:15px;" class="flex-row">
+                            <span style="padding-right: 10px;">
+                                <span style="color: rgba(255, 152, 0, 1);">Requested On: </span>{{approval.requestedGenerationDateTime | localDate }}
+                            </span>
+                            <span *ngIf="approval.approvedGenerationDateTime != null">
                                 <span *ngIf="approval.requestStatus == 'APPROVED'" style="color: rgba(255, 152, 0, 1)"> Approved On: </span>
                                 <span *ngIf="approval.requestStatus == 'DECLINED'" style="color: rgba(255, 152, 0, 1)"> Declined On: </span>
                                 {{approval.approvedGenerationDateTime | localDate}}
@@ -238,7 +238,7 @@
                                     <div class="col-md-3" style="padding-right: 0px;">
                                         <span style="color: rgba(255, 152, 0, 1);">Paid To</span>
                                     </div>
-                                    <div class="col-md-9" style="padding: 0px;">
+                                    <div class="col-md-9">
                                         <div *ngFor = "let account of approval.debitAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
                                             <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color: rgba(76, 175, 80, 1);font-size: 14px;">{{account.amount}}</span>
                                         </div>
@@ -250,7 +250,7 @@
                                     <div class="col-md-3" style="padding-right: 0px;">
                                         <span style="color: rgba(255, 152, 0, 1);">Paid From</span>
                                     </div>
-                                    <div class="col-md-9" style="padding: 0px;">
+                                    <div class="col-md-9">
                                         <div *ngFor = "let account of approval.creditAccounts" style="margin-bottom: 5px; display:inline-block; padding-right: 20px">
                                             <span style="font-size: 14px;">{{account.account}}&nbsp;A/c</span><br><span style="color:rgba(86, 142, 174, 1);font-size: 14px;">{{account.amount}}</span>
                                         </div>
