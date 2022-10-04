@@ -41,3 +41,18 @@ span {
     height: 120px;
     animation: spin 2s linear infinite;
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.flex-row {
+    display: flex;
+    justify-content: space-between;
+}
