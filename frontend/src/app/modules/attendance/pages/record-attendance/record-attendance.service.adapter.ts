@@ -211,6 +211,8 @@ export class RecordAttendanceServiceAdapter {
                     this.vm.currentAttendanceList.push(element);
                 });
                 this.populateStudentAttendanceList(attendanceList);
+                this.vm.selectedSort = this.vm.sortingOptions[this.vm.defaultSort];
+                this.vm.changeSortType();
             },
             (error) => {
                 this.vm.isLoading = false;

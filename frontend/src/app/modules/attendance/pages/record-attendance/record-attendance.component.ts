@@ -65,8 +65,9 @@ export class RecordAttendanceComponent implements OnInit {
         {name: this.SORT_BY_ROLL_DEC, value: 'Roll No. ( Decreasing )'}, 
         {name: this.SORT_BY_NAME_INC, value: 'Name ( A-Z )'}, 
         {name: this.SORT_BY_NAME_DEC, value: 'Name ( Z-A )'}];
-
-    selectedSort = this.sortingOptions[0];
+    
+    defaultSort = 0;
+    selectedSort = this.sortingOptions[this.defaultSort];
     // ---------- Ends : variables for sorting studentAttendanceStatusList ---------
 
 
@@ -109,11 +110,11 @@ export class RecordAttendanceComponent implements OnInit {
     // ----------------- Starts : Triggers for sorting ---------------
 
     triggerSortAscendingByRoll(): void {
-        this.studentAttendanceStatusList.sort((a, b) => (a.rollNumber < b.rollNumber ? -1 : a.rollNumber > b.rollNumber ? 1 : 0));
+        this.studentAttendanceStatusList.sort((a, b) => a.rollNumber.localeCompare(b.rollNumber, 'en', { numeric: true }));
     } 
 
     triggerSortDescendingByRoll(): void {
-        this.studentAttendanceStatusList.sort((a, b) => (a.rollNumber > b.rollNumber ? -1 : a.rollNumber < b.rollNumber ? 1 : 0));
+        this.studentAttendanceStatusList.sort((a, b) => b.rollNumber.localeCompare(a.rollNumber, 'en', { numeric: true }));
     }
 
     triggerSortAscendingByName(): void {
