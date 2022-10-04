@@ -19,13 +19,56 @@ export class ViewDefaultersServiceAdapter {
             {parentSchool: this.vm.user.activeSchool.dbId}), //0
             this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {SMSEventId: this.vm.NOTIFY_DEFAULTERS_EVENT_DBID}), //1
             this.vm.smsService.getObject(this.vm.smsService.sms_event, {id: this.vm.NOTIFY_DEFAULTERS_EVENT_DBID}), //2
-            this.vm.informationService.getObjectList(this.vm.informationService.send_update_type, {})]); //3
+            this.vm.informationService.getObjectList(this.vm.informationService.send_update_type, {}),      // 3
+            this.vm.genericService.getObject({fees_third_app: 'ViewDefaulterPermissions'}, {        // 4
+                filter: {
+                    parentEmployeePermission__parentEmployee: this.vm.user.activeSchool.employeeId
+                }
+            })
+        ]);
 
         this.vm.backendData.smsIdSchoolList = firstValue[0];
         this.vm.backendData.eventSettingsList = firstValue[1];
         this.vm.backendData.defaultersSMSEvent = firstValue[2];
         this.vm.backendData.sendUpdateTypeList = firstValue[3].filter(x => x.name != "NULL");
         this.vm.userInput.selectedSendUpdateType = this.vm.backendData.sendUpdateTypeList[0];
+        this.vm.userNotifyDefaulterPermissionList = firstValue[4];
+
+        this.vm.userNotifyDefaulterPermissionList = await this.vm.genericService.getObject({
+            fees_third_app: 'ViewDefaulterPermissions'
+         }, {
+            filter: {
+                parentEmployeePermission__parentEmployee: this.vm.user.activeSchool.employeeId
+            }
+        });
+
+        if(!this.vm.userNotifyDefaulterPermissionList){
+            console.log("Creating new record...");
+            let parentEmployeePermission = await this.vm.genericService.getObject({ employee_app: 'EmployeePermission' }, {
+                filter: {
+                    parentEmployee: this.vm.user.activeSchool.employeeId,
+                    parentTask: 66
+                }
+            });
+
+            if(!parentEmployeePermission) {
+
+                console.log("ParentEMployeePermission", parentEmployeePermission)
+                parentEmployeePermission = await this.vm.genericService.createObject({employee_app: 'EmployeePermission'}, {
+                    parentTask: 66,
+                    parentEmployee: this.vm.user.activeSchool.employeeId,
+                });
+            }
+
+
+            let result = await this.vm.genericService.createObject({
+                fees_third_app: 'ViewDefaulterPermissions'
+            }, {
+                parentEmployeePermission: parentEmployeePermission.id
+            });
+            this.vm.userNotifyDefaulterPermissionList = result;
+        }
+
 
         this.vm.backendData.smsIdList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_id, {
             id__in: this.vm.backendData.smsIdSchoolList.map(a => a.parentSMSId),
@@ -38,6 +81,24 @@ export class ViewDefaultersServiceAdapter {
 
         this.populateTemplateList();
 
+        const value = await Promise.all([
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 0
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), //1
+            this.vm.genericService.getObjectList({attendance_app: 'AttendancePermission'}, {
+                filter: {
+                    parentEmployee: this.vm.user.activeSchool.employeeId,
+                    parentSession: this.vm.user.activeSchool.currentSessionDbId,
+                }
+            }) // 2
+        ]);
+        this.vm.attendancePermissionList = value[2];
+
+        if (!this.vm.hasAdminPermission() && this.vm.attendancePermissionList.length === 0) {
+            alert("You do not have permission to view defaulters. Please contact your administrator.");
+            this.vm.isLoading = false;
+            return;
+        }
+
         const feeTypeList = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
@@ -45,20 +106,40 @@ export class ViewDefaultersServiceAdapter {
         const student_section_list = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            parentDivision__in: Array.from(
+                new Set(
+                    this.vm.attendancePermissionList.map((item) => {
+                        return item.parentDivision;
+                    })
+                )
+            ).join(),
+            parentClass__in: Array.from(
+                new Set(
+                    this.vm.attendancePermissionList.map((item) => {
+                        return item.parentClass;
+                    })
+                )
+            ).join(),
             parentStudent__parentTransferCertificate: 'null__korangle',
         };
 
+        if(this.vm.hasAdminPermission()){
+            student_section_list['parentClass__in'] = value[0].map(classs => classs.id).join();
+            student_section_list['parentDivision__in'] = value[1].map(div => div.id).join();
+        }
+
         Promise.all([
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, {
+            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),     // 0
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, {        // 1
                 parentSchool: this.vm.user.activeSchool.dbId,
                 parameterType: 'FILTER',
             }),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, {
+            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, {      // 2
                 parentStudentParameter__parentSchool: this.vm.user.activeSchool.dbId,
                 parentStudentParameter__parameterType: 'FILTER',
             }),
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, feeTypeList),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, feeTypeList),     // 3
+            
         ]).then((val) => {
             let sessionList = val[0];
             this.vm.sessionList = sessionList;
