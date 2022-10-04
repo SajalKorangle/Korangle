@@ -467,15 +467,21 @@ export class UpdateViaExcelComponent implements OnInit {
         //create list of usefulFeeTypes in the form (feeName-month, index)
         let excelFeeColumnList = this.usefulFeeTypeExcelColumnIndexList.map((value) => [this.excelDataFromUser[0][value], value]);
 
+        //traversing row of  uploaded data
         this.excelDataFromUser.slice(1).forEach((uploadedRow, row) => {
             let [student_id] = uploadedRow;
+
             excelFeeColumnList.forEach((feeColumn) => {
                 let studentFee;
                 let feeTypeId = this.feeTypeIdMappedByFeeTypeName[feeColumn[0].split("-")[0]];
+                
+                //checking if student_id and feeTypeId already exists
                 if (
                     this.studentFeeListMappedByStudentIdFeeTypeId[student_id] &&
                     this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId]
                 ) {
+
+                    //checking if a previously unused installment is being added 
                     let studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId]
                     if (!studentFee[feeColumn[0].split("-")[1] + "Amount"]) {
                         if (uploadedRow[feeColumn[1]]) {
@@ -483,9 +489,8 @@ export class UpdateViaExcelComponent implements OnInit {
                         }
                         return;
                     }
-                    studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][
-                        this.feeTypeIdMappedByFeeTypeName[feeColumn[0].split("-")[0]]
-                    ];
+
+                    //checking if a uploaded fee is equal to previously added fee
                     let currentFee = studentFee[feeColumn[0].split("-")[1] + "Amount"];
                     if (parseInt(uploadedRow[feeColumn[1]]) != currentFee) {
                         // What happens if parseInt gives error: It will not give error, handled in previous sanity check

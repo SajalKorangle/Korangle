@@ -144,27 +144,36 @@ export class UpdateViaExcelServiceAdapter {
                 //create list of usefulFeeTypes in the form (feeName-month, index)
                 let excelFeeColumnList = this.vm.usefulFeeTypeExcelColumnIndexList.map((value) => [this.vm.excelDataFromUser[0][value], value]);
 
+                //Start traversing uploaded data rows
                 this.vm.excelDataFromUser.slice(1).forEach((uploadedRow, rowIndex) => {
                     let student_id = uploadedRow[0];
                     excelFeeColumnList.forEach((feeColumn) => {
                         let feeTypeId = this.vm.feeTypeIdMappedByFeeTypeName[feeColumn[0].split("-")[0]];
+
+                        //checking if student_id, feeTypeId, Installment type is not present, because if it is present we dont have to upload it
                         if (
                             !(
                                 this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id] &&
                                 this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId] &&
                                 this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId][feeColumn[0].split("-")[1] + "Amount"]
                             ) &&
-                            this.vm.excelDataFromUser[rowIndex + 1][feeColumn[1]] != 0
+                            this.vm.excelDataFromUser[rowIndex + 1][feeColumn[1]] != 0 //checking if fee amount is not empty
                         ) {
                             let studentFee;
+
+                            //Start checking if feeType for a particular student has already been added to studentFeeListToBeUploaded 
                             studentFee = studentFeeListToBeUploaded.find(e => e.parentStudent == student_id && e.parentFeeType == feeTypeId);
                             if (studentFee) {
+                                //add installment to feeType that has already been added to studentFeeListToBeUploaded
                                 studentFee[feeColumn[0].split("-")[1] + "Amount"] = this.vm.excelDataFromUser[rowIndex + 1][feeColumn[1]];
                                 return;
                             }
                             else {
                                 studentFee = {};
                             }
+                            //End checking if feeType for a particular student has already been added to studentFeeListToBeUploaded 
+
+                            //Create studentFee
                             studentFee['parentStudent'] = student_id;
                             studentFee['parentSchoolFeeRule'] = null; // We will populate this after we have created the school fee rule in backend.
                             studentFee['parentFeeType'] = feeTypeId;
@@ -182,7 +191,8 @@ export class UpdateViaExcelServiceAdapter {
                                 let schoolFeeRuleListBackendFilteredByFeeTypeId = schoolFeeRuleListBackend.filter(
                                     (item) => item.parentFeeType == feeTypeId
                                 );
-
+                                
+                                //create SchoolFeeRule
                                 let newSchoolFeeRule = new SchoolFeeRule();
                                 newSchoolFeeRule.parentSession = this.vm.user.activeSchool.currentSessionDbId;
                                 // If there's a student added through add student page, it will see that whether there's a school fee rule
@@ -210,6 +220,7 @@ export class UpdateViaExcelServiceAdapter {
                         }
                     });
                 });
+                //End traversing uploaded data rows
 
                 if (schoolFeeRuleListToBeUploaded.length > 0) {
                     // Creating School Fee Rules
