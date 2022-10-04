@@ -340,10 +340,10 @@ export class UpdateViaExcelComponent implements OnInit {
             if (!feeTypeHeaders.includes(headers[i].split("-")[0])) {
                 this.newErrorCell(0, i, 'Header should be in FeeType-Installment format');
             }
-            if (this.monthList.findIndex( value => { return value.month == headers[i].split("-")[1]; })) {
+            if (this.monthList.findIndex( value => { return value.month == headers[i].split("-")[1]; }) == -1) {
                 this.newErrorCell(0, i, 'Invalid Installment name');
             }
-            if (feeTypeHeaders.indexOf(headers[i]) != i) {
+            if (headers.indexOf(headers[i]) != i) {
                 this.newErrorCell(0, i, 'Duplicate Header');
             }
         }
