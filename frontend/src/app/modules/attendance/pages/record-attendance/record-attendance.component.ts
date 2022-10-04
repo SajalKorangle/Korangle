@@ -66,8 +66,7 @@ export class RecordAttendanceComponent implements OnInit {
         {name: this.SORT_BY_NAME_INC, value: 'Name ( A-Z )'}, 
         {name: this.SORT_BY_NAME_DEC, value: 'Name ( Z-A )'}];
     
-    defaultSort = 0;
-    selectedSort = this.sortingOptions[this.defaultSort];
+    selectedSort = this.sortingOptions[0];
     // ---------- Ends : variables for sorting studentAttendanceStatusList ---------
 
 

@@ -181,7 +181,7 @@ export class RecordAttendanceServiceAdapter {
                 section.studentList.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
 
                 section.studentList.sort((a, b) =>
-                            (a.rollNumber < b.rollNumber ? -1 : a.rollNumber > b.rollNumber ? 1 : 0));
+                            a.rollNumber.localeCompare(b.rollNumber, 'en', { numeric: true }));
             });
             classs.sectionList.sort((a, b) => (a.dbId < b.dbId ? -1 : a.dbId > b.dbId ? 1 : 0));
         });
@@ -211,8 +211,6 @@ export class RecordAttendanceServiceAdapter {
                     this.vm.currentAttendanceList.push(element);
                 });
                 this.populateStudentAttendanceList(attendanceList);
-                this.vm.selectedSort = this.vm.sortingOptions[this.vm.defaultSort];
-                this.vm.changeSortType();
             },
             (error) => {
                 this.vm.isLoading = false;
