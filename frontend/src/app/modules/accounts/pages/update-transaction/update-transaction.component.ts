@@ -33,6 +33,9 @@ export class UpdateTransactionComponent implements OnInit {
   loadMoreTransaction: boolean;
   loadingCount = 15;
   maximumPermittedAmount: any;
+  shouldTransactionsBeEmpty: boolean;
+
+  isVNumberEmpty = true;
 
   transactionsList: any;
   accountsList: any;
@@ -55,8 +58,9 @@ export class UpdateTransactionComponent implements OnInit {
     this.serviceAdapter.initializeData();
   }
 
-  handleSelection($event) {
-
+  handleSelection(selectedSearchType: any) {
+    this.searchType = selectedSearchType;
+    this.shouldTransactionsBeEmpty = false;
   }
 
   getDisplayDateFormat(str: any) {
@@ -108,4 +112,17 @@ export class UpdateTransactionComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
     });
   }
+
+  onVnumberChange(vNumber: any): void {
+    if (vNumber == "" || vNumber == null) {
+      this.isVNumberEmpty = true;
+    } else {
+      this.isVNumberEmpty = false;
+    }
+  }
+
+  isNumber(vNumber): boolean {
+    return /[0-9]/.test(vNumber);
+  }
+
 }

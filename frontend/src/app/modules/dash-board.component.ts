@@ -57,7 +57,7 @@ export class DashBoardComponent implements OnInit {
             let dateOfExpiryInDateObject = new Date(this.user.activeSchool.dateOfExpiry + 'T23:59:59');
             let todaysDate = new Date();
             if (Math.abs(dateOfExpiryInDateObject.getTime() - todaysDate.getTime()) / (1000 * 60 * 60 * 24) < 15) {
-                return 'Your school will expire on ' + this.formatDate(dateOfExpiryInDateObject);
+                return 'Your licence will expire on ' + this.formatDate(dateOfExpiryInDateObject);
             }
         }
         return '';
