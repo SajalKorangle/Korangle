@@ -55,3 +55,7 @@ i {
 .example-full-width {
     width: 100%;
 }*/
+
+::ng-deep .mat-expansion-panel-body {
+    overflow-x: auto;
+}
