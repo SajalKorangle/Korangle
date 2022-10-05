@@ -107,7 +107,6 @@ export class CreateTestComponent implements OnInit {
         public examinationService: ExaminationService,
         public classService: ClassService,
         public subjectNewService: SubjectService,
-        public cdRef: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {
@@ -227,13 +226,10 @@ export class CreateTestComponent implements OnInit {
 
     //It handles which test type can be selected
     handleTestTypeSelection(value: any, ngModelControl: NgModel, test: any) {
-        console.log(test);
-        console.dir(this.newTestList, { depth: null });
         if (this.findAnyDuplicate(test, value)) {
             alert('Test already exists!!');
             ngModelControl.control.setValue(test.testType);
             test.newTestType = test.testType;
-            this.cdRef.detectChanges();
         }
     }
 
