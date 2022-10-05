@@ -485,7 +485,7 @@ export class UpdateViaExcelComponent implements OnInit {
                     let studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId]
                     if (!studentFee[feeColumn[0].split("-")[1] + "Amount"]) {
                         if (uploadedRow[feeColumn[1]]) {
-                            this.newErrorCell(row + 1, feeColumn[1], 'error');
+                            this.newErrorCell(row + 1, feeColumn[1], 'Fees already exists for this fee type of the student');
                         }
                         return;
                     }
