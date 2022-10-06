@@ -442,6 +442,7 @@ export class UpdateMarksServiceAdapter {
                 this.sortTestDataBySubjectName();
                 this.sortStudentListByRollNumber();
                 this.sortTestDataBySubjectName();
+                this.vm.updateFilteredStudentList(this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.studentList);
                 this.vm.isLoading = false;
                 this.vm.showTestDetails = true;
             }).catch((error) => {

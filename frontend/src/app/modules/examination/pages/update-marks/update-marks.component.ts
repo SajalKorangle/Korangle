@@ -33,6 +33,7 @@ export class UpdateMarksComponent implements OnInit {
     inPagePermissionMappedByKey: { [key: string]: valueType; };
 
     subjectList: any;
+    filteredStudentList=[];
 
     testTypeList = TEST_TYPE_LIST;
 
@@ -81,8 +82,8 @@ export class UpdateMarksComponent implements OnInit {
         return result;
     }
 
-    getFilteredStudentList(list: any): any {
-        return list.filter((item) => {
+    updateFilteredStudentList(list: any): any {
+        this.filteredStudentList = list.filter((item) => {
             if (item.parentTransferCertificate === null) {
                 return true;
             }

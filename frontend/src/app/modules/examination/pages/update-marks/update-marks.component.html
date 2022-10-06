@@ -98,9 +98,7 @@
                 <tbody>
                     <tr
                         *ngFor="
-                            let student of getFilteredStudentList(
-                                selectedExamination.selectedClass.selectedSection.selectedTestList.studentList
-                            );
+                            let student of filteredStudentList
                             let i = index
                         "
                     >
