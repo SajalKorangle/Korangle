@@ -2281,7 +2281,9 @@ export class Formula extends CanvasText implements Layer {
                     return;
                 }
                 let layer = this.ca.layers.find(l => l && l.id == layerId);
-                if (layer && layer.LAYER_TYPE == 'FORMULA') {
+                // Harshal (7th Oct 2022): I hope adding " || layer.LAYER_TYPE == 'MARKS'" doesn't slow
+                // the canvas rendering.
+                if (layer && (layer.LAYER_TYPE == 'FORMULA' || layer.LAYER_TYPE == 'MARKS')) {
                     formulaDependencies.push(layer);
                 }
                 formulaCopy = formulaCopy.replace('#' + layerId, numberToVariable(layerId));
@@ -2289,8 +2291,10 @@ export class Formula extends CanvasText implements Layer {
             }
 
             // const parser = getParser(this.ca.layers);
-            formulaDependencies.forEach(formulaLayer => {
-                formulaLayer.layerDataUpdate([...dependents]);
+            formulaDependencies.forEach(formulaOrMarksLayer => {
+                // The calculation might be repetitive but if the formula is getting calculated
+                // before dependent formula or mark then it will show gibberish value.
+                 formulaOrMarksLayer.layerDataUpdate([...dependents]);
                 // parser.setVariable(numberToVariable(formulaLayer.id), formulaLayer.marks);
             });
             if (!parser)
