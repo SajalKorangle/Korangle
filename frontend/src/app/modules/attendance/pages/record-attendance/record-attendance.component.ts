@@ -109,11 +109,11 @@ export class RecordAttendanceComponent implements OnInit {
     // ----------------- Starts : Triggers for sorting ---------------
 
     triggerSortAscendingByRoll(): void {
-        this.studentAttendanceStatusList.sort((a, b) => a.rollNumber.localeCompare(b.rollNumber, 'en', { numeric: true }));
+        this.studentAttendanceStatusList.sort((a, b) => (a.rollNumber ||a.name.toUpperCase()).localeCompare((b.rollNumber || b.name.toUpperCase()), 'en', { numeric: true }));
     } 
 
     triggerSortDescendingByRoll(): void {
-        this.studentAttendanceStatusList.sort((a, b) => b.rollNumber.localeCompare(a.rollNumber, 'en', { numeric: true }));
+        this.studentAttendanceStatusList.sort((a, b) => (b.rollNumber ||b.name.toUpperCase()).localeCompare((a.rollNumber || a.name.toUpperCase()), 'en', { numeric: true }));
     }
 
     triggerSortAscendingByName(): void {

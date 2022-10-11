@@ -181,7 +181,7 @@ export class RecordAttendanceServiceAdapter {
                 section.studentList.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
 
                 section.studentList.sort((a, b) =>
-                            a.rollNumber.localeCompare(b.rollNumber, 'en', { numeric: true }));
+                (a.rollNumber || a.name.toUpperCase()).localeCompare((b.rollNumber || b.name.toUpperCase()), 'en', { numeric: true }));
             });
             classs.sectionList.sort((a, b) => (a.dbId < b.dbId ? -1 : a.dbId > b.dbId ? 1 : 0));
         });
