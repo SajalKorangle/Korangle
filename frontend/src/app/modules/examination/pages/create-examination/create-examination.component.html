@@ -1,65 +1,65 @@
 <div class="card-content">
     <ng-container *ngIf="!isLoading">
         <cdk-virtual-scroll-viewport itemSize="12" class="example-viewport">
-        <table class="table table-hover" *ngIf="examinationList && examinationList.length > 0">
-            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                <tr>
-                    <th>S No.</th>
-                    <th>Examination</th>
-                    <th>Exam Status</th>
-                    <th>Marks Updation Status</th>
-                    <th>-</th>
-                </tr>
-            </thead>
-            <tbody>
-                <ng-container *cdkVirtualFor="let examination of examinationList; let i = index">
-                <tr>
-                    <td>{{ i + 1 }}.</td>
-                    <td>
-                        <input type="text" [(ngModel)]="examination.newName" [disabled]="examination.updating" />
-                    </td>
-                    <td>
-                        <mat-form-field>
-                            <mat-select
-                                placeholder="Select Exam Status"
-                                [ngModel]="examination.newStatus"
-                                (ngModelChange)="examination.newStatus = $event"
-                            >
-                                <mat-option value="Created">Created</mat-option>
-                                <mat-option value="Declared">Declared</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </td>
-                    <!-- Starts : Dropdown for updating marks modify policy -->
-                    <td>
-                        <mat-form-field>
-                            <mat-select
-                                placeholder="Select Marks Status"
-                                [ngModel]="examination.newMarksUpdationStatus"
-                                (ngModelChange)="examination.newMarksUpdationStatus = $event"
-                            >
-                                <mat-option value="Locked">Locked</mat-option>
-                                <mat-option value="Unlocked">Unlocked</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </td>
-                    <!-- Ends : Dropdown for updating marks modify policy -->
-                    <td>
-                        <button
-                            type="submit"
-                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                            [disabled]="isExaminationUpdateDisabled(examination)"
-                            style="padding: 3px 8px"
-                            (click)="serviceAdapter.updateExamination(examination)"
-                        >
-                            Update
-                        </button>
-                        <div *ngIf="examination.updating" class="loader-custom"></div>
-                    </td>
-                </tr>
-                </ng-container>
-            </tbody>
-        </table>
+            <table class="table table-hover" *ngIf="examinationList && examinationList.length > 0">
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th>S No.</th>
+                        <th>Examination</th>
+                        <th>Exam Status</th>
+                        <th>Marks Updation Status</th>
+                        <th>-</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *cdkVirtualFor="let examination of examinationList; let i = index">
+                        <tr>
+                            <td>{{ i + 1 }}.</td>
+                            <td>
+                                <input type="text" [(ngModel)]="examination.newName" [disabled]="examination.updating" />
+                            </td>
+                            <td>
+                                <mat-form-field>
+                                    <mat-select
+                                        placeholder="Select Exam Status"
+                                        [ngModel]="examination.newStatus"
+                                        (ngModelChange)="examination.newStatus = $event"
+                                    >
+                                        <mat-option value="Created">Created</mat-option>
+                                        <mat-option value="Declared">Declared</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <!-- Starts : Dropdown for updating marks modify policy -->
+                            <td>
+                                <mat-form-field>
+                                    <mat-select
+                                        placeholder="Select Marks Status"
+                                        [ngModel]="examination.newMarksUpdationStatus"
+                                        (ngModelChange)="examination.newMarksUpdationStatus = $event"
+                                    >
+                                        <mat-option value="Locked">Locked</mat-option>
+                                        <mat-option value="Unlocked">Unlocked</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <!-- Ends : Dropdown for updating marks modify policy -->
+                            <td>
+                                <button
+                                    type="submit"
+                                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                                    [disabled]="isExaminationUpdateDisabled(examination)"
+                                    style="padding: 3px 8px"
+                                    (click)="serviceAdapter.updateExamination(examination)"
+                                >
+                                    Update
+                                </button>
+                                <div *ngIf="examination.updating" class="loader-custom"></div>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
         </cdk-virtual-scroll-viewport>
 
         <br /><br /><br />
