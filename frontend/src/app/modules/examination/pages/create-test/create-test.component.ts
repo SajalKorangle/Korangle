@@ -107,6 +107,7 @@ export class CreateTestComponent implements OnInit {
         public examinationService: ExaminationService,
         public classService: ClassService,
         public subjectNewService: SubjectService,
+        public cdRef: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {
@@ -230,6 +231,7 @@ export class CreateTestComponent implements OnInit {
             alert('Test already exists!!');
             ngModelControl.control.setValue(test.testType);
             test.newTestType = test.testType;
+            this.cdRef.detectChanges();
         }
     }
 
