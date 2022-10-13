@@ -83,7 +83,6 @@
     "karma-jasmine-html-reporter": "^1.5.4",
     "protractor": "^5.4.4",
     "protractor-retry": "^1.2.13",
-    "puppeteer": "^5.5.0",
     "puppeteer-to-istanbul": "^1.4.0",
     "rxjs-tslint": "^0.1.8",
     "source-map-support": "^0.5.19",
