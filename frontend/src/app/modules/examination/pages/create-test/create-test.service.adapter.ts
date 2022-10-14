@@ -433,7 +433,7 @@ export class CreateTestServiceAdapter {
         let updateTest = [];
         let deleteTest = [];
         let promises = [];
-        var date = new Date().toJSON().slice(0,10);
+        var date = new Date().toJSON().slice(0, 10);
         //Update the test list if any value changed in any of the test from test list
         this.vm.newTestList.forEach((test) => {
             test.classList.forEach((cl) => {
@@ -444,8 +444,8 @@ export class CreateTestServiceAdapter {
                         parentClass: cl.classId,
                         parentDivision: sec.sectionId,
                         parentSubject: test.subjectId,
-                        startTime: date+'T10:30:00+05:30',
-                        endTime: date+'T13:30:00+05:30',
+                        startTime: date + 'T10:30:00+05:30',
+                        endTime: date + 'T13:30:00+05:30',
                         testType: test.newTestType,
                         maximumMarks: test.newMaximumMarks,
                     };
