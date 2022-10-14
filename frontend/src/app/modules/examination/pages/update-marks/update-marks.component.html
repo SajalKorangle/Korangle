@@ -80,14 +80,14 @@
             <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px">
                 <div class="col-md-12"></div>
             </div>
-            <div class="responsive-table-wrapper">
+            <div style="height: 75vh;overflow: scroll;">
             <table class="table table-hover">
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                     <tr>
                         <th>S No.</th>
                         <th>Student</th>
                         <th>Roll No.</th>
-                        <ng-container *ngFor="let test of selectedExamination.selectedClass.selectedSection.selectedTestList">
+                        <ng-container *ngFor="let test of getSavedSelectedTestList()">
                             <th>
                                 <span>{{ test.name }} (Max: {{ test.maximumMarks }})</span>
                             </th>
@@ -98,21 +98,23 @@
                 <tbody>
                     <tr
                         *ngFor="
-                            let student of filteredStudentList
+                            let student of getFilteredStudentList(
+                                selectedExamination.selectedClass.selectedSection.selectedTestList.studentList
+                            );
                             let i = index
                         "
                     >
                         <td>{{ i + 1 }}.</td>
-                        <td>{{ student.name }}</td>
+                        <td style="min-width: 100px;">{{ student.name }}</td>
                         <td>
                             <span *ngIf="student.rollNumber != null">{{ student.rollNumber }}</span>
                             <span *ngIf="student.rollNumber == null"> N/A </span>
                         </td>
                         <ng-container *ngFor="let test of student.testData">
-                            <td>
+                            <td style="min-width: 100px;">
                                 <input [ngClass]="{'invalidMarks': test.marksObtained > test.maximumMarks}" type="number" [disabled]="test.absent" [(ngModel)]="test.marksObtained" (change)="handleUpdate(test,$event)" placeholder="Type marks here" />
                             </td>
-                            <td style="padding-left:4px;padding-right:4px;">
+                            <td style="min-width: 100px; padding-left:4px;padding-right:4px;">
                                 <mat-checkbox style="margin-left: 14px" [(ngModel)]="test.absent" (ngModelChange)="handleUpdate(test)"></mat-checkbox>
                             </td>
                         </ng-container>

@@ -429,9 +429,6 @@ export class UpdateMarksServiceAdapter {
                     student.testData.forEach((testDataSingle) => {
                         testDataSingle['subjectName'] = subjectMap.get(testDataSingle.parentSubject);
                         let subjectFullName = testDataSingle['subjectName'];
-                        if(testDataSingle.testType != null) {
-                            subjectFullName += ' - ' + testDataSingle.testType;
-                        }
                         testDataSingle['maximumMarks'] = subjectMaxMarksMap.get(subjectFullName);
                         testDataSingle['subjectFullName'] = subjectFullName;
                     }
@@ -442,7 +439,7 @@ export class UpdateMarksServiceAdapter {
                 this.sortTestDataBySubjectName();
                 this.sortStudentListByRollNumber();
                 this.sortTestDataBySubjectName();
-                this.vm.updateFilteredStudentList(this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.studentList);
+                this.vm.saveSelectedTestList();
                 this.vm.isLoading = false;
                 this.vm.showTestDetails = true;
             }).catch((error) => {
