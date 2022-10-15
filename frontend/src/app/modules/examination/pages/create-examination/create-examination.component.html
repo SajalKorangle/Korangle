@@ -6,8 +6,8 @@
                     <tr>
                         <th>S No.</th>
                         <th>Examination</th>
-                        <th>Exam Status</th>
                         <th>Marks Updation Status</th>
+                        <th>Exam Status</th>
                         <th>-</th>
                     </tr>
                 </thead>
@@ -21,12 +21,12 @@
                             <td>
                                 <mat-form-field>
                                     <mat-select
-                                        placeholder="Select Exam Status"
-                                        [ngModel]="examination.newStatus"
-                                        (ngModelChange)="examination.newStatus = $event"
+                                        placeholder="Select Marks Status"
+                                        [ngModel]="examination.newMarksUpdationStatus"
+                                        (ngModelChange)="examination.newMarksUpdationStatus = $event"
                                     >
-                                        <mat-option value="Created">Created</mat-option>
-                                        <mat-option value="Declared">Declared</mat-option>
+                                        <mat-option [value]="MARKS_UPDATION_LOCKED_STATUS_BACKEND">Locked</mat-option>
+                                        <mat-option [value]="MARKS_UPDATION_UNLOCKED_STATUS_BACKEND">Unlocked</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </td>
@@ -34,12 +34,12 @@
                             <td>
                                 <mat-form-field>
                                     <mat-select
-                                        placeholder="Select Marks Status"
-                                        [ngModel]="examination.newMarksUpdationStatus"
-                                        (ngModelChange)="examination.newMarksUpdationStatus = $event"
+                                        placeholder="Select Exam Status"
+                                        [ngModel]="examination.newStatus"
+                                        (ngModelChange)="examination.newStatus = $event"
                                     >
-                                        <mat-option value="Locked">Locked</mat-option>
-                                        <mat-option value="Unlocked">Unlocked</mat-option>
+                                        <mat-option value="Created">Created</mat-option>
+                                        <mat-option value="Declared">Declared</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </td>

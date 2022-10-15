@@ -71,7 +71,7 @@ export class CreateExaminationServiceAdapter {
         let data = {
             name: this.vm.examinationNameToBeAdded,
             status: 'Created', // this.vm.examinationStatusToBeAdded,
-            marksUpdationStatus: this.vm.MARKS_UPDATION_LOCKED_STATUS_BACKEND,
+            marksUpdationStatus: this.vm.MARKS_UPDATION_UNLOCKED_STATUS_BACKEND,
             parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
@@ -127,7 +127,6 @@ export class CreateExaminationServiceAdapter {
         if (examination.newStatus == 'None') {
             examination.newStatus = null;
         }
-
 
         let data = {
             id: examination.id,

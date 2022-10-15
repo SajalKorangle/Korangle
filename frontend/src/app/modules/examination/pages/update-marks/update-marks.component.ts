@@ -14,6 +14,7 @@ import { UpdateMarksHtmlRenderer } from './update-marks.html.renderer';
 import {ADMIN_PERMSSION, USER_PERMISSION_KEY} from './update-marks.permissions';
 import {valueType} from '@modules/common/in-page-permission';
 import {EmployeeService} from '@services/modules/employee/employee.service';
+import { MARKS_UPDATION_LOCKED_STATUS_BACKEND, MARKS_UPDATION_UNLOCKED_STATUS_BACKEND } from '@modules/examination/classes/constants';
 
 @Component({
     selector: 'update-class-marks',
@@ -26,10 +27,8 @@ export class UpdateMarksComponent implements OnInit {
 
     showTestDetails = false;
 
-    // --- starts : variables for marks lock status ---
-    MARKS_UPDATION_LOCKED_STATUS_BACKEND = 'Locked';
-    MARKS_UPDATION_UNLOCKED_STATUS_BACKEND = 'Unlocked';
-    // --- ends : variables for marks lock status ---
+    readonly MARKS_UPDATION_LOCKED_STATUS_BACKEND = MARKS_UPDATION_LOCKED_STATUS_BACKEND;
+    readonly MARKS_UPDATION_UNLOCKED_STATUS_BACKEND = MARKS_UPDATION_UNLOCKED_STATUS_BACKEND;
 
     selectedExamination: any;
     examinationClassSectionSubjectList: any;

@@ -4,6 +4,7 @@ import { ExaminationService } from '../../../../services/modules/examination/exa
 
 import { CreateExaminationServiceAdapter } from './create-examination.service.adapter';
 import { DataStorage } from '../../../../classes/data-storage';
+import { MARKS_UPDATION_LOCKED_STATUS_BACKEND, MARKS_UPDATION_UNLOCKED_STATUS_BACKEND } from '@modules/examination/classes/constants';
 
 @Component({
     selector: 'create-examination',
@@ -14,14 +15,12 @@ import { DataStorage } from '../../../../classes/data-storage';
 export class CreateExaminationComponent implements OnInit {
     user;
 
-    // --- starts : variables for marks lock status ---
-    MARKS_UPDATION_LOCKED_STATUS_BACKEND = 'Locked';
-    MARKS_UPDATION_UNLOCKED_STATUS_BACKEND = 'Unlocked';
-    // --- ends : variables for marks lock status ---
     examinationList: any;
     examinationNameToBeAdded = null;
     // examinationStatusToBeAdded = null;
 
+    readonly MARKS_UPDATION_LOCKED_STATUS_BACKEND = MARKS_UPDATION_LOCKED_STATUS_BACKEND;
+    readonly MARKS_UPDATION_UNLOCKED_STATUS_BACKEND = MARKS_UPDATION_UNLOCKED_STATUS_BACKEND;
     serviceAdapter: CreateExaminationServiceAdapter;
 
     isLoading = false;
