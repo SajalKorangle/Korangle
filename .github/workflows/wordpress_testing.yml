@@ -9,7 +9,7 @@ jobs:
         strategy:
             matrix:
                 python-version: [3.9]
-                node-version: [10.16]
+                node-version: [14.17.6]
 
         # Steps represent a sequence of tasks that will be executed as part of the job
         steps:
