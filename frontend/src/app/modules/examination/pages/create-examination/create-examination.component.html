@@ -7,7 +7,7 @@
                         <th>S No.</th>
                         <th>Examination</th>
                         <th>Marks Updation Status</th>
-                        <th>Exam Status</th>
+                        <th>Result Status</th>
                         <th>-</th>
                     </tr>
                 </thead>
@@ -15,9 +15,14 @@
                     <ng-container *cdkVirtualFor="let examination of examinationList; let i = index">
                         <tr>
                             <td>{{ i + 1 }}.</td>
+
+                            <!-- Starts : Examination Name Input field -->
                             <td>
                                 <input type="text" [(ngModel)]="examination.newName" [disabled]="examination.updating" />
                             </td>
+                            <!-- Ends : Examination Name Input field -->
+
+                            <!-- Starts : Dropdown for updating marks modify policy -->
                             <td>
                                 <mat-form-field>
                                     <mat-select
@@ -30,20 +35,23 @@
                                     </mat-select>
                                 </mat-form-field>
                             </td>
-                            <!-- Starts : Dropdown for updating marks modify policy -->
+                            <!-- Ends : Dropdown for updating marks modify policy -->
+
+                            <!-- Starts : Dropdown for Exam Result status -->
                             <td>
                                 <mat-form-field>
                                     <mat-select
-                                        placeholder="Select Exam Status"
+                                        placeholder="Select Result Status"
                                         [ngModel]="examination.newStatus"
                                         (ngModelChange)="examination.newStatus = $event"
                                     >
-                                        <mat-option value="Created">Created</mat-option>
+                                        <mat-option value="Created">Undeclared</mat-option>
                                         <mat-option value="Declared">Declared</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </td>
-                            <!-- Ends : Dropdown for updating marks modify policy -->
+                            <!-- Ends : Dropdown for Exam Result status -->
+
                             <td>
                                 <button
                                     type="submit"
