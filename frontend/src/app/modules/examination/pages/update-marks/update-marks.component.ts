@@ -27,7 +27,6 @@ export class UpdateMarksComponent implements OnInit {
     showTestDetails = false;
 
     selectedExamination: any;
-    savedSelectedTestList: any = [];
     examinationClassSectionSubjectList: any;
     selectedTestsList:any = [];
     student_mini_profile_list: any = [];
@@ -91,14 +90,6 @@ export class UpdateMarksComponent implements OnInit {
         });
     }
 
-    saveSelectedTestList():void{
-        this.savedSelectedTestList = this.selectedExamination.selectedClass.selectedSection.selectedTestList;
-    }
-    
-    getSavedSelectedTestList():any{
-        return this.savedSelectedTestList;
-    }
-    
     handleUpdate(studentTest: any, event: any): void {
         if (studentTest.absent) {
             studentTest.marksObtained = null;

@@ -54,6 +54,7 @@
                     <mat-select
                         placeholder="Select Test"
                         [(ngModel)]="selectedExamination.selectedClass.selectedSection.selectedTestList"
+                        (ngModelChange) = "detectChanges()"
                         multiple
                     >
                         <mat-option *ngFor="let test of selectedExamination.selectedClass.selectedSection.testList" [value]="test">
@@ -87,7 +88,7 @@
                         <th>S No.</th>
                         <th>Student</th>
                         <th>Roll No.</th>
-                        <ng-container *ngFor="let test of getSavedSelectedTestList()">
+                        <ng-container *ngFor="let test of this.selectedExamination.selectedClass.selectedSection.selectedTestList">
                             <th>
                                 <span>{{ test.name }} (Max: {{ test.maximumMarks }})</span>
                             </th>

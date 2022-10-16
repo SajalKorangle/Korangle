@@ -439,7 +439,6 @@ export class UpdateMarksServiceAdapter {
                 this.sortTestDataBySubjectName();
                 this.sortStudentListByRollNumber();
                 this.sortTestDataBySubjectName();
-                this.vm.saveSelectedTestList();
                 this.vm.isLoading = false;
                 this.vm.showTestDetails = true;
             }).catch((error) => {
@@ -450,9 +449,11 @@ export class UpdateMarksServiceAdapter {
 
     sortStudentListByRollNumber(): void {
         this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.studentList.sort((a, b) => {
-            return a.rollNumber - b.rollNumber;
-        }
-        );
+            if (a.rollNumber && b.rollNumber) {
+                return a.rollNumber.toString() < b.rollNumber.toString() ? -1 : 1;
+            }
+            return b.rollNumber ? -1 : 1;
+        });
     }
 
     sortselectedTestListBySubjectName(): void {
