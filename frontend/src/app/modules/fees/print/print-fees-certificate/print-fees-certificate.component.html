@@ -93,7 +93,7 @@
                 >. The parent has paid Rs.
                 <b
                     ><i>{{ getTotalFeesPaid() }}</i></b
-                >/- towards fees from {{ selectedSession.startDate | date: 'dd/MM/yyyy' }} to {{ getCurrentDate() | date: 'dd/MM/yyyy' }},
+                >/- towards fees from {{ selectedSession.startDate | date: 'dd/MM/yyyy' }} to {{ selectedSession.endDate | date: 'dd/MM/yyyy' }},
                 as per the following details :-
             </ng-container>
 
@@ -106,7 +106,7 @@
                 <b
                     ><i>{{ getTotalFeesPaid() }}</i></b
                 >/- towards fees for his wards from {{ selectedSession.startDate | date: 'dd/MM/yyyy' }} to
-                {{ getCurrentDate() | date: 'dd/MM/yyyy' }}
+                {{ selectedSession.endDate | date: 'dd/MM/yyyy' }}
                 as per the following details :-
             </ng-container>
 
