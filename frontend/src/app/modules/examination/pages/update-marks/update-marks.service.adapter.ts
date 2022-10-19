@@ -272,10 +272,10 @@ export class UpdateMarksServiceAdapter {
                                     let testDetails = this.getTestDetails(examination, classs, section, subject);
 
                                     if (testDetails.length > 0) {
-                                        for(let i = 0; i < testDetails.length; i++) {
+                                        for (let i = 0; i < testDetails.length; i++) {
                                             let test = testDetails[i];
                                             test['name'] = subject.name;
-                                            if(test.testType) {
+                                            if (test.testType) {
                                                 test['name'] += ' - ' + test.testType;
                                             }
                                             test['isSelected'] = false;
@@ -381,7 +381,7 @@ export class UpdateMarksServiceAdapter {
 
         let selectedSubjectIDList = [];
         this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.forEach((test) => {
-            if(selectedSubjectIDList.indexOf(test.subject.id) === -1) {
+            if (selectedSubjectIDList.indexOf(test.subject.id) === -1) {
                 selectedSubjectIDList.push(test.subject.id);
             }
         });
@@ -395,17 +395,17 @@ export class UpdateMarksServiceAdapter {
         this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, query).then(
             (response) => {
                 let studentTestList = this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList;
-                
+
                 // clean the result
                 let cleanedResponse = [];
                 response.forEach((item) => {
                     studentTestList.forEach((test) => {
-                        if(test.subject.id === item.parentSubject){
-                            if( (test.testType == null && item.testType == null) || (test.testType === item.testType)) {
+                        if (test.subject.id === item.parentSubject ){
+                            if ( (test.testType == null && item.testType == null) || (test.testType === item.testType)) {
                                 cleanedResponse.push(item);
                             }
                         }
-                        
+
                     });
                 });
                 // end of clean the result
@@ -415,10 +415,10 @@ export class UpdateMarksServiceAdapter {
                 let subjectMap = new Map<number, string>();
                 let subjectMaxMarksMap = new Map<string, number>();
                 this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.forEach((test) => {
-                    if(!subjectMap.has(test.subject.id)) {
+                    if (!subjectMap.has(test.subject.id)) {
                         subjectMap.set(test.subject.id, test.name);
                     }
-                    if(!subjectMaxMarksMap.has(test.name)) {
+                    if (!subjectMaxMarksMap.has(test.name)) {
                         subjectMaxMarksMap.set(test.name, test.maximumMarks);
                     }
                 }
@@ -488,7 +488,8 @@ export class UpdateMarksServiceAdapter {
     populateStudentTestList(response: any): void {
         this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList['studentList'] = [];
         this.student_mini_profile_list.filter(
-            (item) => item.classDbId === this.vm.selectedExamination.selectedClass.id && item.sectionDbId === this.vm.selectedExamination.selectedClass.selectedSection.id
+            (item) => item.classDbId === this.vm.selectedExamination.selectedClass.id &&
+            item.sectionDbId === this.vm.selectedExamination.selectedClass.selectedSection.id
         ).sort((a, b) => {
             if (a.rollNumber && b.rollNumber) {
                 return a.rollNumber.toString() < b.rollNumber.toString() ? -1 : 1;
@@ -498,7 +499,7 @@ export class UpdateMarksServiceAdapter {
             let studentData = [];
             response.forEach((item) => {
                 if (item.parentStudent === student.dbId) {
-                    if(item.marksObtained === null) {
+                    if (item.marksObtained === null) {
                         item.marksObtained = 0;
                     } else {
                         item.marksObtained = Number(item.marksObtained.toString());
@@ -506,9 +507,9 @@ export class UpdateMarksServiceAdapter {
                     studentData.push(item);
                 }
             });
-            if(studentData.length < this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.length) {
+            if (studentData.length < this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.length) {
                 this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.forEach((test) => {
-                    if(studentData.filter((item) => item.parentSubject === test.subject.id && item.testType === test.testType).length === 0) {
+                    if (studentData.filter((item) => item.parentSubject === test.subject.id && item.testType === test.testType).length === 0) {
                         studentData.push({
                             id: null,
                             parentStudent: student.dbId,

@@ -28,7 +28,7 @@ export class UpdateMarksComponent implements OnInit {
 
     selectedExamination: any;
     examinationClassSectionSubjectList: any;
-    selectedTestsList:any = [];
+    selectedTestsList: any = [];
     student_mini_profile_list: any = [];
     inPagePermissionMappedByKey: { [key: string]: valueType; };
 
