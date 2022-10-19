@@ -400,7 +400,7 @@ export class UpdateMarksServiceAdapter {
                 let cleanedResponse = [];
                 response.forEach((item) => {
                     studentTestList.forEach((test) => {
-                        if (test.subject.id === item.parentSubject ){
+                        if (test.subject.id === item.parentSubject) {
                             if ( (test.testType == null && item.testType == null) || (test.testType === item.testType)) {
                                 cleanedResponse.push(item);
                             }
