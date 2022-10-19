@@ -471,9 +471,6 @@ export class CreateTestServiceAdapter {
                 });
             });
         });
-        console.log(createTest);
-        console.log(updateTest);
-        console.log(deleteTest);
         if (createTest.length) {
             promises.push(this.vm.examinationService.createObjectList(this.vm.examinationService.test_second, createTest));
         }
