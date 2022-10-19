@@ -235,6 +235,7 @@ export class RecordAttendanceServiceAdapter {
                 }
             });
         });
+        this.vm.changeSortType();
         this.vm.messageService.fetchGCMDevicesNew(this.vm.studentAttendanceStatusList);
     }
 
