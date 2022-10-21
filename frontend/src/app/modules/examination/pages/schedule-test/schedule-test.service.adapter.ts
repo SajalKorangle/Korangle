@@ -240,7 +240,6 @@ export class ScheduleTestServiceAdapter {
             this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_test_data_list),
         ]).then(
             (value) => {
-                console.dir(value, { depth: null });
                 //test list obtained...
 
                 this.vm.newTestList = [];
