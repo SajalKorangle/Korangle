@@ -75,6 +75,10 @@ input {
     /* Chrome and Safari */
 }
 
+.invalidMarks {
+    background-color: red;
+}
+
 @keyframes colorchange {
     0% {
         background: lightpink;
