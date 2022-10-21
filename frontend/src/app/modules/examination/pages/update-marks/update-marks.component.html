@@ -52,17 +52,13 @@
 
                 <mat-form-field style="margin-top: 23px; margin-left: 20px">
                     <mat-select
-                        placeholder="Select Subject"
-                        id="selectSubject"
-                        [ngModel]="selectedExamination.selectedClass.selectedSection.selectedSubject"
-                        (ngModelChange)="selectedExamination.selectedClass.selectedSection.selectedSubject = $event; detectChanges()"
+                        placeholder="Select Test"
+                        [(ngModel)]="selectedExamination.selectedClass.selectedSection.selectedTestList"
+                        (ngModelChange) = "detectChanges()"
+                        multiple
                     >
-                        <mat-option
-                            *ngFor="let subject of selectedExamination.selectedClass.selectedSection.subjectList"
-                            testId="subject.id"
-                            [value]="subject"
-                        >
-                            {{ subject.name }}
+                        <mat-option *ngFor="let test of selectedExamination.selectedClass.selectedSection.testList" [value]="test">
+                            {{ test.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -72,6 +68,7 @@
                     style="margin-left: 20px"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                     (click)="serviceAdapter.getStudentTestDetails()"
+                    [disabled]="selectedExamination.selectedClass.selectedSection.selectedTestList.length <= 0"
                 >
                     GET
                 </button>
@@ -92,10 +89,9 @@
                         <th>S No.</th>
                         <th>Student</th>
                         <th>Roll No.</th>
-                        <ng-container *ngFor="let test of selectedExamination.selectedClass.selectedSection.selectedSubject.testDetails">
+                        <ng-container *ngFor="let test of this.selectedExamination.selectedClass.selectedSection.selectedTestList">
                             <th>
-                                <span *ngIf="test.testType === null">Max. Marks {{ test.maximumMarks }}</span>
-                                <span *ngIf="test.testType !== null">{{ test.testType }} Out of {{ test.maximumMarks }}</span>
+                                <span>{{ test.name }} (Max: {{ test.maximumMarks }})</span>
                             </th>
                             <th style="padding-left:4px;padding-right:4px;">Absent</th>
                         </ng-container>
@@ -105,7 +101,7 @@
                     <tr
                         *ngFor="
                             let student of getFilteredStudentList(
-                                selectedExamination.selectedClass.selectedSection.selectedSubject.studentList
+                                selectedExamination.selectedClass.selectedSection.selectedTestList.studentList
                             );
                             let i = index
                         "
