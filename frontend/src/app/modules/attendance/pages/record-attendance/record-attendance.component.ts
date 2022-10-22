@@ -61,11 +61,11 @@ export class RecordAttendanceComponent implements OnInit {
     SORT_BY_NAME_INC: string = 'sortAscendingByName';
     SORT_BY_NAME_DEC: string = 'sortDescendingByName';
 
-    sortingOptions = [{name: this.SORT_BY_ROLL_INC, value: 'Roll No. ( Increasing )'}, 
-        {name: this.SORT_BY_ROLL_DEC, value: 'Roll No. ( Decreasing )'}, 
-        {name: this.SORT_BY_NAME_INC, value: 'Name ( A-Z )'}, 
+    sortingOptions = [{name: this.SORT_BY_ROLL_INC, value: 'Roll No. ( Increasing )'},
+        {name: this.SORT_BY_ROLL_DEC, value: 'Roll No. ( Decreasing )'},
+        {name: this.SORT_BY_NAME_INC, value: 'Name ( A-Z )'},
         {name: this.SORT_BY_NAME_DEC, value: 'Name ( Z-A )'}];
-    
+
     selectedSort = this.sortingOptions[0];
     // ---------- Ends : variables for sorting studentAttendanceStatusList ---------
 
@@ -109,20 +109,22 @@ export class RecordAttendanceComponent implements OnInit {
     // ----------------- Starts : Triggers for sorting ---------------
 
     triggerSortAscendingByRoll(): void {
-        this.studentAttendanceStatusList.sort((a, b) => (a.rollNumber ||a.name.toUpperCase()).localeCompare((b.rollNumber || b.name.toUpperCase()), 'en', { numeric: true }));
-    } 
+        this.studentAttendanceStatusList.sort((a, b) =>
+            (a.rollNumber || a.name.toUpperCase()).localeCompare((b.rollNumber || b.name.toUpperCase()), 'en', { numeric: true }));
+    }
 
     triggerSortDescendingByRoll(): void {
-        this.studentAttendanceStatusList.sort((a, b) => (b.rollNumber ||b.name.toUpperCase()).localeCompare((a.rollNumber || a.name.toUpperCase()), 'en', { numeric: true }));
+        this.studentAttendanceStatusList.sort((a, b) =>
+            (b.rollNumber || b.name.toUpperCase()).localeCompare((a.rollNumber || a.name.toUpperCase()), 'en', { numeric: true }));
     }
 
     triggerSortAscendingByName(): void {
-        this.studentAttendanceStatusList.sort((a, b) => 
+        this.studentAttendanceStatusList.sort((a, b) =>
             (a.name.toUpperCase() < b.name.toUpperCase() ? -1 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : 0));
     }
 
     triggerSortDescendingByName(): void {
-        this.studentAttendanceStatusList.sort((a, b) => 
+        this.studentAttendanceStatusList.sort((a, b) =>
             (a.name.toUpperCase() > b.name.toUpperCase() ? -1 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : 0));
     }
 
