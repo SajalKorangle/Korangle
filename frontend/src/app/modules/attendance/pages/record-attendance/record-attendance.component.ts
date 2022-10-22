@@ -55,6 +55,21 @@ export class RecordAttendanceComponent implements OnInit {
 
     attendanceStatusList = ATTENDANCE_STATUS_LIST;
 
+    // ---------- Start : variables for sorting studentAttendanceStatusList ---------
+    SORT_BY_ROLL_INC: string = 'sortAscendingByRoll';
+    SORT_BY_ROLL_DEC: string = 'sortDescendingByRoll';
+    SORT_BY_NAME_INC: string = 'sortAscendingByName';
+    SORT_BY_NAME_DEC: string = 'sortDescendingByName';
+
+    sortingOptions = [{name: this.SORT_BY_ROLL_INC, value: 'Roll No. ( Increasing )'},
+        {name: this.SORT_BY_ROLL_DEC, value: 'Roll No. ( Decreasing )'},
+        {name: this.SORT_BY_NAME_INC, value: 'Name ( A-Z )'},
+        {name: this.SORT_BY_NAME_DEC, value: 'Name ( Z-A )'}];
+
+    selectedSort = this.sortingOptions[0];
+    // ---------- Ends : variables for sorting studentAttendanceStatusList ---------
+
+
     mobileNumberList = [];
 
     studentList: any;
@@ -89,7 +104,44 @@ export class RecordAttendanceComponent implements OnInit {
         public classService: ClassService,
         public employeeService: EmployeeService,
         public tcService: TCService
-    ) {}
+    ) { }
+
+    // ----------------- Starts : Triggers for sorting ---------------
+
+    triggerSortAscendingByRoll(): void {
+        this.studentAttendanceStatusList.sort((a, b) =>
+            (a.rollNumber || a.name.toUpperCase()).localeCompare((b.rollNumber || b.name.toUpperCase()), 'en', { numeric: true }));
+    }
+
+    triggerSortDescendingByRoll(): void {
+        this.studentAttendanceStatusList.sort((a, b) =>
+            (b.rollNumber || b.name.toUpperCase()).localeCompare((a.rollNumber || a.name.toUpperCase()), 'en', { numeric: true }));
+    }
+
+    triggerSortAscendingByName(): void {
+        this.studentAttendanceStatusList.sort((a, b) =>
+            (a.name.toUpperCase() < b.name.toUpperCase() ? -1 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : 0));
+    }
+
+    triggerSortDescendingByName(): void {
+        this.studentAttendanceStatusList.sort((a, b) =>
+            (a.name.toUpperCase() > b.name.toUpperCase() ? -1 : a.name.toUpperCase() > b.name.toUpperCase() ? 1 : 0));
+    }
+
+    changeSortType(): void {
+        if (this.selectedSort.name === this.SORT_BY_ROLL_INC) {
+            this.triggerSortAscendingByRoll();
+        } else if (this.selectedSort.name === this.SORT_BY_ROLL_DEC) {
+            this.triggerSortDescendingByRoll();
+        } else if (this.selectedSort.name === this.SORT_BY_NAME_INC) {
+            this.triggerSortAscendingByName();
+        } else if (this.selectedSort.name === this.SORT_BY_NAME_DEC) {
+            this.triggerSortDescendingByName();
+        }
+    }
+
+    // ----------------- Ends : Triggers for sorting ---------------
+
 
     changeSelectedSectionToFirst(): void {
         this.selectedSection = this.selectedClass.sectionList[0];
