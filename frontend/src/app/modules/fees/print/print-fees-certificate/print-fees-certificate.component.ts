@@ -50,6 +50,11 @@ export class PrintFeesCertificateComponent implements OnInit {
         return new Date();
     }
 
+    convertToDate(date: any) {
+        const [year, month, day] = date.split("-");
+        return new Date(year, month - 1, day);
+      }
+
     getClassAndSectionName(student: any): any {
         let classs = this.classList.find((classs) => {
             return (
