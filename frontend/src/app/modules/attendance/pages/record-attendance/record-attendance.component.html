@@ -59,13 +59,40 @@
     </div>
 
     <ng-container *ngIf="!isLoading && showStudentList && studentAttendanceStatusList">
-        <button type="submit" style="padding: 3px 8px" class="btn" (click)="declareAllPresent()">All Present</button>
+        <div style="width: 100%; float: left;">
 
+            <div style="width: 50%;">
+                <button type="submit" style="padding: 3px 8px;float: left;" class="btn" (click)="declareAllPresent()">All Present</button>
+            </div>
+
+            <!-- Starts : sorting option dropdown to sort by name or roll number -->
+            <div style="margin-right: auto;margin-top: 12px;float: right;">
+                Sort By :
+                <select
+                    [ngModel]="selectedSort"
+                    (ngModelChange)="selectedSort = $event; changeSortType(); "
+                    style="margin-right: 15px; margin-bottom: 10px"
+                >
+                    <option *ngFor="let sort of sortingOptions" [ngValue]="sort">
+                        {{ sort.value }}
+                    </option>
+                </select>
+            </div>
+            <!-- Ends : sorting option dropdown to sort by name or roll number -->
+            
+        </div>
+        <br class="visible-sm visible-xs" />
         <table class="table table-hover">
             <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                 <tr>
                     <th>S No.</th>
-                    <th>Student</th>
+                    <th style="margin: 0 left;">
+                        <div style="float: left;">Student &nbsp;</div>
+                    </th>
+                    <th style="margin: 0 left;">
+                        <div style="float: left;">Roll No. &nbsp;</div>
+                    </th>
+
                     <th *ngIf="by === 'month'">Abs./Total</th>
                     <ng-container *ngFor="let date of getDateList()">
                         <th style="text-align: center" *ngIf="by === 'month'">{{ date.getDate() }}</th>
@@ -81,6 +108,7 @@
                             {{ student.name }}
                             <ng-container *ngIf="student.scholarNumber"> ({{ student.scholarNumber }}) </ng-container>
                         </td>
+                        <td>{{ student.rollNumber }}</td>
                         <td *ngIf="by === 'month'">
                             {{ getStudentRecord(student) }}
                         </td>
