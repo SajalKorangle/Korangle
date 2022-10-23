@@ -52,17 +52,13 @@
 
                 <mat-form-field style="margin-top: 23px; margin-left: 20px">
                     <mat-select
-                        placeholder="Select Subject"
-                        id="selectSubject"
-                        [ngModel]="selectedExamination.selectedClass.selectedSection.selectedSubject"
-                        (ngModelChange)="selectedExamination.selectedClass.selectedSection.selectedSubject = $event; detectChanges()"
+                        placeholder="Select Test"
+                        [(ngModel)]="selectedExamination.selectedClass.selectedSection.selectedTestList"
+                        (ngModelChange) = "detectChanges()"
+                        multiple
                     >
-                        <mat-option
-                            *ngFor="let subject of selectedExamination.selectedClass.selectedSection.subjectList"
-                            testId="subject.id"
-                            [value]="subject"
-                        >
-                            {{ subject.name }}
+                        <mat-option *ngFor="let test of selectedExamination.selectedClass.selectedSection.testList" [value]="test">
+                            {{ test.name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -72,6 +68,7 @@
                     style="margin-left: 20px"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                     (click)="serviceAdapter.getStudentTestDetails()"
+                    [disabled]="selectedExamination.selectedClass.selectedSection.selectedTestList.length <= 0"
                 >
                     GET
                 </button>
@@ -84,17 +81,16 @@
             <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px">
                 <div class="col-md-12"></div>
             </div>
-            <div class="responsive-table-wrapper">
+            <div style="height: 75vh;overflow: scroll;">
             <table class="table table-hover">
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                     <tr>
                         <th>S No.</th>
                         <th>Student</th>
                         <th>Roll No.</th>
-                        <ng-container *ngFor="let test of selectedExamination.selectedClass.selectedSection.selectedSubject.testDetails">
+                        <ng-container *ngFor="let test of this.selectedExamination.selectedClass.selectedSection.selectedTestList">
                             <th>
-                                <span *ngIf="test.testType === null">Max. Marks {{ test.maximumMarks }}</span>
-                                <span *ngIf="test.testType !== null">{{ test.testType }} Out of {{ test.maximumMarks }}</span>
+                                <span>{{ test.name }} (Max: {{ test.maximumMarks }})</span>
                             </th>
                             <th style="padding-left:4px;padding-right:4px;">Absent</th>
                         </ng-container>
@@ -104,19 +100,22 @@
                     <tr
                         *ngFor="
                             let student of getFilteredStudentList(
-                                selectedExamination.selectedClass.selectedSection.selectedSubject.studentList
+                                selectedExamination.selectedClass.selectedSection.selectedTestList.studentList
                             );
                             let i = index
                         "
                     >
                         <td>{{ i + 1 }}.</td>
-                        <td>{{ student.name }}</td>
-                        <td>{{ student.rollNumber }}</td>
-                        <ng-container *ngFor="let test of student.testDetails">
-                            <td>
-                                <input type="number" [disabled]="test.absent" [(ngModel)]="test.marksObtained" (change)="handleUpdate(test,$event)" placeholder="Type marks here" />
+                        <td style="min-width: 100px;">{{ student.name }}</td>
+                        <td>
+                            <span *ngIf="student.rollNumber != null">{{ student.rollNumber }}</span>
+                            <span *ngIf="student.rollNumber == null"> N/A </span>
+                        </td>
+                        <ng-container *ngFor="let test of student.testData">
+                            <td style="min-width: 100px;">
+                                <input [ngClass]="{'invalidMarks': test.marksObtained > test.maximumMarks}" type="number" [disabled]="test.absent" [(ngModel)]="test.marksObtained" (change)="handleUpdate(test,$event)" placeholder="Type marks here" />
                             </td>
-                            <td style="padding-left:4px;padding-right:4px;">
+                            <td style="min-width: 100px; padding-left:4px;padding-right:4px;">
                                 <mat-checkbox style="margin-left: 14px" [(ngModel)]="test.absent" (ngModelChange)="handleUpdate(test)"></mat-checkbox>
                             </td>
                         </ng-container>

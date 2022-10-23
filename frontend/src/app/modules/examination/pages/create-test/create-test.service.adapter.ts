@@ -308,73 +308,6 @@ export class CreateTestServiceAdapter {
         });
     }
 
-    //Create Test New implemented to created test with provided class and section parameter for specific subject and test type
-    createTestNew(parentClass: any, parentDivision: any): void {
-        if (this.vm.selectedSubject === null) {
-            alert('Subject should be selected');
-            return;
-        }
-
-        if (this.vm.selectedTestType === 0) {
-            this.vm.selectedTestType = null;
-        }
-
-        if (!this.isOnlyGrade(this.vm.selectedSubject) && (!this.vm.selectedMaximumMarks || this.vm.selectedMaximumMarks < 1)) {
-            alert('Invalid Maximum Marks');
-            return;
-        }
-
-        if (this.isOnlyGrade(this.vm.selectedSubject)) {
-            this.vm.selectedMaximumMarks = 100;
-        }
-
-        let data = {
-            parentExamination: this.vm.selectedExamination,
-            parentClass: parentClass,
-            parentDivision: parentDivision,
-            parentSubject: this.vm.selectedSubject,
-            startTime: '2019-07-01T11:30:00+05:30',
-            endTime: '2019-07-01T13:30:00+05:30',
-            testType: this.vm.selectedTestType,
-            maximumMarks: this.vm.selectedMaximumMarks,
-        };
-
-        //Logic to check for test already or not...
-
-        let testAlreadyAdded = false;
-
-        this.vm.newTestList.forEach((test) => {
-            if (test.subjectId === data.parentSubject && test.testType === data.testType) {
-                test.classList.forEach((cll) => {
-                    if (cll.classId === data.parentClass) {
-                        cll.sectionList.forEach((secc) => {
-                            if (secc.sectionId === data.parentDivision) {
-                                testAlreadyAdded = true;
-                            }
-                        });
-                    }
-                });
-            }
-        });
-
-        if (testAlreadyAdded) {
-            alert('Test already exists!!');
-            return;
-        }
-
-        this.vm.isLoading = true;
-
-        Promise.all([this.vm.examinationService.createObject(this.vm.examinationService.test_second, data)]).then(
-            (value) => {
-                this.addTestToNewTestList(value[0]);
-                this.vm.isLoading = false;
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
-    }
-
     getDateTime(selectedDate: any, selectedTime: any): any {
         return selectedDate + 'T' + selectedTime + ':00+05:30';
     }
@@ -500,6 +433,7 @@ export class CreateTestServiceAdapter {
         let updateTest = [];
         let deleteTest = [];
         let promises = [];
+        var date = new Date().toJSON().slice(0, 10);
         //Update the test list if any value changed in any of the test from test list
         this.vm.newTestList.forEach((test) => {
             test.classList.forEach((cl) => {
@@ -510,8 +444,8 @@ export class CreateTestServiceAdapter {
                         parentClass: cl.classId,
                         parentDivision: sec.sectionId,
                         parentSubject: test.subjectId,
-                        startTime: '2019-07-01T10:30:00+05:30',
-                        endTime: '2019-07-01T13:30:00+05:30',
+                        startTime: date + 'T10:30:00+05:30',
+                        endTime: date + 'T13:30:00+05:30',
                         testType: test.newTestType,
                         maximumMarks: test.newMaximumMarks,
                     };
@@ -537,9 +471,6 @@ export class CreateTestServiceAdapter {
                 });
             });
         });
-        console.log(createTest);
-        console.log(updateTest);
-        console.log(deleteTest);
         if (createTest.length) {
             promises.push(this.vm.examinationService.createObjectList(this.vm.examinationService.test_second, createTest));
         }
