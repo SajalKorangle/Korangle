@@ -122,8 +122,6 @@ export class CreateExaminationServiceAdapter {
 
         examination.updating = true;
 
-        this.vm.isLoading = true;
-
         if (examination.newStatus == 'None') {
             examination.newStatus = null;
         }
@@ -144,11 +142,9 @@ export class CreateExaminationServiceAdapter {
                 examination.status = value.status;
                 examination.marksUpdationStatus = value.marksUpdationStatus;
                 examination.updating = false;
-                this.vm.isLoading = false;
             },
             (error) => {
                 examination.updating = false;
-                this.vm.isLoading = false;
             }
         );
     }
