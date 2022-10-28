@@ -57,7 +57,6 @@ export class ViewDefaultersServiceAdapter {
                 });
             }
 
-
             let result = await this.vm.genericService.createObject({
                 fees_third_app: 'ViewDefaulterPermissions'
             }, {
@@ -91,7 +90,7 @@ export class ViewDefaultersServiceAdapter {
         this.vm.attendancePermissionList = value[2];
 
         if (!this.vm.hasAdminPermission() && this.vm.attendancePermissionList.length === 0) {
-            alert("You do not have permission to view defaulters. Please contact your administrator.");
+            alert("You do not have permission to view the list of any class. Either get admin permission from Employee -> Assign Task page for all classes or get permission of specific classes from Class -> Assign Class page.");
             this.vm.isLoading = false;
             return;
         }
