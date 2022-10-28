@@ -18,9 +18,11 @@
 </ng-template>
 <!-- END: path display at top of modal  -->
 
+<!-- Starts: Employee Name -->
 <ng-container>
     <h4>Employee: {{employee.name}}</h4>
 </ng-container>
+<!-- Ends: Employee Name -->
 
 <hr style="background-color: black;" />
 
@@ -41,8 +43,6 @@
     <!-- END: userType Selection  -->
     
     <!-- START: Field View Access  -->
-    
-    
     <div style="margin-left: 1rem; display: grid; grid-template-columns: auto auto auto auto;">
         <mat-checkbox [(ngModel)]="employeePermissionList.viewStudent" style="margin-right: 1rem;">Student List</mat-checkbox>
         <mat-checkbox [(ngModel)]="employeePermissionList.viewSummary" style="margin-right: 1rem;">Summary</mat-checkbox>

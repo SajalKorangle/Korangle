@@ -135,8 +135,7 @@ export class ViewDefaultersServiceAdapter {
                 parentStudentParameter__parentSchool: this.vm.user.activeSchool.dbId,
                 parentStudentParameter__parameterType: 'FILTER',
             }),
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, feeTypeList),     // 3
-            
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, feeTypeList),     // 3    
         ]).then((val) => {
             let sessionList = val[0];
             this.vm.sessionList = sessionList;

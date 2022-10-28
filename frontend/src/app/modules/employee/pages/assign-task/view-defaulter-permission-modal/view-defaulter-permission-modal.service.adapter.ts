@@ -12,8 +12,10 @@ export class ViewDefaulterPermissionModalService {
     async initializeData(){
 
         this.vm.isLoading = true;
+
+        // Starts :- Fetching In Page Permissions
         [
-            this.vm.employeePermissionList, // 0
+            this.vm.employeeInPagePermissions, // 0
             this.vm.parentEmployeePermission // 1
         ] = await Promise.all([
             this.vm.genericService.getObject({ fees_third_app: 'ViewDefaulterPermissions' }, {
@@ -28,11 +30,14 @@ export class ViewDefaulterPermissionModalService {
                 }
             })          // 1
         ]);
+        // Ends :- Fetching In Page Permissions
 
-        // Creating a permission record if not present till now.
-        if(!this.vm.employeePermissionList){
+        /* We are creating a record so that the default values always come from one place. */
+        // Starts :- Creating a permission record if not present till now.
+        if(!this.vm.employeeInPagePermissions){
             await this.createNewPermissionRecord();
         }
+        // Ends :- Creating a permission record if not present till now.
         
         this.vm.isLoading = false;
     }
@@ -45,13 +50,13 @@ export class ViewDefaulterPermissionModalService {
         }, {
             parentEmployeePermission: this.vm.parentEmployeePermission.id
         });
-        this.vm.employeePermissionList = result;
+        this.vm.employeeInPagePermissions = result;
         this.vm.isLoading = false;
     }
 
     async apply(){
         this.vm.isLoading = true;
-        let result = await this.vm.genericService.updateObject({fees_third_app: 'ViewDefaulterPermissions'}, this.vm.employeePermissionList);
+        let result = await this.vm.genericService.updateObject({fees_third_app: 'ViewDefaulterPermissions'}, this.vm.employeeInPagePermissions);
         this.vm.isLoading = false;
         this.vm.dialogRef.close();
     }
