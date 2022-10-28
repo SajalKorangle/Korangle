@@ -16,7 +16,7 @@ export class ViewDefaulterPermissionModalComponent implements OnInit {
   employee;
   user;
 
-  employeePermissionList: {
+  employeeInPagePermissions: {
     id?: number,
     parentEmployeePermission: number,
     userType: string,
