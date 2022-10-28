@@ -43,7 +43,6 @@ export class ViewDefaultersServiceAdapter {
         });
 
         if(!this.vm.userNotifyDefaulterPermissionList){
-            console.log("Creating new record...");
             let parentEmployeePermission = await this.vm.genericService.getObject({ employee_app: 'EmployeePermission' }, {
                 filter: {
                     parentEmployee: this.vm.user.activeSchool.employeeId,
@@ -52,8 +51,6 @@ export class ViewDefaultersServiceAdapter {
             });
 
             if(!parentEmployeePermission) {
-
-                console.log("ParentEMployeePermission", parentEmployeePermission)
                 parentEmployeePermission = await this.vm.genericService.createObject({employee_app: 'EmployeePermission'}, {
                     parentTask: 66,
                     parentEmployee: this.vm.user.activeSchool.employeeId,
@@ -180,48 +177,6 @@ export class ViewDefaultersServiceAdapter {
                 service_list.push(this.vm.classService.getObjectList(this.vm.classService.division, {})); // 1
                 service_list.push(this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt)); // 2
 
-                /*let loopVariable = 0;
-                while (loopVariable < iterationCount) {
-                    const student_list = {
-                        id__in: tempStudentIdList
-                            .slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1))
-                            .join(),
-                        fields__korangle: 'id,name,fathersName,mobileNumber,secondMobileNumber,address,scholarNumber',
-                    };
-
-                    const student_fee_list = {
-                        parentSession__or: this.vm.user.activeSchool.currentSessionDbId,
-                        cleared: 'false__boolean',
-                        parentStudent__in: tempStudentIdList
-                            .slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1))
-                            .join(),
-                    };
-
-                    const sub_fee_receipt_list = {
-                        parentStudentFee__parentSession__or: this.vm.user.activeSchool.currentSessionDbId,
-                        parentStudentFee__cleared: 'false__boolean',
-                        parentStudentFee__parentStudent__in: tempStudentIdList
-                            .slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1))
-                            .join(),
-                        parentFeeReceipt__cancelled: 'false__boolean',
-                    };
-
-                    const sub_discount_list = {
-                        parentStudentFee__parentSession__or: this.vm.user.activeSchool.currentSessionDbId,
-                        parentStudentFee__cleared: 'false__boolean',
-                        parentStudentFee__parentStudent__in: tempStudentIdList
-                            .slice(this.vm.STUDENT_LIMITER * loopVariable, this.vm.STUDENT_LIMITER * (loopVariable + 1))
-                            .join(),
-                        parentDiscount__cancelled: 'false__boolean',
-                    };
-                    service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, student_list));
-                    service_list.push(this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list));
-                    service_list.push(this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list));
-                    service_list.push(this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list));
-
-                    loopVariable = loopVariable + 1;
-                }*/
-
                 const student_list = {
                     id__in: tempStudentIdList,
                     fields__korangle: 'id,name,fathersName,mobileNumber,secondMobileNumber,address,scholarNumber',
@@ -265,17 +220,6 @@ export class ViewDefaultersServiceAdapter {
                         this.vm.studentFeeList = [];
                         this.vm.subFeeReceiptList = [];
                         this.vm.subDiscountList = [];
-
-                        /*let remaining_result = value.slice(3);
-
-                        let loopVariable = 0;
-                        while (loopVariable < iterationCount) {
-                            this.vm.studentList = this.vm.studentList.concat(remaining_result[loopVariable * 4]);
-                            this.vm.studentFeeList = this.vm.studentFeeList.concat(remaining_result[loopVariable * 4 + 1]);
-                            this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(remaining_result[loopVariable * 4 + 2]);
-                            this.vm.subDiscountList = this.vm.subDiscountList.concat(remaining_result[loopVariable * 4 + 3]);
-                            loopVariable = loopVariable + 1;
-                        }*/
 
                         this.vm.studentList = this.vm.studentList.concat(value[3]);
                         this.vm.studentFeeList = this.vm.studentFeeList.concat(value[4]);
