@@ -12,7 +12,10 @@ export class ViewDefaulterPermissionModalService {
     async initializeData(){
 
         this.vm.isLoading = true;
-        let value = await Promise.all([
+        [
+            this.vm.employeePermissionList, // 0
+            this.vm.parentEmployeePermission // 1
+        ] = await Promise.all([
             this.vm.genericService.getObject({ fees_third_app: 'ViewDefaulterPermissions' }, {
                 filter: {
                     parentEmployeePermission__parentEmployee: this.vm.employee.id
@@ -26,14 +29,8 @@ export class ViewDefaulterPermissionModalService {
             })          // 1
         ]);
 
-        this.vm.employeePermissionList = value[0];
-        this.vm.parentEmployeePermission = value[1];
-        console.log(this.vm.employeePermissionList);
-        console.log(this.vm.parentEmployeePermission);
-
-
+        // Creating a permission record if not present till now.
         if(!this.vm.employeePermissionList){
-            // create a permission record
             await this.createNewPermissionRecord();
         }
         
@@ -42,7 +39,6 @@ export class ViewDefaulterPermissionModalService {
     
     
     async createNewPermissionRecord(){
-        console.log("Creating new record...");
         this.vm.isLoading = true;
         let result = await this.vm.genericService.createObject({
             fees_third_app: 'ViewDefaulterPermissions'
