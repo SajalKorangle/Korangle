@@ -34,14 +34,6 @@ export class ViewDefaultersServiceAdapter {
         this.vm.userInput.selectedSendUpdateType = this.vm.backendData.sendUpdateTypeList[0];
         this.vm.userNotifyDefaulterPermissionList = firstValue[4];
 
-        this.vm.userNotifyDefaulterPermissionList = await this.vm.genericService.getObject({
-            fees_third_app: 'ViewDefaulterPermissions'
-         }, {
-            filter: {
-                parentEmployeePermission__parentEmployee: this.vm.user.activeSchool.employeeId
-            }
-        });
-
         if(!this.vm.userNotifyDefaulterPermissionList){
             let parentEmployeePermission = await this.vm.genericService.getObject({ employee_app: 'EmployeePermission' }, {
                 filter: {
@@ -49,13 +41,6 @@ export class ViewDefaultersServiceAdapter {
                     parentTask: 66
                 }
             });
-
-            if(!parentEmployeePermission) {
-                parentEmployeePermission = await this.vm.genericService.createObject({employee_app: 'EmployeePermission'}, {
-                    parentTask: 66,
-                    parentEmployee: this.vm.user.activeSchool.employeeId,
-                });
-            }
 
             let result = await this.vm.genericService.createObject({
                 fees_third_app: 'ViewDefaulterPermissions'
@@ -162,8 +147,6 @@ export class ViewDefaultersServiceAdapter {
                 this.vm.dataForMapping['studentSectionList'] = valueList;
 
                 const tempStudentIdList = valueList.map((a) => a.parentStudent);
-
-                const iterationCount = Math.ceil(tempStudentIdList.length / this.vm.STUDENT_LIMITER);
 
                 const service_list = [];
 

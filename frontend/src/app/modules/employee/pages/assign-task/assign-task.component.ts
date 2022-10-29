@@ -93,13 +93,13 @@ export class AssignTaskComponent implements OnInit {
 
     openInPagePermissionDialog(module, task, employee) {
         // module = {id: 15, path: 'fees', ...}, task = {id: 66, path: 'view_defaulters', ...}
-        if(module.id === 15 && task.id === 66){
+        if(module.id === 15 && task.id === 66) { // For new implementation
             this.dialog.open(ViewDefaulterPermissionModalComponent, {
                 data: {
                     module, task, employee
                 }
             });
-        } else {
+        } else { // This is old implementation and is deprecated, use above (if) way to solve new issues.
             const existingPermission = this.hasPermission(employee, task);
             const openedDialog = this.dialog.open(InPagePermissionDialogComponent, {
                 data: {
