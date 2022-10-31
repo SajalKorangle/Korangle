@@ -429,14 +429,17 @@ export class UpdateMarksServiceAdapter {
                     student.testData.forEach((testDataSingle) => {
                         testDataSingle['subjectName'] = subjectMap.get(testDataSingle.parentSubject);
                         let subjectFullName = testDataSingle['subjectName'];
-                        testDataSingle['maximumMarks'] = subjectMaxMarksMap.get(subjectFullName);
-                        testDataSingle['subjectFullName'] = subjectFullName;
+                        
+                        if(!testDataSingle['subjectFullName']){
+                            testDataSingle['subjectFullName'] = testDataSingle['testType']?subjectFullName + " - "+testDataSingle['testType']:subjectFullName;
+                        }
+                        testDataSingle['maximumMarks'] = subjectMaxMarksMap.get(testDataSingle['subjectFullName']);
                     }
+
                     );
                 }
                 );
 
-                this.sortTestDataBySubjectName();
                 this.sortStudentListByRollNumber();
                 this.sortTestDataBySubjectName();
                 this.vm.isLoading = false;
