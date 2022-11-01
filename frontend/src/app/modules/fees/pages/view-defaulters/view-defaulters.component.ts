@@ -146,7 +146,7 @@ export class ViewDefaultersComponent implements OnInit {
         viewSummary: boolean
     } = null;
 
-    attendancePermissionList: any;      // same as backend
+    attendancePermissionList = <any>[];      // same as backend
 
     constructor(
         public schoolService: SchoolService,
