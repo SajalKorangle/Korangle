@@ -429,9 +429,9 @@ export class UpdateMarksServiceAdapter {
                     student.testData.forEach((testDataSingle) => {
                         testDataSingle['subjectName'] = subjectMap.get(testDataSingle.parentSubject);
                         let subjectFullName = testDataSingle['subjectName'];
-                        
-                        if(!testDataSingle['subjectFullName']){
-                            testDataSingle['subjectFullName'] = testDataSingle['testType']?subjectFullName + " - "+testDataSingle['testType']:subjectFullName;
+
+                        if (!testDataSingle['subjectFullName']) {
+                            testDataSingle['subjectFullName'] = testDataSingle['testType'] ? subjectFullName + " - " + testDataSingle['testType'] : subjectFullName;
                         }
                         testDataSingle['maximumMarks'] = subjectMaxMarksMap.get(testDataSingle['subjectFullName']);
                     }
