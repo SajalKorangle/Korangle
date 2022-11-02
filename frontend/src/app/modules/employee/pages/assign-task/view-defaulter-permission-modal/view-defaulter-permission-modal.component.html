@@ -32,8 +32,8 @@
     <!-- START: userType Selection  -->
     <div>     
         <mat-form-field style="margin: 1rem;">
-            <mat-label> {{ employeePermissionList.userType }} </mat-label>
-            <mat-select [(ngModel)]="employeePermissionList.userType" placeholder="Select a Role" >
+            <mat-label> {{ employeeInPagePermissions.userType }} </mat-label>
+            <mat-select [(ngModel)]="employeeInPagePermissions.userType" placeholder="Select a Role" >
                 <mat-option *ngFor="let option of userTypeOptionList" [value]="option.value">
                     {{option.displayName}}
                 </mat-option>
@@ -44,8 +44,8 @@
     
     <!-- START: Field View Access  -->
     <div style="margin-left: 1rem; display: grid; grid-template-columns: auto auto auto auto;">
-        <mat-checkbox [(ngModel)]="employeePermissionList.viewStudent" style="margin-right: 1rem;">Student List</mat-checkbox>
-        <mat-checkbox [(ngModel)]="employeePermissionList.viewSummary" style="margin-right: 1rem;">Summary</mat-checkbox>
+        <mat-checkbox [(ngModel)]="employeeInPagePermissions.viewStudent" style="margin-right: 1rem;">Student List</mat-checkbox>
+        <mat-checkbox [(ngModel)]="employeeInPagePermissions.viewSummary" style="margin-right: 1rem;">Summary</mat-checkbox>
     </div>
     <!-- END: Field View Access -->
 

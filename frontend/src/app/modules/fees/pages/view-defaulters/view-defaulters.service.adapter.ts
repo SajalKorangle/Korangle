@@ -83,7 +83,7 @@ export class ViewDefaultersServiceAdapter {
         // Starts :- Should return from here if user doesn't have permission of a single class section
         if (!this.vm.hasAdminPermission()) {
 
-            this.vm.attendancePermissionList = this.vm.genericService.getObjectList({attendance_app: 'AttendancePermission'}, {
+            this.vm.attendancePermissionList = await this.vm.genericService.getObjectList({attendance_app: 'AttendancePermission'}, {
                 filter: {
                     parentEmployee: this.vm.user.activeSchool.employeeId,
                     parentSession: this.vm.user.activeSchool.currentSessionDbId,
@@ -103,26 +103,12 @@ export class ViewDefaultersServiceAdapter {
         const student_section_list_filter = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            parentStudent__parentTransferCertificate: 'null__korangle'
+            parentStudent__parentTransferCertificate: null
         };
 
         if(this.vm.attendancePermissionList.length > 0) { // This will happen only when admin permission is not present otherwise we wouldn't have fetched attendance permission list from backend.
-            /*student_section_list_filter['parentClass__in'] = Array.from(
-                new Set(
-                    this.vm.attendancePermissionList.map((item) => {
-                        return item.parentClass;
-                    })
-                )
-            ).join();
-            student_section_list_filter['parentDivision__in'] = Array.from(
-                new Set(
-                    this.vm.attendancePermissionList.map((item) => {
-                        return item.parentDivision;
-                    })
-                )
-            ).join();*/
             student_section_list_filter['__or__classSection'] = [];
-            this.vm.attendancePermissionList.array.forEach(attendancePermission => {
+            this.vm.attendancePermissionList.forEach(attendancePermission => {
                 student_section_list_filter['__or__classSection'].push({
                     parentClass: attendancePermission.parentClass,
                     parentDivision: attendancePermission.parentDivision
@@ -159,7 +145,7 @@ export class ViewDefaultersServiceAdapter {
         // Ends :- Populating Fee Type List, Student Custom Filter Parameters, Student Values of Student Custom Filter Parameters.
 
         // Starts :- Populating Student List and Student Fees Data
-        this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_filter).then(
+        this.vm.genericService.getObjectList({student_app: "StudentSection"}, {filter: student_section_list_filter}).then(
             (valueList) => {
                 this.vm.studentSectionList = valueList;
 
@@ -225,6 +211,9 @@ export class ViewDefaultersServiceAdapter {
                         this.vm.messageService.fetchGCMDevicesNew(this.vm.studentList);
                         this.vm.handleLoading();
                         this.vm.selectedFilterType = this.vm.filterTypeList[0];
+
+                        this.vm.selectAllClassSectionHandler();
+
                         this.vm.isLoading = false;
                     },
                     (error) => {

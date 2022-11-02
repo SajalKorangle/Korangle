@@ -76,7 +76,7 @@ export class ViewDefaultersComponent implements OnInit {
     subFeeReceiptList: any;
     subDiscountList: any;
     studentFeeList: any;
-    studentSectionList: any;
+    studentSectionList = <any>[];
     studentList: any;
     classList: any;
     sectionList: any;
@@ -178,7 +178,6 @@ export class ViewDefaultersComponent implements OnInit {
 
         const monthNumber = new Date().getMonth();
         this.installmentNumber = monthNumber > 2 ? monthNumber - 3 : monthNumber + 9;
-        this.selectAllClassSectionHandler();
     }
     applyFilters() {
         this.studentDataSource.data = this.getFilteredStudentList();
