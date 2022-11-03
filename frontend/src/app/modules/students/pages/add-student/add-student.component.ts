@@ -8,10 +8,6 @@ import { StudentService } from "../../../../services/modules/student/student.ser
 import { Student } from "../../../../services/modules/student/models/student";
 import { StudentSection } from "../../../../services/modules/student/models/student-section";
 import { VehicleOldService } from "../../../../services/modules/vehicle/vehicle-old.service";
-import { ExaminationService } from "../../../../services/modules/examination/examination.service";
-import { SubjectService } from "../../../../services/modules/subject/subject.service";
-import { FeeService } from "../../../../services/modules/fees/fee.service";
-import { INSTALLMENT_LIST } from "../../../fees/classes/constants";
 import { DataStorage } from "../../../../classes/data-storage";
 import { SchoolService } from "../../../../services/modules/school/school.service";
 import { BankService } from '../../../../services/bank.service';
@@ -31,15 +27,11 @@ declare const $: any;
         ClassService,
         BusStopService,
         StudentService,
-        SubjectService,
-        ExaminationService,
         VehicleOldService,
-        FeeService,
         BankService
     ],
 })
 export class AddStudentComponent implements OnInit {
-    installmentList = INSTALLMENT_LIST;
     sessionList = [];
     nullValue = null;
 
@@ -52,11 +44,7 @@ export class AddStudentComponent implements OnInit {
     classList = [];
     sectionList = [];
     busStopList = [];
-    classSubjectList = [];
     testSecondList = []; // represents Class Test
-    schoolFeeRuleList = [];
-    classFilterFeeList = [];
-    busStopFilterFeeList = [];
 
     newStudent: Student;
     newStudentSection: StudentSection;
@@ -75,10 +63,7 @@ export class AddStudentComponent implements OnInit {
         public classService: ClassService,
         public busStopService: BusStopService,
         public studentService: StudentService,
-        public subjectService: SubjectService,
         public vehicleService: VehicleOldService,
-        public examinationService: ExaminationService,
-        public feeService: FeeService,
         public bankService: BankService,
         public dialog: MatDialog
     ) { }
