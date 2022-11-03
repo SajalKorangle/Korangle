@@ -130,21 +130,21 @@ export class UnpromoteStudentServiceAdapter {
             return;
         }
 
-        const studentSubjectQuery = new Query()
+        /*const studentSubjectQuery = new Query()
             .filter({
                 parentStudent: this.vm.selectedStudent.id,
                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
             })
-            .deleteObjectList({ subject_app: 'StudentSubject' });
+            .deleteObjectList({ subject_app: 'StudentSubject' });*/
 
-        const studentTestQuery = new Query()
+        /*const studentTestQuery = new Query()
             .filter({
                 parentStudent: this.vm.selectedStudent.id,
                 parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
             })
-            .deleteObjectList({ examination_app: 'StudentTest' });
+            .deleteObjectList({ examination_app: 'StudentTest' });*/
 
-        const studentExtraSubFieldQuery = new Query()
+        /*const studentExtraSubFieldQuery = new Query()
             .filter({
                 parentStudent: this.vm.selectedStudent.id,
                 parentExamination__parentSession: this.vm.user.activeSchool.currentSessionDbId,
@@ -156,21 +156,21 @@ export class UnpromoteStudentServiceAdapter {
                 parentStudent: this.vm.selectedStudent.id,
                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
             })
-            .deleteObjectList({ examination_app: 'CCEMarks' });
+            .deleteObjectList({ examination_app: 'CCEMarks' });*/
 
-        const studentFeeReceiptQuery = new Query()
+        /*const studentFeeReceiptQuery = new Query()
             .filter({
                 parentStudent: this.vm.selectedStudent.id,
                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
             })
-            .deleteObjectList({ fees_third_app: 'FeeReceipt' });
+            .deleteObjectList({ fees_third_app: 'FeeReceipt' });*/
 
-        const studentFeeQuery = new Query()
+        /*const studentFeeQuery = new Query()
             .filter({
                 parentStudent: this.vm.selectedStudent.id,
                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
             })
-            .deleteObjectList({ fees_third_app: 'StudentFee' });
+            .deleteObjectList({ fees_third_app: 'StudentFee' });*/
 
         const studentSectionQuery = new Query()
             .filter({
@@ -182,12 +182,6 @@ export class UnpromoteStudentServiceAdapter {
         this.vm.isLoading = true;
 
         await Promise.all([
-            studentSubjectQuery,
-            studentTestQuery,
-            studentExtraSubFieldQuery,
-            cceMarksQuery,
-            studentFeeReceiptQuery,
-            studentFeeQuery,
             studentSectionQuery
         ]);
 
