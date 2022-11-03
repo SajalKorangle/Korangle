@@ -1,15 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { PromoteStudentServiceAdapter } from './promote-student.service.adapter';
 
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { CommonFunctions } from '../../../../classes/common-functions';
-import { SubjectService } from '../../../../services/modules/subject/subject.service';
-import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { StudentSection } from '../../../../services/modules/student/models/student-section';
-import { FeeService } from '../../../../services/modules/fees/fee.service';
-import { INSTALLMENT_LIST } from '../../../fees/classes/constants';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from './../../../../services/modules/school/school.service';
 import { TCService } from './../../../../services/modules/tc/tc.service';
@@ -17,11 +13,10 @@ import { TCService } from './../../../../services/modules/tc/tc.service';
     selector: 'promote-student',
     templateUrl: './promote-student.component.html',
     styleUrls: ['./promote-student.component.css'],
-    providers: [SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService, TCService],
+    providers: [SchoolService, StudentService, ClassService, TCService],
 })
 export class PromoteStudentComponent implements OnInit {
     sessionList = [];
-    installmentList = INSTALLMENT_LIST;
 
     STUDENT_LIMITER = 200;
 
@@ -33,11 +28,6 @@ export class PromoteStudentComponent implements OnInit {
     studentSectionListOne: any;
     studentSectionListTwo: any;
     studentList: any;
-    classSubjectList = [];
-    testSecondList = []; // represents Class Test
-    schoolFeeRuleList = [];
-    classFilterFeeList = [];
-    busStopFilterFeeList = [];
 
     fromSelectedClass: any;
     fromSelectedSection: any;
@@ -57,9 +47,6 @@ export class PromoteStudentComponent implements OnInit {
         public schoolService: SchoolService,
         public studentService: StudentService,
         public classService: ClassService,
-        public subjectService: SubjectService,
-        public feeService: FeeService,
-        public examinationService: ExaminationService,
         public tcService: TCService
     ) {}
 
