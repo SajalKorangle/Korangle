@@ -1,5 +1,5 @@
 <!-- START: path display at top of modal -->
-<h2 *ngIf="!isMobile() else MobileHeader" mat-dialog-title
+<h2 *ngIf="!isMobile else MobileHeader" mat-dialog-title
     style="display: flex; flex-direction: row; align-items: center;">
     <span>In Page Permission:</span>
     <mat-icon style="margin-left: 24px; margin-right: 8px;">{{data.module.icon}}</mat-icon>

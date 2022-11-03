@@ -187,6 +187,11 @@ export class ViewDefaultersComponent implements OnInit {
         this.cdRef.detectChanges();
     }
 
+    isPermissionToShow(){
+        if(this.userNotifyDefaulterPermissionList.viewStudent || this.userNotifyDefaulterPermissionList.viewSummary)
+            return true;
+        return false;
+    }
     checkMobileNumber(mobileNumber: number): boolean {
         if (mobileNumber && mobileNumber.toString().length == 10) {
             return true;
