@@ -1,5 +1,6 @@
 <div class="card-content table-responsive">
-    <ng-container *ngIf="!isLoading && studentSectionList.length > 0">
+    <ng-container *ngIf="!isLoading && studentSectionList.length > 0 && isPermissionToShow()">
+        <p>{{userNotifyDefaulterPermissionList | json}}</p>
         <div class="row">
             <div class="col-sm-3">
                 <div class="form-group form-black label-floating">
@@ -930,7 +931,7 @@
         </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="!isLoading && studentSectionList.length == 0">
+    <ng-container *ngIf="!isLoading && (studentSectionList.length == 0 || !isPermissionToShow())">
         You do not have permission to view the list of any class. Either get admin permission from Employee -> Assign Task page for all classes or get permission of specific classes from Class -> Assign Class page.
         <br>
         Or, there might not be any students in your permitted class/es.

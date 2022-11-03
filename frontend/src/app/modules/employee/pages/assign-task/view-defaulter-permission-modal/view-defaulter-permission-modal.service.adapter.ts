@@ -50,6 +50,12 @@ export class ViewDefaulterPermissionModalService {
     
     async createNewPermissionRecord(){
         this.vm.isLoading = true;
+        this.vm.parentEmployeePermission = await this.vm.genericService.getObject({ employee_app: 'EmployeePermission' }, {
+            filter: {
+                parentEmployee: this.vm.user.activeSchool.employeeId,
+                parentTask: 66
+            }
+        });
         let result = await this.vm.genericService.createObject({
             fees_third_app: 'ViewDefaulterPermissions'
         }, {
