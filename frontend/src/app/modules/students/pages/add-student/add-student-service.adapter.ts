@@ -40,6 +40,7 @@ export class AddStudentServiceAdapter {
             this.vm.genericService.getObjectList({class_app: "Class"}, {}), // 0
             this.vm.genericService.getObjectList({class_app: "Division"}, {}), // 1
             this.vm.genericService.getObjectList({school_app: "BusStop"}, bus_stop_query_parameters), // 2
+            // this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 2
             this.vm.genericService.getObjectList({school_app: "Session"}, {}), // 3
             this.vm.genericService.getObjectList({student_app: "StudentParameter"}, student_parameter_query_parameters) // 4
         ]).then(
