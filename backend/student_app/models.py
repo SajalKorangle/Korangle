@@ -53,7 +53,6 @@ class Student(models.Model):
     mobileNumber = models.BigIntegerField(null=True)
     secondMobileNumber = models.BigIntegerField(null=True)
     scholarNumber = models.TextField(null=True, blank=True)
-    totalFees = models.IntegerField(default=0)
     dateOfBirth = models.DateField(null=True)
     remark = models.TextField(null=True, blank=True)
 
@@ -158,7 +157,6 @@ class StudentSection(models.Model):
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession', related_name="studentSectionList")
 
     rollNumber = models.TextField(null=True, blank=True)
-    attendance = models.IntegerField(null=True)
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentStudent__parentSchool__id']
