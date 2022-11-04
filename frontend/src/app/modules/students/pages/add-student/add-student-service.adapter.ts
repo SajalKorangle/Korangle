@@ -21,14 +21,28 @@ export class AddStudentServiceAdapter {
             parentSchool: schoolId,
         };
 
+        let bus_stop_query_parameters = {
+            filter: {
+                parentSchool: schoolId,
+            },
+            order_by: [
+                'kmDistance'
+            ]
+        };
+
+        let student_parameter_query_parameters = {
+            filter: {
+                parentSchool: this.vm.user.activeSchool.dbId
+            }
+        };
+
         Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 0
-            this.vm.classService.getObjectList(this.vm.classService.division, {}), // 1
-            this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 2
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 3
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, { // 4
-                parentSchool: this.vm.user.activeSchool.dbId,
-            }),
+            this.vm.genericService.getObjectList({class_app: "Class"}, {}), // 0
+            this.vm.genericService.getObjectList({class_app: "Division"}, {}), // 1
+            this.vm.genericService.getObjectList({school_app: "BusStop"}, bus_stop_query_parameters), // 2
+            // this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 2
+            this.vm.genericService.getObjectList({school_app: "Session"}, {}), // 3
+            this.vm.genericService.getObjectList({student_app: "StudentParameter"}, student_parameter_query_parameters) // 4
         ]).then(
             (value) => {
                 this.vm.classList = value[0];
