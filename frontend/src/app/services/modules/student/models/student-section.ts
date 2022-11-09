@@ -5,5 +5,4 @@ export class StudentSection {
     parentClass: number = null;
     parentDivision: number = null;
     rollNumber: number = null;
-    attendance: number = null;
 }
