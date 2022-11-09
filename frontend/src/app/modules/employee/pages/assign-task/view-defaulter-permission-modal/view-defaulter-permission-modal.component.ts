@@ -48,7 +48,7 @@ export class ViewDefaulterPermissionModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { [key: string]: any; }
   ){
     this.employee = data.employee;
-    this.parentEmployeePermission = this.employee.parentEmployeePermission;
+    this.parentEmployeePermission = data.parentEmployeePermission;
   }
 
   
