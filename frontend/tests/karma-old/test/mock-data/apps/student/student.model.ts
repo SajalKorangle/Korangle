@@ -5,7 +5,6 @@ export const STUDENT_BASE_MODEL = {
     fathersName: '-----',
     mobileNumber: null,
     scholarNumber : null,
-    totalFees : 0,
     dateOfBirth : null,
     remark : null,
     motherName : null,
