@@ -5,11 +5,11 @@ export class ViewDefaulterPermissionModalService {
 
     constructor() {}
 
-    initializeAdapter(vm: ViewDefaulterPermissionModalComponent){
+    initializeAdapter(vm: ViewDefaulterPermissionModalComponent) {
         this.vm = vm;
     }
 
-    async initializeData(){
+    async initializeData() {
 
         this.vm.isLoading = true;
 
@@ -39,16 +39,15 @@ export class ViewDefaulterPermissionModalService {
 
         /* We are creating a record so that the default values always come from one place. */
         // Starts :- Creating a permission record if not present till now.
-        if(!this.vm.employeeInPagePermissions){
+        if (!this.vm.employeeInPagePermissions) {
             await this.createNewPermissionRecord();
         }
         // Ends :- Creating a permission record if not present till now.
-        
+
         this.vm.isLoading = false;
     }
-    
-    
-    async createNewPermissionRecord(){
+
+    async createNewPermissionRecord() {
         this.vm.isLoading = true;
         this.vm.parentEmployeePermission = await this.vm.genericService.getObject({ employee_app: 'EmployeePermission' }, {
             filter: {
@@ -65,7 +64,7 @@ export class ViewDefaulterPermissionModalService {
         this.vm.isLoading = false;
     }
 
-    async apply(){
+    async apply() {
         this.vm.isLoading = true;
         let result = await this.vm.genericService.updateObject({fees_third_app: 'ViewDefaulterPermissions'}, this.vm.employeeInPagePermissions);
         this.vm.isLoading = false;

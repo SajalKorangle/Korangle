@@ -93,7 +93,7 @@ export class AssignTaskComponent implements OnInit {
 
     openInPagePermissionDialog(module, task, employee) {
         // module = {id: 15, path: 'fees', ...}, task = {id: 66, path: 'view_defaulters', ...}
-        if(module.id === 15 && task.id === 66) { // For new implementation
+        if (module.id === 15 && task.id === 66) { // For new implementation
             let parentEmployeePermission = this.currentPermissionList.find(currentPermission => {
                 return currentPermission.parentTask == 66;
             });
@@ -130,9 +130,9 @@ export class AssignTaskComponent implements OnInit {
     hasInPageTaskPermission(module, task, employee): boolean {
         if (this.isDisabled(module, task, employee))
             return false;
-        
+
         // module = {id: 15, path: 'fees', ...}, task = {id: 66, path: 'view_defaulters', ...}
-        if(module.id === 15 && task.id === 66){
+        if (module.id === 15 && task.id === 66) {
             return true;
         }
 

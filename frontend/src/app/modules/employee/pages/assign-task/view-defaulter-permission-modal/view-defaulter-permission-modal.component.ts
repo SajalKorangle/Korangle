@@ -46,12 +46,11 @@ export class ViewDefaulterPermissionModalComponent implements OnInit {
     public genericService: GenericService,
     public dialogRef: MatDialogRef<ViewDefaulterPermissionModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { [key: string]: any; }
-  ){
+  ) {
     this.employee = data.employee;
     this.parentEmployeePermission = data.parentEmployeePermission;
   }
 
-  
   ngOnInit() {
     this.user = DataStorage.getInstance().getUser();
     this.serviceAdapter = new ViewDefaulterPermissionModalService();
