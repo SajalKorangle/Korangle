@@ -99,6 +99,11 @@ EXAMINATION_STATUS = (
     ('Declared', 'Declared'),
 )
 
+MARKS_UPDATION_STATUS = (
+    ('Locked', 'Locked'),
+    ('Unlocked', 'Unlocked')
+)
+
 
 class Examination(models.Model):
 
@@ -106,6 +111,7 @@ class Examination(models.Model):
     parentSchool = models.ForeignKey(School, models.PROTECT, null=False, default=0, verbose_name='parentSchool')
     parentSession = models.ForeignKey(Session, models.PROTECT, null=False, default=0, verbose_name='parentSession')
     status = models.CharField(max_length=20, choices=EXAMINATION_STATUS, null=False, default='Created', verbose_name='examinationStatus')
+    marksUpdationStatus = models.CharField(max_length=20, choices=MARKS_UPDATION_STATUS, null=False, default='Unlocked', verbose_name='marksUpdationStatus')
 
     def __str__(self):
         return self.name
