@@ -27,7 +27,18 @@ import { GenericService } from '@services/generic/generic-service';
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [FeeService, StudentService, ClassService, NotificationService, UserService, SmsService, SmsOldService, SchoolService, InformationService, GenericService],
+    providers: [
+        FeeService,
+        StudentService,
+        ClassService,
+        NotificationService,
+        UserService,
+        SmsService,
+        SmsOldService,
+        SchoolService,
+        InformationService,
+        GenericService
+    ],
     //animation for row expansion on clicking row on mat table
     animations: [
         trigger('detailExpand', [
@@ -187,8 +198,8 @@ export class ViewDefaultersComponent implements OnInit {
         this.cdRef.detectChanges();
     }
 
-    isPermissionToShow(){
-        if(this.userNotifyDefaulterPermissionList.viewStudent || this.userNotifyDefaulterPermissionList.viewSummary)
+    isPermissionToShow() {
+        if (this.userNotifyDefaulterPermissionList.viewStudent || this.userNotifyDefaulterPermissionList.viewSummary)
             return true;
         return false;
     }

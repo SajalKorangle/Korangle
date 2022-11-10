@@ -50,7 +50,7 @@ export class ViewDefaultersServiceAdapter {
         // Ends:- Getting initial data
 
         // Starts :- Populate In Page permission in backend if it doesn't exist and get default permission in result
-        if(!this.vm.userNotifyDefaulterPermissionList){
+        if (!this.vm.userNotifyDefaulterPermissionList) {
             let parentEmployeePermission = await this.vm.genericService.getObject({ employee_app: 'EmployeePermission' }, {
                 filter: {
                     parentEmployee: this.vm.user.activeSchool.employeeId,
@@ -106,7 +106,8 @@ export class ViewDefaultersServiceAdapter {
             parentStudent__parentTransferCertificate: null
         };
 
-        if(this.vm.attendancePermissionList.length > 0) { // This will happen only when admin permission is not present otherwise we wouldn't have fetched attendance permission list from backend.
+        // This will happen only when admin permission is not present otherwise we wouldn't have fetched attendance permission list from backend.
+        if (this.vm.attendancePermissionList.length > 0) {
             student_section_list_filter['__or__classSection'] = [];
             this.vm.attendancePermissionList.forEach(attendancePermission => {
                 student_section_list_filter['__or__classSection'].push({
