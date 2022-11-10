@@ -148,7 +148,7 @@ class ViewDefaulterPermissions(models.Model):
     )
 
     parentEmployeePermission = models.ForeignKey(EmployeePermission, on_delete=models.CASCADE, verbose_name='parentEmployeePermission', unique=True)
-    userType = models.CharField(max_length=10, choices=USER_TYPE, default='Teacher')
+    userType = models.CharField(max_length=10, choices=USER_TYPE, default='Admin')
     viewSummary = models.BooleanField(null=False, default=True)
     viewStudent = models.BooleanField(null=False, default=True)
 
