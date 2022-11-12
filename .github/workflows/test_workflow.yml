@@ -19,8 +19,6 @@ jobs:
 
         steps:
             - uses: actions/checkout@v2
-
-
             - name: Small Changes
               run: |
                   sudo sh ./frontend/scripts/diff_changes/small_changes_check.sh
