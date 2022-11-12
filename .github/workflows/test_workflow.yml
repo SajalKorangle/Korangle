@@ -14,9 +14,6 @@ on:
 jobs:
     # This workflow contains a single job called "build"
     build:
-        #if: contains( github.event.pull_request.labels.*.name, 'Run Tests')
-        # if: github.event.review.state == 'approved'
-        # The type of runner that the job will run on
         runs-on: ubuntu-20.04
 
 
@@ -28,7 +25,7 @@ jobs:
 
             - name: Small Changes
               run: |
-                  ./frontend/scripts/diff_changes/small_changes_check.sh
+                  sudo sh ./frontend/scripts/diff_changes/small_changes_check.sh
 
 
 
