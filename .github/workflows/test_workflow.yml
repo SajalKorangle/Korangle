@@ -23,6 +23,3 @@ jobs:
               run: |
                   sudo sh ./frontend/scripts/diff_changes/small_changes_check.sh
 
-
-
-
