@@ -1,0 +1,104 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Test Code
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+    push:
+        branches: [master]
+    pull_request:
+        branches: [master]
+        #types: [labeled]
+    # pull_request_review:
+    #   branches: [ master ]
+    #   types: [ submitted ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+    # This workflow contains a single job called "build"
+    build:
+        #if: contains( github.event.pull_request.labels.*.name, 'Run Tests')
+        # if: github.event.review.state == 'approved'
+        # The type of runner that the job will run on
+        runs-on: ubuntu-20.04
+
+        services:
+            postgres:
+                image: postgres:13.3
+                env:
+                    POSTGRES_DB: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_USER: postgres
+                ports:
+                    - 5432:5432
+
+        strategy:
+            matrix:
+                python-version: [3.9]
+                node-version: [14.17.6]
+
+        # Steps represent a sequence of tasks that will be executed as part of the job
+        steps:
+            # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+            - uses: actions/checkout@v2
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v1
+              with:
+                  python-version: ${{ matrix.python-version }}
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+            #    - uses: chrislennon/action-aws-cli@v1.1
+            #    - name: Setup Aws cli
+
+            # Installing Dependencies
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r backend/requirements.txt
+                  cd frontend
+                  npm ci
+
+            - name: Testing Linting
+              run: |
+                  cd frontend
+                  ./scripts/ng-lint/run_linter_ci.sh
+
+            - name: Small Changes
+              run: |
+                  ./frontend/scripts/diff_changes/small_changes.sh
+
+            - name: Checking Migration
+              run: |
+                  cd backend
+                  ./manage.py makemigrations --check
+
+            - name: Build Test
+              run: |
+                  cd frontend
+                  cp src/environments/environment.ts src/environments/environment.prod.ts
+                  node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --prod --build-optimizer
+
+            # - name: Karma Tests
+              # env:
+                  # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              # run: |
+                  # cd frontend
+                  # aws configure list
+                  # sh scripts/karma/run-tests.sh github
+
+            # - name: Protractor Tests
+              # env:
+                  # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              # run: |
+                  # cd frontend
+                  # aws configure list
+                  # cp src/environments/environment.ts src/environments/environment.prod.ts
+                  # sh scripts/protractor/run-tests-github.sh
+                  # # sh scripts/protractor/check-coverage.sh github
+                  # # For now we are not keeping track of implemented protractor tests using feature files
+                  # # sh scripts/feature/check-coverage.sh github
