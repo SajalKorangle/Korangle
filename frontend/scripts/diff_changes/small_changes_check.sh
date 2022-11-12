@@ -1,6 +1,4 @@
-git diff master
-
-CHANGE_COUNT=$(git diff master --shortstat | awk '{print $4 + $6}')
+CHANGE_COUNT=$(git diff origin/master --shortstat | awk '{print $4 + $6}')
 
 echo $CHANGE_COUNT
 
