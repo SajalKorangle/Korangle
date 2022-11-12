@@ -67,7 +67,7 @@ jobs:
 
             - name: Small Changes
               run: |
-                  ./frontend/scripts/diff_changes/small_changes.sh
+                  ./frontend/scripts/diff_changes/small_changes_check.sh
 
             #- name: Checking Migration
             #  run: |
