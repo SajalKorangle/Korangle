@@ -23,63 +23,63 @@ jobs:
         # The type of runner that the job will run on
         runs-on: ubuntu-20.04
 
-        services:
-            postgres:
-                image: postgres:13.3
-                env:
-                    POSTGRES_DB: postgres
-                    POSTGRES_PASSWORD: postgres
-                    POSTGRES_USER: postgres
-                ports:
-                    - 5432:5432
+        #services:
+        #    postgres:
+        #        image: postgres:13.3
+        #        env:
+        #            POSTGRES_DB: postgres
+        #            POSTGRES_PASSWORD: postgres
+        #            POSTGRES_USER: postgres
+        #        ports:
+        #            - 5432:5432
 
-        strategy:
-            matrix:
-                python-version: [3.9]
-                node-version: [14.17.6]
+        #strategy:
+        #    matrix:
+        #        python-version: [3.9]
+        #        node-version: [14.17.6]
 
         # Steps represent a sequence of tasks that will be executed as part of the job
         steps:
             # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
             - uses: actions/checkout@v2
-            - name: Set up Python ${{ matrix.python-version }}
-              uses: actions/setup-python@v1
-              with:
-                  python-version: ${{ matrix.python-version }}
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v1
-              with:
-                  node-version: ${{ matrix.node-version }}
+        #    - name: Set up Python ${{ matrix.python-version }}
+        #      uses: actions/setup-python@v1
+        #      with:
+        #          python-version: ${{ matrix.python-version }}
+        #    - name: Use Node.js ${{ matrix.node-version }}
+        #      uses: actions/setup-node@v1
+        #      with:
+        #          node-version: ${{ matrix.node-version }}
             #    - uses: chrislennon/action-aws-cli@v1.1
             #    - name: Setup Aws cli
 
             # Installing Dependencies
-            - name: Install dependencies
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install -r backend/requirements.txt
-                  cd frontend
-                  npm ci
+        #    - name: Install dependencies
+        #      run: |
+        #          python -m pip install --upgrade pip
+        #          pip install -r backend/requirements.txt
+        #          cd frontend
+        #          npm ci
 
-            - name: Testing Linting
-              run: |
-                  cd frontend
-                  ./scripts/ng-lint/run_linter_ci.sh
+        #    - name: Testing Linting
+        #      run: |
+        #          cd frontend
+        #          ./scripts/ng-lint/run_linter_ci.sh
 
             - name: Small Changes
               run: |
                   ./frontend/scripts/diff_changes/small_changes.sh
 
-            - name: Checking Migration
-              run: |
-                  cd backend
-                  ./manage.py makemigrations --check
+        #    - name: Checking Migration
+        #      run: |
+        #          cd backend
+        #          ./manage.py makemigrations --check
 
-            - name: Build Test
-              run: |
-                  cd frontend
-                  cp src/environments/environment.ts src/environments/environment.prod.ts
-                  node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --prod --build-optimizer
+        #    - name: Build Test
+        #      run: |
+        #          cd frontend
+        #          cp src/environments/environment.ts src/environments/environment.prod.ts
+        #          node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --prod --build-optimizer
 
             # - name: Karma Tests
               # env:

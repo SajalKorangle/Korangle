@@ -22,3 +22,4 @@ jobs:
 							#	fetch-depth: '0'
             - name: Check change size
               run: sudo sh ./frontend/scripts/diff_changes/small_changes_check.sh
+
