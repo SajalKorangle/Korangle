@@ -1,6 +1,6 @@
 CHANGE_COUNT=$(git diff master --shortstat | awk '{print $4 + $6}')
 
-if [[ $CHANGE_COUNT -gt 600 ]]
+if [[ $CHANGE_COUNT -gt 500 ]]
 then
     echo "ERROR: Number of lines changes ($CHANGE_COUNT) should be less than 500"
     exit 1
