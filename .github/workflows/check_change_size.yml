@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Test Code
+name: Test Change Size
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -67,7 +67,7 @@ jobs:
 
             - name: Small Changes
               run: |
-                  ./frontend/scripts/diff_changes/small_changes_check.sh
+                  sudo sh ./frontend/scripts/diff_changes/small_changes_check.sh
 
             #- name: Checking Migration
             #  run: |
