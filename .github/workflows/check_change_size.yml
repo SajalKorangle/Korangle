@@ -18,8 +18,8 @@ jobs:
         steps:
             - name: Checkout Repository
 							uses: actions/checkout@v2
-							with:
-								fetch-depth: '0'
+							#with:
+							#	fetch-depth: '0'
             - name: Check change size
               run: |
                   sudo sh ./frontend/scripts/diff_changes/small_changes_check.sh
