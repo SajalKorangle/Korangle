@@ -1,6 +1,4 @@
-git diff master --shortstat
-
-CHANGE_COUNT=$(git diff master --shortstat | awk '{print $4 + $6}')
+CHANGE_COUNT=$(!git diff master --shortstat | awk '{print $4 + $6}')
 
 if [[ $CHANGE_COUNT -gt 500 ]]
 then
