@@ -9,10 +9,6 @@ on:
         branches: [master]
     pull_request:
         branches: [master]
-        #types: [labeled]
-    # pull_request_review:
-    #   branches: [ master ]
-    #   types: [ submitted ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -32,7 +28,7 @@ jobs:
 
             - name: Small Changes
               run: |
-                  ./frontend/scripts/diff_changes/small_changes.sh
+                  ./frontend/scripts/diff_changes/small_changes_check.sh
 
 
 
