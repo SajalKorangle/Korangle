@@ -24,6 +24,16 @@ const routes: Routes = [
         data: { moduleName: 'class' },
     },
     {
+        path: 'backtrack_student',
+        loadChildren: 'app/modules/class/pages/backtrack-student/backtrack-student.module#BacktrackStudentModule',
+        data: { moduleName: 'class' },
+    },
+    {
+        path: 'manage_student_sessions',
+        loadChildren: 'app/modules/class/pages/manage-student-sessions/manage-student-sessions.module#ManageStudentSessionsModule',
+        data: { moduleName: 'class' },
+    },
+    {
         path: 'change_class',
         loadChildren: 'app/modules/class/pages/change-class/change-class.module#ChangeClassModule',
         data: { moduleName: 'class' },

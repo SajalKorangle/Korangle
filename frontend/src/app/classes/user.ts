@@ -19,6 +19,8 @@ export class User {
 
     schoolList: School[] = [];
 
+    featureFlagList = <any>[];
+
     isLazyLoading: boolean = false;
 
     notification = {
@@ -108,6 +110,7 @@ export class User {
         this.last_name = data.last_name;
         this.email = data.email;
         this.initializeSchoolList(data.schoolList);
+        this.featureFlagList = data.featureFlagList;
         this.activeSchool = this.schoolList[0];
         this.initializeTask();
     }
@@ -268,6 +271,14 @@ export class User {
         });
         EmitterService.get('initialize-router').emit({ queryParams: queryParams });
     }
+
+    isFeatureEnabled(featureName: string): boolean {
+        return this.featureFlagList.find(featureFlag => {
+            return featureFlag.name == featureName
+                && featureFlag.enabled;
+        }) != undefined;
+    }
+
 }
 
 /*
