@@ -10,7 +10,7 @@ export class BacktrackStudentComponent implements OnInit {
 
     constructor(
     ) { }
-    
+
     ngOnInit(): void {
     }
 
