@@ -66,10 +66,6 @@ jobs:
                   cd frontend
                   ./scripts/ng-lint/run_linter_ci.sh
 
-            - name: Small Changes
-              run: |
-                  ./frontend/scripts/diff_changes/small_changes.sh
-
             - name: Checking Migration
               run: |
                   cd backend
