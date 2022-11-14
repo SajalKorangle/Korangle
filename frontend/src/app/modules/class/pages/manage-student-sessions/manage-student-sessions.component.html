@@ -1,1 +1,126 @@
-In Development Phase!!!
+<!-- START: main card content  -->
+<div class="card-content">
+    <!-- check if the page was opening in mobile viewport  -->
+    <ng-container *ngIf="isMobileMenu()">This page is not supported in mobile version yet.</ng-container>
+
+    <ng-container *ngIf="!isMobileMenu()">
+
+        <!-- START: Search bar to search the students  -->
+        <parent-student-filter
+            [user]="user"
+            (onStudentListSelected)="handleStudentListSelection($event)"
+            (onStudentListLoading)="isStudentListLoading = $event"
+            [selectedFilterType]="'Student'"
+            [bothFilters]="false"
+            [studentTcGenerated]="false"
+        ></parent-student-filter>
+        <!-- END: Search bar to search the students   -->
+
+        <!-- START: section to display details about the selected student  -->
+        <ng-container *ngIf="selectedStudent && !isLoading">
+            <!-- header to display the selected students name  -->
+            <div style="font-weight: 600; font-size: 18px">{{selectedStudent.name}} - Session Wise Class Section List</div>
+
+            <!-- START: section containing the table  -->
+            <div>
+                <!-- START: table  -->
+                <table class="table table-hover">
+
+                    <!-- START: table header  -->
+                    <thead class="text-{{user.activeSchool.secondaryThemeColor}}">
+                        <tr>
+                            <th>Session</th>
+                            <th>Class</th>
+                            <th>Section</th>
+                        </tr>
+                    </thead>
+                    <!-- END: table header  -->
+
+                    <!-- START: Table Body  -->
+                    <tbody>
+                        <tr *ngFor="let studentSession of studentSessionList; let idx = index;">
+                            <!-- column to display the session name  -->
+                            <td>{{studentSession.parentSession.name}}</td>
+
+                            <!-- column to display the class dropdown  -->
+                            <td>
+                                <mat-form-field style="margin-top: -1.25em; margin-bottom: -1.25em;">
+                                    <mat-select 
+                                        [(ngModel)]="studentSession.parentClass"
+                                        (ngModelChange)="handleClassChange(idx)"
+                                        [disabled]="studentSession.hasFeeReceipt"
+                                    >
+                                        <mat-option *ngFor="let class of classList" [value]="class">{{class.name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+
+                            <!-- column to display the section dropdown  -->
+                            <td>
+                                <mat-form-field style="margin-top: -1.25em; margin-bottom: -1.25em;">
+                                    <mat-select
+                                    [(ngModel)]="studentSession.parentDivision"
+                                    (ngModelChange)="handleDivisionChange(idx)"
+                                    [disabled]="studentSession.hasFeeReceipt"
+                                    >
+                                        <mat-option *ngFor="let section of sectionList" [value]="section">{{section.name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <span class="text-muted" *ngIf="studentSession.hasFeeReceipt">
+                                    <mat-icon
+                                            class="error" 
+                                            matTooltip="Fee Receipt has been generated for this session." 
+                                            matTooltipPosition="above" 
+                                            matTooltipClass="delay-msg-tooltip"
+                                            >
+                                                error
+                                    </mat-icon>
+                                </span>
+
+                                <!-- START: Remove Button  -->
+                                <span class="text-{{ user.activeSchool.secondaryThemeColor }}" *ngIf="idx == studentSessionList.length - 1 && !studentSession.hasFeeReceipt">
+                                    <mat-icon class="do_not_disturb_on" style="cursor: pointer;" (click)="removeSession()">do_not_disturb_on</mat-icon>
+                                </span>
+                                <!-- END: Remove Button  -->
+
+                            </td>
+                        </tr>
+                    </tbody>
+                    <!-- END: Table Body  -->
+
+                </table>
+                <!-- END: table  -->
+
+                <!-- START: Add New session  -->
+                <div>
+                    <div *ngIf="enableNewSessionButton()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="cursor: pointer;" (click)="addStudentSession()">
+                        + Add Session
+                    </div>
+                </div>
+                <!-- END: Add new session  -->
+
+                <!-- START: Save student sessions button  -->
+                <div>
+                    <button *ngIf="showUpdateButton()"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                        (click)="serviceAdapter.saveSessions()">
+                        Update Student Sessions
+                    </button>
+                </div>
+                <!-- END: Save student sessions button  -->
+
+            </div>
+            <!-- END: section containing the table  -->
+        </ng-container>
+        <!-- END: section to display details about the selected student  -->
+
+    </ng-container>
+
+</div>
+<!-- END: main card content  -->
+
+<!-- START: loading spinner  -->
+<ng-container *ngIf="isLoading || isStudentListLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- END: loading spinner  -->
