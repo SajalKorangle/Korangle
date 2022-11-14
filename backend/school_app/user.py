@@ -113,6 +113,7 @@ def get_employee_school_module_list(employee_object):
 
     for module_object in \
             Module.objects.filter(Q(parentBoard=None) | Q(parentBoard=school_object.parentBoard))\
+                    .exclude(parentFeatureFlag__enabled=False)\
                     .order_by('orderNumber'):
         tempModule = {}
         tempModule['dbId'] = module_object.id
@@ -123,6 +124,8 @@ def get_employee_school_module_list(employee_object):
         for permission_object in \
                 EmployeePermission.objects.filter(parentEmployee=employee_object,
                                                   parentTask__parentModule=module_object)\
+                    .exclude(parentTask__parentFeatureFlag__enabled=False)\
+                    .exclude(parentTask__parentModule__parentFeatureFlag__enabled=False)\
                     .order_by('parentTask__orderNumber') \
                     .select_related('parentTask'):
             tempTask = {}
@@ -232,6 +235,9 @@ class UserDetailsView(APIView):
         return Response({"data": userDetails})
 
 
+from common.json_encoding import make_dict_list_serializable
+from feature_flag_app.models import FeatureFlag
+
 def get_user_details(user_object):
 
     response = {
@@ -241,6 +247,7 @@ def get_user_details(user_object):
         'email': user_object.email,
         'id': user_object.id,
         'schoolList': get_school_list(user_object),
+        'featureFlagList': make_dict_list_serializable(list(FeatureFlag.objects.all().values()))
     }
 
     return response
