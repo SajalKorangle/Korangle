@@ -36,36 +36,44 @@
                     </thead>
                     <!-- END: table header  -->
 
-                    <!-- START: Table Body  -->
+                    <!-- START: Table for student session class section list  -->
                     <tbody>
                         <tr *ngFor="let studentSession of studentSessionList; let idx = index;">
-                            <!-- column to display the session name  -->
-                            <td>{{studentSession.parentSession.name}}</td>
 
-                            <!-- column to display the class dropdown  -->
+                            <!-- START: column to display the session name  -->
+                            <td>{{studentSession.parentSession.name}}</td>
+                            <!-- END: column to display the session name  -->
+
+                            <!-- START: column to display the class dropdown  -->
                             <td>
                                 <mat-form-field style="margin-top: -1.25em; margin-bottom: -1.25em;">
                                     <mat-select 
                                         [(ngModel)]="studentSession.parentClass"
-                                        (ngModelChange)="handleClassChange(idx)"
+                                        (ngModelChange)="htmlAdapter.handleClassChange(idx)"
                                         [disabled]="studentSession.hasFeeReceipt"
                                     >
                                         <mat-option *ngFor="let class of classList" [value]="class">{{class.name}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </td>
+                            <!-- END: column to display the class dropdown  -->
 
-                            <!-- column to display the section dropdown  -->
+                            <!-- START: column to display the section dropdown, Receipt exists icon & Remove Button  -->
                             <td>
+
+                                <!-- START: Section Drop Down -->
                                 <mat-form-field style="margin-top: -1.25em; margin-bottom: -1.25em;">
                                     <mat-select
                                     [(ngModel)]="studentSession.parentDivision"
-                                    (ngModelChange)="handleDivisionChange(idx)"
+                                    (ngModelChange)="htmlAdapter.handleDivisionChange(idx)"
                                     [disabled]="studentSession.hasFeeReceipt"
                                     >
                                         <mat-option *ngFor="let section of sectionList" [value]="section">{{section.name}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
+                                <!-- END: Section Drop Down -->
+
+                                <!-- START: Receipt exists icon -->
                                 <span class="text-muted" *ngIf="studentSession.hasFeeReceipt">
                                     <mat-icon
                                             class="error" 
@@ -76,24 +84,28 @@
                                                 error
                                     </mat-icon>
                                 </span>
+                                <!-- END: Receipt exists icon -->
 
                                 <!-- START: Remove Button  -->
-                                <span class="text-{{ user.activeSchool.secondaryThemeColor }}" *ngIf="idx == studentSessionList.length - 1 && !studentSession.hasFeeReceipt">
+                                <span class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                                    *ngIf="idx == studentSessionList.length - 1 && !studentSession.hasFeeReceipt && studentSessionList.length > 1">
                                     <mat-icon class="do_not_disturb_on" style="cursor: pointer;" (click)="removeSession()">do_not_disturb_on</mat-icon>
                                 </span>
                                 <!-- END: Remove Button  -->
 
                             </td>
+                            <!-- END: column to display the section dropdown, Receipt exists icon & Remove Button  -->
+
                         </tr>
                     </tbody>
-                    <!-- END: Table Body  -->
+                    <!-- END: Table student session class section list  -->
 
                 </table>
                 <!-- END: table  -->
 
                 <!-- START: Add New session  -->
                 <div>
-                    <div *ngIf="enableNewSessionButton()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="cursor: pointer;" (click)="addStudentSession()">
+                    <div *ngIf="htmlAdapter.enableNewSessionButton()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="cursor: pointer;" (click)="htmlAdapter.addStudentSession()">
                         + Add Session
                     </div>
                 </div>
@@ -101,9 +113,9 @@
 
                 <!-- START: Save student sessions button  -->
                 <div>
-                    <button *ngIf="showUpdateButton()"
+                    <button *ngIf="htmlAdapter.showUpdateButton()"
                         class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                        (click)="serviceAdapter.saveSessions()">
+                        (click)="htmlAdapter.handleUpdateButtonClick()">
                         Update Student Sessions
                     </button>
                 </div>
