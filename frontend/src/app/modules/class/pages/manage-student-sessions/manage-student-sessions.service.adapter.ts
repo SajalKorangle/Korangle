@@ -45,11 +45,19 @@ export class ManageStudentSessionsServiceAdapter {
                     parentSchool: this.vm.user.activeSchool.dbId,
                     cancelled: false
                 }
+            }),
+            this.vm.genericService.getObjectList({ fees_third_app: 'Discount' }, { //     1 - get all the non cancelled fee receipts for the student in current school
+                filter: {
+                    parentStudent: this.vm.selectedStudent.id,
+                    parentSchool: this.vm.user.activeSchool.dbId,
+                    cancelled: false
+                }
             })
         ]);
 
         this.vm.backendStudentSessionList = value[0];
         this.vm.feeReceiptList = value[1];
+        this.vm.discountList = value[2];
 
         this.prepareStudentSessionList();
     }
@@ -65,7 +73,7 @@ export class ManageStudentSessionsServiceAdapter {
                 parentClass: this.vm.classList.find((classObj) => classObj.id == backendStudentSessionObject.parentClass),
                 parentDivision: this.vm.sectionList.find((sectionObj) => sectionObj.id == backendStudentSessionObject.parentDivision),
                 parentSession: this.vm.sessionList.find((sessionObj) => sessionObj.id == backendStudentSessionObject.parentSession),
-                hasFeeReceipt: false
+                hasFeeReceiptOrDiscount: false
             });
         });
 
@@ -73,9 +81,14 @@ export class ManageStudentSessionsServiceAdapter {
         this.vm.studentSessionList.forEach((classSection) => {
             this.vm.feeReceiptList.forEach((feeReceipt) => {
                 if(feeReceipt.parentSession == classSection.parentSession.id) {
-                    classSection.hasFeeReceipt = true;
+                    classSection.hasFeeReceiptOrDiscount = true;
                 }
             });
+            this.vm.discountList.forEach((discount) => {
+                if (discount.parentSession == classSection.parentSession.id) {
+                    classSection.hasFeeReceiptOrDiscount = true;
+                }
+            })
         });
 
         this.sortStudentSessionListBySessionID();

@@ -26,7 +26,7 @@ export class ManageStudentSessionsComponent implements OnInit {
 
     // stores the details of each of the sessions associated with the selected student
     studentSessionList: {
-        hasFeeReceipt: boolean,
+        hasFeeReceiptOrDiscount: boolean,
         id?: number,
         parentClass: {
             id?: number,
@@ -49,6 +49,7 @@ export class ManageStudentSessionsComponent implements OnInit {
 
     // contains the details of fee receipt for the selected student
     feeReceiptList: any = [];
+    discountList: any = [];
 
     // student session list matching with backend
     backendStudentSessionList: {

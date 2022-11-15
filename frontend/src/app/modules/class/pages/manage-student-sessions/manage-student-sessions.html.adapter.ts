@@ -20,7 +20,7 @@ export class ManageStudentSessionsHtmlAdapter {
     handleClassChange(idx): void {
     let currClassIdx = this.vm.classList.findIndex((classObj) => classObj.id == this.vm.studentSessionList[idx].parentClass.id);
         for(let i = idx + 1; i < this.vm.studentSessionList.length; i++) {
-            if(this.vm.studentSessionList[i].hasFeeReceipt == false) {
+            if(this.vm.studentSessionList[i].hasFeeReceiptOrDiscount == false) {
                 let nextClass = currClassIdx+1 < this.vm.classList.length ? this.vm.classList[currClassIdx + 1] : this.vm.classList[currClassIdx];
                 this.vm.studentSessionList[i].parentClass = nextClass;
                 currClassIdx++;
@@ -35,7 +35,7 @@ export class ManageStudentSessionsHtmlAdapter {
     handleDivisionChange(idx): void {
         let currDivisionIdx = this.vm.sectionList.findIndex((sectionObj) => sectionObj.id == this.vm.studentSessionList[idx].parentDivision.id);
         for(let i = idx + 1; i < this.vm.studentSessionList.length; i++) {
-            if(this.vm.studentSessionList[i].hasFeeReceipt == false) {
+            if(this.vm.studentSessionList[i].hasFeeReceiptOrDiscount == false) {
                 this.vm.studentSessionList[i].parentDivision = this.vm.sectionList[currDivisionIdx];
             } else {
                 break;
@@ -48,7 +48,7 @@ export class ManageStudentSessionsHtmlAdapter {
     removeSession() {
         if(this.vm.studentSessionList.length > 0) {
             let lastSession = this.vm.studentSessionList[this.vm.studentSessionList.length - 1];
-            if(lastSession.hasFeeReceipt == false){
+            if(lastSession.hasFeeReceiptOrDiscount == false){
                 this.vm.studentSessionList.pop();
             } 
         }
@@ -77,7 +77,7 @@ export class ManageStudentSessionsHtmlAdapter {
                 parentSession: this.vm.sessionList[lastSessionIdx-1],
                 parentClass: this.vm.classList.find(classObject => classObject.id == studentSessionFromBackendStudentSessionList.parentClass),
                 parentDivision: this.vm.sectionList.find(sectionObject => sectionObject.id == studentSessionFromBackendStudentSessionList.parentDivision),
-                hasFeeReceipt: false // This can be added as false otherwise the session couldn't have been removed in the first place.
+                hasFeeReceiptOrDiscount: false // This can be added as false otherwise the session couldn't have been removed in the first place.
             });
         } else { // if it is a new session w.r.t. backend as well then populate in the following manner.
             let lastClassIdx = this.vm.classList.findIndex((classObj) => classObj.id == lastSession.parentClass.id);
@@ -87,7 +87,7 @@ export class ManageStudentSessionsHtmlAdapter {
                 // populate with previous class, if already at the lowest class then populate with lowest class again.
                 parentClass: lastClassIdx + 1 < this.vm.classList.length ? this.vm.classList[lastClassIdx + 1]: this.vm.classList[lastClassIdx],
                 parentDivision: this.vm.sectionList[lastDivisionIdx],
-                hasFeeReceipt: false
+                hasFeeReceiptOrDiscount: false
             });
         }
 

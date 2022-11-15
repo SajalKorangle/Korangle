@@ -50,7 +50,7 @@
                                     <mat-select 
                                         [(ngModel)]="studentSession.parentClass"
                                         (ngModelChange)="htmlAdapter.handleClassChange(idx)"
-                                        [disabled]="studentSession.hasFeeReceipt"
+                                        [disabled]="studentSession.hasFeeReceiptOrDiscount"
                                     >
                                         <mat-option *ngFor="let class of classList" [value]="class">{{class.name}}</mat-option>
                                     </mat-select>
@@ -66,7 +66,7 @@
                                     <mat-select
                                     [(ngModel)]="studentSession.parentDivision"
                                     (ngModelChange)="htmlAdapter.handleDivisionChange(idx)"
-                                    [disabled]="studentSession.hasFeeReceipt"
+                                    [disabled]="studentSession.hasFeeReceiptOrDiscount"
                                     >
                                         <mat-option *ngFor="let section of sectionList" [value]="section">{{section.name}}</mat-option>
                                     </mat-select>
@@ -74,10 +74,10 @@
                                 <!-- END: Section Drop Down -->
 
                                 <!-- START: Receipt exists icon -->
-                                <span class="text-muted" *ngIf="studentSession.hasFeeReceipt">
+                                <span class="text-muted" *ngIf="studentSession.hasFeeReceiptOrDiscount">
                                     <mat-icon
                                             class="error" 
-                                            matTooltip="Fee Receipt has been generated for this session." 
+                                            matTooltip="Fee Receipt or Discount has been generated for this session." 
                                             matTooltipPosition="above" 
                                             matTooltipClass="delay-msg-tooltip"
                                             >
@@ -88,7 +88,7 @@
 
                                 <!-- START: Remove Button  -->
                                 <span class="text-{{ user.activeSchool.secondaryThemeColor }}"
-                                    *ngIf="idx == studentSessionList.length - 1 && !studentSession.hasFeeReceipt && studentSessionList.length > 1">
+                                    *ngIf="idx == studentSessionList.length - 1 && !studentSession.hasFeeReceiptOrDiscount && studentSessionList.length > 1">
                                     <mat-icon class="do_not_disturb_on" style="cursor: pointer;" (click)="htmlAdapter.removeSession()">do_not_disturb_on</mat-icon>
                                 </span>
                                 <!-- END: Remove Button  -->
