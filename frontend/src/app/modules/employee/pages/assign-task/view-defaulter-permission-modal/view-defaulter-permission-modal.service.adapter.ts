@@ -14,22 +14,6 @@ export class ViewDefaulterPermissionModalService {
         this.vm.isLoading = true;
 
         // Starts :- Fetching In Page Permissions
-        /*[
-            this.vm.employeeInPagePermissions, // 0
-            this.vm.parentEmployeePermission // 1
-        ] = await Promise.all([
-            this.vm.genericService.getObject({ fees_third_app: 'ViewDefaulterPermissions' }, {
-                filter: {
-                    parentEmployeePermission__parentEmployee: this.vm.employee.id
-                }
-            }),         // 0
-            this.vm.genericService.getObject({ employee_app: 'EmployeePermission' }, {
-                filter: {
-                    parentEmployee: this.vm.employee.id,
-                    parentTask: 66
-                }
-            })          // 1
-        ]);*/
         this.vm.employeeInPagePermissions = await this.vm.genericService.getObject({ fees_third_app: 'ViewDefaulterPermissions' }, {
             filter: {
                 parentEmployeePermission__parentEmployee: this.vm.employee.id
