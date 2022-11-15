@@ -269,14 +269,14 @@ def create_subjects_tests_fees(sender, instance, created, **kwargs):
                         property_full_name = month + property
 
                         if property == 'ClearanceDate':
-                            student_fee_object[property_full_name] = None
+                            setattr(student_fee_object, property_full_name, None)
                         else:
-                            student_fee_object[property_full_name] = school_fee_rule[property_full_name]
+                            setattr(student_fee_object, property_full_name, getattr(school_fee_rule, property_full_name))
 
                 student_fee_object.save()
 
 @receiver(pre_delete, sender = StudentSection)
-def delete_subjects_tests_fees(sender, instance, created, **kwargs):
+def delete_subjects_tests_fees(sender, instance, using, **kwargs):
     
     # Delete Student Fees
     fees_third_app.models.StudentFee.objects.filter(parentStudent=instance.parentStudent,
@@ -293,7 +293,7 @@ def delete_subjects_tests_fees(sender, instance, created, **kwargs):
     # Delete Student Extra Sub Fields and CCE Marks
     examination_app.models.StudentExtraSubField.objects.filter(parentStudent=instance.parentStudent,
                                                                 parentExamination__parentSession=instance.parentSession).delete()
-    examination_app.models.CCEMarks.objects.filter(parentStudent=instance.parnetStudent,
+    examination_app.models.CCEMarks.objects.filter(parentStudent=instance.parentStudent,
                                                     parentSession=instance.parentSession).delete()
 
 
