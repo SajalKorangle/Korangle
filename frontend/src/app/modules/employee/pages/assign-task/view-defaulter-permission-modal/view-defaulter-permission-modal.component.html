@@ -27,7 +27,7 @@
 <hr style="background-color: black;" />
 
 <!-- START: Permissions Section -->
-<ng-container>
+<ng-container *ngIf="!isLoading">
     
     <!-- START: userType Selection  -->
     <div>     
@@ -52,6 +52,11 @@
 </ng-container>
 <!-- END: Permissions Section -->
 
+<!-- START: Loader -->
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- END: Loader -->
 
 <!-- START: Apply button to save the changes -->
 <div mat-dialog-actions style="color: white">
@@ -60,8 +65,4 @@
 </div>
 <!-- END: Apply button to save the changes  -->
 
-
-<ng-container *ngIf="isLoading">
-    <app-loading-spinner [user]="user"></app-loading-spinner>
-</ng-container>
 
