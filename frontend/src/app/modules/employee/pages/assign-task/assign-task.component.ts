@@ -140,4 +140,12 @@ export class AssignTaskComponent implements OnInit {
             return true;
         return false;
     }
+
+    employeeTaskPermissionExists(task, employee): boolean {
+        return this.currentPermissionList.find(currentPermissionObject => {
+            return currentPermissionObject.parentEmployee == employee.id
+                && currentPermissionObject.parentTask == task.id;
+        }) != undefined;
+    }
+
 }
