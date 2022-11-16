@@ -96,7 +96,7 @@
 
         <ng-container *ngIf="selectedFilterType == filterTypeList[1]">
             <mat-tab-group dynamicHeight>            
-                <mat-tab label="Parent Fees Table">
+                <mat-tab label="Parent Fees Table" *ngIf="userNotifyDefaulterPermissionList.viewStudent">
                     <div class="mat-tab-element">
                         <div class="row">
                             <div class="col-sm-6">
