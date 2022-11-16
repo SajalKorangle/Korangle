@@ -73,7 +73,7 @@ export class ManageStudentSessionsComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        if(this.isMobileMenu()) {
+        if (this.isMobileMenu()) {
             return;
         }
 

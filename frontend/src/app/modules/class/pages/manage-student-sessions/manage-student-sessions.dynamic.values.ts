@@ -11,7 +11,7 @@ export class ManageStudentSessionsDynamicValues {
 
     isSessionNew(studentSessionObject): boolean {
         return this.vm.backendStudentSessionList.find(backendStudentSessionObject => {
-            if (backendStudentSessionObject.parentSession==studentSessionObject.parentSession.id) {
+            if (backendStudentSessionObject.parentSession == studentSessionObject.parentSession.id) {
                 return true;
             }
         }) == undefined;
@@ -20,7 +20,7 @@ export class ManageStudentSessionsDynamicValues {
     isSessionUpdated(studentSessionObject): boolean {
         return this.vm.backendStudentSessionList.find(backendStudentSessionObject => {
             if (
-                backendStudentSessionObject.parentSession==studentSessionObject.parentSession.id && (
+                backendStudentSessionObject.parentSession == studentSessionObject.parentSession.id && (
                     backendStudentSessionObject.parentClass != studentSessionObject.parentClass.id ||
                     backendStudentSessionObject.parentDivision != studentSessionObject.parentDivision.id
                 )

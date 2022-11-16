@@ -10,7 +10,7 @@ export class ManageStudentSessionsServiceAdapter {
         this.vm = vm;
     }
 
-    // START: initialization of Data 
+    // START: initialization of Data
     async initializeData() {
         this.vm.isLoading = true;
         let value = await Promise.all([
@@ -32,21 +32,24 @@ export class ManageStudentSessionsServiceAdapter {
     async initializeSelectedStudentData() {
         this.vm.isLoading = true;
         let value = await Promise.all([
-            this.vm.genericService.getObjectList({ student_app: 'StudentSection' }, {  //   0 - get all student's class and section in the currently active school
+            // get class and section of all students of this session
+            this.vm.genericService.getObjectList({ student_app: 'StudentSection' }, {  //   0
                 filter: {
                     parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
                     parentStudent: this.vm.selectedStudent.id
                 },
                 fields_list: ['parentClass', 'parentDivision', 'parentSession']
             }),
-            this.vm.genericService.getObjectList({ fees_third_app: 'FeeReceipt' }, { //     1 - get all the non cancelled fee receipts for the student in current school
+            // get all the non cancelled fee receipts for the student in current school
+            this.vm.genericService.getObjectList({ fees_third_app: 'FeeReceipt' }, { // 1
                 filter: {
                     parentStudent: this.vm.selectedStudent.id,
                     parentSchool: this.vm.user.activeSchool.dbId,
                     cancelled: false
                 }
             }),
-            this.vm.genericService.getObjectList({ fees_third_app: 'Discount' }, { //     1 - get all the non cancelled fee receipts for the student in current school
+            // get all the non cancelled discounts for the student in current school
+            this.vm.genericService.getObjectList({ fees_third_app: 'Discount' }, { // 2
                 filter: {
                     parentStudent: this.vm.selectedStudent.id,
                     parentSchool: this.vm.user.activeSchool.dbId,
@@ -62,7 +65,7 @@ export class ManageStudentSessionsServiceAdapter {
         this.prepareStudentSessionList();
     }
 
-    // START: populate the studentSessionList 
+    // START: populate the studentSessionList
     prepareStudentSessionList(): void {
 
         this.vm.studentSessionList = [];
@@ -80,7 +83,7 @@ export class ManageStudentSessionsServiceAdapter {
         // checking if feeReceipt has already been generated in each classSection
         this.vm.studentSessionList.forEach((classSection) => {
             this.vm.feeReceiptList.forEach((feeReceipt) => {
-                if(feeReceipt.parentSession == classSection.parentSession.id) {
+                if (feeReceipt.parentSession == classSection.parentSession.id) {
                     classSection.hasFeeReceiptOrDiscount = true;
                 }
             });
@@ -88,19 +91,19 @@ export class ManageStudentSessionsServiceAdapter {
                 if (discount.parentSession == classSection.parentSession.id) {
                     classSection.hasFeeReceiptOrDiscount = true;
                 }
-            })
+            });
         });
 
         this.sortStudentSessionListBySessionID();
     }
-    // END: populate the studentSessionList 
+    // END: populate the studentSessionList
 
     // START: sorting the studentsessions by session ID
     sortStudentSessionListBySessionID(): void {
         this.vm.studentSessionList.sort((a, b) => {
-            if(a.parentSession.id && b.parentSession.id && a.parentSession.id < b.parentSession.id) {
+            if (a.parentSession.id && b.parentSession.id && a.parentSession.id < b.parentSession.id) {
                 return 1;
-            } else if(a.parentSession.id && b.parentSession.id && a.parentSession.id > b.parentSession.id) {
+            } else if (a.parentSession.id && b.parentSession.id && a.parentSession.id > b.parentSession.id) {
                 return -1;
             } else {
                 return 0;
