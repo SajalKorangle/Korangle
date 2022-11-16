@@ -38,8 +38,6 @@ export class ParentStudentFilterServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
         ]).then(
             (value) => {
-                console.log(value);
-
                 this.vm.classList = value[0];
                 this.vm.sectionList = value[1];
                 this.vm.studentSectionList = value[2];

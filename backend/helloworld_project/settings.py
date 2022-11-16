@@ -89,6 +89,7 @@ INSTALLED_APPS = [
     'contact_app',
     'payment_app',
     'activity_record_app',
+    'feature_flag_app',
 
     'corsheaders',
 
