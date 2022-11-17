@@ -1,4 +1,4 @@
-CHANGE_COUNT=$(git diff --shortstat origin/master | awk '{print $4 + $6}')
+CHANGE_COUNT=$(git diff -w --shortstat origin/master | awk '{print $4 + $6}')
 
 if [[ $CHANGE_COUNT -gt 600 ]]
 then
