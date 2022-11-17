@@ -4,4 +4,5 @@ if [[ $branchName == master ]]; then
 else
 	dropdb -h localhost -U postgres $branchName
 	createdb -h localhost -U postgres -T master $branchName
+	./manage.py migrate
 fi
