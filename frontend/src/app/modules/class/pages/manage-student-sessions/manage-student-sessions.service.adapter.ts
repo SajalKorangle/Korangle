@@ -29,7 +29,6 @@ export class ManageStudentSessionsServiceAdapter {
     // END: initialization of data
 
     async initializeSelectedStudentData() {
-        this.vm.isLoading = true;
         let value = await Promise.all([
             // get class and section of all students of this session
             this.vm.genericService.getObjectList({ student_app: 'StudentSection' }, {  //   0
@@ -173,7 +172,6 @@ export class ManageStudentSessionsServiceAdapter {
 
         // updating student sessions in the database
         if(updateStudentSessionList.length > 0) {
-            console.log(updateStudentSessionList);
             await this.vm.genericService.updateObjectList({ student_app: 'StudentSection' }, updateStudentSessionList);
         }
 
@@ -183,7 +181,7 @@ export class ManageStudentSessionsServiceAdapter {
         }
 
         // Reinitialize Selected Student Data
-        this.initializeSelectedStudentData();
+        await this.initializeSelectedStudentData();
 
         this.vm.isLoading = false;
     }
