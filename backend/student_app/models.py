@@ -181,7 +181,7 @@ def create_subjects_tests_fees(sender, instance, created, **kwargs):
     if created:
 
         parentSchool = instance.parentStudent.parentSchool
-        parentSession = instance.parentStudent.parentSchool.currentSession
+        parentSession = instance.parentSession
         parentStudent = instance.parentStudent
         parentClass = instance.parentClass
         parentDivision = instance.parentDivision
