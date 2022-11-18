@@ -5,6 +5,13 @@ from school_app.model.models import BusStop, Session, School
 
 from class_app.models import Class, Division
 
+from django.db.models.signals import post_save, pre_delete
+from django.dispatch import receiver
+
+import subject_app
+import examination_app
+import fees_third_app
+
 from django.core.exceptions import ObjectDoesNotExist
 
 import os
@@ -166,6 +173,128 @@ class StudentSection(models.Model):
         db_table = 'student_section'
         unique_together = ('parentStudent', 'parentClass', 'parentSession')
         unique_together = ('parentStudent', 'parentDivision', 'parentSession')
+
+
+@receiver(post_save, sender = StudentSection)
+def create_subjects_tests_fees(sender, instance, created, **kwargs):
+
+    if created:
+
+        parentSchool = instance.parentStudent.parentSchool
+        parentSession = instance.parentSession
+        parentStudent = instance.parentStudent
+        parentClass = instance.parentClass
+        parentDivision = instance.parentDivision
+
+        # Create Student Subjects
+        for class_subject in subject_app.models.ClassSubject.objects.filter(parentSchool = parentSchool, parentSession = parentSession, parentClass = parentClass, parentDivision = parentDivision):
+            student_subject = subject_app.models.StudentSubject()
+            student_subject.parentSubject = class_subject.parentSubject
+            student_subject.parentStudent = parentStudent
+            student_subject.parentSession = class_subject.parentSession
+            student_subject.save()
+
+        # Create Student Tests
+        for test_second in examination_app.models.TestSecond.objects.filter(parentExamination__parentSchool = parentSchool, parentExamination__parentSession = parentSession, parentClass = parentClass, parentDivision = parentDivision):
+            student_test = examination_app.models.StudentTest()
+            student_test.parentExamination = test_second.parentExamination
+            student_test.parentSubject = test_second.parentSubject
+            student_test.parentStudent = parentStudent
+            student_test.testType = test_second.testType
+            student_test.marksObtained = 0
+            student_test.save()
+
+        # Create Student Fees.
+        feeTypeIdList = []
+        schoolFeeRuleList = fees_third_app.models.SchoolFeeRule.objects.filter(
+                                parentFeeType__parentSchool = parentSchool,
+                                parentSession = parentSession
+                            )
+
+        classFilterFeeList = fees_third_app.models.ClassFilterFee.objects.filter(
+                                parentSchoolFeeRule__parentFeeType__parentSchool = parentSchool,
+                                parentSchoolFeeRule__parentSession = parentSession
+                            )
+
+        busStopFilterFeeList = fees_third_app.models.BusStopFilterFee.objects.filter(
+                                parentSchoolFeeRule__parentFeeType__parentSchool = parentSchool,
+                                parentSchoolFeeRule__parentSession = parentSession,
+                            )
+
+
+        for school_fee_rule in schoolFeeRuleList:
+            feeTypeIdList.append(school_fee_rule.parentFeeType.id)
+
+        feeTypeIdSet = set(feeTypeIdList)
+        for feeTypeId in feeTypeIdSet:
+            for school_fee_rule in schoolFeeRuleList.filter(parentFeeType = feeTypeId).order_by('ruleNumber'):
+
+                class_filter_fee = classFilterFeeList.filter(
+                                        parentSchoolFeeRule = school_fee_rule,
+                                        parentClass = parentClass,
+                                        parentDivision = parentDivision
+                                    )
+
+                if (school_fee_rule.isClassFilter) and (len(class_filter_fee) == 0):
+                    continue
+
+                bus_stop_filter_fee = busStopFilterFeeList.filter(
+                                        parentSchoolFeeRule = school_fee_rule,
+                                        parentBusStop = parentStudent.currentBusStop
+                                    )
+
+                if (school_fee_rule.isBusStopFilter) and (len(bus_stop_filter_fee) == 0):
+                    continue
+
+                if (school_fee_rule.onlyNewAdmission) and (parentStudent.admissionSession != school_fee_rule.parentSession):
+                    continue
+
+                if (not school_fee_rule.includeRTE) and (parentStudent.rte == 'YES'):
+                    continue
+
+                student_fee_object = fees_third_app.models.StudentFee()
+
+                student_fee_object.parentStudent = parentStudent
+                student_fee_object.parentSchoolFeeRule = school_fee_rule
+                student_fee_object.parentFeeType = school_fee_rule.parentFeeType
+                student_fee_object.parentSession = school_fee_rule.parentSession
+                student_fee_object.isAnnually = school_fee_rule.isAnnually
+                student_fee_object.cleared = False
+
+                month_list = ['april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december', 'january', 'february', 'march']
+                property_list = ['Amount', 'LastDate', 'LateFee', 'MaximumLateFee', 'ClearanceDate']
+
+                for month in month_list:
+                    for property in property_list:
+                        property_full_name = month + property
+
+                        if property == 'ClearanceDate':
+                            setattr(student_fee_object, property_full_name, None)
+                        else:
+                            setattr(student_fee_object, property_full_name, getattr(school_fee_rule, property_full_name))
+
+                student_fee_object.save()
+
+@receiver(pre_delete, sender = StudentSection)
+def delete_subjects_tests_fees(sender, instance, using, **kwargs):
+    
+    # Delete Student Fees
+    fees_third_app.models.StudentFee.objects.filter(parentStudent=instance.parentStudent,
+                                                    parentSession=instance.parentSession).delete()
+
+    # Delete Tests
+    examination_app.models.StudentTest.objects.filter(parentStudent=instance.parentStudent,
+                                                    parentExamination__parentSession=instance.parentSession).delete()
+
+    # Delete Subjects
+    subject_app.models.StudentSubject.objects.filter(parentStudent=instance.parentStudent,
+                                                    parentSession=instance.parentSession).delete()
+
+    # Delete Student Extra Sub Fields and CCE Marks
+    examination_app.models.StudentExtraSubField.objects.filter(parentStudent=instance.parentStudent,
+                                                                parentExamination__parentSession=instance.parentSession).delete()
+    examination_app.models.CCEMarks.objects.filter(parentStudent=instance.parentStudent,
+                                                    parentSession=instance.parentSession).delete()
 
 
 class StudentParameter(models.Model):
