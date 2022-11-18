@@ -105,7 +105,10 @@ export class ManageStudentSessionsHtmlAdapter {
 
         // Start :- Checking if a session is updated or added
         for (let index = 0; index < this.vm.studentSessionList.length; index++) {
-            if (this.vm.dynamicValues.isSessionNew(this.vm.studentSessionList[index]) || this.vm.dynamicValues.isSessionUpdated(this.vm.studentSessionList[index])) {
+            if (
+                this.vm.dynamicValues.isSessionNew(this.vm.studentSessionList[index]) || 
+                this.vm.dynamicValues.isSessionUpdated(this.vm.studentSessionList[index])
+            ) {
                 return true;
             }
         }
