@@ -105,7 +105,10 @@
 
                 <!-- START: Add New session  -->
                 <div>
-                    <div *ngIf="htmlAdapter.enableNewSessionButton()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="cursor: pointer;" (click)="htmlAdapter.addStudentSession()">
+                    <div *ngIf="htmlAdapter.enableNewSessionButton()"
+                        class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                        style="cursor: pointer;"
+                        (click)="htmlAdapter.addStudentSession()">
                         + Add Session
                     </div>
                 </div>

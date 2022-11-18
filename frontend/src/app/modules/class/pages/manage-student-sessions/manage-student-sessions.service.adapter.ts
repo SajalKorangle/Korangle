@@ -134,7 +134,7 @@ export class ManageStudentSessionsServiceAdapter {
 
         // deleting all the objects that have been deleted and saving the changes to the database
         this.vm.backendStudentSessionList.forEach(backendStudentSessionObject => {
-            if(this.vm.studentSessionList.find((studentSession) => 
+            if (this.vm.studentSessionList.find((studentSession) =>
                 studentSession.parentSession.id == backendStudentSessionObject.parentSession
             ) == undefined) {
                 deleteStudentSessionList.push({id: backendStudentSessionObject.id});
@@ -143,7 +143,7 @@ export class ManageStudentSessionsServiceAdapter {
 
         // filling the addSessionList (for new sessions) and updateSessionList(for changes in previously existing sessions)
         this.vm.studentSessionList.forEach((studentSessionObject) => {
-            if(this.vm.dynamicValues.isSessionNew(studentSessionObject)) {
+            if (this.vm.dynamicValues.isSessionNew(studentSessionObject)) {
                 addStudentSessionList.push({
                     parentStudent: this.vm.selectedStudent.id,
                     parentClass: studentSessionObject.parentClass.id,
@@ -171,12 +171,12 @@ export class ManageStudentSessionsServiceAdapter {
         }
 
         // updating student sessions in the database
-        if(updateStudentSessionList.length > 0) {
+        if (updateStudentSessionList.length > 0) {
             await this.vm.genericService.updateObjectList({ student_app: 'StudentSection' }, updateStudentSessionList);
         }
 
         // adding student sessions to the database
-        if(addStudentSessionList.length > 0) {
+        if (addStudentSessionList.length > 0) {
             await this.vm.genericService.createObjectList({ student_app: 'StudentSection' }, addStudentSessionList);
         }
 
