@@ -1,5 +1,4 @@
 import { ManageStudentSessionsComponent } from "./manage-student-sessions.component";
-import { cloneDeep } from "lodash";
 
 export class ManageStudentSessionsServiceAdapter {
     vm: ManageStudentSessionsComponent;
@@ -30,7 +29,6 @@ export class ManageStudentSessionsServiceAdapter {
     // END: initialization of data
 
     async initializeSelectedStudentData() {
-        this.vm.isLoading = true;
         let value = await Promise.all([
             // get class and section of all students of this session
             this.vm.genericService.getObjectList({ student_app: 'StudentSection' }, {  //   0
@@ -73,6 +71,7 @@ export class ManageStudentSessionsServiceAdapter {
         // assigning values to each classSection in studentSessionList
         this.vm.backendStudentSessionList.forEach((backendStudentSessionObject) => {
             this.vm.studentSessionList.push({
+                id: backendStudentSessionObject.id,
                 parentClass: this.vm.classList.find((classObj) => classObj.id == backendStudentSessionObject.parentClass),
                 parentDivision: this.vm.sectionList.find((sectionObj) => sectionObj.id == backendStudentSessionObject.parentDivision),
                 parentSession: this.vm.sessionList.find((sessionObj) => sessionObj.id == backendStudentSessionObject.parentSession),
@@ -111,5 +110,81 @@ export class ManageStudentSessionsServiceAdapter {
         });
     }
     // END: sorting the studentsessions by session ID
+
+    // START: saving the changed data to the database
+    async saveSessions() {
+        this.vm.isLoading = true;
+
+        let deleteStudentSessionList: {
+            id: number
+        }[] = [];
+        let updateStudentSessionList: {
+            id?: number,
+            parentStudent: number,
+            parentClass?: number,
+            parentDivision?: number,
+            parentSession?: number
+        }[] = [];
+        let addStudentSessionList: {
+            parentStudent: number,
+            parentClass?: number,
+            parentDivision?: number,
+            parentSession?: number
+        }[] = [];
+
+        // deleting all the objects that have been deleted and saving the changes to the database
+        this.vm.backendStudentSessionList.forEach(backendStudentSessionObject => {
+            if (this.vm.studentSessionList.find((studentSession) =>
+                studentSession.parentSession.id == backendStudentSessionObject.parentSession
+            ) == undefined) {
+                deleteStudentSessionList.push({id: backendStudentSessionObject.id});
+            }
+        });
+
+        // filling the addSessionList (for new sessions) and updateSessionList(for changes in previously existing sessions)
+        this.vm.studentSessionList.forEach((studentSessionObject) => {
+            if (this.vm.dynamicValues.isSessionNew(studentSessionObject)) {
+                addStudentSessionList.push({
+                    parentStudent: this.vm.selectedStudent.id,
+                    parentClass: studentSessionObject.parentClass.id,
+                    parentDivision: studentSessionObject.parentDivision.id,
+                    parentSession: studentSessionObject.parentSession.id
+                });
+            } else if (this.vm.dynamicValues.isSessionUpdated(studentSessionObject)) {
+                updateStudentSessionList.push({
+                    id: studentSessionObject.id,
+                    parentStudent: this.vm.selectedStudent.id,
+                    parentClass: studentSessionObject.parentClass.id,
+                    parentDivision: studentSessionObject.parentDivision.id,
+                    parentSession: studentSessionObject.parentSession.id,
+                });
+            }
+        });
+
+        // Deleting the removed student sessions from database
+        if (deleteStudentSessionList.length > 0) {
+            await this.vm.genericService.deleteObjectList({ student_app: 'StudentSection' }, {
+                filter: {
+                    id__in: deleteStudentSessionList.map(deleteSession => deleteSession.id)
+                }
+            });
+        }
+
+        // updating student sessions in the database
+        if (updateStudentSessionList.length > 0) {
+            await this.vm.genericService.updateObjectList({ student_app: 'StudentSection' }, updateStudentSessionList);
+        }
+
+        // adding student sessions to the database
+        if (addStudentSessionList.length > 0) {
+            await this.vm.genericService.createObjectList({ student_app: 'StudentSection' }, addStudentSessionList);
+        }
+
+        // Reinitialize Selected Student Data
+        await this.initializeSelectedStudentData();
+
+        this.vm.isLoading = false;
+    }
+    // END: saving the changed data to the database
 
 }
