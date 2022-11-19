@@ -71,7 +71,7 @@
                                             [disabled]="isDisabled(module, task, selectedEmployee)">
                                             {{ task.title }}
                                         </mat-checkbox>
-                                        <span *ngIf="hasInPageTaskPermission(module, task, selectedEmployee)"
+                                        <span *ngIf="hasInPageTaskPermission(module, task, selectedEmployee) && employeeTaskPermissionExists(task, selectedEmployee)"
                                             (click)="openInPagePermissionDialog(module, task, selectedEmployee)"
                                             style="cursor: pointer; color: blue;">&nbsp;(<u>more</u>)</span>
                                         <div *ngIf="isPermissionLoading(selectedEmployee, task)" class="loader-custom">
@@ -98,7 +98,7 @@
                         [disabled]="isDisabled(getModuleById(selectedTask.parentModule), selectedTask, employee)">
                         {{ employee.name }}
                     </mat-checkbox>
-                    <span *ngIf="hasInPageTaskPermission(getModuleById(selectedTask.parentModule), selectedTask, employee)"
+                    <span *ngIf="hasInPageTaskPermission(getModuleById(selectedTask.parentModule), selectedTask, employee) && employeeTaskPermissionExists(selectedTask, employee)"
                           (click)="openInPagePermissionDialog(getModuleById(selectedTask.parentModule), selectedTask, employee)"
                           style="cursor: pointer; color: blue;">&nbsp;(<u>more</u>)</span>
                     <div *ngIf="isPermissionLoading(employee, selectedTask)" class="loader-custom"></div>

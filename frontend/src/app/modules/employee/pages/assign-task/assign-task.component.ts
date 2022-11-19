@@ -8,6 +8,7 @@ import { AssignTaskServiceAdapter } from './assign-task.service.adapter';
 import { TeamService } from '../../../../services/modules/team/team.service';
 import { InPagePermissionDialogComponent } from '@modules/employee/component/in-page-permission-dialog/in-page-permission-dialog.component';
 import { TASK_PERMISSION_LIST } from '@modules/common/in-page-permission';
+import { ViewDefaulterPermissionModalComponent } from './view-defaulter-permission-modal/view-defaulter-permission-modal.component';
 
 @Component({
     selector: 'assign-task',
@@ -91,34 +92,60 @@ export class AssignTaskComponent implements OnInit {
     }
 
     openInPagePermissionDialog(module, task, employee) {
-        const existingPermission = this.hasPermission(employee, task);
-        const openedDialog = this.dialog.open(InPagePermissionDialogComponent, {
-            data: {
-                module, task, employee, existingPermission
-            }
-        });
+        // module = {id: 15, path: 'fees', ...}, task = {id: 66, path: 'view_defaulters', ...}
+        if (module.id === 15 && task.id === 66) { // For new implementation
+            let parentEmployeePermission = this.currentPermissionList.find(currentPermission => {
+                return currentPermission.parentTask == 66;
+            });
+            this.dialog.open(ViewDefaulterPermissionModalComponent, {
+                data: {
+                    module, task, employee, parentEmployeePermission
+                }
+            });
+        } else { // This is old implementation and is deprecated, use above (if) way to solve new issues.
+            const existingPermission = this.hasPermission(employee, task);
+            const openedDialog = this.dialog.open(InPagePermissionDialogComponent, {
+                data: {
+                    module, task, employee, existingPermission
+                }
+            });
 
-        openedDialog.afterClosed().subscribe((data: any) => {
-            if (data && data.employeePermissionConfigJson) {
-                data.employeePermissionConfigJsonCopy = Object.assign({}, data.employeePermissionConfigJson);
-                this.updatePermissionLoading(employee, task, true);
-                if (existingPermission) {
-                    this.serviceAdapter.updatePermission(
-                        { ...existingPermission, configJSON: data.employeePermissionConfigJson },
-                        employee, task);
+            openedDialog.afterClosed().subscribe((data: any) => {
+                if (data && data.employeePermissionConfigJson) {
+                    data.employeePermissionConfigJsonCopy = Object.assign({}, data.employeePermissionConfigJson);
+                    this.updatePermissionLoading(employee, task, true);
+                    if (existingPermission) {
+                        this.serviceAdapter.updatePermission(
+                            { ...existingPermission, configJSON: data.employeePermissionConfigJson },
+                            employee, task);
+                    }
+                    else {
+                        this.serviceAdapter.addPermission(employee, task, data.employeePermissionConfigJson);
+                    }
                 }
-                else {
-                    this.serviceAdapter.addPermission(employee, task, data.employeePermissionConfigJson);
-                }
-            }
-        });
+            });
+        }
     }
 
     hasInPageTaskPermission(module, task, employee): boolean {
         if (this.isDisabled(module, task, employee))
             return false;
+
+        // module = {id: 15, path: 'fees', ...}, task = {id: 66, path: 'view_defaulters', ...}
+        if (module.id === 15 && task.id === 66) {
+            return true;
+        }
+
         if (TASK_PERMISSION_LIST.find(taskPermission => taskPermission.modulePath == module.path && taskPermission.taskPath == task.path))
             return true;
         return false;
     }
+
+    employeeTaskPermissionExists(task, employee): boolean {
+        return this.currentPermissionList.find(currentPermissionObject => {
+            return currentPermissionObject.parentEmployee == employee.id
+                && currentPermissionObject.parentTask == task.id;
+        }) != undefined;
+    }
+
 }

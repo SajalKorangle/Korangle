@@ -21,12 +21,24 @@ import { FeeType } from '@services/modules/fees/models/fee-type';
 import { MatTableDataSource } from '@angular/material';
 import { MatPaginator } from '@angular/material';
 import {InformationService} from '@services/modules/information/information.service';
+import { GenericService } from '@services/generic/generic-service';
 
 @Component({
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [FeeService, StudentService, ClassService, NotificationService, UserService, SmsService, SmsOldService, SchoolService, InformationService],
+    providers: [
+        FeeService,
+        StudentService,
+        ClassService,
+        NotificationService,
+        UserService,
+        SmsService,
+        SmsOldService,
+        SchoolService,
+        InformationService,
+        GenericService
+    ],
     //animation for row expansion on clicking row on mat table
     animations: [
         trigger('detailExpand', [
@@ -75,7 +87,7 @@ export class ViewDefaultersComponent implements OnInit {
     subFeeReceiptList: any;
     subDiscountList: any;
     studentFeeList: any;
-    studentSectionList: any;
+    studentSectionList = <any>[];
     studentList: any;
     classList: any;
     sectionList: any;
@@ -137,11 +149,22 @@ export class ViewDefaultersComponent implements OnInit {
 
     feesDueBySession = [];
 
+    userNotifyDefaulterPermissionList: {
+        id?: number,
+        parentEmployeePermission: number,
+        userType: string,
+        viewStudent: boolean,
+        viewSummary: boolean
+    } = null;
+
+    attendancePermissionList = <any>[];      // same as backend
+
     constructor(
         public schoolService: SchoolService,
         public feeService: FeeService,
         public studentService: StudentService,
         public classService: ClassService,
+        public genericService: GenericService,
         private excelService: ExcelService,
         public notificationService: NotificationService,
         public userService: UserService,
@@ -166,7 +189,6 @@ export class ViewDefaultersComponent implements OnInit {
 
         const monthNumber = new Date().getMonth();
         this.installmentNumber = monthNumber > 2 ? monthNumber - 3 : monthNumber + 9;
-        this.selectAllClassSectionHandler();
     }
     applyFilters() {
         this.studentDataSource.data = this.getFilteredStudentList();
@@ -176,6 +198,11 @@ export class ViewDefaultersComponent implements OnInit {
         this.cdRef.detectChanges();
     }
 
+    isPermissionToShow() {
+        if (this.userNotifyDefaulterPermissionList.viewStudent || this.userNotifyDefaulterPermissionList.viewSummary)
+            return true;
+        return false;
+    }
     checkMobileNumber(mobileNumber: number): boolean {
         if (mobileNumber && mobileNumber.toString().length == 10) {
             return true;
@@ -1196,5 +1223,9 @@ export class ViewDefaultersComponent implements OnInit {
             );
         });
         return filteredSubDiscountList;
+    }
+
+    hasAdminPermission(): boolean {
+        return this.userNotifyDefaulterPermissionList.userType == 'Admin';
     }
 }

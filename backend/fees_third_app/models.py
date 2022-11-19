@@ -1,3 +1,4 @@
+from employee_app.models import EmployeePermission
 from payment_app.cashfree.cashfree import initiateRefund
 from payment_app.models import SchoolMerchantAccount
 from django.db import models
@@ -138,6 +139,24 @@ class ClassFilterFee(models.Model):
 
     class Meta:
         db_table = 'class_filter_fee'
+
+
+class ViewDefaulterPermissions(models.Model):
+    USER_TYPE = (
+        ('Admin', 'Admin'),
+        ('Teacher', 'Teacher')
+    )
+
+    parentEmployeePermission = models.ForeignKey(EmployeePermission, on_delete=models.CASCADE, verbose_name='parentEmployeePermission', unique=True)
+    userType = models.CharField(max_length=10, choices=USER_TYPE, default='Admin')
+    viewSummary = models.BooleanField(null=False, default=True)
+    viewStudent = models.BooleanField(null=False, default=True)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentEmployeePermission__parentEmployee__parentSchool__id']
+
+    class Meta:
+        db_table = 'view_defaulter_permissions'
 
 
 class BusStopFilterFee(models.Model):
