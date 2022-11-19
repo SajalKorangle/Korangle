@@ -94,4 +94,45 @@ export class ManageStudentSessionsHtmlAdapter {
     }
     // END: add new session when new session button is clicked
 
+    // START: save the changes made to the data
+    saveStudentSessions() {
+        this.vm.serviceAdapter.saveSessions();
+    }
+    // END: save the changes made to the data
+
+    // Start: return whether to show update button or not
+    showUpdateButton(): boolean {
+
+        // Start :- Checking if a session is updated or added
+        for (let index = 0; index < this.vm.studentSessionList.length; index++) {
+            if (
+                this.vm.dynamicValues.isSessionNew(this.vm.studentSessionList[index]) ||
+                this.vm.dynamicValues.isSessionUpdated(this.vm.studentSessionList[index])
+            ) {
+                return true;
+            }
+        }
+        // End :- Checking if a session is updated or added
+
+        // Start :- Checking if a session is deleted
+        for (let index = 0; index < this.vm.backendStudentSessionList.length; index++) {
+            if (this.vm.studentSessionList.find(studentSessionObject => {
+                return studentSessionObject.parentSession.id == this.vm.backendStudentSessionList[index].parentSession;
+            }) == undefined) {
+                return true;
+            }
+        }
+        // End :- Checking if a session deleted
+
+        return false;
+
+    }
+    // End: return whether to show update button or not
+
+    // Start :- handle update Button click
+    handleUpdateButtonClick() {
+        this.vm.serviceAdapter.saveSessions();
+    }
+    // End :- handle update Button click
+
 }

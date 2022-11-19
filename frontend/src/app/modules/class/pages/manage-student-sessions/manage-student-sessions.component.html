@@ -105,11 +105,24 @@
 
                 <!-- START: Add New session  -->
                 <div>
-                    <div *ngIf="htmlAdapter.enableNewSessionButton()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="cursor: pointer;" (click)="htmlAdapter.addStudentSession()">
+                    <div *ngIf="htmlAdapter.enableNewSessionButton()"
+                        class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                        style="cursor: pointer;"
+                        (click)="htmlAdapter.addStudentSession()">
                         + Add Session
                     </div>
                 </div>
                 <!-- END: Add new session  -->
+
+                <!-- START: Save student sessions button  -->
+                <div>
+                    <button *ngIf="htmlAdapter.showUpdateButton()"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                        (click)="htmlAdapter.handleUpdateButtonClick()">
+                        Update Student Sessions
+                    </button>
+                </div>
+                <!-- END: Save student sessions button  -->
 
             </div>
             <!-- END: section containing the table  -->
