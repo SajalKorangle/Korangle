@@ -1,1 +1,40 @@
-In Development Phase
+<!-- START: main card content  -->
+<div class="card-content">
+    <ng-container *ngIf="isMobileMenu()">This page is not supported in mobile version yet.</ng-container>
+
+    <ng-container *ngIf="!isLoading && !isMobileMenu()">
+
+        <!-- START: No Students in this session -->
+        <div *ngIf="classSectionList.length == 0">
+            There are not students present in this session.
+        </div>
+        <!-- END: No Students in this session -->
+
+        <!-- START: Dropdown displaying class and section  -->
+        <div *ngIf="classSectionList.length > 0">
+            <mat-form-field>
+                <mat-select multiple
+                    placeholder="Select Class"
+                    [(ngModel)]="htmlAdapter.selectedClassSectionList"
+                >
+                    <div class="select-all">
+                        <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.selectAllClassSectionHandler(); $event.stopPropagation()">Select All</button>
+                        <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.clearAllClassSectionHandler(); $event.stopPropagation()">Clear All</button>
+                    </div>
+                    <mat-option *ngFor="let classSectionObj of classSectionList" [value]="classSectionItem">
+                        {{classSectionObj.class.name}} - {{classSectionObj.section.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <!-- END: Dropdown displaying class and section  -->
+
+    </ng-container>
+</div>
+<!-- END: main card content  -->
+
+<!-- START: loading spinner  -->
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- END: loading spinner  -->
