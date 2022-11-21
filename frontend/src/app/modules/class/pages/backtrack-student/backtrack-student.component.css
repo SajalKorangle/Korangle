@@ -1,0 +1,7 @@
+/* START: select all and clear all buttons in select class dropdown */
+.select-all {
+    display: flex;
+    justify-content: left;
+    padding-left: 16px;
+}
+/* END: select all and clear all buttons in select class dropdown */
