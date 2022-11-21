@@ -12,7 +12,7 @@ import { BacktrackStudentHtmlAdapter } from './backtrack-student.html.adapter';
     styleUrls: ['./backtrack-student.component.css'],
     providers: [GenericService]
 })
-  
+
 export class BacktrackStudentComponent implements OnInit {
 
     user;

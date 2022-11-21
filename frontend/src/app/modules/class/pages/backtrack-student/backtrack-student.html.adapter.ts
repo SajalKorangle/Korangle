@@ -19,7 +19,7 @@ export class BacktrackStudentHtmlAdapter {
 
     constructor() {}
 
-    initialize(vm: BacktrackStudentComponent) { this.vm = vm; } 
+    initialize(vm: BacktrackStudentComponent) { this.vm = vm; }
 
     // START: select all the class-sections
     selectAllClassSectionHandler() {

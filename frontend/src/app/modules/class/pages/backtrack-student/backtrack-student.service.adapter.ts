@@ -15,12 +15,13 @@ export class BacktrackStudentServiceAdapter {
         let value = await Promise.all([
             this.vm.genericService.getObjectList({ class_app: 'Class' }, {}),  //           0 - get all the classes
             this.vm.genericService.getObjectList({ class_app: 'Division' }, {}),  //        1 - get all the sections
-            this.vm.genericService.getObjectList({ student_app: 'StudentSection' }, {  //   2 - get all student's class and section in the currently active school
+            // get all student's class and section in the currently active school
+            this.vm.genericService.getObjectList({ student_app: 'StudentSection' }, {  //   2
                 filter: {
                     parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
                     parentSession: this.vm.user.activeSchool.currentSessionDbId
                 },
-                fields_list: ['parentStudent__id','parentStudent__admissionSession', 'parentStudent__dateOfAdmission', 'parentStudent__name', 'parentClass', 'parentDivision', 'parentSession']
+                fields_list: ['parentStudent__id', 'parentStudent__admissionSession', 'parentStudent__dateOfAdmission', 'parentStudent__name', 'parentClass', 'parentDivision', 'parentSession']
             })
         ]);
 
@@ -55,14 +56,14 @@ export class BacktrackStudentServiceAdapter {
 
         // START :- Sort class section list by Class 12, 11, 10... and then Section A,B,C...
         this.vm.classSectionList.sort((a, b) => {
-            if(a.class.id > b.class.id) {
+            if (a.class.id > b.class.id) {
                 return 1;
-            } else if(a.class.id < b.class.id) {
+            } else if (a.class.id < b.class.id) {
                 return -1;
             } else {
-                if(a.section.id > b.section.id) {
+                if (a.section.id > b.section.id) {
                     return 1;
-                } else if(a.section.id < b.section.id) {
+                } else if (a.section.id < b.section.id) {
                     return -1;
                 } else {
                     return 0;
