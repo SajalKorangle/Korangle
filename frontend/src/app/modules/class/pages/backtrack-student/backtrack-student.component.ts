@@ -5,6 +5,7 @@ import { DataStorage } from '@classes/data-storage';
 import { GenericService } from '@services/generic/generic-service';
 import { BacktrackStudentServiceAdapter } from './backtrack-student.service.adapter';
 import { BacktrackStudentHtmlAdapter } from './backtrack-student.html.adapter';
+import { Student, Session } from './backtrack-student.models';
 
 @Component({
     selector: 'app-backtrack-student',
@@ -32,6 +33,27 @@ export class BacktrackStudentComponent implements OnInit {
         orderNumber: number
     }[] = [];
     // End :- section list
+
+    // Start :- session list
+    sessionList: Session[] = [];
+    // End :- session list
+
+    // Start :- Frontend Student List with all session information
+    studentList: Student[] = [];
+    // End :- Frontend Student List with all session information
+
+    // Start :- Backend Student List with all session information
+    studentSectionListOfAllSessionsForAllStudentsOfCurrentSession: {
+        id: number,
+        parentSession: number
+        parentClass: number,
+        parentDivision: number,
+        parentStudent: number,
+        parentStudent__name: string,
+        parentStudent__dateOfAdmission: Date,
+        parentStudent__admissionSession: number,
+    } [] = [];
+    // End :- Backend Student List with all session information
 
     // Start :- contains those class and sections for which students exist in this session
     classSectionList: {

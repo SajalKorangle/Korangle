@@ -5,9 +5,12 @@ import { ComponentsModule } from '../../../../components/components.module';
 import { BacktrackStudentComponent } from './backtrack-student.component';
 
 @NgModule({
-    declarations: [BacktrackStudentComponent],
+    declarations: [ BacktrackStudentComponent ],
 
-    imports: [BacktrackStudentRoutingModule, ComponentsModule],
+    imports: [
+        BacktrackStudentRoutingModule,
+        ComponentsModule
+    ],
     exports: [],
     providers: [],
     bootstrap: [BacktrackStudentComponent],

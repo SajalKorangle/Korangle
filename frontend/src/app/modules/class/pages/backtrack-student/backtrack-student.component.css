@@ -5,3 +5,21 @@
     padding-left: 16px;
 }
 /* END: select all and clear all buttons in select class dropdown */
+
+/* START: No class is selected message CSS  */
+.noClassSelectedMsg{
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 2rem;
+}
+/* END: No class is selected message CSS  */
+
+/* START: highlight student row */
+.highlightStudentRow {
+    background-color: #ffffea;
+}
+.highlightStudentRow:hover {
+    background-color: #ffffea;
+}
+/* END: highlight student row */

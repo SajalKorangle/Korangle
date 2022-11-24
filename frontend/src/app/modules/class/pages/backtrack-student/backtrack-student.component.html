@@ -21,13 +21,76 @@
                         <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.selectAllClassSectionHandler(); $event.stopPropagation()">Select All</button>
                         <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.clearAllClassSectionHandler(); $event.stopPropagation()">Clear All</button>
                     </div>
-                    <mat-option *ngFor="let classSectionObj of classSectionList" [value]="classSectionItem">
+                    <mat-option *ngFor="let classSectionObj of classSectionList" [value]="classSectionObj">
                         {{classSectionObj.class.name}} - {{classSectionObj.section.name}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
         <!-- END: Dropdown displaying class and section  -->
+
+        <!-- START: Message when no class is selected yet -->
+        <div class="noClassSelectedMsg" *ngIf="htmlAdapter.selectedClassSectionList.length == 0"> No Classes Selected! </div>
+        <!-- End: Message when no class is selected yet -->
+
+        <!-- START: Student List of selected classes and sections  -->
+        <div *ngIf="htmlAdapter.selectedClassSectionList.length > 0">
+            <!-- START: Student Table  -->
+            <table class="table table-hover">
+
+                <!-- START: Table Header  -->
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th>S No.</th>
+                        <th>Student Name</th>
+                        <th>Class</th>
+                        <th>Admission Date</th>
+                        <th>Admission Session</th>
+                    </tr>
+                </thead>
+                <!-- END: Table Header  -->
+
+                <!-- START: Table Body  -->
+                <tbody>
+                    <ng-container *ngFor="let student of htmlAdapter.getFilteredStudentList(); let i=index;">
+                        <tr [class.highlightStudentRow]="htmlAdapter.highlightStudentRow(student)">
+
+                            <!-- Serial No. -->
+                            <td>{{i+1}}</td>
+
+                            <!-- Student Name Column  -->
+                            <td>{{ student.name }}</td>
+
+                            <!-- Student Class Column  -->
+                            <td>{{ student.currentClassSectionSession.class.name }}, {{ student.currentClassSectionSession.section.name}}</td>
+
+                            <!-- Student Admission Date Column  -->
+                            <td>{{ student.dateOfAdmission | date : 'd MMM yyyy' }}</td>
+
+                            <!-- Admission Session Column  -->
+                            <td>
+                                <mat-form-field style="margin-bottom: -1.25em">
+                                    <mat-label>{{ student.classSectionSessionList[student.classSectionSessionList.length - 1].session.name }}</mat-label>
+                                    <mat-select
+                                        [(ngModel)]="student.selectedAdmissionSession"
+                                        (ngModelChange)="htmlAdapter.handleAdmissionSessionChange(student)"
+                                    >
+                                        <mat-option *ngFor="let session of htmlAdapter.getAllowedAdmissionSessionList(student)" [value]="session" >
+                                            {{ session.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+
+                        </tr>
+                    </ng-container>
+                </tbody>
+                <!-- END: Table Body  -->
+
+            </table>
+            <!-- END: Student Table  -->
+        </div>
+        <!-- End: Student List of selected classes and sections  -->
 
     </ng-container>
 </div>
