@@ -144,7 +144,7 @@ export class BacktrackStudentServiceAdapter {
                     class: this.vm.classList.find((classObj) => classObj.id == studentSection.parentClass),
                     section: this.vm.sectionList.find((sectionObj) => sectionObj.id == studentSection.parentDivision),
                     session: this.vm.sessionList.find((sessionObj) => sessionObj.id == studentSection.parentSession)
-                }
+                };
             }
             // End :- Populating currentClassSectionSession if this for current Session
 

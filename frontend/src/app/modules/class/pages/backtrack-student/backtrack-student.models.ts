@@ -4,19 +4,19 @@ export type Session = {
     startDate: Date,
     endDate: Date,
     orderNumber: number
-}
+};
 
 export type Class = {
     id: number,
     name: string,
     orderNumber: number
-}
+};
 
 export type Section = {
     id: number,
     name: string,
     orderNumber: number
-}
+};
 
 export type ClassSectionSession = {
     class: Class,

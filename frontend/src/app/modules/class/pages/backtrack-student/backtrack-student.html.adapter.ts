@@ -56,7 +56,7 @@ export class BacktrackStudentHtmlAdapter {
                 && session.orderNumber >= student.selectedAdmissionSession.orderNumber) {
                 student.classSectionSessionList.push({
                     session: session,
-                    class: this.vm.classList[oldestClassIndex<this.vm.classList.length-1?++oldestClassIndex:oldestClassIndex],
+                    class: this.vm.classList[oldestClassIndex < this.vm.classList.length - 1 ? ++oldestClassIndex : oldestClassIndex],
                     section: this.vm.sectionList[oldestSectionIndex],
                 });
             }
