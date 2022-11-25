@@ -28,7 +28,8 @@ export type Student = {
     id: number,
     name: string,
     admissionSession: number,
-    dateOfAdmission: Date
+    dateOfAdmission: Date,
+    allowedAdmissionSessionList: Session[],
     // Order is from newest session to oldest session.
     classSectionSessionList: ClassSectionSession [],
     selectedAdmissionSession?: Session,

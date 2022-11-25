@@ -120,6 +120,7 @@ export class BacktrackStudentServiceAdapter {
                     name: studentSection.parentStudent__name,
                     admissionSession: studentSection.parentStudent__admissionSession,
                     dateOfAdmission: studentSection.parentStudent__dateOfAdmission,
+                    allowedAdmissionSessionList: [],
                     classSectionSessionList: [{
                         class: this.vm.classList.find((classObj) => classObj.id == studentSection.parentClass),
                         section: this.vm.sectionList.find((sectionObj) => sectionObj.id == studentSection.parentDivision),
@@ -139,7 +140,7 @@ export class BacktrackStudentServiceAdapter {
             }
 
             // Start :- Populating currentClassSectionSession if this for current Session
-            if (this.vm.sessionList.find(sessionObj => sessionObj.id == this.vm.user.activeSchool.currentSessionDbId)) {
+            if (studentSection.parentSession == this.vm.user.activeSchool.currentSessionDbId) {
                 student.currentClassSectionSession = {
                     class: this.vm.classList.find((classObj) => classObj.id == studentSection.parentClass),
                     section: this.vm.sectionList.find((sectionObj) => sectionObj.id == studentSection.parentDivision),
@@ -150,6 +151,21 @@ export class BacktrackStudentServiceAdapter {
 
         });
         // End :- Populate Student List
+
+        // Start :- Populating AllowedAdmissionSessionList
+        this.vm.studentList.forEach(student => {
+            let studentSectionListOfAllSessionsForSelectedStudent = this.vm.studentSectionListOfAllSessionsForAllStudentsOfCurrentSession.filter(studentSection => {
+                return studentSection.parentStudent == student.id;
+            });
+            let oldestCurrentBackendSession = this.vm.sessionList.find(sessionObj => {
+                return sessionObj.id == 
+                    studentSectionListOfAllSessionsForSelectedStudent[studentSectionListOfAllSessionsForSelectedStudent.length - 1].parentSession;
+            });
+            student.allowedAdmissionSessionList = this.vm.sessionList.slice().reverse().filter(session => {
+              return session.orderNumber <= oldestCurrentBackendSession.orderNumber;
+            });
+        });
+        // End :- Populating AllowedAdmissionSessionList
 
     }
 

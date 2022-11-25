@@ -1,5 +1,5 @@
 import { BacktrackStudentComponent } from "./backtrack-student.component";
-import { Student, Session } from "./backtrack-student.models";
+import { Student } from "./backtrack-student.models";
 
 export class BacktrackStudentHtmlAdapter {
 
@@ -99,14 +99,5 @@ export class BacktrackStudentHtmlAdapter {
 
     }
     // End: Highlight Student Row if student's data is updated
-
-    // Start :- Get this list of sessions available for student backtracking
-    getAllowedAdmissionSessionList(student: Student): Session[] {
-        let oldestCurrentBackendSession = student.classSectionSessionList[student.classSectionSessionList.length - 1];
-        return this.vm.sessionList.slice().reverse().filter(session => {
-          return session.orderNumber <= oldestCurrentBackendSession.session.orderNumber;
-        });
-    }
-    // End :- Get this list of sessions available for student backtracking
 
 }

@@ -75,7 +75,7 @@
                                         [(ngModel)]="student.selectedAdmissionSession"
                                         (ngModelChange)="htmlAdapter.handleAdmissionSessionChange(student)"
                                     >
-                                        <mat-option *ngFor="let session of htmlAdapter.getAllowedAdmissionSessionList(student)" [value]="session" >
+                                        <mat-option *ngFor="let session of student.allowedAdmissionSessionList" [value]="session" >
                                             {{ session.name }}
                                         </mat-option>
                                     </mat-select>
