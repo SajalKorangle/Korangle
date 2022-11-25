@@ -154,11 +154,12 @@ export class BacktrackStudentServiceAdapter {
 
         // Start :- Populating AllowedAdmissionSessionList
         this.vm.studentList.forEach(student => {
-            let studentSectionListOfAllSessionsForSelectedStudent = this.vm.studentSectionListOfAllSessionsForAllStudentsOfCurrentSession.filter(studentSection => {
+            let studentSectionListOfAllSessionsForSelectedStudent =
+                this.vm.studentSectionListOfAllSessionsForAllStudentsOfCurrentSession.filter(studentSection => {
                 return studentSection.parentStudent == student.id;
             });
             let oldestCurrentBackendSession = this.vm.sessionList.find(sessionObj => {
-                return sessionObj.id == 
+                return sessionObj.id ==
                     studentSectionListOfAllSessionsForSelectedStudent[studentSectionListOfAllSessionsForSelectedStudent.length - 1].parentSession;
             });
             student.allowedAdmissionSessionList = this.vm.sessionList.slice().reverse().filter(session => {
