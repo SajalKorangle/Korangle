@@ -46,6 +46,7 @@
                         <th>Class</th>
                         <th>Admission Date</th>
                         <th>Admission Session</th>
+                        <th></th> <!-- Column for button to open the session class section  modal -->
                     </tr>
                 </thead>
                 <!-- END: Table Header  -->
@@ -72,14 +73,25 @@
                                 <mat-form-field style="margin-bottom: -1.25em">
                                     <mat-label>{{ student.classSectionSessionList[student.classSectionSessionList.length - 1].session.name }}</mat-label>
                                     <mat-select
-                                        [(ngModel)]="student.selectedAdmissionSession"
-                                        (ngModelChange)="htmlAdapter.handleAdmissionSessionChange(student)"
+                                        [ngModel]="htmlAdapter.getAdmissionSession(student)"
+                                        (ngModelChange)="htmlAdapter.handleAdmissionSessionChange($event, student)"
                                     >
                                         <mat-option *ngFor="let session of student.allowedAdmissionSessionList" [value]="session" >
                                             {{ session.name }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
+                            </td>
+
+                            <!-- Button to open class section session modal column  -->
+                            <td>
+                                <button
+                                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} btn-sm" 
+                                    style="padding: 0.5rem; margin: 0px;"
+                                    (click)="htmlAdapter.openClassSectionModal(student)"    
+                                >
+                                    More...
+                                </button>
                             </td>
 
                         </tr>

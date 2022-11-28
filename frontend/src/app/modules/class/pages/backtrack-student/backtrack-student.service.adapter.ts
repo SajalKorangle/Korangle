@@ -126,7 +126,6 @@ export class BacktrackStudentServiceAdapter {
                         section: this.vm.sectionList.find((sectionObj) => sectionObj.id == studentSection.parentDivision),
                         session: this.vm.sessionList.find((sessionObj) => sessionObj.id == studentSection.parentSession)
                     }],
-                    selectedAdmissionSession: this.vm.sessionList.find((sessionObj) => sessionObj.id == studentSection.parentSession),
                     currentClassSectionSession: null
                 };
                 this.vm.studentList.push(student);
@@ -136,7 +135,6 @@ export class BacktrackStudentServiceAdapter {
                     section: this.vm.sectionList.find((sectionObj) => sectionObj.id == studentSection.parentDivision),
                     session: this.vm.sessionList.find((sessionObj) => sessionObj.id == studentSection.parentSession)
                 });
-                student.selectedAdmissionSession = this.vm.sessionList.find((sessionObj) => sessionObj.id == studentSection.parentSession);
             }
 
             // Start :- Populating currentClassSectionSession if this for current Session

@@ -32,7 +32,16 @@ export type Student = {
     allowedAdmissionSessionList: Session[],
     // Order is from newest session to oldest session.
     classSectionSessionList: ClassSectionSession [],
-    selectedAdmissionSession?: Session,
     currentClassSectionSession: ClassSectionSession
 };
 
+export type StudentAndStudentSectionJoined = {
+    id: number,
+    parentSession: number
+    parentClass: number,
+    parentDivision: number,
+    parentStudent: number,
+    parentStudent__name: string,
+    parentStudent__dateOfAdmission: Date,
+    parentStudent__admissionSession: number,
+};

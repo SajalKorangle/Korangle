@@ -1,0 +1,136 @@
+<mat-dialog-content class="class-section-modal-container">
+    <!-- START: Header -->
+    <div class="header">
+        <div class="title">{{student.name}} - Session-wise Class Section List</div>
+        <div><i class="material-icons close-btn" (click)="htmlAdapter.closeClicked()">highlight_off</i></div>
+    </div>
+    <br />
+    <!-- END: Header -->
+
+    <!-- START: Table Container -->
+    <ng-container class="table-container">
+            <!-- START: Table  -->
+            <table class="table table-hover" style="margin-right: 1.5rem; margin-left: 1.5rem">
+                <!-- START: Head of Table  -->
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th>Session</th>
+                        <th>Class</th>
+                        <th>Section</th>
+                    </tr>
+                </thead>
+                <!-- END: Head of Table  -->
+                <!-- START: Body of Table  -->
+                <tbody>
+
+                    <!-- Start: Class Section Session List of student -->
+                    <tr *ngFor="let classSectionSession of student.classSectionSessionList; let idx = index;">
+
+                        <!-- Start: Non editable class section Sessions -->
+                        <ng-container *ngIf="!dynamicValues.isClassSectionSessionEnabled(classSectionSession)">
+
+                            <!-- START: Session Name  -->
+                            <td>{{classSectionSession.session.name}}</td>
+                            <!-- END: Session Name  -->
+
+                            <!-- NOTE: The class and section of this tr contains only one option because they will always remain disabled so there is no point of adding more options to it.  -->
+
+                            <!-- START: Dropdown to select class  -->
+                            <td>
+                                <mat-form-field style="margin-top: -1.25em;margin-bottom: -1.25em;">
+                                    <mat-label>{{classSectionSession.class.name}}</mat-label>
+                                    <mat-select [disabled]="true">
+                                        <mat-option>
+                                            {{classSectionSession.class.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <!-- END: Dropdown to select class  -->
+
+                            <!-- START: Dropdown to select section  -->
+                            <td>
+                                <mat-form-field style="margin-top: -1.25em; margin-bottom:-1.25em;">
+                                    <mat-label>{{classSectionSession.section.name}}</mat-label>
+                                    <mat-select [disabled]="true">
+                                        <mat-option>
+                                            {{classSectionSession.section.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <!-- END: Dropdown to select section  -->
+
+                        </ng-container>
+                        <!-- End : Non editable class session Sessions -->
+
+                        <!-- Start: Editable class session Sessions -->
+                        <ng-container *ngIf="dynamicValues.isClassSectionSessionEnabled(classSectionSession)">
+
+                            <!-- START: Session Name  -->
+                            <td>
+                                <!-- START: Remove Session Icon  -->
+                                <span class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                                    <mat-icon class="remove" *ngIf="idx == student.classSectionSessionList.length - 1" (click)="htmlAdapter.removeSession()">remove</mat-icon>
+                                </span>
+                                <!-- END: Remove Session Icon  -->
+
+                                {{classSectionSession.session.name}}
+
+                            </td>
+                            <!-- END: Session Name  -->
+
+                            <!-- START: Dropdown Menu to select the class  -->
+                            <td>
+                                <mat-form-field style="margin-top: -1.25em; margin-bottom:-1.25em;">
+                                    <mat-select
+                                        [(ngModel)]="classSectionSession.class"
+                                        (ngModelChange)="htmlAdapter.handleClassChange(idx)"
+                                    >
+                                        <ng-container *ngFor="let classObj of classList">
+                                            <mat-option [value]="classObj">
+                                                {{classObj.name}}
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <!-- END: Dropdown menu to select the class  -->
+
+                            <!-- START: Dropdown menu to select the section -->
+                            <td>
+                                <mat-form-field style="margin-top: -1.25em; margin-bottom:-1.25em;">
+                                    <mat-select
+                                        [(ngModel)]="classSectionSession.section"
+                                        (ngModelChange)="htmlAdapter.handleSectionChange(idx)"
+                                    >
+                                        <ng-container *ngFor="let sectionObj of sectionList">
+                                            <mat-option [value]="sectionObj">
+                                                {{sectionObj.name}}
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <!-- END: Dropdown menu to select the section  -->
+
+                        </ng-container>
+                        <!-- End : Editable class session Sessions -->
+
+                    </tr>
+                    <!-- End: Class Section Session List of student -->
+
+                </tbody>
+                <!-- END: Body of Table  -->
+            </table>
+            <!-- END: Table  -->
+            <div>
+                <div *ngIf="htmlAdapter.enableNewSessionButton()"
+                    class="text-{{ user.activeSchool.secondaryThemeColor }}"
+                    style="cursor: pointer;" (click)="htmlAdapter.addBacktrackSession()">
+                    + Add Session
+                </div>
+            </div>
+    </ng-container>
+    <!-- END: Table Container -->
+</mat-dialog-content>

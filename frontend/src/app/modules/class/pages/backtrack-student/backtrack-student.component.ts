@@ -5,7 +5,7 @@ import { DataStorage } from '@classes/data-storage';
 import { GenericService } from '@services/generic/generic-service';
 import { BacktrackStudentServiceAdapter } from './backtrack-student.service.adapter';
 import { BacktrackStudentHtmlAdapter } from './backtrack-student.html.adapter';
-import { Student, Session } from './backtrack-student.models';
+import { Student, Session, StudentAndStudentSectionJoined } from './backtrack-student.models';
 
 @Component({
     selector: 'app-backtrack-student',
@@ -43,16 +43,7 @@ export class BacktrackStudentComponent implements OnInit {
     // End :- Frontend Student List with all session information
 
     // Start :- Backend Student List with all session information
-    studentSectionListOfAllSessionsForAllStudentsOfCurrentSession: {
-        id: number,
-        parentSession: number
-        parentClass: number,
-        parentDivision: number,
-        parentStudent: number,
-        parentStudent__name: string,
-        parentStudent__dateOfAdmission: Date,
-        parentStudent__admissionSession: number,
-    } [] = [];
+    studentSectionListOfAllSessionsForAllStudentsOfCurrentSession: StudentAndStudentSectionJoined [] = [];
     // End :- Backend Student List with all session information
 
     // Start :- contains those class and sections for which students exist in this session
@@ -87,7 +78,7 @@ export class BacktrackStudentComponent implements OnInit {
             return;
         }
 
-        this.htmlAdapter = new BacktrackStudentHtmlAdapter();
+        this.htmlAdapter = new BacktrackStudentHtmlAdapter(this.dialog);
         this.htmlAdapter.initialize(this);
 
         this.serviceAdapter = new BacktrackStudentServiceAdapter();

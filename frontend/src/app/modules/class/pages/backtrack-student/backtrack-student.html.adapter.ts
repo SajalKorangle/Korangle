@@ -1,5 +1,7 @@
 import { BacktrackStudentComponent } from "./backtrack-student.component";
-import { Student } from "./backtrack-student.models";
+import { MatDialog } from '@angular/material';
+import { Session, Student } from "./backtrack-student.models";
+import { ClassSectionModalComponent } from "./class-section-modal/class-section-modal.component";
 
 export class BacktrackStudentHtmlAdapter {
 
@@ -18,7 +20,7 @@ export class BacktrackStudentHtmlAdapter {
         }
     }[] = [];
 
-    constructor() {}
+    constructor(public dialog: MatDialog) {}
 
     initialize(vm: BacktrackStudentComponent) { this.vm = vm; }
 
@@ -36,11 +38,11 @@ export class BacktrackStudentHtmlAdapter {
     // END: deselect all the class-sections
 
     // Start: Update class section session list of student on admission session change
-    handleAdmissionSessionChange(student: Student) {
+    handleAdmissionSessionChange(selectedAdmissionSession: Session, student: Student) {
 
         // Start: Delete if any older session than selected Admission Session
         student.classSectionSessionList = student.classSectionSessionList.filter(classSectionSessionObj => {
-            return classSectionSessionObj.session.orderNumber >= student.selectedAdmissionSession.orderNumber;
+            return classSectionSessionObj.session.orderNumber >= selectedAdmissionSession.orderNumber;
         });
         // End: Delete if any older session than selected Admission Session
 
@@ -53,7 +55,7 @@ export class BacktrackStudentHtmlAdapter {
         // Start: Add older sessions till selected Admission Session
         this.vm.sessionList.slice().reverse().forEach(session => {
             if (session.orderNumber < oldestClassSectionSession.session.orderNumber
-                && session.orderNumber >= student.selectedAdmissionSession.orderNumber) {
+                && session.orderNumber >= selectedAdmissionSession.orderNumber) {
                 student.classSectionSessionList.push({
                     session: session,
                     class: this.vm.classList[oldestClassIndex < this.vm.classList.length - 1 ? ++oldestClassIndex : oldestClassIndex],
@@ -100,4 +102,24 @@ export class BacktrackStudentHtmlAdapter {
     }
     // End: Highlight Student Row if student's data is updated
 
+    // Start: Open Class Section Modal for more customization
+    openClassSectionModal(student: Student) {
+        this.dialog.open(ClassSectionModalComponent, {
+            data: {
+                user: this.vm.user,
+                student: student,
+                classList: this.vm.classList,
+                sectionList: this.vm.sectionList,
+                sessionList: this.vm.sessionList,
+                studentSectionListOfAllSessionsForAllStudentsOfCurrentSession: this.vm.studentSectionListOfAllSessionsForAllStudentsOfCurrentSession
+            }
+        });
+    }
+    // End: Open Class Section Modal for more customization
+
+    // Start: get admission session of student
+    getAdmissionSession(student: Student): Session {
+        return student.classSectionSessionList[student.classSectionSessionList.length - 1].session;
+    }
+    // End: get admission session of student
 }
