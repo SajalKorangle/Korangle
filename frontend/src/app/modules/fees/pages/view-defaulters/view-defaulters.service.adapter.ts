@@ -210,11 +210,11 @@ export class ViewDefaultersServiceAdapter {
                         this.vm.subDiscountList = this.vm.subDiscountList.concat(value[4]);
 
                         this.vm.messageService.fetchGCMDevicesNew(this.vm.studentList);
-                        this.vm.handleLoading();
-                        this.vm.selectedFilterType = this.vm.filterTypeList[0];
 
                         this.vm.selectAllClassSectionHandler();
 
+                        this.vm.handleLoading();
+                        this.vm.selectedFilterType = this.vm.filterTypeList[0];
                         this.vm.isLoading = false;
                     },
                     (error) => {
