@@ -9,5 +9,4 @@ fi
 if [[ $CHANGE_COUNT -lt 500 ]]
 then
     echo "Success: Number of changed lines ($CHANGE_COUNT) is less than 500"
-    exit 1
 fi
