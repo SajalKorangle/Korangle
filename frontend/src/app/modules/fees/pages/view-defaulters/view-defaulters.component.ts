@@ -242,7 +242,9 @@ export class ViewDefaultersComponent implements OnInit {
                     }
                     return (
                         total +
-                        filteredInstallmentList.reduce((installmentAmount, installment) => {
+                        filteredInstallmentList.filter((installment) => {
+                            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+                        }).reduce((installmentAmount, installment) => {
                             let lateFeeAmount = 0;
                             if (
                                 studentFee[installment + 'LastDate'] &&
@@ -316,7 +318,9 @@ export class ViewDefaultersComponent implements OnInit {
                 filteredStudentFeeList.reduce((total, studentFee) => {
                     return (
                         total +
-                        this.installmentList.reduce((installmentAmount, installment) => {
+                        this.installmentList.filter((installment) => {
+                            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+                        }).reduce((installmentAmount, installment) => {
                             let lateFeeAmount = 0;
                             if (
                                 studentFee[installment + 'LastDate'] &&
@@ -414,7 +418,9 @@ export class ViewDefaultersComponent implements OnInit {
                 .reduce((total, studentFee) => {
                     return (
                         total +
-                        this.installmentList.reduce((installmentAmount, installment) => {
+                        this.installmentList.filter((installment) => {
+                            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+                        }).reduce((installmentAmount, installment) => {
                             let lateFeeAmount = 0;
                             if (
                                 studentFee[installment + 'LastDate'] &&
@@ -984,6 +990,8 @@ export class ViewDefaultersComponent implements OnInit {
     getFilteredInstallmentListByStudentFee(studentFee: any): any {
         return this.installmentList.filter((installment) => {
             return studentFee[installment + 'Amount'] ? studentFee[installment + 'Amount'] > 0 : false;
+        }).filter((installment) => {
+            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
         });
     }
     studentFeeDetailsVisible(studentFee: any): boolean {
@@ -1037,7 +1045,9 @@ export class ViewDefaultersComponent implements OnInit {
         let studentFeeList = this.getStudentFeeByStudentId(id);
         let amount = 0;
         studentFeeList.forEach((studentFee) => {
-            this.installmentList.forEach((installment) => {
+            this.installmentList.filter((installment) => {
+                return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+            }).forEach((installment) => {
                 amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
             });
         });
@@ -1047,7 +1057,9 @@ export class ViewDefaultersComponent implements OnInit {
         let studentFeeList = this.getStudentFeeByStudentId(id);
         let amount = 0;
         studentFeeList.forEach((studentFee) => {
-            this.installmentList.forEach((installment) => {
+            this.installmentList.filter((installment) => {
+                return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+            }).forEach((installment) => {
                 amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment);
             });
         });
@@ -1074,7 +1086,9 @@ export class ViewDefaultersComponent implements OnInit {
         });
         let amount = 0;
         filteredStudentFeeList.forEach((studentFee) => {
-            this.installmentList.forEach((installment) => {
+            this.installmentList.filter((installment) => {
+                return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+            }).forEach((installment) => {
                 amount += this.getStudentFeeInstallmentFeesDue(studentFee, installment);
             });
         });
@@ -1087,7 +1101,9 @@ export class ViewDefaultersComponent implements OnInit {
         });
         let amount = 0;
         filteredStudentFeeList.forEach((studentFee) => {
-            this.installmentList.forEach((installment) => {
+            this.installmentList.filter((installment) => {
+                return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+            }).forEach((installment) => {
                 amount += studentFee[installment + "Amount"];
             });
         });
@@ -1100,7 +1116,9 @@ export class ViewDefaultersComponent implements OnInit {
         });
         let amount = 0;
         filteredStudentFeeList.forEach((studentFee) => {
-            this.installmentList.forEach((installment) => {
+            this.installmentList.filter((installment) => {
+                return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+            }).forEach((installment) => {
                 amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment);
             });
         });
@@ -1113,7 +1131,9 @@ export class ViewDefaultersComponent implements OnInit {
         });
         let amount = 0;
         filteredStudentFeeList.forEach((studentFee) => {
-            this.installmentList.forEach((installment) => {
+            this.installmentList.filter((installment) => {
+                return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+            }).forEach((installment) => {
                 amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
             });
         });
@@ -1121,7 +1141,9 @@ export class ViewDefaultersComponent implements OnInit {
     }
     getStudentFeeFeesDue(studentFee: any): number {
         let amount = 0;
-        this.installmentList.forEach((installment) => {
+        this.installmentList.filter((installment) => {
+            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+        }).forEach((installment) => {
             amount += this.getStudentFeeInstallmentFeesDue(studentFee, installment);
         });
         return amount;
@@ -1130,21 +1152,27 @@ export class ViewDefaultersComponent implements OnInit {
     }
     getStudentFeeLateFeesDue(studentFee: any): number {
         let amount = 0;
-        this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
+        this.getFilteredInstallmentListByStudentFee(studentFee).filter((installment) => {
+            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+        }).forEach((installment) => {
             amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment);
         });
         return amount;
     }
     getStudentFeeLateFeeTotal(studentFee: any): number {
         let amount = 0;
-        this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
+        this.getFilteredInstallmentListByStudentFee(studentFee).filter((installment) => {
+            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+        }).forEach((installment) => {
             amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
         });
         return amount;
     }
     getStudentFeeTotalFees(studentFee: any): number {
         let amount = 0;
-        this.installmentList.forEach((installment) => {
+        this.installmentList.filter((installment) => {
+            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+        }).forEach((installment) => {
             amount += this.getStudentFeeInstallmentTotalFees(studentFee, installment);
         });
         return amount;
