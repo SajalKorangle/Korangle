@@ -1,13 +1,13 @@
 import { BacktrackStudentComponent } from "./backtrack-student.component";
 import { MatDialog } from '@angular/material';
-import { Session, Student } from "./backtrack-student.models";
+import { ClassSectionSession, Session, Student } from "./backtrack-student.models";
 import { ClassSectionModalComponent } from "./class-section-modal/class-section-modal.component";
 
 export class BacktrackStudentHtmlAdapter {
 
     vm: BacktrackStudentComponent;
 
-    selectedClassSectionList: {
+    selectedClassSection: {
         class: {
             id: number,
             name: string,
@@ -18,24 +18,33 @@ export class BacktrackStudentHtmlAdapter {
             name: string,
             orderNumber: number
         }
-    }[] = [];
+    } = null;
 
     constructor(public dialog: MatDialog) {}
 
     initialize(vm: BacktrackStudentComponent) { this.vm = vm; }
 
-    // START: select all the class-sections
-    selectAllClassSectionHandler() {
-        this.selectedClassSectionList = [];
-        this.selectedClassSectionList = this.vm.classSectionList;
-    }
-    // END: select all the class-sections
+    // START: Map Admission Session to potential admission session
+    mapAdmissionSession() {
+        // Iterating over the list of filtered students
+        this.vm.htmlAdapter.getFilteredStudentList().forEach((student: Student) => {
+            // Will map admission session only when potential admission is populated.
+            if (student.potentialAdmissionSession) {
+                this.handleAdmissionSessionChange(student.potentialAdmissionSession, student);
+            }
+        });
 
-    // START: deselect all the class-sections
-    clearAllClassSectionHandler() {
-        this.selectedClassSectionList = [];
     }
-    // END: deselect all the class-sections
+    // End: Map Admission Session to potential admission session
+
+    // Start: reset admission session to original backend value
+    resetAdmissionSession() {
+        // Iterating over the list of filtered students
+        this.vm.htmlAdapter.getFilteredStudentList().forEach((student: Student) => {
+            this.handleAdmissionSessionChange(student.allowedAdmissionSessionList[0], student);
+        });
+    }
+    // End: reset admission session to original backend value
 
     // Start: Update class section session list of student on admission session change
     handleAdmissionSessionChange(selectedAdmissionSession: Session, student: Student) {
@@ -70,34 +79,24 @@ export class BacktrackStudentHtmlAdapter {
 
     // Start: Get list of student list based on class section filters
     getFilteredStudentList(): Student[] {
-        return this.vm.studentList.filter((student) => {
-            let studentCurrentSessionData = student.classSectionSessionList.find(classSectionSessionObj => {
-                return classSectionSessionObj.session.id == this.vm.user.activeSchool.currentSessionDbId;
+        if (this.selectedClassSection) {
+            return this.vm.studentList.filter((student) => {
+                return this.selectedClassSection.class.id == student.currentClassSectionSession.class.id
+                    && this.selectedClassSection.section.id == student.currentClassSectionSession.section.id;
             });
-            return this.selectedClassSectionList.find(selectedClassSection => {
-                return selectedClassSection.class.id == studentCurrentSessionData.class.id
-                    && selectedClassSection.section.id == studentCurrentSessionData.section.id;
-            }) != undefined;
-        });
+        }
+        return [];
     }
     // End: Get list of student list based on class section filters
 
     // Start: Highlight Student Row if student's data is updated
     highlightStudentRow(student: Student): boolean {
 
-        // Start :- Filter list only for student
-        let filteredList = this.vm.studentSectionListOfAllSessionsForAllStudentsOfCurrentSession.filter(studentSectionObj => {
-            return studentSectionObj.parentStudent == student.id;
-        });
-        // End :- Filter list only for student
-
-        // Start :- Check if there are more sessions in student then in backend.
-        if (student.classSectionSessionList.length != filteredList.length) {
-            return true;
-        }
-        // End :- Check if there are more sessions in student then in backend.
-
-        return false;
+        // Start :- Check if class section session exists for more than one allowed admission session values
+        return student.classSectionSessionList.find((classSectionSession: ClassSectionSession) => {
+            return classSectionSession.session.orderNumber < student.allowedAdmissionSessionList[0].orderNumber;
+        }) != undefined;
+        // End :- Check if class section session exists for more than one allowed admission session values
 
     }
     // End: Highlight Student Row if student's data is updated
@@ -110,8 +109,7 @@ export class BacktrackStudentHtmlAdapter {
                 student: student,
                 classList: this.vm.classList,
                 sectionList: this.vm.sectionList,
-                sessionList: this.vm.sessionList,
-                studentSectionListOfAllSessionsForAllStudentsOfCurrentSession: this.vm.studentSectionListOfAllSessionsForAllStudentsOfCurrentSession
+                sessionList: this.vm.sessionList
             }
         });
     }
@@ -122,4 +120,11 @@ export class BacktrackStudentHtmlAdapter {
         return student.classSectionSessionList[student.classSectionSessionList.length - 1].session;
     }
     // End: get admission session of student
+
+    disableButton(): boolean {
+        return this.getFilteredStudentList().find((student: Student) => {
+            return this.highlightStudentRow(student);
+        }) == undefined;
+    }
+
 }

@@ -32,7 +32,8 @@ export type Student = {
     allowedAdmissionSessionList: Session[],
     // Order is from newest session to oldest session.
     classSectionSessionList: ClassSectionSession [],
-    currentClassSectionSession: ClassSectionSession
+    currentClassSectionSession: ClassSectionSession,
+    potentialAdmissionSession: Session
 };
 
 export type StudentAndStudentSectionJoined = {

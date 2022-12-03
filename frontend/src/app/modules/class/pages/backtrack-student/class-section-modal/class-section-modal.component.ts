@@ -18,7 +18,6 @@ export class ClassSectionModalComponent implements OnInit {
     classList: Class[] = [];
     sectionList: Section[] = [];
     sessionList: Session[] = [];
-    studentSectionListOfAllSessionsForAllStudentsOfCurrentSession: StudentAndStudentSectionJoined [] = [];
 
     dynamicValues: ClassSectionModalDynamicValues;
     htmlAdapter: ClassSectionModalHtmlAdapter;
@@ -32,7 +31,6 @@ export class ClassSectionModalComponent implements OnInit {
         this.classList = data.classList;
         this.sectionList = data.sectionList;
         this.sessionList = data.sessionList;
-        this.studentSectionListOfAllSessionsForAllStudentsOfCurrentSession = data.studentSectionListOfAllSessionsForAllStudentsOfCurrentSession;
     }
 
     ngOnInit() {

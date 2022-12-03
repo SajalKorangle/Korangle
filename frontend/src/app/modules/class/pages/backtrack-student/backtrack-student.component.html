@@ -1,8 +1,9 @@
 <!-- START: main card content  -->
 <div class="card-content">
-    <ng-container *ngIf="isMobileMenu()">This page is not supported in mobile version yet.</ng-container>
+    <!-- ng-container *ngIf="isMobileMenu()">This page is not supported in mobile version yet.</ng-container>
 
-    <ng-container *ngIf="!isLoading && !isMobileMenu()">
+    <ng-container *ngIf="!isLoading && !isMobileMenu()" -->
+    <ng-container *ngIf="!isLoading">
 
         <!-- START: No Students in this session -->
         <div *ngIf="classSectionList.length == 0">
@@ -13,14 +14,11 @@
         <!-- START: Dropdown displaying class and section  -->
         <div *ngIf="classSectionList.length > 0">
             <mat-form-field>
-                <mat-select multiple
+                <mat-select
                     placeholder="Select Class"
-                    [(ngModel)]="htmlAdapter.selectedClassSectionList"
+                    [(ngModel)]="htmlAdapter.selectedClassSection"
                 >
-                    <div class="select-all">
-                        <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.selectAllClassSectionHandler(); $event.stopPropagation()">Select All</button>
-                        <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.clearAllClassSectionHandler(); $event.stopPropagation()">Clear All</button>
-                    </div>
+                    <mat-option [value]="null">None</mat-option>
                     <mat-option *ngFor="let classSectionObj of classSectionList" [value]="classSectionObj">
                         {{classSectionObj.class.name}} - {{classSectionObj.section.name}}
                     </mat-option>
@@ -30,11 +28,20 @@
         <!-- END: Dropdown displaying class and section  -->
 
         <!-- START: Message when no class is selected yet -->
-        <div class="noClassSelectedMsg" *ngIf="htmlAdapter.selectedClassSectionList.length == 0"> No Classes Selected! </div>
+        <div class="noClassSelectedMsg" *ngIf="!htmlAdapter.selectedClassSection"> Please select a class! </div>
         <!-- End: Message when no class is selected yet -->
 
         <!-- START: Student List of selected classes and sections  -->
-        <div *ngIf="htmlAdapter.selectedClassSectionList.length > 0">
+        <div *ngIf="htmlAdapter.selectedClassSection" style="margin-bottom: 60px;">
+
+            <!-- Start: Map Button for mapping admission session to date of admission -->
+            <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.mapAdmissionSession(); $event.stopPropagation()">Map</button>
+            <!-- End: Map Button for mapping admission session to date of admission -->
+
+            <!-- Start: Reset Button for resetting admission session to original backend data -->
+            <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.resetAdmissionSession(); $event.stopPropagation()">Reset</button>
+            <!-- End: Reset Button for resetting admission session to original backend data -->
+
             <!-- START: Student Table  -->
             <table class="table table-hover">
 
@@ -43,7 +50,6 @@
                     <tr>
                         <th>S No.</th>
                         <th>Student Name</th>
-                        <th>Class</th>
                         <th>Admission Date</th>
                         <th>Admission Session</th>
                         <th></th> <!-- Column for button to open the session class section  modal -->
@@ -62,13 +68,10 @@
                             <!-- Student Name Column  -->
                             <td>{{ student.name }}</td>
 
-                            <!-- Student Class Column  -->
-                            <td>{{ student.currentClassSectionSession.class.name }}, {{ student.currentClassSectionSession.section.name}}</td>
-
                             <!-- Student Admission Date Column  -->
                             <td>{{ student.dateOfAdmission | date : 'd MMM yyyy' }}</td>
 
-                            <!-- Admission Session Column  -->
+                            <!-- Start: Admission Session Column  -->
                             <td>
                                 <mat-form-field style="margin-bottom: -1.25em">
                                     <mat-label>{{ student.classSectionSessionList[student.classSectionSessionList.length - 1].session.name }}</mat-label>
@@ -82,17 +85,18 @@
                                     </mat-select>
                                 </mat-form-field>
                             </td>
+                            <!-- End: Admission Session Column  -->
 
-                            <!-- Button to open class section session modal column  -->
+                            <!-- Start: Button to open class section session modal column  -->
                             <td>
                                 <button
-                                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} btn-sm" 
-                                    style="padding: 0.5rem; margin: 0px;"
+                                    class="btn" style="padding: 4px 7px; background-color: blue;"
                                     (click)="htmlAdapter.openClassSectionModal(student)"    
                                 >
                                     More...
                                 </button>
                             </td>
+                            <!-- End: Button to open class section session modal column  -->
 
                         </tr>
                     </ng-container>
@@ -103,6 +107,37 @@
             <!-- END: Student Table  -->
         </div>
         <!-- End: Student List of selected classes and sections  -->
+
+
+        <!-- Start: Footer Section of the page in desktop view -->
+        <div class="footer" *ngIf="!isMobileMenu()">
+
+            <!-- Start: Update Button -->
+            <button class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                [disabled]="htmlAdapter.disableButton()"
+                (click)="serviceAdapter.backtrackStudents()">
+                Update
+            </button>
+            <!-- End: Update Button -->
+
+            <!-- Start: Nothing to update Message -->
+            <span style="margin-left: 10px; color: black;" *ngIf="htmlAdapter.disableButton()">
+                Nothing to update
+            </span>
+            <!-- End: Nothing to update Message -->
+
+        </div>
+        <!-- End: Footer Section of the page in desktop view -->
+
+        <!-- Start: Floating Update button in mobile menu view -->
+        <button [ngClass]="'sticky mobileButton-' + user.activeSchool.secondaryThemeColor"
+            mat-fab
+            *ngIf="isMobileMenu() && !htmlAdapter.disableButton()"
+            (click)="serviceAdapter.backtrackStudents()"
+        >
+            <mat-icon>check</mat-icon>
+        </button>
+        <!-- End: Floating Update button in mobile menu view -->
 
     </ng-container>
 </div>

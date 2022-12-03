@@ -11,10 +11,7 @@ export class ClassSectionModalDynamicValues {
 
     isClassSectionSessionEnabled(classSectionSession: ClassSectionSession) {
 
-        return this.vm.studentSectionListOfAllSessionsForAllStudentsOfCurrentSession.find(studentSectionObject => {
-            return studentSectionObject.parentStudent == this.vm.student.id &&
-                studentSectionObject.parentSession == classSectionSession.session.id;
-        }) == undefined;
+        return classSectionSession.session.orderNumber < this.vm.student.allowedAdmissionSessionList[0].orderNumber;
 
     }
 
