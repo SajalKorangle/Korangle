@@ -1,12 +1,16 @@
-CHANGE_COUNT=$(git diff -w --shortstat origin/master | awk '{print $4 + $6}')
+LINE_CHANGE_COUNT=$(git diff -w --shortstat origin/master | awk '{print $4 + $6}')
+FILE_CHANGE_COUNT=$(git diff -w --shortstat origin/master | awk '{print $1}')
 
-if [[ $CHANGE_COUNT -gt 500 ]]
+if [[ $LINE_CHANGE_COUNT -gt 500 ]]
 then
-    echo "ERROR: Number of changed lines ($CHANGE_COUNT) should be less than 600"
+    echo "ERROR: Number of changed lines ($LINE_CHANGE_COUNT) should be less than 500"
     exit 1
 fi
 
-if [[ $CHANGE_COUNT -lt 500 ]]
+if [[ $FILE_CHANGE_COUNT -gt 10 ]]
 then
-    echo "Success: Number of changed lines ($CHANGE_COUNT) is less than 500"
+    echo "ERROR: Number of changed files $FILE_CHANGE_COUNT should be less than 10"
+    exit 1
 fi
+
+echo "PR Change Success\nNumber of changed lines: $LINE_CHANGE_COUNT\nNumber of changed files: $FILE_CHANGE_COUNT"
