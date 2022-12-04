@@ -27,7 +27,7 @@ export class BacktrackStudentHtmlAdapter {
     initialize(vm: BacktrackStudentComponent) {
         this.vm = vm;
         this.bottomMarginStyle = {
-            'margin-bottom': this.vm.isMobileMenu()? '90px' : '60px',
+            'margin-bottom': this.vm.isMobileMenu() ? '90px' : '60px',
         };
     }
 
