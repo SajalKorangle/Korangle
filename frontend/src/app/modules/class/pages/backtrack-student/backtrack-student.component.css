@@ -50,9 +50,8 @@
 
 /* Start: Floating Button in mobile Menu */
 .sticky {
-    position: sticky;
-    position: -webkit-sticky;
-    float: right;
+    position: fixed;
+    right: 15px;
     bottom: 30px;
 }
 /* End: Floating Button in mobile Menu */

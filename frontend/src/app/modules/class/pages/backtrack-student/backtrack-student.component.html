@@ -32,7 +32,7 @@
         <!-- End: Message when no class is selected yet -->
 
         <!-- START: Student List of selected classes and sections  -->
-        <div *ngIf="htmlAdapter.selectedClassSection" style="margin-bottom: 60px;">
+        <div *ngIf="htmlAdapter.selectedClassSection" [ngStyle]="htmlAdapter.bottomMarginStyle">
 
             <!-- Start: Map Button for mapping admission session to date of admission -->
             <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.mapAdmissionSession(); $event.stopPropagation()">Map</button>

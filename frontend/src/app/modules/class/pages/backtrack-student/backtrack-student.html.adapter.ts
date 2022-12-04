@@ -20,9 +20,16 @@ export class BacktrackStudentHtmlAdapter {
         }
     } = null;
 
+    bottomMarginStyle;
+
     constructor(public dialog: MatDialog) {}
 
-    initialize(vm: BacktrackStudentComponent) { this.vm = vm; }
+    initialize(vm: BacktrackStudentComponent) {
+        this.vm = vm;
+        this.bottomMarginStyle = {
+            'margin-bottom': this.vm.isMobileMenu()? '90px' : '60px',
+        };
+    }
 
     // START: Map Admission Session to potential admission session
     mapAdmissionSession() {
@@ -121,10 +128,12 @@ export class BacktrackStudentHtmlAdapter {
     }
     // End: get admission session of student
 
+    // Start: disable update button if no data to update
     disableButton(): boolean {
         return this.getFilteredStudentList().find((student: Student) => {
             return this.highlightStudentRow(student);
         }) == undefined;
     }
+    // Start: disable update button if no data to update
 
 }
