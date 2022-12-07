@@ -1,6 +1,8 @@
-<div class="wrapper hidePrint">
-    <router-outlet></router-outlet>
-</div>
-<div class="wrapper showPrint">
-    <router-outlet name="print"></router-outlet>
-</div>
+<ng-container *ngIf="featureFlagListIsFetched">
+    <div class="wrapper hidePrint">
+        <router-outlet></router-outlet>
+    </div>
+    <div class="wrapper showPrint">
+        <router-outlet name="print"></router-outlet>
+    </div>
+</ng-container>

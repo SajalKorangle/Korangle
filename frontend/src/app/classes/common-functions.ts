@@ -13,7 +13,9 @@ export class CommonFunctions {
 
     static scrollToTop(): void {
         const mainPannel = document.getElementById('main-pannel');
-        mainPannel.scrollTop = 0;
+        if (mainPannel) {
+           mainPannel.scrollTop = 0;         
+        }
     }
 
     copyObject(object: any): any {
