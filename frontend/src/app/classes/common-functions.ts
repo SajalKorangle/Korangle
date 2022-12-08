@@ -14,7 +14,7 @@ export class CommonFunctions {
     static scrollToTop(): void {
         const mainPannel = document.getElementById('main-pannel');
         if (mainPannel) {
-           mainPannel.scrollTop = 0;       
+           mainPannel.scrollTop = 0;
         }
     }
 
