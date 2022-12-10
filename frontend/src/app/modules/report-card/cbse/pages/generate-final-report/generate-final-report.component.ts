@@ -14,13 +14,14 @@ import { ClassService } from '../../../../../services/modules/class/class.servic
 import { StudentService } from '../../../../../services/modules/student/student.service';
 import { ExaminationService } from '../../../../../services/modules/examination/examination.service';
 import { SubjectService } from '../../../../../services/modules/subject/subject.service';
+import { GenericService } from '@services/generic/generic-service';
 import { PRINT_STUDENT_JUNIOR_REPORT, PRINT_STUDENT_SENIOR_REPORT } from '../../../../../print/print-routes.constants';
 
 @Component({
     selector: 'generate-final-report',
     templateUrl: './generate-final-report.component.html',
     styleUrls: ['./generate-final-report.component.css'],
-    providers: [ReportCardCbseService, ClassService, StudentService, ExaminationService, SubjectService, AttendanceService],
+    providers: [ReportCardCbseService, ClassService, StudentService, ExaminationService, SubjectService, AttendanceService, GenericService],
 })
 export class GenerateFinalReportComponent implements OnInit {
     user;
@@ -51,6 +52,8 @@ export class GenerateFinalReportComponent implements OnInit {
     showPromotionStatement = true;
     showAbsentOnZero = false;
 
+    sessionList: any;
+
     serviceAdapter: GenerateFinalReportServiceAdapter;
 
     isLoading = true;
@@ -63,6 +66,7 @@ export class GenerateFinalReportComponent implements OnInit {
         public examinationService: ExaminationService,
         public subjectService: SubjectService,
         public attendanceService: AttendanceService,
+        public genericService: GenericService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService
     ) {}
@@ -105,6 +109,7 @@ export class GenerateFinalReportComponent implements OnInit {
             classTeacherSignature: this.classTeacherSignature,
             showPromotionStatement: this.showPromotionStatement,
             showAbsentOnZero: this.showAbsentOnZero,
+            sessionList: this.sessionList,
         };
         let printRoute: string;
 
