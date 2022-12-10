@@ -1,3 +1,4 @@
+import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
@@ -20,6 +21,7 @@ export class PrintStudentComprehensiveFinalReportListComponent implements OnInit
     showPrincipalSignature: any;
     classTeacherSignature: any;
     boardList: any;
+    sessionList: any;
 
     marksDecimalPoint: any;
 
@@ -38,6 +40,7 @@ export class PrintStudentComprehensiveFinalReportListComponent implements OnInit
             '1.' + this.reportCardMapping.minimumDecimalPoints.toString() + '-' + this.reportCardMapping.maximumDecimalPoints;
         // console.log(this.classTeacherSignature);
         this.boardList = value['boardList'];
+        this.sessionList = value['sessionList'];
         this.populateIncludeProject();
         this.viewChecked = false;
     }
@@ -223,19 +226,9 @@ export class PrintStudentComprehensiveFinalReportListComponent implements OnInit
     }
 
     getSessionName(sessionId: any): any {
-        let result = '';
-        switch (sessionId) {
-            case 1:
-                result = 'Session 2017-18';
-                break;
-            case 2:
-                result = 'Session 2018-19';
-                break;
-            case 3:
-                result = 'Session 2019-20';
-                break;
-        }
-        return result;
+        return this.sessionList.find(session => {
+            return session.id == sessionId;
+        }).name;
     }
 
     getNextStep(student: any): any {

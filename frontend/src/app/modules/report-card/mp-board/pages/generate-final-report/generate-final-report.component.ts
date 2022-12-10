@@ -101,12 +101,13 @@ export class GenerateFinalReportComponent implements OnInit {
             showPrincipalSignature: this.showPrinicipalSignature,
             classTeacherSignature: this.currentClassTeacherSignature,
             boardList: this.boardList,
+            sessionList: this.sessionList,
         };
         let selectedClassSection = this.getSelectedClassSection();
         let printRoute: string;
 
         if (selectedClassSection.className == 'Class - 9') {
-            if (this.getSession(this.user.activeSchool.currentSessionDbId).orderNumber >= 3) {
+            if (this.getSession(this.user.activeSchool.currentSessionDbId).orderNumber >= 119) {
                 printRoute = PRINT_STUDENT_NINTH_FINAL_REPORT_2019;
             } else {
                 printRoute = PRINT_STUDENT_NINTH_FINAL_REPORT;
