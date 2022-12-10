@@ -9,7 +9,6 @@ import { AttendanceReportHtmlRenderer } from './attendance-report.html.renderer'
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { ClassService } from '@services/modules/class/class.service';
 import { SubjectService } from '@services/modules/subject/subject.service';
-import { SESSION_CONSTANT } from '@services/modules/school/models/session';
 
 import { Classs } from '@services/modules/class/models/classs';
 import { Division } from '@services/modules/class/models/division';
@@ -18,12 +17,13 @@ import { Subject } from '@services/modules/subject/models/subject';
 import { Student } from '@services/modules/student/models/student';
 import { StudentSection } from '@services/modules/student/models/student-section';
 import { StudentService } from '@services/modules/student/student.service';
+import { GenericService } from '@services/generic/generic-service';
 
 @Component({
     selector: 'attendance-report',
     templateUrl: './attendance-report.component.html',
     styleUrls: ['./attendance-report.component.css'],
-    providers: [OnlineClassService, ClassService, SubjectService, StudentService],
+    providers: [OnlineClassService, ClassService, SubjectService, StudentService, GenericService],
 })
 
 export class AttendanceReportComponent implements OnInit {
@@ -49,7 +49,7 @@ export class AttendanceReportComponent implements OnInit {
         classSubjectList: Array<ClassSubject>,
         subjectList: Array<Subject>,
         studentAttendance: Array<any>,
-        activeSession: typeof SESSION_CONSTANT[0],
+        activeSession: any,
     } = {
             studentList: [],
             studentSectionList: [],
@@ -72,6 +72,7 @@ export class AttendanceReportComponent implements OnInit {
         public classService: ClassService,
         public subjectService: SubjectService,
         public studentService: StudentService,
+        public genericService: GenericService,
         public snackBar: MatSnackBar,
     ) { }
 
@@ -84,7 +85,6 @@ export class AttendanceReportComponent implements OnInit {
         this.serviceAdapter = new AttendanceReportServiceAdapter();
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initilizeData();
-        this.backendData.activeSession = SESSION_CONSTANT.find(session => session.id == this.user.activeSchool.currentSessionDbId);
         // console.log('this: ', this);
     }
 

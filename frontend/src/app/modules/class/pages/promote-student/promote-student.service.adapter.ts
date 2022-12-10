@@ -10,10 +10,17 @@ export class PromoteStudentServiceAdapter {
     }
 
     // initialize data
-    initializeData(): void {
-        const schoolId = this.vm.user.activeSchool.dbId;
-        const sessionId = this.vm.user.activeSchool.currentSessionDbId;
-        const nextSessionId = this.vm.user.activeSchool.currentSessionDbId + 1;
+    async initializeData() {
+
+        this.vm.sessionList = await this.vm.genericService.getObjectList({school_app: 'Session'}, {});
+
+        const fromSessionIndex = this.vm.sessionList.findIndex(session => {
+            return session.id == this.vm.user.activeSchool.currentSessionDbId;
+        });
+        this.vm.fromSessionName = this.vm.sessionList[fromSessionIndex].name;
+        this.vm.toSessionName = (fromSessionIndex != this.vm.sessionList.length - 1) ? this.vm.sessionList[fromSessionIndex + 1].name : '';
+        this.vm.toSessionId = (fromSessionIndex != this.vm.sessionList.length - 1) ? this.vm.sessionList[fromSessionIndex + 1].id : 0;
+
 
         const student_section_list_one = {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
@@ -22,7 +29,7 @@ export class PromoteStudentServiceAdapter {
         };
 
         const student_section_list_two = {
-            parentSession: nextSessionId,
+            parentSession: this.vm.toSessionId,
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             parentStudent__parentTransferCertificate: 'null__korangle',
         };
@@ -40,8 +47,7 @@ export class PromoteStudentServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 1
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_one), // 2
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list_two), // 3
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 4
-            this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data), // 5
+            this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data), // 4
         ]).then(
             (value) => {
 
@@ -49,11 +55,9 @@ export class PromoteStudentServiceAdapter {
                 this.vm.sectionList = value[1];
 
                 this.vm.studentSectionListOne = value[2].filter(
-                    (ss) => value[5].find((tc) => tc.parentStudentSection == ss.id) == undefined
+                    (ss) => value[4].find((tc) => tc.parentStudentSection == ss.id) == undefined
                 );
                 this.vm.studentSectionListTwo = value[3];
-
-                this.vm.sessionList = value[4];
 
                 this.populateFromAndToVariables();
 
