@@ -286,7 +286,6 @@ export class UpdateProfileServiceAdapter {
                     }
                 });
 
-            console.log(this.vm.studentParameterValueList);
             this.vm.studentParameterValueList
                 .filter((x) => x.parentStudent === studentId)
                 .forEach((item) => {
