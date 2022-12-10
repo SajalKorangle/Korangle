@@ -26,6 +26,7 @@ export class SettingsServiceAdapter {
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data),
             this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_amount_permission_request),
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 2
         ]).then(value => {
             this.vm.backendData.employeeAmountPermissionList = value[1];
             if (value[0].length == 0) {
@@ -35,6 +36,7 @@ export class SettingsServiceAdapter {
             } else {
                 alert('Error: Report admin');
             }
+            this.vm.currentSession = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId);
             this.vm.isLoading = false;
         });
     }
