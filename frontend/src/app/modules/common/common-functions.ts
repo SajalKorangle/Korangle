@@ -1,14 +1,13 @@
-import { SESSION_CONSTANT, Session } from '@services/modules/school/models/session';
 import { Query } from '@services/generic/query';
 
 export class CommonFunctions {
 
-    static getActiveSession(): Session {
+    static isSessionActive(sessionId, sessionList): boolean {
         const today = new Date();
-        return SESSION_CONSTANT.find(session => {
+        return sessionList.find(session => {
             const startDate = new Date(session.startDate);
             const endDate = new Date(session.endDate);
-            return startDate <= today && today <= endDate;
+            return sessionId == session.id && startDate <= today && today <= endDate;
         });
     }
 
