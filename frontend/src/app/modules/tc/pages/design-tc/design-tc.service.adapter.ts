@@ -56,7 +56,6 @@ export class DesignTCServiceAdapter {
             this.vm.tcService.getObject(this.vm.tcService.tc_settings, request_tc_settings), // 10
         ])
             .then((data) => {
-                // console.log(data);
                 this.vm.tcLayoutList = data[0];
                 this.vm.DATA.data.studentSectionList = data[1];
                 this.vm.DATA.data.studentParameterList = data[2];
@@ -67,7 +66,6 @@ export class DesignTCServiceAdapter {
                 this.vm.publicLayoutList = data[7];
                 this.vm.DATA.data.classSectionSignatureList = data[8];
                 this.vm.DATA.certificateNumber = data[10] ? data[10].nextCertificateNumber : 1;
-                // console.log('DATA: ', this.vm.DATA);
                 const request_student_data = {
                     id__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
                 };
@@ -81,13 +79,13 @@ export class DesignTCServiceAdapter {
                             this.vm.DATA.data.sessionList.find((session) => {
                                 return session.id === this.vm.user.activeSchool.currentSessionDbId;
                             }).startDate
-                        ).getFullYear() + '-01-01',
+                        ).getFullYear() + '-01-01', // We are getting the attendance of whole first year just to be safe
                     dateOfAttendance__lte:
                         new Date(
                             this.vm.DATA.data.sessionList.find((session) => {
                                 return session.id === this.vm.user.activeSchool.currentSessionDbId;
                             }).endDate
-                        ).getFullYear() + '-12-31',
+                        ).getFullYear() + '-12-31', // We are getting the attendance of whole second year just to be safe
                 };
 
                 const request_layout_sharing_data = {

@@ -173,14 +173,14 @@ export class BacktrackStudentServiceAdapter {
             // Will populate potential admission session only when date of admission field is populated.
             if (student.dateOfAdmission) {
 
-                // If date of admission is of before Session 2017-18, then at least backtrack till there.
+                // If date of admission is of before first session, then at least backtrack till first session.
                 if (student.dateOfAdmission < this.vm.sessionList[0].startDate) {
                     student.potentialAdmissionSession = this.vm.sessionList[0];
-                // if date of admission is at or after Session 2017-18,
+                // if date of admission is at or after first session,
                 // then see the allowed admission session list to find appropriate potential admission session.
                 } else {
                     // Iterating over the list of allowed admission session
-                    // If date of admission is not before Session 2017-18 and is not in allowed admission session list then
+                    // If date of admission is not before first session and is not in allowed admission session list then
                     // chances are that there is something wrong with date of admission.
                     const potentialAdmissionSession = student.allowedAdmissionSessionList.find((session: Session) => {
                         return student.dateOfAdmission >= session.startDate && student.dateOfAdmission <= session.endDate;

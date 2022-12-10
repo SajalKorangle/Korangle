@@ -153,4 +153,11 @@ export class SidebarComponent implements OnInit {
         this.user.emptyUserDetails();
         this.router.navigate(['login']);
     }
+
+    getCurrentSession(): any {
+        return this.session_list.find(session => {
+            return session.id == this.user.activeSchool.currentSessionDbId;
+        });
+    }
+
 }

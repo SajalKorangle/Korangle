@@ -120,6 +120,8 @@ export class LoginSignupServiceAdapter {
                         this.vm.notificationService.gcm_device,
                 });
             }
+            // TODO :- the following await line should be with in above else statement.
+            // It needs to be tested whether it is working properly or not after that.
             await this.vm.router.navigate([Constants.dashBoardRoute + '/notification/view_notification']);
         } else if (otpResponse.status === 'failure') {
             alert(otpResponse.message);
