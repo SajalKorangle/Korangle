@@ -13,7 +13,8 @@ export class BlockStudentServiceAdapter {
     }
 
     async initilizeData() {
-        if (CommonFunctions.getActiveSession().id != this.vm.user.activeSchool.currentSessionDbId) {
+        const sessionList = await this.vm.genericService.getObjectList({school_app: 'Session'}, {});
+        if (CommonFunctions.isSessionActive(this.vm.user.activeSchool.currentSessionDbId, sessionList)) {
             this.vm.isActiveSession = false;
             return;
         }

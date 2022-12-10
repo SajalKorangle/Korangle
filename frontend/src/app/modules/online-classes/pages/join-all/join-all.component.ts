@@ -14,6 +14,7 @@ import { OnlineClassService } from '@services/modules/online-class/online-class.
 import { ClassService } from '@services/modules/class/class.service';
 import { SchoolService } from '@services/modules/school/school.service';
 import { EmployeeService } from '@services/modules/employee/employee.service';
+import { GenericService } from '@services/generic/generic-service';
 
 import { Time, ParsedOnlineClass } from '@modules/online-classes/class/constants';
 import { WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME } from '@modules/online-classes/class/constants';
@@ -27,7 +28,7 @@ import { ERROR_REPORTING_URL } from '@services/modules/errors/error-reporting.se
     selector: 'join-all',
     templateUrl: './join-all.component.html',
     styleUrls: ['./join-all.component.css'],
-    providers: [SubjectService, OnlineClassService, ClassService, SchoolService, EmployeeService],
+    providers: [SubjectService, OnlineClassService, ClassService, SchoolService, EmployeeService, GenericService],
 })
 
 export class JoinAllComponent implements OnInit {
@@ -67,6 +68,7 @@ export class JoinAllComponent implements OnInit {
         public classService: ClassService,
         public schoolService: SchoolService,
         public employeeService: EmployeeService,
+        public genericService: GenericService,
     ) { }
 
     ngOnInit(): void {
