@@ -24,22 +24,10 @@
             <mat-datepicker #picker1></mat-datepicker>
         </mat-form-field>
 
-        <!-- <mat-form-field style="margin-right: 20px;">
-            <mat-label>End Date</mat-label>
-            <input matInput [matDatepicker]="picker2" [min]="backendData.activeSession.startDate"
-                [max]="backendData.activeSession.endDate" [(ngModel)]="userInput.endDate">
-            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-            <mat-datepicker #picker2></mat-datepicker>
-        </mat-form-field> -->
-
-
         <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" style="padding: 6px 4px;"
             (click)="serviceAdapter.loadAttendance();" [disabled]="!validUserInput()">
             <mat-icon style="font-size: x-large;">search</mat-icon>
         </button>
-
-        <!-- <span class="text-{{ user.activeSchool.secondaryThemeColor }}" style="float: right;">Days:
-            {{getDaysDiff()}}</span> -->
 
     </div>
 

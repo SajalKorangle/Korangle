@@ -535,7 +535,7 @@ export class GiveDiscountComponent implements OnInit {
                 return this.getSessionFeesDue(student, session, false) + this.getSessionLateFeesDue(student, session, false) > 0;
             })
             .sort((a, b) => {
-                return a.id - b.id;
+                return a.orderNumber - b.orderNumber;
             });
     }
 
@@ -1038,33 +1038,6 @@ export class GiveDiscountComponent implements OnInit {
         });
         return filteredSubFeeReceiptList;
     }
-
-    /*createNewSubFeeReceipt(studentFee: any, installment: any, payment: any): void {
-
-        let subFeeReceipt = new SubFeeReceipt();
-        subFeeReceipt.parentStudentFee = studentFee.id;
-        subFeeReceipt.parentFeeType = studentFee.parentFeeType;
-        subFeeReceipt.parentSession = studentFee.parentSession;
-        subFeeReceipt.isAnnually = studentFee.isAnnually;
-        subFeeReceipt[installment] = payment;
-        this.newSubFeeReceiptList.push(subFeeReceipt);
-
-        this.checkAndCreateNewFeeReceipt(studentFee);
-
-    }*/
-
-    /*checkAndDeleteNewSubFeeReceipt(subFeeReceipt: any, studentFee: any): void {
-        if (this.installmentList.reduce((total, installment) => {
-            return total
-                + (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0)
-                + (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
-        }, 0) == 0) {
-            this.newSubFeeReceiptList = this.newSubFeeReceiptList.filter(subFeeReceipt => {
-                return subFeeReceipt.parentStudentFee != studentFee.id;
-            });
-            this.checkAndDeleteNewFeeReceipt(studentFee);
-        }
-    }*/
 
     // Sub Discount
     getFilteredSubDiscountListByStudentFee(studentFee: any, includeNewSubDiscount = true): any {

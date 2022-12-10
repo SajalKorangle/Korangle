@@ -45,6 +45,7 @@ export class GenerateHallTicketServiceAdapter {
             this.vm.studentService.getStudentMiniProfileList(request_student_section_data, this.vm.user.jwt),
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}),
         ]).then(
             (value) => {
                 let request_test_data = {
@@ -59,6 +60,7 @@ export class GenerateHallTicketServiceAdapter {
                     this.studentSectionList = value[4];
                     this.studentSubjectList = value[5];
                     this.vm.boardList = value[6];
+                    this.vm.sessionList = value[7];
                     this.testList = value2;
 
                     this.populateExaminationList();
