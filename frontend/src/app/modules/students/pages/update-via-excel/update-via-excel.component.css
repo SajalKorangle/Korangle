@@ -1,0 +1,96 @@
+/* Starts: Container */
+.card-content {
+    min-height: 90vh;
+}
+/* Ends: Container */
+
+
+/* Starts: Tab Section */
+.tabs {
+    display: flex;
+    align-items: center;
+}
+
+.inactive-tab {
+    color: rgba(0, 0, 0, 0.7);
+}
+/* Ends: Tab Section */
+
+
+/* Starts: Upload Sheet */
+
+    /* Starts: Sheet Input Section */
+.input-row {
+    display: flex;
+    align-items: center;
+}
+    /* Ends: Sheet Input Section */
+
+    /* Starts: Error-Updation-FilterType Section */
+.error-tab-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+    /* Ends: Error-Updation-FilterType Section */
+
+.example-viewport {
+    height: 70vh;
+    width: 100%;
+}
+
+.minWidth {
+    min-width: 200px;
+    max-width: 300px;
+    line-height: 18px;
+    word-wrap: break-word;
+}
+
+    /* Starts: Custom Inputs */
+.customInput {
+    border: none;
+    width: 100%;
+}
+
+.customInput:enabled {
+    border-bottom: 1px solid lightgrey;
+}
+
+.customInput:focus {
+    background-color: white;
+}
+    /* Ends: Custom Inputs */
+
+    /* Starts: Cell Details */
+.redBackground {
+    background-color: #FF0000;
+}
+
+.greenBackground {
+    background-color: #8EFF93;
+}
+
+.disabled {
+    color: rgba(0, 0, 0, 0.3);
+    font-weight: 400;
+    cursor: not-allowed;
+}
+    /* Ends: Cell Details */
+
+.delete-icon {
+    color: red;
+    cursor: pointer;
+}
+
+    /* Starts: Bottom-Button-Section */
+.bottom-btns {
+    float: right;
+}
+
+.bottom-btns .btn {
+    font-weight: 500;
+    font-size: 12px;
+}
+    /* Ends: Bottom-Button-Section */
+
+/* Ends: Upload Sheet */
