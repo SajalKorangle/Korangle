@@ -44,6 +44,11 @@ const routes: Routes = [
         data: { moduleName: 'students' },
     },
     {
+        path: 'update_via_excel',
+        loadChildren: 'app/modules/students/pages/update-via-excel/update-via-excel.module#UpdateViaExcelModule',
+        data: { moduleName: 'students' },
+    },
+    {
         path: 'update_all',
         loadChildren: 'app/modules/students/pages/update_all/update-all.module#UpdateAllModule',
         data: { moduleName: 'students' },
