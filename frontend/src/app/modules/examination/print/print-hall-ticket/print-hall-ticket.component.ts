@@ -30,6 +30,7 @@ export class PrintHallTicketComponent implements OnInit, OnDestroy, AfterViewChe
         this.studentList = value.studentList;
         this.examination = value.examination;
         this.boardList = value.boardList;
+        this.sessionList = value.sessionList;
         this.opacity = {
             opacity: this.user.activeSchool.opacity,
         };
