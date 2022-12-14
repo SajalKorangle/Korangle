@@ -32,7 +32,7 @@ export class GrantApprovalServiceAdapter {
         };
 
         const currentSession =
-            (await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}))
+            (await this.vm.genericService.getObjectList({school_app: 'Session'}, {}))
                 .find(session => session.id == this.vm.user.activeSchool.currentSessionDbId);
         this.vm.minimumDate = currentSession.startDate;
         this.vm.maximumDate = currentSession.endDate;
@@ -54,7 +54,7 @@ export class GrantApprovalServiceAdapter {
 
                 Promise.all([
                     this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),   // 0
-                    this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),    // 1
+                    this.vm.genericService.getObjectList({employee_app: 'Employee'}, {filter: employee_data}), // 1
                     this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),    // 3
                     this.vm.accountsService.getObjectList(this.vm.accountsService.approval, approval_request_data), //4
                 ]).then(value => {

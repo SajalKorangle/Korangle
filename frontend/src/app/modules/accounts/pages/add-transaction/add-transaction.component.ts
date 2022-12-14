@@ -4,7 +4,7 @@ import { AccountsService } from './../../../../services/modules/accounts/account
 import { CommonFunctions } from './../../../../classes/common-functions';
 import { MatDialog } from '@angular/material';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component';
-import { SchoolService } from './../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 
 import { AddTransactionServiceAdapter } from './add-transaction.service.adapter';
 import { AddTransactionHtmlRenderer } from './add-transaction.html.renderer';
@@ -16,7 +16,7 @@ import { AddTransactionBackendData } from './add-transaction.backend.data';
   styleUrls: ['./add-transaction.component.css'],
   providers: [
     AccountsService,
-    SchoolService,
+    GenericService,
   ]
 })
 
@@ -41,7 +41,7 @@ export class AddTransactionComponent implements OnInit {
   constructor(
     public accountsService: AccountsService,
     public dialog: MatDialog,
-    public schoolService: SchoolService,
+    public genericService: GenericService,
   ) { }
 
   // Server Handling - Initial

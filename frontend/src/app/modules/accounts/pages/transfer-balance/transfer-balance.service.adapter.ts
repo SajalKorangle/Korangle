@@ -29,7 +29,7 @@ export class TransferBalanceServiceAdapter {
         };
 
         Promise.all([
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 0
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 0
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_data), // 1
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, current_session_accounts_data), // 2
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, next_session_accounts_data), //3

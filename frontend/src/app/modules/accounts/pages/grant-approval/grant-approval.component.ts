@@ -5,8 +5,7 @@ import { ImagePreviewDialogComponent } from './../../components/image-preview-di
 import { MatDialog } from '@angular/material';
 
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
-import { SchoolService } from './../../../../services/modules/school/school.service';
-import { EmployeeService } from './../../../../services/modules/employee/employee.service';
+import { GenericService } from '@services/generic/generic-service';
 
 @Component({
     selector: 'grant-approval',
@@ -15,8 +14,7 @@ import { EmployeeService } from './../../../../services/modules/employee/employe
     providers: [
         MatDialog,
         AccountsService,
-        EmployeeService,
-        SchoolService,
+        GenericService,
     ]
 })
 
@@ -45,8 +43,7 @@ export class GrantApprovalComponent implements OnInit {
     constructor(
         public dialog: MatDialog,
         public accountsService: AccountsService,
-        public employeeService: EmployeeService,
-        public schoolService: SchoolService,
+        public genericService: GenericService,
     ) { }
 
     ngOnInit(): void {
