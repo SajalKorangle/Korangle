@@ -3,13 +3,18 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MEDIUM_LIST } from '../../../../classes/constants/medium';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
 
 @Component({
     selector: 'update-profile',
     templateUrl: './update-profile.component.html',
     styleUrls: ['./update-profile.component.css'],
-    providers: [SchoolOldService, SchoolService],
+    providers: [
+        SchoolOldService,
+        SchoolService,
+        GenericService,
+    ],
 })
 export class UpdateProfileComponent implements OnInit {
     user;
@@ -40,7 +45,11 @@ export class UpdateProfileComponent implements OnInit {
     sessionList: any;
     boardList: any;
 
-    constructor(private schoolOldService: SchoolOldService, private schoolService: SchoolService) {}
+    constructor(
+        private schoolOldService: SchoolOldService,
+        private schoolService: SchoolService,
+        private genericService: GenericService,
+    ) {}
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
@@ -63,7 +72,7 @@ export class UpdateProfileComponent implements OnInit {
         this.currentDistrict = this.user.activeSchool.district;
         this.currentState = this.user.activeSchool.state;
 
-        this.schoolService.getObjectList(this.schoolService.session, {}).then(
+        this.genericService.getObjectList({school_app: 'Session'}, {}).then(
             (sessionList) => {
                 this.isLoading = false;
                 this.sessionList = sessionList;

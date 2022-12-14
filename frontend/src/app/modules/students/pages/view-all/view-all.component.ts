@@ -1,16 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ClassService } from '../../../../services/modules/class/class.service';
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
-import { StudentService } from '../../../../services/modules/student/student.service';
 
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
 import { ExcelService } from '../../../../excel/excel-service';
 import { DataStorage } from '../../../../classes/data-storage';
-import { BusStopService } from '@services/modules/school/bus-stop.service';
-import { SchoolService } from '@services/modules/school/school.service';
-import { TCService } from './../../../../services/modules/tc/tc.service';
+import { GenericService } from '@services/generic/generic-service';
 
 import { MatDialog } from '@angular/material';
 import { ImagePdfPreviewDialogComponent } from '../../../../components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
@@ -71,8 +67,14 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService, TCService,
-    NotificationService, UserService, SmsService],
+    providers: [
+        StudentOldService,
+        ExcelService,
+        GenericService,
+        NotificationService,
+        UserService,
+        SmsService
+    ],
 })
 export class ViewAllComponent implements OnInit {
     user;
@@ -161,13 +163,9 @@ export class ViewAllComponent implements OnInit {
 
     constructor(
         public studentOldService: StudentOldService,
-        public studentService: StudentService,
-        public classService: ClassService,
         public excelService: ExcelService,
-        public schoolService: SchoolService,
         public printService: PrintService,
-        public busStopService: BusStopService,
-        public tcService: TCService,
+        public genericService: GenericService,
         public dialog: MatDialog,
         public notificationService: NotificationService,
         public userService: UserService,
@@ -269,14 +267,6 @@ export class ViewAllComponent implements OnInit {
             return x.name.includes(parameter.filterFilterValues);
         });
     }
-
-    /*initializeClassList(classList: any): void {
-        this.classList = classList;
-    }
-
-    initializeSectionList(sectionList: any): void {
-        this.sectionList = sectionList;
-    }*/
 
     initializeStudentFullProfileList(studentFullProfileList: any): void {
         this.studentFullProfileList = studentFullProfileList;

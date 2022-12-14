@@ -31,8 +31,6 @@ export class SetClassSubjectServiceAdapter {
         };
 
         let request_class_subject_data = {
-            /*sessionId: this.vm.user.activeSchool.currentSessionDbId,
-            schoolId: this.vm.user.activeSchool.dbId,*/
             sessionList: [this.vm.user.activeSchool.currentSessionDbId],
             schoolList: [this.vm.user.activeSchool.dbId],
         };
@@ -47,12 +45,12 @@ export class SetClassSubjectServiceAdapter {
         };
 
         Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 0
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 1
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
             this.vm.subjectService.getStudentSubjectList(request_student_subject_data, this.vm.user.jwt),
             this.vm.studentService.getStudentMiniProfileList(request_student_section_data, this.vm.user.jwt),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}),
             this.vm.subjectService.getSubjectList(this.vm.user.jwt),
             this.vm.employeeService.getEmployeeMiniProfileList(request_employee_data, this.vm.user.jwt),
         ]).then(
@@ -159,25 +157,7 @@ export class SetClassSubjectServiceAdapter {
                 Object.keys(section).forEach((key) => {
                     tempSection[key] = section[key];
                 });
-                // tempSection['subjectList'] = [];
                 tempSection['studentList'] = [];
-                /*this.classSubjectList.forEach(classSubject => {
-                    if (classSubject.parentClass === tempClass['dbId']
-                        && classSubject.parentDivision === tempSection['id']) {
-
-                        let tempSubject = {};
-
-                        Object.keys(classSubject).forEach(key => {
-                            tempSubject[key] = classSubject[key];
-                        });
-                        tempSubject['newEmployee'] = tempSubject['parentEmployee'];
-                        tempSubject['newOrderNumber'] = tempSubject['orderNumber'];
-                        tempSubject['newMainSubject'] = tempSubject['mainSubject'];
-                        tempSubject['newOnlyGrade'] = tempSubject['onlyGrade'];
-
-                        tempSection['subjectList'].push(tempSubject);
-                    }
-                });*/
                 this.studentSectionList.forEach((studentSection) => {
                     if (studentSection.classDbId === tempClass['id'] && studentSection.sectionDbId === tempSection['id']) {
                         let tempStudent = {};
@@ -299,7 +279,6 @@ export class SetClassSubjectServiceAdapter {
             if (classs.id === classSubject.parentClass) {
                 classs.sectionList.every((section) => {
                     if (section.id === classSubject.parentDivision) {
-                        // section['subjectList'].push(classSubject);
                         section['studentList'].forEach((student) => {
                             studentSubjectList.every((studentSubject) => {
                                 if (student.dbId === studentSubject.parentStudent) {
@@ -408,12 +387,6 @@ export class SetClassSubjectServiceAdapter {
             if (classs.id === classId) {
                 classs.sectionList.every((section) => {
                     if (section.id === sectionId) {
-                        /*section['subjectList'] = section['subjectList'].filter(subject => {
-                            if (subject.parentSubject === subjectId) {
-                                return false;
-                            }
-                            return true;
-                        });*/
                         section['studentList'].forEach((student) => {
                             student['subjectList'] = student['subjectList'].filter((subject) => {
                                 if (subject.parentSubject === subjectId) {
@@ -473,9 +446,6 @@ export class SetClassSubjectServiceAdapter {
         Promise.all([this.vm.subjectService.updateClassSubject(data, this.vm.user.jwt)]).then(
             (value) => {
                 alert('Subject updated in class successfully');
-                // this.addSubjectInClassSectionSubjectList(value[0]);
-                // this.addSubjectInClassSectionStudentSubjectList(value[0], value[1]);
-                // this.vm.selectedSubject = null;
                 subject.parentEmployee = subject.newEmployee.id;
                 subject.orderNumber = subject.newOrderNumber;
                 subject.mainSubject = subject.newMainSubject;

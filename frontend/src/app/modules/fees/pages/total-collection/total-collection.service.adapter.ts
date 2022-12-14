@@ -31,12 +31,12 @@ export class TotalCollectionServiceAdapter {
 
         Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list), // 0
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list), // 1
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 2
-            this.vm.classService.getObjectList(this.vm.classService.division, {}), // 3
+            this.vm.genericService.getObjectList({employee_app: 'Employee'}, {filter: employee_list}), // 1
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 2
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 3
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}), // 4
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 5
-            this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, employee_permission_data), // 6
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 5
+            this.vm.genericService.getObject({employee_app: 'EmployeePermission'}, {filter: employee_permission_data}), // 6
         ]).then(
             (value) => {
                 this.feeTypeList = value[0];
@@ -79,8 +79,8 @@ export class TotalCollectionServiceAdapter {
         };
 
         Promise.all([
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceipt'}, {filter: fee_receipt_list}),
+            this.vm.genericService.getObjectList({fees_third_app: 'SubFeeReceipt'}, {filter: sub_fee_receipt_list}),
         ]).then(
             (value) => {
                 this.vm.feeReceiptList = value[0].sort((a, b) => {
@@ -109,7 +109,7 @@ export class TotalCollectionServiceAdapter {
                 };
 
                 if (student_list.id__in.length != 0) {
-                    service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, student_list));
+                    service_list.push(this.vm.genericService.getObjectList({student_app: 'Student'}, {filter: student_list}));
                 }
 
                 let tempList = value[0].map((item) => item.parentSession);
@@ -139,7 +139,7 @@ export class TotalCollectionServiceAdapter {
 
                         if (student_section_list.parentStudent__in.length != 0) {
                             service_list.push(
-                                this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list)
+                                this.vm.genericService.getObjectList({student_app: 'StudentSection'}, {filter: student_section_list})
                             );
                         }
                     });

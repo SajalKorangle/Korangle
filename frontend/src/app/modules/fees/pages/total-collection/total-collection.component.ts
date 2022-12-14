@@ -1,22 +1,24 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { TotalCollectionServiceAdapter } from './total-collection.service.adapter';
 import { FeeService } from '../../../../services/modules/fees/fee.service';
-import { EmployeeService } from '../../../../services/modules/employee/employee.service';
-import { StudentService } from '../../../../services/modules/student/student.service';
-import { ClassService } from '../../../../services/modules/class/class.service';
 import { INSTALLMENT_LIST, ReceiptColumnFilter } from '../../classes/constants';
 import { CommonFunctions } from '../../../../classes/common-functions';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FEE_RECIEPT_LIST } from '../../print/print-routes.constants';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import {TotalCollectionHtmlRenderer} from './total-collection.html.renderer';
 
 @Component({
     selector: 'total-collection',
     templateUrl: './total-collection.component.html',
     styleUrls: ['./total-collection.component.css'],
-    providers: [FeeService, EmployeeService, StudentService, ClassService, SchoolService],
+    providers: [
+        FeeService,
+        SchoolService,
+        GenericService,
+    ],
 })
 export class TotalCollectionComponent implements OnInit {
     // Constants
@@ -67,10 +69,8 @@ export class TotalCollectionComponent implements OnInit {
 
     constructor(
         public feeService: FeeService,
-        public employeeService: EmployeeService,
-        public studentService: StudentService,
-        public classService: ClassService,
         public schoolService: SchoolService,
+        public genericService: GenericService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService
     ) {}

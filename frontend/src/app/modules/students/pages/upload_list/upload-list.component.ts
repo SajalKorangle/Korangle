@@ -1,9 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ClassService } from '../../../../services/modules/class/class.service';
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
 import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-old.service';
-import { SchoolService } from '../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 
 import { ExcelService } from '../../../../excel/excel-service';
 import { DataStorage } from '../../../../classes/data-storage';
@@ -130,7 +129,11 @@ const RTE_VALUES = ['RTE Values', 'YES', 'NO'];
     selector: 'upload-list',
     templateUrl: './upload-list.component.html',
     styleUrls: ['./upload-list.component.css'],
-    providers: [SchoolService, StudentOldService, ClassService, VehicleOldService],
+    providers: [
+        StudentOldService,
+        VehicleOldService,
+        GenericService,
+    ],
 })
 export class UploadListComponent implements OnInit {
     user;
@@ -166,10 +169,9 @@ export class UploadListComponent implements OnInit {
 
     constructor(
         private studentService: StudentOldService,
-        public classService: ClassService,
-        private schoolService: SchoolService,
         private excelService: ExcelService,
-        private vehicleService: VehicleOldService
+        private vehicleService: VehicleOldService,
+        private genericService: GenericService,
     ) {}
 
     ngOnInit(): void {
@@ -181,9 +183,9 @@ export class UploadListComponent implements OnInit {
         this.isLoading = true;
         Promise.all([
             this.vehicleService.getBusStopList(request_bus_stop_data, this.user.jwt),
-            this.classService.getObjectList(this.classService.classs, {}),
-            this.schoolService.getObjectList(this.schoolService.session, {}),
-            this.classService.getObjectList(this.classService.division, {}),
+            this.genericService.getObjectList({class_app: 'Class'}, {}),
+            this.genericService.getObjectList({school_app: 'Session'}, {}),
+            this.genericService.getObjectList({class_app: 'Division'}, {}),
         ]).then(
             (value) => {
                 this.isLoading = false;

@@ -7,13 +7,21 @@ import { SchoolService } from '../../../../services/modules/school/school.servic
 
 import { SetClassSubjectServiceAdapter } from './set-class-subject.service.adapter';
 import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
+import { GenericService } from '@services/generic/generic-service';
 import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
     selector: 'set-class-subject',
     templateUrl: './set-class-subject.component.html',
     styleUrls: ['./set-class-subject.component.css'],
-    providers: [SubjectOldService, ClassService, StudentOldService, SchoolService, EmployeeOldService],
+    providers: [
+        SubjectOldService,
+        ClassService,
+        StudentOldService,
+        SchoolService,
+        EmployeeOldService,
+        GenericService,
+    ],
 })
 export class SetClassSubjectComponent implements OnInit {
     user;
@@ -44,7 +52,8 @@ export class SetClassSubjectComponent implements OnInit {
         public classService: ClassService,
         public studentService: StudentOldService,
         public schoolService: SchoolService,
-        public employeeService: EmployeeOldService
+        public employeeService: EmployeeOldService,
+        public genericService: GenericService,
     ) {}
 
     ngOnInit(): void {

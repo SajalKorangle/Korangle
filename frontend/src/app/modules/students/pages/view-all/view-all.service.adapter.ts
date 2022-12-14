@@ -17,10 +17,6 @@ export class ViewAllServiceAdapter {
             sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        const class_section_request_data = {
-            sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
-        };
-
         const student_parameter_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
         };
@@ -37,7 +33,7 @@ export class ViewAllServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             status__in: ['Generated', 'Issued'],
-            fields__korangle: ['parentStudent'],
+            // fields__korangle: ['parentStudent'],
         };
 
         let temp_classSectionList_1, temp_classSectionList_2, temp_studentFullProfileList, temp_studentParameterList,
@@ -45,14 +41,14 @@ export class ViewAllServiceAdapter {
 
         [temp_classSectionList_1, temp_classSectionList_2, temp_studentFullProfileList, temp_studentParameterList, temp_studentParameterValueList,
         temp_busStopList, temp_session_list, temp_backendDataTcList] = await Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),    // 0
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),  // 1
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 0
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 1
             this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),   // 2
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, student_parameter_data), // 3
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, student_parameter_value_data), // 4
-            this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, bus_stop_data), // 5
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 6
-            this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data),   // 7
+            this.vm.genericService.getObjectList({student_app: 'StudentParameter'}, {filter: student_parameter_data}), // 3
+            this.vm.genericService.getObjectList({student_app: 'StudentParameterValue'}, {filter: student_parameter_value_data}), // 4
+            this.vm.genericService.getObjectList({school_app: 'BusStop'}, {filter: bus_stop_data}), // 5
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 6
+            this.vm.genericService.getObjectList({tc_app: 'TransferCertificateNew'}, {filter: tc_data, fields_list:  ['parentStudent']}), // 7
         ]);
 
         temp_classSectionList_1.forEach((classs) => {
