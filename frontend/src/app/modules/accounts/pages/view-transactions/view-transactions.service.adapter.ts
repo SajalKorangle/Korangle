@@ -47,9 +47,9 @@ export class ViewTransactionsServiceAdapter {
 
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data), //0
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_all_data),  //1
+            this.vm.genericService.getObjectList({employee_app: 'Employee'}, {filter: employee_all_data}), // 1
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),    //2
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),    //3
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}),    //3
             this.vm.accountsService.getObjectList(this.vm.accountsService.employee_amount_permission, employee_data),  //4
             this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data), //5
         ]).then(value => {

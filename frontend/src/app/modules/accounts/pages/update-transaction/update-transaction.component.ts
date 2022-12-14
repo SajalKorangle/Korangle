@@ -2,7 +2,7 @@ import { Component, Input, OnInit, HostListener } from '@angular/core';
 import { DataStorage } from "../../../../classes/data-storage";
 import { UpdateTransactionServiceAdapter } from './update-transaction.service.adapter';
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
-import { SchoolService } from './../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component';
 import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component';
 import { MatDialog } from '@angular/material';
@@ -14,7 +14,7 @@ import { MatDialog } from '@angular/material';
   styleUrls: ['./update-transaction.component.css'],
   providers: [
     AccountsService,
-    SchoolService,
+    GenericService,
   ]
 })
 
@@ -47,7 +47,7 @@ export class UpdateTransactionComponent implements OnInit {
 
   constructor(
     public accountsService: AccountsService,
-    public schoolService: SchoolService,
+    public genericService: GenericService,
     public dialog: MatDialog,
   ) { }
   // Server Handling - Initial

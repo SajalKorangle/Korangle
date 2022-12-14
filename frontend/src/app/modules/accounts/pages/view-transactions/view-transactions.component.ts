@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "../../../../classes/data-storage";
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
-import { EmployeeService } from './../../../../services/modules/employee/employee.service';
 import { ViewTransactionsServiceAdapter } from './view-transactions.service.adapter';
 import { CommonFunctions } from './../../../../classes/common-functions';
 import { MatDialog } from '@angular/material';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component';
 import { PrintService } from '../../../../print/print-service';
 import { ExcelService } from '../../../../excel/excel-service';
-import { SchoolService } from './../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component';
 import { HEADS_LIST } from './../../classes/constants';
 
@@ -18,8 +17,7 @@ import { HEADS_LIST } from './../../classes/constants';
     styleUrls: ['./view-transactions.component.css'],
     providers: [
         AccountsService,
-        EmployeeService,
-        SchoolService,
+        GenericService,
     ]
 })
 
@@ -134,11 +132,10 @@ export class ViewTransactionsComponent implements OnInit {
 
     constructor(
         public accountsService: AccountsService,
-        public employeeService: EmployeeService,
         public dialog: MatDialog,
         public printService: PrintService,
         public excelService: ExcelService,
-        public schoolService: SchoolService,
+        public genericService: GenericService,
     ) { }
 
     // Server Handling - Initial
@@ -290,10 +287,6 @@ export class ViewTransactionsComponent implements OnInit {
             }
         }
         return false;
-    }
-
-    func(a) {
-        console.log(a);
     }
 
     openImagePreviewDialog(images: any, index: any, editable): void {
