@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 
 import { UpdateViaExcelRoutingModule } from './update-via-excel.routing';
+import { ComponentsModule } from '../../../../components/components.module';
 import { UpdateViaExcelComponent } from './update-via-excel.component';
 
 
@@ -11,6 +12,7 @@ import { UpdateViaExcelComponent } from './update-via-excel.component';
 
     imports: [
         UpdateViaExcelRoutingModule,
+        ComponentsModule,
     ],
     exports: [],
     providers: [],
