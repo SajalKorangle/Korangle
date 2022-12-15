@@ -12,6 +12,17 @@ export class UpdateViaExcelHtmlRenderer {
         this.vm = vm;
     }
 
+    /* Get Section Name */
+    getSectionName(classSection: any): boolean {
+        let sectionLength = 0;
+        this.vm.classSectionList.forEach((element) => {
+            if (element.parentClassId == classSection.parentClassId && element.containsStudent) {
+                sectionLength++;
+            }
+        });
+        return (sectionLength > 1);
+    }   // Ends: getSectionName()
+
     /* For mobile-browser */
     isMobileBrowser(): boolean {
         if (window.innerWidth > 991) {
