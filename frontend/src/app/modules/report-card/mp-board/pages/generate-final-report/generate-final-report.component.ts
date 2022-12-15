@@ -23,6 +23,7 @@ import {
 import { PrintService } from '../../../../../print/print-service';
 import { DataStorage } from '../../../../../classes/data-storage';
 import { SchoolService } from '../../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { ReportCardMpBoardService } from '../../../../../services/modules/report-card/mp-board/report-card-mp-board.service';
 
 @Component({
@@ -35,6 +36,7 @@ import { ReportCardMpBoardService } from '../../../../../services/modules/report
         SubjectOldService,
         AttendanceOldService,
         SchoolService,
+        GenericService,
         ReportCardMpBoardService,
         ClassService,
         ExaminationService,
@@ -76,6 +78,7 @@ export class GenerateFinalReportComponent implements OnInit {
         public subjectService: SubjectOldService,
         public attendanceService: AttendanceOldService,
         public schoolService: SchoolService,
+        public genericService: GenericService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService,
         public reportCardMpBoardService: ReportCardMpBoardService

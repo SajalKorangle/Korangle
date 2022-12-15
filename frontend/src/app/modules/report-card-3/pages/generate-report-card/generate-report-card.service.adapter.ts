@@ -26,11 +26,11 @@ export class GenerateReportCardServiceAdapter {
         };
         this.vm.isLoading = true;
         Promise.all([
-            this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, report_card_layouts_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data), // 1\
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 2
-            this.vm.classService.getObjectList(this.vm.classService.division, {}), // 3
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 4
+            this.vm.reportCardService.getObjectList(this.vm.reportCardService.report_card_layout_new, report_card_layouts_data), // 0
+            this.vm.genericService.getObjectList({student_app: 'StudentSection'}, {filter: request_student_section_data}), // 1
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 2
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 3
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 4
         ])
             .then((data) => {
                 this.vm.reportCardLayoutList = data[0];
@@ -57,9 +57,9 @@ export class GenerateReportCardServiceAdapter {
                 studentIdChunkList.forEach((idChunk) => {
                     // requesting students for eahc chunk
                     const request_student_data = {
-                        id__in: idChunk.join(','),
+                        id__in: idChunk,
                     };
-                    service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data));
+                    service_list.push(this.vm.genericService.getObjectList({student_app: 'Student'}, {filter: request_student_data}));
                 });
 
                 Promise.all(service_list).then(
@@ -103,11 +103,11 @@ export class GenerateReportCardServiceAdapter {
         };
         // this.vm.isLoading = true;
         return Promise.all([
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, request_student_parameter_data), // 0
+            this.vm.genericService.getObjectList({student_app: 'StudentParameter'}, {filter: request_student_parameter_data}), // 0
             this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data), // 1
             this.vm.examinationService.getObjectList(this.vm.examinationService.test_second, request_test_data), // 2
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), // 3
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 4
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 4
             this.vm.gradeService.getObjectList(this.vm.gradeService.grade, request_grade_data), // 5
             this.vm.gradeService.getObjectList(this.vm.gradeService.sub_grade, request_sub_grade_data), // 6
             this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, request_class_signature_data), //7
@@ -123,11 +123,11 @@ export class GenerateReportCardServiceAdapter {
                 this.vm.DATA.data.classSectionSignatureList = data[7];
 
                 const request_student_parameter_value_data = {
-                    parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
+                    parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent),
                 };
                 const request_student_test_data = {
-                    parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
-                    parentExamination__in: this.vm.DATA.data.examinationList.map((item) => item.id).join(','),
+                    parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent),
+                    parentExamination__in: this.vm.DATA.data.examinationList.map((item) => item.id),
                 };
                 const request_attendance_data = {
                     parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
@@ -154,11 +154,8 @@ export class GenerateReportCardServiceAdapter {
                 };
 
                 await Promise.all([
-                    this.vm.studentService.getObjectList(
-                        this.vm.studentService.student_parameter_value,
-                        request_student_parameter_value_data
-                    ), // 0
-                    this.vm.examinationService.getObjectList(this.vm.examinationService.student_test, request_student_test_data), // 1
+                    this.vm.genericService.getObjectList({student_app: 'StudentParameterValue'}, {filter: request_student_parameter_value_data}), // 0
+                    this.vm.genericService.getObjectList({examination_app: 'StudentTest'}, {filter: request_student_test_data}), // 1
                     this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 2
                     this.vm.gradeService.getObjectList(this.vm.gradeService.student_sub_grade, request_student_sub_grade_data), // 3
                     this.vm.examinationService.getObjectList(

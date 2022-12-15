@@ -22,7 +22,7 @@ export class CollectFeeServiceAdapter {
 
         let schoolId = this.vm.user.activeSchool.dbId;
         const today = new Date();
-        this.vm.sessionList = await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {});
+        this.vm.sessionList = await this.vm.genericService.getObjectList({school_app: 'Session'}, {});
         const activeSession = this.vm.sessionList.find(session => { // active session according to date
             const endDate = new Date(session.endDate);
             endDate.setHours(23, 59, 59, 999);
@@ -60,7 +60,7 @@ export class CollectFeeServiceAdapter {
         const value = await Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list), // 0
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),    // 2
+            this.vm.genericService.getObjectList({employee_app: 'Employee'}, {filter: employee_list}), // 2
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),    // 3
             this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),  // 4
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request), // 5
@@ -88,8 +88,8 @@ export class CollectFeeServiceAdapter {
         };
 
         const val = await Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
-            this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 0
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 1
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //2
             this.vm.smsService.getObjectList(this.vm.smsService.sms_event,
                 { id__in: this.vm.FEE_RECEIPT_NOTIFICATION_EVENT_DBID}), //3
@@ -117,7 +117,7 @@ export class CollectFeeServiceAdapter {
 
     // Get Student Fee Profile
     getStudentFeeProfile(): void {
-        let studentListId = this.vm.selectedStudentList.map((a) => a.id).join();
+        let studentListId = this.vm.selectedStudentList.map((a) => a.id);
 
         let student_fee_list = {
             parentStudent__in: studentListId,
@@ -125,22 +125,22 @@ export class CollectFeeServiceAdapter {
 
         let fee_receipt_list = {
             parentStudent__in: studentListId,
-            cancelled: 'false__boolean',
+            cancelled: false,
         };
 
         let sub_fee_receipt_list = {
             parentStudentFee__parentStudent__in: studentListId,
-            parentFeeReceipt__cancelled: 'false__boolean',
+            parentFeeReceipt__cancelled: false,
         };
 
         let discount_list = {
             parentStudent__in: studentListId,
-            cancelled: 'false__boolean',
+            cancelled: false,
         };
 
         let sub_discount_list = {
             parentStudentFee__parentStudent__in: studentListId,
-            parentDiscount__cancelled: 'false__boolean',
+            parentDiscount__cancelled: false,
         };
 
         let student_section_list = {
@@ -150,12 +150,12 @@ export class CollectFeeServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.discounts, discount_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list),
+            this.vm.genericService.getObjectList({fees_third_app: 'StudentFee'}, {filter: student_fee_list}), // 0
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceipt'}, {filter: fee_receipt_list}), // 1
+            this.vm.genericService.getObjectList({fees_third_app: 'SubFeeReceipt'}, {filter: sub_fee_receipt_list}), // 2
+            this.vm.genericService.getObjectList({fees_third_app: 'Discount'}, {filter: discount_list}), // 3
+            this.vm.genericService.getObjectList({fees_third_app: 'SubDiscount'}, {filter: sub_discount_list}), // 4
+            this.vm.genericService.getObjectList({student_app: 'StudentSection'}, {filter: student_section_list}), // 5
         ]).then(
             (value) => {
                 this.populateStudentFeeList(value[0]);
@@ -164,7 +164,6 @@ export class CollectFeeServiceAdapter {
                 this.populateDiscountList(value[3]);
                 this.vm.subDiscountList = value[4];
                 this.vm.selectedStudentSectionList = value[5];
-                // this.populateSelectedStudentSectionList(value[5]);
 
                 this.vm.handleStudentFeeProfile();
 

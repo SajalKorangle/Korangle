@@ -5,14 +5,18 @@ import { PrintService } from '../../../../print/print-service';
 import { PRINT_FEES_CERTIFICATE } from '../../print/print-routes.constants';
 import { INSTALLMENT_LIST } from '../../classes/constants';
 import { DataStorage } from '../../../../classes/data-storage';
-import { StudentService } from '../../../../services/modules/student/student.service';
 import { SchoolService } from '../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 
 @Component({
     selector: 'generate-fees-certificate',
     templateUrl: './generate-fees-certificate.component.html',
     styleUrls: ['./generate-fees-certificate.component.css'],
-    providers: [FeeService, SchoolService, StudentService],
+    providers: [
+        FeeService,
+        SchoolService,
+        GenericService,
+    ],
 })
 export class GenerateFeesCertificateComponent implements OnInit {
     user;
@@ -39,7 +43,7 @@ export class GenerateFeesCertificateComponent implements OnInit {
     constructor(
         public printService: PrintService,
         public schoolService: SchoolService,
-        public studentService: StudentService,
+        public genericService: GenericService,
         public feeService: FeeService,
         private cdRef: ChangeDetectorRef
     ) {}
@@ -53,7 +57,7 @@ export class GenerateFeesCertificateComponent implements OnInit {
     }
 
     getSessionList(): void {
-        this.schoolService.getObjectList(this.schoolService.session, {}).then((sessionList) => {
+        this.genericService.getObjectList({school_app: 'Session'}, {}).then((sessionList) => {
             this.sessionList = sessionList;
             this.sessionList.every((session) => {
                 if (session.id === this.user.activeSchool.currentSessionDbId) {

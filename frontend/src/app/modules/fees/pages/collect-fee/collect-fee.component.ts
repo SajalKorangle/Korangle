@@ -10,9 +10,6 @@ import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-
 import { DiscountColumnFilter, INSTALLMENT_LIST, MODE_OF_PAYMENT_LIST, ReceiptColumnFilter } from '../../classes/constants';
 import { FeeType } from '../../../../services/modules/fees/models/fee-type';
 import { SchoolFeeRule } from '../../../../services/modules/fees/models/school-fee-rule';
-import { ClassService } from '../../../../services/modules/class/class.service';
-import { StudentService } from '../../../../services/modules/student/student.service';
-import { EmployeeService } from '../../../../services/modules/employee/employee.service';
 import { CommonFunctions } from '../../../../classes/common-functions';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../print/print-routes.constants';
@@ -27,7 +24,6 @@ import { SmsService } from '@services/modules/sms/sms.service';
 import { SmsOldService } from '@services/modules/sms/sms-old.service';
 import { NotificationService } from '../../../../services/modules/notification/notification.service';
 import { UserService } from '@services/modules/user/user.service';
-import { TCService } from '@services/modules/tc/tc.service';
 import { MessageService } from '@services/message-service';
 import { GenericService } from '@services/generic/generic-service';
 
@@ -37,8 +33,17 @@ declare const $: any;
     selector: 'collect-fee',
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
-    providers: [GenericService, FeeService, StudentService, VehicleOldService, ClassService, EmployeeService,
-        SchoolService, AccountsService, SmsService, NotificationService, SmsOldService, UserService, TCService],
+    providers: [
+        GenericService,
+        FeeService,
+        VehicleOldService,
+        SchoolService,
+        AccountsService,
+        SmsService,
+        NotificationService,
+        SmsOldService,
+        UserService,
+    ],
 })
 export class CollectFeeComponent implements OnInit {
     user;
@@ -112,17 +117,13 @@ export class CollectFeeComponent implements OnInit {
     constructor(
         public genericService: GenericService,
         public feeService: FeeService,
-        public studentService: StudentService,
         public vehicleService: VehicleOldService,
-        public classService: ClassService,
-        public employeeService: EmployeeService,
         public schoolService: SchoolService,
         public accountsService: AccountsService,
         public smsService: SmsService,
         public smsOldService: SmsOldService,
         public notificationService: NotificationService,
         public userService: UserService,
-        public tcService: TCService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService
     ) { }

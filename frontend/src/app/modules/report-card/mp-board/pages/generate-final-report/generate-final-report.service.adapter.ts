@@ -72,16 +72,16 @@ export class GenerateFinalReportServiceAdapter {
                     console.log(request_examination_data);
 
                     Promise.all([
-                        this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-                        this.vm.classService.getObjectList(this.vm.classService.division, {}),
-                        this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),
-                        this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data),
-                        this.vm.subjectService.getSubjectList(this.vm.user.jwt),
-                        this.vm.subjectService.getExtraFieldList({}, this.vm.user.jwt),
-                        this.vm.subjectService.getExtraSubFieldList({}, this.vm.user.jwt),
-                        this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),
-                        this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, teacher_signature_data),
-                        this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+                        this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 0
+                        this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 1
+                        this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt), // 2
+                        this.vm.examinationService.getObjectList(this.vm.examinationService.examination, request_examination_data), // 3
+                        this.vm.subjectService.getSubjectList(this.vm.user.jwt), // 4
+                        this.vm.subjectService.getExtraFieldList({}, this.vm.user.jwt), // 5
+                        this.vm.subjectService.getExtraSubFieldList({}, this.vm.user.jwt), // 6
+                        this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}), // 7
+                        this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, teacher_signature_data), // 8
+                        this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 9
                     ]).then(
                         (value2) => {
                             this.classList = value2[0];
@@ -570,12 +570,6 @@ export class GenerateFinalReportServiceAdapter {
                 .sort((a, b) => {
                     return a.orderNumber - b.orderNumber;
                 });
-
-            /*student['studentSubjectList'] = this.studentSubjectList.filter(item => {
-                return item.parentStudent == student.dbId;
-            }).sort((a,b) => {
-                return a.orderNumber - b.orderNumber;
-            });*/
 
             student['cceMarks'] = this.studentCCEMarksList.find((item) => {
                 return item.parentStudent == student.dbId;
