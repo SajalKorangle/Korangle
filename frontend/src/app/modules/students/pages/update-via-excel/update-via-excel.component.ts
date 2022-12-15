@@ -29,10 +29,6 @@ export class UpdateViaExcelComponent implements OnInit {
     studentSectionList: any = [];
     tcList: any = [];
 
-    reader: FileReader = new FileReader();
-
-    excelDataFromUser: any = [];
-
     serviceAdapter: UpdateViaExcelServiceAdapter;
     htmlRenderer: UpdateViaExcelHtmlRenderer;
 
