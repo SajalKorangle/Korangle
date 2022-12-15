@@ -6,7 +6,7 @@ import { EmitterService } from '../../services/emitter.service';
 
 import { User } from '../../classes/user';
 import { style, state, trigger, animate, transition } from '@angular/animations';
-import { SchoolService } from '../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { environment } from '../../../environments/environment';
 import { Constants } from '../../classes/constants';
 import { CommonFunctions } from './../../classes/common-functions';
@@ -20,7 +20,10 @@ declare const $: any;
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css'],
-    providers: [NotificationService, SchoolService],
+    providers: [
+        NotificationService,
+        GenericService,
+    ],
     animations: [
         trigger('rotate', [
             state('true', style({ transform: 'rotate(0deg)' })),
@@ -43,7 +46,11 @@ export class SidebarComponent implements OnInit {
     warning = 'warning';
     session_list = [];
 
-    constructor(private router: Router, private notificationService: NotificationService, private schoolService: SchoolService) {
+    constructor(
+        private router: Router,
+        private notificationService: NotificationService,
+        private genericService: GenericService
+    ) {
         // We are using this routeReuseStrategy because the DashBoard Component should not re-render when changing pages.
         this.router.routeReuseStrategy.shouldReuseRoute = function (future: any, curr: any) {
             return (curr.routeConfig === future.routeConfig) || future.data.reuse;
@@ -75,7 +82,7 @@ export class SidebarComponent implements OnInit {
                 CommonFunctions.scrollToTop();
             }
         });
-        this.schoolService.getObjectList(this.schoolService.session, {}).then((value) => {
+        this.genericService.getObjectList({school_app: 'Session'}, {}).then((value) => {
             this.session_list = value;
         });
         EmitterService.get('initialize-router').subscribe((value) => {

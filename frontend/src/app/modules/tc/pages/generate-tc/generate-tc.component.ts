@@ -5,10 +5,7 @@ import { GenerateTCServiceAdapter } from './generate-tc.service.adapter';
 import { StudentFee } from './../../../../services/modules/fees/models/student-fee';
 
 import { TCService } from '@services/modules/tc/tc.service';
-import { StudentService } from '@services/modules/student/student.service';
-import { ClassService } from '@services/modules/class/class.service';
 import { SubjectService } from '@services/modules/subject/subject.service';
-import { SchoolService } from '@services/modules/school/school.service';
 import { AttendanceService } from '@services/modules/attendance/attendance.service';
 import { FeeService } from './../../../../services/modules/fees/fee.service';
 import { GenericService } from '@services/generic/generic-service';
@@ -24,7 +21,13 @@ import * as jsPDF from 'jspdf';
     selector: 'app-generate-tc',
     templateUrl: './generate-tc.component.html',
     styleUrls: ['./generate-tc.component.css'],
-    providers: [TCService, StudentService, ClassService, SubjectService, SchoolService, AttendanceService, FeeService, GenericService],
+    providers: [
+        TCService,
+        SubjectService,
+        AttendanceService,
+        FeeService,
+        GenericService
+    ],
 })
 export class GenerateTCComponent implements OnInit {
     user: any;
@@ -121,10 +124,7 @@ export class GenerateTCComponent implements OnInit {
 
     constructor(
         public tcService: TCService,
-        public studentService: StudentService,
-        public classService: ClassService,
         public subjectService: SubjectService,
-        public schoolService: SchoolService,
         public attendanceService: AttendanceService,
         public feeService: FeeService,
         public genericService: GenericService,
