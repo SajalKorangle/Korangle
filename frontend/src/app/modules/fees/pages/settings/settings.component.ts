@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import { DataStorage } from "../../../../classes/data-storage";
-import { SchoolService } from '../../../../services/modules/school/school.service';
 import { AccountsService } from '@services/modules/accounts/accounts.service';
 import { MODE_OF_PAYMENT_LIST } from './../../classes/constants';
 import { AccountSession } from '@services/modules/accounts/models/account-session';
@@ -17,7 +16,11 @@ import { GenericService } from '@services/generic/generic-service';
     selector: 'lock-fees',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.css'],
-    providers: [GenericService, FeeService, SchoolService, AccountsService],
+    providers: [
+        GenericService,
+        FeeService,
+        AccountsService
+    ],
 })
 
 export class SettingsComponent implements OnInit {
@@ -44,7 +47,6 @@ export class SettingsComponent implements OnInit {
 
     constructor(
         public genericService: GenericService,
-        public schoolService: SchoolService,
         public feeService: FeeService,
         public accountsService: AccountsService,
         private cdRef: ChangeDetectorRef

@@ -20,7 +20,7 @@ export class SettingsServiceAdapter {
 
         this.vm.isLoading = true;
 
-        const sessionList = await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {});
+        const sessionList = await this.vm.genericService.getObjectList({school_app: 'Session'}, {});
         const activeSession: Session = sessionList.find(s => s.id == this.vm.user.activeSchool.currentSessionDbId);
         this.populateActiveSession(activeSession, sessionList);
 
@@ -119,7 +119,7 @@ export class SettingsServiceAdapter {
                 new Query().partiallyUpdateObject(
                     {payment_app: 'SchoolMerchantAccount'},
                     this.vm.backendData.schoolMerchantAccount
-                    )
+                )
             );
         }
 

@@ -1,21 +1,22 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 
 import { IdCardService } from '../../../../services/modules/id-card/id-card.service';
-import { StudentService } from '../../../../services/modules/student/student.service';
-import { ClassService } from '../../../../services/modules/class/class.service';
 
 import { GenerateIdCardServiceAdapter } from './generate-id-card.service.adapter';
 
 import { DataStorage } from '../../../../classes/data-storage';
 import DefaultIdCard from './../../class/id-card';
-import { SchoolService } from '@services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { PARAMETER_LIST } from '@modules/id-card/class/constants';
 
 @Component({
     selector: 'generate-id-card',
     templateUrl: './generate-id-card.component.html',
     styleUrls: ['./generate-id-card.component.css'],
-    providers: [IdCardService, ClassService, StudentService, SchoolService],
+    providers: [
+        IdCardService,
+        GenericService,
+    ],
 })
 export class GenerateIdCardComponent implements OnInit {
     user;
@@ -50,9 +51,7 @@ export class GenerateIdCardComponent implements OnInit {
 
     constructor(
         public idCardService: IdCardService,
-        public classService: ClassService,
-        public studentService: StudentService,
-        public schoolService: SchoolService
+        public genericService: GenericService
     ) {}
 
     ngOnInit(): void {

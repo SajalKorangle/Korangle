@@ -17,9 +17,7 @@ export class PayFeesServiceAdapter {
 
         let schoolId = this.vm.user.activeSchool.dbId;
 
-        let studentListId = this.vm.user.section.student.studentList.map((a) => a.id).join();
-
-        console.log(studentListId);
+        let studentListId = this.vm.user.section.student.studentList.map((a) => a.id);
 
         let fee_type_list = {
             parentSchool: schoolId,
@@ -39,44 +37,42 @@ export class PayFeesServiceAdapter {
 
         let fee_receipt_list = {
             parentStudent__in: studentListId,
-            cancelled: 'false__boolean',
+            cancelled: false,
         };
 
         let sub_fee_receipt_list = {
             parentStudentFee__parentStudent__in: studentListId,
-            parentFeeReceipt__cancelled: 'false__boolean',
+            parentFeeReceipt__cancelled: false,
         };
 
         let discount_list = {
             parentStudent__in: studentListId,
-            cancelled: 'false__boolean',
+            cancelled: false,
         };
 
         let sub_discount_list = {
             parentStudentFee__parentStudent__in: studentListId,
-            parentDiscount__cancelled: 'false__boolean',
+            parentDiscount__cancelled: false,
         };
 
         await Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),   // 0
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),    // 2
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),    // 3
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),  // 4
-
-            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list),    // 5
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),    // 6
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),    // 7
-            this.vm.feeService.getObjectList(this.vm.feeService.discounts, discount_list),  // 8
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),  // 9
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list), // 10
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 11
+            this.vm.genericService.getObjectList({employee_app: 'Employee'}, {filter: employee_list}), // 2
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 3
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 4
+            this.vm.genericService.getObjectList({fees_third_app: 'StudentFee'}, {filter: student_fee_list}), // 5
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceipt'}, {filter: fee_receipt_list}), // 6
+            this.vm.genericService.getObjectList({fees_third_app: 'SubFeeReceipt'}, {filter: sub_fee_receipt_list}), // 7
+            this.vm.genericService.getObjectList({fees_third_app: 'Discount'}, {filter: discount_list}), // 8
+            this.vm.genericService.getObjectList({fees_third_app: 'SubDiscount'}, {filter: sub_discount_list}), // 9
+            this.vm.genericService.getObjectList({student_app: 'StudentSection'}, {filter: student_fee_list}), // 10
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 11
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),   // 12
             this.vm.paymentService.getObject(this.vm.paymentService.school_merchant_account, {parentSchool: schoolId}), // 13
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipt_order, {parentSchool: schoolId}), //14
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptOrder'}, {filter: {parentSchool: schoolId}}), // 14
         ]).then(
             (value) => {
-                console.log(value);
 
                 this.vm.schoolMerchantAccount = value[13];
 
@@ -111,8 +107,6 @@ export class PayFeesServiceAdapter {
 
     populateStudentFeeList(studentFeeList: any): void {
         this.vm.studentFeeList = studentFeeList.sort((a, b) => {
-            let first = this.vm.getFeeTypeByStudentFee(a);
-            let second = this.vm.getFeeTypeByStudentFee(b);
             return a.orderNumber - b.orderNumber;
         });
     }
@@ -165,7 +159,7 @@ export class PayFeesServiceAdapter {
                 'email': this.vm.email
             };
             // no need to await for response, not critical task/ utility task
-            this.vm.userService.partiallyUpdateObject(this.vm.userService.user, user_email_update_request);
+            this.vm.genericService.partiallyUpdateObject({user_app: 'User'}, user_email_update_request);
         }
 
         const currentRedirectParams = new URLSearchParams(location.search);

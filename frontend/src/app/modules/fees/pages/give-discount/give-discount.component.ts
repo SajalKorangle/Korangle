@@ -9,19 +9,14 @@ import { FeeReceipt } from '../../../../services/modules/fees/models/fee-receipt
 import { SubFeeReceipt } from '../../../../services/modules/fees/models/sub-fee-receipt';
 import { Discount } from '../../../../services/modules/fees/models/discount';
 import { SubDiscount } from '../../../../services/modules/fees/models/sub-discount';
-import { StudentService } from '../../../../services/modules/student/student.service';
 import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-old.service';
-import { ClassService } from '../../../../services/modules/class/class.service';
-import { EmployeeService } from '../../../../services/modules/employee/employee.service';
 import { CommonFunctions } from '../../../../classes/common-functions';
 import { DataStorage } from '../../../../classes/data-storage';
-import { SchoolService } from '../../../../services/modules/school/school.service';
 import { SmsService } from '../../../../services/modules/sms/sms.service';
 import { NotificationService } from '../../../../services/modules/notification/notification.service';
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { UserService } from '@services/modules/user/user.service';
 import { MessageService } from '@services/message-service';
-import { TCService } from '@services/modules/tc/tc.service';
 import { GenericService } from '@services/generic/generic-service';
 
 declare const $: any;
@@ -30,8 +25,15 @@ declare const $: any;
     selector: 'give-discount',
     templateUrl: './give-discount.component.html',
     styleUrls: ['./give-discount.component.css'],
-    providers: [GenericService, FeeService, StudentService, VehicleOldService, ClassService, EmployeeService,
-        SchoolService, SmsService, NotificationService, SmsOldService, UserService, TCService],
+    providers: [
+        GenericService,
+        FeeService,
+        VehicleOldService,
+        SmsService,
+        NotificationService,
+        SmsOldService,
+        UserService,
+    ],
 })
 export class GiveDiscountComponent implements OnInit {
     user;
@@ -92,18 +94,13 @@ export class GiveDiscountComponent implements OnInit {
 
     constructor(
         public genericService: GenericService,
-        public schoolService: SchoolService,
         public feeService: FeeService,
-        public studentService: StudentService,
         public vehicleService: VehicleOldService,
-        public classService: ClassService,
-        public employeeService: EmployeeService,
         private cdRef: ChangeDetectorRef,
         public smsService: SmsService,
         public notificationService: NotificationService,
         public smsOldService: SmsOldService,
         public userService: UserService,
-        public tcService: TCService,
     ) {}
 
     ngOnInit(): void {
