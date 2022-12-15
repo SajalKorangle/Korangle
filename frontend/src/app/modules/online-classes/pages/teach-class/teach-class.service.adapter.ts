@@ -14,7 +14,7 @@ export class TeachClassServiceAdapter {
     async initializeData() {
         this.vm.isLoading = true;
         const sessionList = await this.vm.genericService.getObjectList({school_app: 'Session'}, {});
-        if (CommonFunctions.isSessionActive(this.vm.user.activeSchool.currentSessionDbId, sessionList)) {
+        if (!CommonFunctions.isSessionActive(this.vm.user.activeSchool.currentSessionDbId, sessionList)) {
             this.vm.isActiveSession = false;
             this.vm.isLoading = false;
             return;
