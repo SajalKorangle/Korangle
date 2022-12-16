@@ -70,8 +70,10 @@ export class RecordAttendanceServiceAdapter {
             division_permission_list = value[2].map(div => div.id);
         } else {
             value[1].forEach((element) => {
-                class_permission_list.push(element.parentClass);
-                division_permission_list.push(element.parentDivision);
+                class_permission_list.push(element.id);
+            });
+            value[2].forEach((element) => {
+                division_permission_list.push(element.id);
             });
         }
         // ------------------- Fetching Valid Student Data Starts ---------------------
