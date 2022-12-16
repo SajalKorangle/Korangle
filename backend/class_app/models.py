@@ -28,6 +28,7 @@ class Class(models.Model):
 
     class Meta:
         db_table = 'class'
+        ordering = ['orderNumber']
 
 
 class Division(models.Model):
@@ -43,6 +44,7 @@ class Division(models.Model):
 
     class Meta:
         db_table = 'division'
+        ordering = ['orderNumber']
 
 
 class ClassTeacherSignature(models.Model):

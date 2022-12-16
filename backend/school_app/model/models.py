@@ -35,6 +35,7 @@ class Board(models.Model):
 
     class Meta:
         db_table = 'board'
+        ordering = ['id']
 
 
 class Session(models.Model):
@@ -53,6 +54,7 @@ class Session(models.Model):
 
     class Meta:
         db_table = 'session'
+        ordering = ['orderNumber']
 
 
 def get_user():
