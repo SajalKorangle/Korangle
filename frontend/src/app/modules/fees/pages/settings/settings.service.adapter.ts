@@ -22,7 +22,7 @@ export class SettingsServiceAdapter {
 
         const sessionList = await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {});
         const activeSession: Session = sessionList.find(s => s.id == this.vm.user.activeSchool.currentSessionDbId);
-        this.populateActiveSession(activeSession);
+        this.populateActiveSession(activeSession, sessionList);
 
         const fee_settings_request = {
             'parentSession': activeSession.id,
@@ -68,9 +68,9 @@ export class SettingsServiceAdapter {
         this.vm.isLoading = false;
     }
 
-    populateActiveSession(activeSession: Session): void {
+    populateActiveSession(activeSession: Session, sessionList: any): void {
         this.vm.activeSession = activeSession;
-        this.vm.isActiveSession = activeSession.id == CommonFunctions.getActiveSession().id;
+        this.vm.isActiveSession = CommonFunctions.isSessionActive(activeSession.id, sessionList);
     }
 
     populateCustomAccountSession(accountsList, accountSessionList): void {
