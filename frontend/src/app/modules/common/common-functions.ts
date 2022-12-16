@@ -8,7 +8,7 @@ export class CommonFunctions {
             const startDate = new Date(session.startDate);
             const endDate = new Date(session.endDate);
             return sessionId == session.id && startDate <= today && today <= endDate;
-        });
+        }) != undefined;
     }
 
     static getModuleTaskPaths() {

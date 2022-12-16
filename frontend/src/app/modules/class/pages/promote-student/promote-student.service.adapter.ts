@@ -12,6 +12,8 @@ export class PromoteStudentServiceAdapter {
     // initialize data
     async initializeData() {
 
+        this.vm.isLoading = true;
+
         this.vm.sessionList = await this.vm.genericService.getObjectList({school_app: 'Session'}, {});
 
         const fromSessionIndex = this.vm.sessionList.findIndex(session => {
@@ -39,8 +41,6 @@ export class PromoteStudentServiceAdapter {
             parentStudentSection__parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             status__in: ['Generated', 'Issued'],
         };
-
-        this.vm.isLoading = true;
 
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 0

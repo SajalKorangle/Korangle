@@ -13,13 +13,17 @@ export class BlockStudentServiceAdapter {
     }
 
     async initilizeData() {
+
+        this.vm.isLoading = true;
+
         const sessionList = await this.vm.genericService.getObjectList({school_app: 'Session'}, {});
-        if (CommonFunctions.isSessionActive(this.vm.user.activeSchool.currentSessionDbId, sessionList)) {
+        if (!CommonFunctions.isSessionActive(this.vm.user.activeSchool.currentSessionDbId, sessionList)) {
             this.vm.isActiveSession = false;
+            this.vm.isLoading = false;
             return;
         }
+
         this.vm.isActiveSession = true;
-        this.vm.isLoading = true;
 
         const request_student_section_data = {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
