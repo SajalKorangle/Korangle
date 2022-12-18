@@ -1,12 +1,12 @@
 <!-- Starts: Container (PC) -->
-<ng-container *ngIf="!isLoading && !htmlRenderer.isMobileApplication() && !htmlRenderer.isMobileBrowser()">
+<ng-container *ngIf="!isLoading && !htmlAdapter.isMobileApplication() && !htmlAdapter.isMobileBrowser()">
     <div class="card-content table-responsive">
 
         <!-- Starts: Tab Section -->
         <div class="tabs">
             <div
-                (click)="setActiveTab('download-template');"
-                [ngClass]="activeTab == 'download-template' ? 'text-' + user.activeSchool.secondaryThemeColor : 'inactive-tab' "
+                (click)="htmlAdapter.setActiveTab(htmlAdapter.DOWNLOAD_TEMPLATE_TAB);"
+                [ngClass]="htmlAdapter.activeTab == htmlAdapter.DOWNLOAD_TEMPLATE_TAB ? 'text-' + user.activeSchool.secondaryThemeColor : 'inactive-tab' "
                 style="cursor: pointer; font-weight: 400;"
             >
                 Download Template
@@ -15,8 +15,8 @@
             <div style="margin: 0px 10px 0px; width: 85px; height: 1px; background-color: #C4C4C4;"></div>
 
             <div
-                (click)="setActiveTab('upload-sheet');"
-                [ngClass]="activeTab == 'upload-sheet' ? 'text-' + user.activeSchool.secondaryThemeColor : 'inactive-tab' "
+                (click)="htmlAdapter.setActiveTab(htmlAdapter.UPLOAD_SHEET_TAB);"
+                [ngClass]="htmlAdapter.activeTab == htmlAdapter.UPLOAD_SHEET_TAB ? 'text-' + user.activeSchool.secondaryThemeColor : 'inactive-tab' "
                 style="cursor: pointer; font-weight: 400;"
             >
                 Upload Sheet
@@ -25,50 +25,61 @@
         <!-- Ends: Tab Section -->
 
         <!-- Starts: Download Template -->
-        <ng-container *ngIf="activeTab == 'download-template'">
+        <ng-container *ngIf="htmlAdapter.activeTab == htmlAdapter.DOWNLOAD_TEMPLATE_TAB">
 
             <!-- Starts: Select Class Filter -->
             <mat-form-field style="margin-right: 15px">
-                <mat-select placeholder="Select Class" id="select-class" style="width: 100%">
+                <mat-select
+                    placeholder="Select Class"
+                    style="width: 100%">
                     <!-- Starts: Select-All & Clear-All button -->
                     <mat-option>
-                        <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">Select All</button>
-                        <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
+                        <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.selectAllClasses(); $event.stopPropagation()">Select All</button>
+                        <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.unselectAllClasses(); $event.stopPropagation()">Clear All</button>
                     </mat-option>
                     <!-- Ends: Select-All & Clear-All button -->
 
                     <!-- Starts: Class-Section Options -->
-                    <ng-container *ngFor="let classSection of classSectionList">
-                        <mat-option *ngIf="classSection.containsStudent" style="width: 100%">
-                            <mat-checkbox
-                                [(ngModel)]="classSection.selected"
-                                (ngModelChange)="handleStudentDisplay()"
-                                (click)="$event.stopPropagation()"
-                            >
-                                {{ classSection.parentClassName }}<span *ngIf="htmlRenderer.getSectionName(classSection)">, {{ classSection.parentSectionName }}</span>
-                            </mat-checkbox>
-                        </mat-option>
+                    <ng-container *ngFor="let classSection of htmlAdapter.classSectionList">
+                        <ng-container *ngFor="let section of classSection.sectionList">
+                            <mat-option style="width: 100%">
+                                <mat-checkbox
+                                    [(ngModel)]="section.selected"
+                                    (click)="$event.stopPropagation()"
+                                >
+                                    {{ classSection.name }}  <span *ngIf="classSection.showSectionNameInDropdown">, {{ section.name }} </span>
+                                </mat-checkbox>
+                            </mat-option>
+                        </ng-container>
                     </ng-container>
                     <!-- Ends: Class-Section Options -->
 
                     <!-- Starts: Select-All & Clear-All button -->
                     <mat-option>
-                        <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">Select All</button>
-                        <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
+                        <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.selectAllClasses(); $event.stopPropagation()">Select All</button>
+                        <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.unselectAllClasses(); $event.stopPropagation()">Clear All</button>
                     </mat-option>
                     <!-- Ends: Select-All & Clear-All button -->
+
                 </mat-select>
             </mat-form-field>
             <!-- Ends: Select Class Filter -->
 
         </ng-container>
         <!-- Ends: Download Template -->
+
+        <!-- Ends: Upload Sheet -->
+        <ng-container *ngIf="htmlAdapter.activeTab==htmlAdapter.UPLOAD_SHEET_TAB">
+            To be implemented!!!
+        </ng-container>
+        <!-- Ends: Upload Sheet -->
+
     </div>
 </ng-container>
 <!-- Ends: Container (PC) -->
 
 <!-- Starts: Container (MOBILE) -->
-<div *ngIf="!isLoading && (htmlRenderer.isMobileApplication() || htmlRenderer.isMobileBrowser())" class="card-content">
+<div *ngIf="!isLoading && (htmlAdapter.isMobileApplication() || htmlAdapter.isMobileBrowser())" class="card-content">
     <i>Not availabe for phones/tablets.</i>
 </div>
 <!-- Ends: Container (MOBILE) -->
