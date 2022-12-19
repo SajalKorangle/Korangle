@@ -471,6 +471,209 @@ export class UpdateViaExcelHtmlAdapter {
             isSelected: false,
             isEditable: true,
         },
+        {
+            id: BANK_ACCOUNT_NUMBER,
+            backendName: "bankAccountNum",
+            backendDisplayName: "Bank Ac. Number",
+            possibleValueList: [
+                "bank account number",
+                "bankaccountnumber",
+                "ac no.",
+                "acno.",
+                "account no.",
+                "accountno.",
+            ],
+            isMandatory: false,
+            isIncluded: false,
+            parameterType: "TEXT",
+            filterValueList: [],
+            isSelected: false,
+            isEditable: true,
+        },
+        {
+            id: AADHAR_NUMBER,
+            backendName: "aadharNum",
+            backendDisplayName: "Aadhar Number",
+            possibleValueList: [
+                "aadharnumber",
+                "aadhar number",
+                "aadharno.",
+                "aadhar no.",
+            ],
+            isMandatory: false,
+            isIncluded: false,
+            parameterType: "NUMBER",
+            filterValueList: [],
+            isSelected: false,
+            isEditable: true,
+        },
+        {
+            id: BLOOD_GROUP,
+            backendName: "bloodGroup",
+            backendDisplayName: "Blood Group",
+            possibleValueList: [
+                "bloodgroup",
+                "blood group",
+            ],
+            isMandatory: false,
+            isIncluded: false,
+            parameterType: "FILTER",
+            filterValueList: [
+                "A -",
+                "A +",
+                "B -",
+                "B +",
+                "AB -",
+                "AB +",
+                "O -",
+                "O +",
+                "None",
+            ],
+            isSelected: false,
+            isEditable: true,
+        },
+        {
+            id: FATHER_ANNUAL_INCOME,
+            backendName: "fatherAnnualIncome",
+            backendDisplayName: "Father's Annual Income",
+            possibleValueList: [
+                "fatherannualincome",
+                "father annual income",
+            ],
+            isMandatory: false,
+            isIncluded: false,
+            parameterType: "TEXT",
+            filterValueList: [],
+            isSelected: false,
+            isEditable: true,
+        },
+        {
+            id: CURRENT_BUS_STOP,
+            backendName: "currentBusStop",
+            backendDisplayName: "Bus Stop",
+            possibleValueList: [
+                "currentbusstop",
+                "current bus stop",
+            ],
+            isMandatory: false,
+            isIncluded: false,
+            parameterType: "FILTER",
+            filterValueList: [],
+            isSelected: false,
+            isEditable: true,
+        },
+        {
+            id: RTE,
+            backendName: "rte",
+            backendDisplayName: "RTE",
+            possibleValueList: [
+                "rte",
+                "righttoeducation",
+                "right to education",
+            ],
+            isMandatory: false,
+            isIncluded: false,
+            parameterType: "FILTER",
+            filterValueList: [
+                "YES",
+                "NO",
+            ],
+            isSelected: false,
+            isEditable: true,
+        },
+        {
+            id: ADMISSION_SESSION,
+            backendName: "admissionSession",
+            backendDisplayName: "Admission Session",
+            possibleValueList: [
+                "admission session",
+                "admissionsession",
+            ],
+            isMandatory: false,
+            isIncluded: false,
+            parameterType: "FILTER",
+            filterValueList: [
+                "None"
+            ],
+            isSelected: false,
+            isEditable: false,
+        },
+        {
+            id: ADMISSION_CLASS,
+            backendName: "parentAdmissionClass",
+            backendDisplayName: "Admission Class",
+            possibleValueList: [],
+            isMandatory: false,
+            isIncluded: false,
+            parameterType: "FILTER",
+            filterValueList: [],
+            isSelected: false,
+            isEditable: false,
+        },
+        {
+            id: DATE_OF_ADMISSION,
+            backendName: "dateOfAdmission",
+            backendDisplayName: "Date of Admission",
+            possibleValueList: [
+                "dateofadmission",
+                "date of admission",
+                "admissiondate",
+                "admission date",
+            ],
+            isMandatory: false,
+            isIncluded: false,
+            parameterType: "DATE",
+            filterValueList: [],
+            isSelected: false,
+            isEditable: true,
+        },
+        {
+            id: SECTION,
+            backendName: "parentDivision",
+            backendDisplayName: "Division",
+            possibleValueList: [
+                "division",
+                "section",
+            ],
+            isMandatory: false,
+            isIncluded: false,
+            parameterType: "FILTER",
+            filterValueList: [],
+            isSelected: false,
+            isEditable: false,
+        },
+        {
+            id: CLASS,
+            backendName: "parentClass",
+            backendDisplayName: "Class",
+            possibleValueList: [
+                "class",
+                "standard",
+            ],
+            isMandatory: false,
+            isIncluded: false,
+            parameterType: "FILTER",
+            filterValueList: [],
+            isSelected: true,
+            isEditable: false,
+        },
+        {
+            id: ROLL_NUMBER,
+            backendName: "rollNumber",
+            backendDisplayName: "Roll No.",
+            possibleValueList: [
+                "roll number",
+                "rollnumber",
+                "roll no.",
+                "rollno.",
+            ],
+            isMandatory: false,
+            isIncluded: false,
+            parameterType: "TEXT",
+            filterValueList: [],
+            isSelected: false,
+            isEditable: false,
+        },
     ];
 
     constructor() {
@@ -501,6 +704,20 @@ export class UpdateViaExcelHtmlAdapter {
         });
     }
     //  Ends: unselectAllClasses()
+
+    /* Select All Columns */
+    selectAllColumns() {
+        this.columnHeadersDetailList.forEach((columnHeader, idx) => {
+            columnHeader.isSelected = true;
+        });
+    }  //  Ends: selectAllColumns()
+
+    /* Unselect All Columns */
+    unselectAllColumns() {
+        this.columnHeadersDetailList.forEach((columnHeader) => {
+            columnHeader.isSelected = false;
+        });
+    }  //  Ends: unselectAllColumns()
 
     /* For mobile-browser */
     isMobileBrowser(): boolean {

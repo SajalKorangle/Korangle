@@ -65,6 +65,41 @@
             </mat-form-field>
             <!-- Ends: Select Class Filter -->
 
+            <!-- Starts: Select Column Filter -->
+            <mat-form-field style="margin-right: 15px">
+                <mat-select placeholder="Select Columns" id="select-class" style="width: 100%">
+                    <!-- Starts: Select-All & Clear-All button -->
+                    <mat-option>
+                        <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.selectAllColumns(); $event.stopPropagation()">Select All</button>
+                        <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.unselectAllColumns(); $event.stopPropagation()">Clear All</button>
+                    </mat-option>
+                    <!-- Ends: Select-All & Clear-All button -->
+
+                    <!-- Starts: Column Options -->
+                    <ng-container *ngFor="let columnHeadersDetail of htmlAdapter.columnHeadersDetailList; let idx = index">
+                        <ng-container *ngIf="idx > 0">
+                            <mat-option style="width: 100%">
+                                <mat-checkbox
+                                    [(ngModel)]="columnHeadersDetail.isSelected"
+                                    (click)="$event.stopPropagation()"
+                                >
+                                    {{ columnHeadersDetail.backendDisplayName }}
+                                </mat-checkbox>
+                            </mat-option>
+                        </ng-container>
+                    </ng-container>
+                    <!-- Ends: Column Options -->
+
+                    <!-- Starts: Select-All & Clear-All button -->
+                    <mat-option>
+                        <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.selectAllColumns(); $event.stopPropagation()">Select All</button>
+                        <button class="btn" style="padding: 4px 7px" (click)="htmlAdapter.unselectAllColumns(); $event.stopPropagation()">Clear All</button>
+                    </mat-option>
+                    <!-- Ends: Select-All & Clear-All button -->
+                </mat-select>
+            </mat-form-field>
+            <!-- Ends: Select Column Filter -->
+
         </ng-container>
         <!-- Ends: Download Template -->
 
