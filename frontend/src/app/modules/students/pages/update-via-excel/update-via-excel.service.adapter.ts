@@ -44,7 +44,6 @@ export class UpdateViaExcelServiceAdapter {
             studentSectionQuery,   // 3
         ]);
 
-        console.log("ClassList: ", classList);
         // Starts :- Initialize Class Section List
         classList.forEach((classs) => {
             let filteredSectionList = sectionList.filter((section) => {
