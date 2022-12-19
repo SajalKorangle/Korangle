@@ -11,6 +11,7 @@ import { SubjectService } from '@services/modules/subject/subject.service';
 import { SchoolService } from '@services/modules/school/school.service';
 import { AttendanceService } from '@services/modules/attendance/attendance.service';
 import { FeeService } from './../../../../services/modules/fees/fee.service';
+import { GenericService } from '@services/generic/generic-service';
 import { TransferCertificateSettings } from './../../../../services/modules/tc/models/transfer-certificate-settings';
 import { SchoolFeeRule } from './../../../../services/modules/fees/models/school-fee-rule';
 
@@ -23,7 +24,7 @@ import * as jsPDF from 'jspdf';
     selector: 'app-generate-tc',
     templateUrl: './generate-tc.component.html',
     styleUrls: ['./generate-tc.component.css'],
-    providers: [TCService, StudentService, ClassService, SubjectService, SchoolService, AttendanceService, FeeService],
+    providers: [TCService, StudentService, ClassService, SubjectService, SchoolService, AttendanceService, FeeService, GenericService],
 })
 export class GenerateTCComponent implements OnInit {
     user: any;
@@ -125,7 +126,8 @@ export class GenerateTCComponent implements OnInit {
         public subjectService: SubjectService,
         public schoolService: SchoolService,
         public attendanceService: AttendanceService,
-        public feeService: FeeService
+        public feeService: FeeService,
+        public genericService: GenericService,
     ) {}
 
     ngOnInit() {
@@ -189,10 +191,6 @@ export class GenerateTCComponent implements OnInit {
             // else undefined which => false
         });
     }
-
-    // selectAllClasses(): void {
-    //     this.classSectionList.forEach((classSection) => (classSection.selected = true));
-    // }
 
     unselectAllClasses(): void {
         this.classSectionList.forEach((classSection) => (classSection.selected = false));

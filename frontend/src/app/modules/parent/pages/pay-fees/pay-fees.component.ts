@@ -507,7 +507,7 @@ export class PayFeesComponent implements OnInit {
                 return this.getSessionFeesDue(student, session) + this.getSessionLateFeesDue(student, session) > 0;
             })
             .sort((a, b) => {
-                return a.id - b.id;
+                return a.orderNumber - b.orderNumber;
             });
     }
 

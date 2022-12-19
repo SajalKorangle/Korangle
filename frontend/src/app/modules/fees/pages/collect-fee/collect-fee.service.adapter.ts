@@ -22,8 +22,8 @@ export class CollectFeeServiceAdapter {
 
         let schoolId = this.vm.user.activeSchool.dbId;
         const today = new Date();
-        const sessionList = await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {});
-        const activeSession = sessionList.find(session => { // active session according to date
+        this.vm.sessionList = await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {});
+        const activeSession = this.vm.sessionList.find(session => { // active session according to date
             const endDate = new Date(session.endDate);
             endDate.setHours(23, 59, 59, 999);
             const startDate = new Date(session.startDate);
@@ -62,23 +62,21 @@ export class CollectFeeServiceAdapter {
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),    // 2
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),    // 3
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),   // 4
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),  // 5
-            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request), //6
-            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), //7
-            this.vm.genericService.getObjectList({ fees_third_app: 'FeeSchoolSettings' }, {filter: {parentSchool: this.vm.user.activeSchool.dbId}}), //8
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),  // 4
+            this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request), // 5
+            this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), // 6
+            this.vm.genericService.getObjectList({ fees_third_app: 'FeeSchoolSettings' }, {filter: {parentSchool: this.vm.user.activeSchool.dbId}}), // 7
         ]);
         this.vm.feeTypeList = value[0];
         this.vm.busStopList = value[1];
         this.vm.employeeList = value[2];
         this.vm.boardList = value[3];
-        this.vm.sessionList = value[4];
-        if (value[5].length == 1)
-            this.vm.feeSettings = value[5][0];
-        this.vm.accountsList = value[6];
-        this.vm.htmlRenderer.populateCustomAccountSessionList(this.vm.accountsList, value[7]);
-        if (value[8].length == 1) {
-            this.vm.printSingleReceipt = value[8][0]["printSingleReceipt"];
+        if (value[4].length == 1)
+            this.vm.feeSettings = value[4][0];
+        this.vm.accountsList = value[5];
+        this.vm.htmlRenderer.populateCustomAccountSessionList(this.vm.accountsList, value[6]);
+        if (value[7].length == 1) {
+            this.vm.printSingleReceipt = value[7][0]["printSingleReceipt"];
         }
 
         this.vm.handlePaymentAccountOnPaymentModeChange();
