@@ -15,8 +15,6 @@ export class UpdateViaExcelComponent implements OnInit {
 
     user;
 
-    isLoading: boolean = false;
-
     serviceAdapter: UpdateViaExcelServiceAdapter;
     htmlAdapter: UpdateViaExcelHtmlAdapter;
 
@@ -25,12 +23,12 @@ export class UpdateViaExcelComponent implements OnInit {
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
 
+        this.htmlAdapter = new UpdateViaExcelHtmlAdapter();
+        this.htmlAdapter.initializeAdapter(this);
+
         this.serviceAdapter = new UpdateViaExcelServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-
-        this.htmlAdapter = new UpdateViaExcelHtmlAdapter();
-        this.htmlAdapter.initializeAdapter(this);
     }
 
 }

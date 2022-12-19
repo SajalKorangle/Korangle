@@ -12,6 +12,7 @@ export class UpdateViaExcelHtmlAdapter {
     UPLOAD_SHEET_TAB = "UPLOAD SHEET TAB"
     // Ends :- Tab Names
 
+    isLoading: boolean = false;
     activeTab: string;
 
     classSectionList: ClassSection[] = [];

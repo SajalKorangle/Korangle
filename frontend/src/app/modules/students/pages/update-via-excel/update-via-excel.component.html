@@ -1,5 +1,5 @@
 <!-- Starts: Container (PC) -->
-<ng-container *ngIf="!isLoading && !htmlAdapter.isMobileApplication() && !htmlAdapter.isMobileBrowser()">
+<ng-container *ngIf="!htmlAdapter.isLoading && !htmlAdapter.isMobileApplication() && !htmlAdapter.isMobileBrowser()">
     <div class="card-content table-responsive">
 
         <!-- Starts: Tab Section -->
@@ -79,13 +79,13 @@
 <!-- Ends: Container (PC) -->
 
 <!-- Starts: Container (MOBILE) -->
-<div *ngIf="!isLoading && (htmlAdapter.isMobileApplication() || htmlAdapter.isMobileBrowser())" class="card-content">
+<div *ngIf="!htmlAdapter.isLoading && (htmlAdapter.isMobileApplication() || htmlAdapter.isMobileBrowser())" class="card-content">
     <i>Not availabe for phones/tablets.</i>
 </div>
 <!-- Ends: Container (MOBILE) -->
 
 <!-- Start: Loader -->
-<ng-container *ngIf="isLoading">
+<ng-container *ngIf="htmlAdapter.isLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
 </ng-container>
 <!-- Ends: Loader -->

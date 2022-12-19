@@ -14,7 +14,7 @@ export class UpdateViaExcelServiceAdapter {
 
     /* Initialize Data */
     async initializeData() {
-        this.vm.isLoading = true;
+        this.vm.htmlAdapter.isLoading = true;
 
         const student_section_filter = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
@@ -44,10 +44,11 @@ export class UpdateViaExcelServiceAdapter {
             studentSectionQuery,   // 3
         ]);
 
+        console.log("ClassList: ", classList);
         // Starts :- Initialize Class Section List
         classList.forEach((classs) => {
             let filteredSectionList = sectionList.filter((section) => {
-                return studentSectionList.find(studentSection => 
+                return studentSectionList.find(studentSection =>
                         studentSection.parentClass == classs.id && studentSection.parentDivision == section.id
                     ) != undefined;
             });
@@ -68,7 +69,7 @@ export class UpdateViaExcelServiceAdapter {
         });
         // Ends :- Initialize Class Section List
 
-        this.vm.isLoading = false;
+        this.vm.htmlAdapter.isLoading = false;
     }
     // Ends: initializeData()
 
