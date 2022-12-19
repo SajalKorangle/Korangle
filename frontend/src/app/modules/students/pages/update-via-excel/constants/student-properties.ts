@@ -1,0 +1,36 @@
+// These parameters are used as id values of columnHeadersDetailsList. (component.ts file)
+
+export const SELECT_PARAMETER = 0;
+export const S_NO = 1;
+export const ID = 2;
+export const NAME = 3;
+export const FATHER_NAME = 4;
+export const MOBILE_NUMBER = 5;
+export const SECOND_MOBILE_NUMBER = 6;
+export const SCHOLAR_NUMBER = 7;
+export const DATE_OF_BIRTH = 8;
+export const REMARK = 9;
+export const MOTHER_NAME = 10;
+export const GENDER = 11;
+export const CASTE = 12;
+export const CATEGORY = 13;
+export const RELIGION = 14;
+export const FATHER_OCCUPATION = 15;
+export const ADDRESS = 16;
+export const FAMILY_SSMID = 17;
+export const CHILD_SSMID = 18;
+export const BANK_NAME = 19;
+export const BANK_IFSC_CODE = 20;
+export const BANK_ACCOUNT_NUMBER = 21;
+export const AADHAR_NUMBER = 22;
+export const BLOOD_GROUP = 23;
+export const FATHER_ANNUAL_INCOME = 24;
+export const CURRENT_BUS_STOP = 25;
+export const RTE = 26;
+export const ADMISSION_SESSION = 27;
+export const ADMISSION_CLASS = 28;
+export const DATE_OF_ADMISSION = 29;
+export const SECTION = 30;
+export const CLASS = 31;
+export const ROLL_NUMBER = 32;
+export const CUSTOM_PARAMETER = 33;
