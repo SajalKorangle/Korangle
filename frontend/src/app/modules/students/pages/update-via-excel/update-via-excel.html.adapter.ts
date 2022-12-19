@@ -9,7 +9,7 @@ export class UpdateViaExcelHtmlAdapter {
 
     // Starts :- Tab Names
     DOWNLOAD_TEMPLATE_TAB = "DOWNLOAD TEMPLATE TAB";
-    UPLOAD_SHEET_TAB = "UPLOAD SHEET TAB"
+    UPLOAD_SHEET_TAB = "UPLOAD SHEET TAB";
     // Ends :- Tab Names
 
     isLoading: boolean = false;
