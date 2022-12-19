@@ -109,7 +109,7 @@ const SECTION_VALUES = [
 ];
 
 // Admission Session Values
-const ADMISSION_SESSION_VALUES = ['Admission Session Values', 'Session 2017-18', 'Session 2018-19', 'Session 2019-20', 'Session 2020-21', 'Session 2021-22', 'Session 2022-23'];
+let ADMISSION_SESSION_VALUES = ['Admission Session Values (Example)'];
 
 // Gender Values
 const GENDER_VALUES = ['Gender Values', 'Male', 'Female', 'Other'];
@@ -178,9 +178,6 @@ export class UploadListComponent implements OnInit {
         let request_bus_stop_data = {
             parentSchool: this.user.activeSchool.dbId,
         };
-        let request_class_data = {
-            sessionDbId: this.user.activeSchool.currentSessionDbId,
-        };
         this.isLoading = true;
         Promise.all([
             this.vehicleService.getBusStopList(request_bus_stop_data, this.user.jwt),
@@ -194,6 +191,7 @@ export class UploadListComponent implements OnInit {
                 this.busStopNameList = this.busStopList.map((a) => a.stopName);
                 this.classList = value[1];
                 this.populateSessionList(value[2]);
+                this.populateAdmissionSessionValues();
                 this.sectionList = value[3];
                 this.initializeTemplate();
             },
@@ -214,13 +212,17 @@ export class UploadListComponent implements OnInit {
         });
     }
 
+    populateAdmissionSessionValues(): void {
+        ADMISSION_SESSION_VALUES = ADMISSION_SESSION_VALUES.concat(this.sessionList.map(session => session.name));
+    }
+
     initializeTemplate(): void {
         this.template = [
             CLASS_VALUES,
 
             SECTION_VALUES,
 
-            ADMISSION_SESSION_VALUES,
+            ADMISSION_SESSION_VALUES.slice(0, 3).concat(ADMISSION_SESSION_VALUES.slice(-2)),
 
             GENDER_VALUES,
 

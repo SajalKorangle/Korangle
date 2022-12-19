@@ -17,7 +17,7 @@ export class GenerateTCServiceAdapter {
     }
 
     // initialize data
-    initializeData(): void {
+    async initializeData() {
         this.vm.DATA.currentSession = this.vm.user.activeSchool.currentSessionDbId;
         const tc_layouts_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -26,8 +26,15 @@ export class GenerateTCServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
+        this.vm.DATA.data.sessionList = await this.vm.genericService.getObjectList({school_app: 'Session'}, {});
+
+        const nextSession = this.vm.DATA.data.sessionList.find(session => {
+            return this.vm.DATA.data.sessionList.find(sessionTwo => {
+                return sessionTwo.id == this.vm.user.activeSchool.currentSessionDbId;
+            }).orderNumber + 1 == session.orderNumber;
+        });
         const request_next_session_student_section_data = {
-            parentSession: this.vm.user.activeSchool.currentSessionDbId + 1,
+            parentSession: nextSession ? nextSession.id : 0,
             fields__korangle: ['parentStudent'],
         };
 
@@ -42,8 +49,7 @@ export class GenerateTCServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_next_session_student_section_data), // 2
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 3
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 4
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 5
-            this.vm.tcService.getObject(this.vm.tcService.tc_settings, request_tc_settings), // 6
+            this.vm.tcService.getObject(this.vm.tcService.tc_settings, request_tc_settings), // 5
         ]).then((data) => {
             this.vm.tcLayoutList = data[0];
             this.vm.studentSectionList = data[1].filter((ss) => {
@@ -57,7 +63,6 @@ export class GenerateTCServiceAdapter {
             this.vm.divisionList = data[4];
             this.vm.DATA.data.classList = data[3];
             this.vm.DATA.data.divisionList = data[4];
-            this.vm.DATA.data.sessionList = data[5];
 
             const studentIdList = this.vm.studentSectionList.map(item => item.parentStudent);
             const studentIdChunkList = [];
@@ -90,8 +95,8 @@ export class GenerateTCServiceAdapter {
 
 
             const serviceList = [];
-            if (data[6]) {
-                this.vm.tcSettings = data[6];
+            if (data[5]) {
+                this.vm.tcSettings = data[5];
             } else {
                 // settings is not initilized
                 this.vm.tcSettings = new DEFAULT_TC_SETTINGS(this.vm.user.activeSchool.dbId);
@@ -176,13 +181,13 @@ export class GenerateTCServiceAdapter {
                         this.vm.DATA.data.sessionList.find((session) => {
                             return session.id === this.vm.user.activeSchool.currentSessionDbId;
                         }).startDate
-                    ).getFullYear() + '-01-01',
+                    ).getFullYear() + '-01-01', // We are getting the attendance of whole first year just to be safe
                 dateOfAttendance__lte:
                     new Date(
                         this.vm.DATA.data.sessionList.find((session) => {
                             return session.id === this.vm.user.activeSchool.currentSessionDbId;
                         }).endDate
-                    ).getFullYear() + '-12-31',
+                    ).getFullYear() + '-12-31', // We are getting the attendance of whole second year just to be safe
             };
 
             await Promise.all([

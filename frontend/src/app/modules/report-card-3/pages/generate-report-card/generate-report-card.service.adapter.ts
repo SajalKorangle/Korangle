@@ -136,13 +136,13 @@ export class GenerateReportCardServiceAdapter {
                             this.vm.DATA.data.sessionList.find((session) => {
                                 return session.id === this.vm.user.activeSchool.currentSessionDbId;
                             }).startDate
-                        ).getFullYear() + '-01-01',
+                        ).getFullYear() + '-01-01', // We are getting the attendance of whole first year just to be safe
                     dateOfAttendance__lte:
                         new Date(
                             this.vm.DATA.data.sessionList.find((session) => {
                                 return session.id === this.vm.user.activeSchool.currentSessionDbId;
                             }).endDate
-                        ).getFullYear() + '-12-31',
+                        ).getFullYear() + '-12-31', // We are getting the attendance of whole second year just to be safe
                 };
                 const request_student_sub_grade_data = {
                     parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
