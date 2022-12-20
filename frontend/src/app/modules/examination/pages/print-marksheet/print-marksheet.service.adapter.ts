@@ -65,6 +65,7 @@ export class PrintMarksheetServiceAdapter {
             this.vm.subjectService.getClassSubjectList(request_class_subject_data, this.vm.user.jwt),
             this.vm.studentService.getStudentFullProfileList(request_student_mini_profile_data, this.vm.user.jwt),
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}),
         ]).then(
             (value) => {
                 console.log(value);
@@ -77,6 +78,7 @@ export class PrintMarksheetServiceAdapter {
                 this.student_full_profile_list = value[5];
                 this.vm.student_full_profile_list = value[5];
                 this.vm.boardList = value[6];
+                this.vm.sessionList = value[7];
 
                 let service_list = [];
 
