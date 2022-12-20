@@ -9,3 +9,8 @@ export type ClassSection = {
         selected: boolean,
     }[],
 };
+
+export type ColumnHeadersDetail = {
+    displayName: string, // Display (Frontend) Name of backendName
+    isSelected: boolean, // Selected in the drop down filter or not.
+};
