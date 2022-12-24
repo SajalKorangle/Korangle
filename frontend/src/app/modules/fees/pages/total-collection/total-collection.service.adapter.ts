@@ -67,16 +67,22 @@ export class TotalCollectionServiceAdapter {
         this.vm.isLoading = true;
 
         let fee_receipt_list = {
-            generationDateTime__gte: this.vm.startDate + ' 00:00:00+05:30',
-            generationDateTime__lte: this.vm.endDate + ' 23:59:59+05:30',
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
         let sub_fee_receipt_list = {
-            parentFeeReceipt__generationDateTime__gte: this.vm.startDate + ' 00:00:00+05:30',
-            parentFeeReceipt__generationDateTime__lte: this.vm.endDate + ' 23:59:59+05:30',
             parentFeeReceipt__parentSchool: this.vm.user.activeSchool.dbId,
         };
+
+        if (this.vm.startDate) {
+            fee_receipt_list['generationDateTime__gte'] = this.vm.startDate + ' 00:00:00+05:30';
+            sub_fee_receipt_list['parentFeeReceipt__generationDateTime__gte'] = this.vm.startDate + ' 00:00:00+05:30';
+        }
+
+        if (this.vm.endDate) {
+            fee_receipt_list['generationDateTime__lte'] = this.vm.endDate + ' 23:59:59+05:30';
+            sub_fee_receipt_list['parentFeeReceipt__generationDateTime__lte'] = this.vm.endDate + ' 23:59:59+05:30';
+        }
 
         Promise.all([
             this.vm.genericService.getObjectList({fees_third_app: 'FeeReceipt'}, {filter: fee_receipt_list}),
