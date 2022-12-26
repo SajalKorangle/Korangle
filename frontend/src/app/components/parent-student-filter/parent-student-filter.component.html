@@ -1,7 +1,9 @@
 <div class="row">
     <div class="col-md-9">
         <form class="example-form" *ngIf="!isLoading">
-            <mat-form-field *ngIf="selectedFilterType == 'Student'" class="example-full-width" floatPlaceholder="never">
+
+            <!-- Starts :- Student Filter -->
+            <mat-form-field *ngIf="selectedFilterType == STUDENT" class="example-full-width" floatPlaceholder="never">
                 <input
                     type="text"
                     id="textInput"
@@ -41,7 +43,10 @@
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
-            <mat-form-field *ngIf="selectedFilterType == 'Parent'" class="example-full-width" floatPlaceholder="never">
+            <!-- Starts :- Student Filter -->
+
+            <!-- Starts :- Mobile Number Filter -->
+            <mat-form-field *ngIf="selectedFilterType == MOBILE_NUMBER" class="example-full-width" floatPlaceholder="never">
                 <input
                     type="number"
                     placeholder="Parent's Mobile No."
@@ -71,7 +76,58 @@
                     </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
+            <!-- Ends :- Mobile Number Filter -->
+
+            <!-- Starts :- Fathers Name & Mother Name Filter -->
+            <mat-form-field *ngIf="selectedFilterType == FATHER_NAME || selectedFilterType == MOTHER_NAME" class="example-full-width" floatPlaceholder="never">
+                <input
+                    type="text"
+                    [placeholder]="getPlaceHolder()"
+                    aria-label="Parent"
+                    matInput
+                    [formControl]="parentNameFormControl"
+                    [matAutocomplete]="autoParentName"
+                />
+                <mat-autocomplete
+                    #autoParentName="matAutocomplete"
+                    (optionSelected)="handleSiblingListSelection($event.option.value)"
+                    [displayWith]="displayParentNameFn"
+                >
+                    <mat-option *ngFor="let siblingList of filteredSiblingListList | async" [value]="siblingList">
+                        <div class="box">
+                            <span>
+                                <span style="font-size: 12px;">
+                                    {{ 
+                                        (
+                                            selectedFilterType == FATHER_NAME ?
+                                                siblingList[0].fathersName :
+                                                getMotherName(siblingList)
+                                        )
+                                    }}
+                                </span>
+                                <p class="paraDown">
+                                    <ng-container *ngFor="let student of siblingList; let last=last;">
+                                        {{student.name}} <ng-container *ngIf="!last">,</ng-container>
+                                    </ng-container>
+                                </p>
+                            </span>
+                            <ng-container *ngFor="let student of siblingList; let last=last;">
+                                <img *ngIf="student.profileImage" style="width: 10%" src="{{ student.profileImage }}" />
+                                <img
+                                    *ngIf="!student.profileImage"
+                                    style="width: 10%"
+                                    src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                                />
+                                <span *ngIf="!last">,</span>
+                            </ng-container>
+                        </div>
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <!-- Ends :- Fathers Name & Mother Name Filter -->
+
         </form>
+
     </div>
     <div *ngIf="showFilter && bothFilters" class="col-md-3">
         <mat-form-field>

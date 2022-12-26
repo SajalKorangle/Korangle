@@ -37,11 +37,17 @@ export class ParentStudentFilterComponent implements OnInit {
 
     studentFormControl = new FormControl();
     mobileNumberFormControl = new FormControl();
+    parentNameFormControl = new FormControl();
 
     filteredStudentList: any;
     filteredMobileNumberList: any;
+    filteredSiblingListList: any;
 
-    filterTypeList = ['Student', 'Parent'];
+    STUDENT = 'Student';
+    MOBILE_NUMBER = 'Mobile Number';
+    FATHER_NAME = "Father's Name";
+    MOTHER_NAME = "Mother's Name";
+    filterTypeList = [];
 
     serviceAdapter: ParentStudentFilterServiceAdapter;
 
@@ -50,6 +56,14 @@ export class ParentStudentFilterComponent implements OnInit {
     constructor(public studentService: StudentService, public classService: ClassService) {}
 
     ngOnInit(): void {
+
+        this.filterTypeList = this.filterTypeList.concat([
+            this.STUDENT,
+            this.MOBILE_NUMBER,
+            this.FATHER_NAME,
+            this.MOTHER_NAME
+        ]);
+
         this.serviceAdapter = new ParentStudentFilterServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
@@ -63,6 +77,11 @@ export class ParentStudentFilterComponent implements OnInit {
             map((value) => (typeof value === 'number' ? value : null)),
             map((value) => this.filterMobileNumberList(value))
         );
+
+        this.filteredSiblingListList = this.parentNameFormControl.valueChanges.pipe(
+            map((value) => this.filterSiblingListListByParentName(value))
+        );
+
     }
 
     policeMobileNumberInput(event: any): boolean {
@@ -137,7 +156,7 @@ export class ParentStudentFilterComponent implements OnInit {
                 student.name.toLowerCase().indexOf(value.toLowerCase()) != -1 ||
                 (student.scholarNumber && student.scholarNumber.toLowerCase().indexOf(value.toLowerCase()) != -1)
             );
-        });
+        }).slice(0,20);
     }
 
     displayStudentFunction(student?: any): any {
@@ -169,7 +188,7 @@ export class ParentStudentFilterComponent implements OnInit {
         this.onStudentListSelected.emit([[student], this.getFilteredStudentSectionListByStudentList([student])]);
     }
 
-    // Parent
+    // Parent Mobile Number
     filterMobileNumberList(value: number): any {
         if (value == null) {
             return [];
@@ -190,6 +209,69 @@ export class ParentStudentFilterComponent implements OnInit {
 
     handleMobileNumberSelection(mobileNumber: any): void {
         let studentList = this.getFilteredStudentListByMobileNumber(mobileNumber);
+        this.onStudentListSelected.emit([studentList, this.getFilteredStudentSectionListByStudentList(studentList)]);
+    }
+
+    // Parent Name
+    getPlaceHolder(): any {
+        let parent = this.selectedFilterType == this.FATHER_NAME ? "father's" : "mother's";
+        return "Type " + parent + " name here";
+    }
+
+    filterSiblingListListByParentName(value: any): any {
+        if (typeof value != 'string' || value === '') {
+            return [];
+        }
+        // toString is required with value below, because for a moment form sends the mobilenumber (typeof number) as value
+        let strValue = value.toString().toLowerCase();
+        let filteredStudentList = [];
+        if (this.selectedFilterType == this.FATHER_NAME) {
+            filteredStudentList = this.studentList.filter((student) => {
+                return student.fathersName.toLowerCase().indexOf(strValue) != -1;
+            });
+        } else {
+            filteredStudentList = this.studentList.filter((student) => {
+                return student.motherName && student.motherName.toLowerCase().indexOf(strValue) != -1;
+            });
+        }
+        return filteredStudentList.reduce( (siblingListList, student) => {
+            let studentListFromMobileNumber = student.mobileNumber ? this.getFilteredStudentListByMobileNumber(student.mobileNumber) : [];
+            let studentListFromSecondMobileNumber = student.secondMobileNumber ? this.getFilteredStudentListByMobileNumber(student.secondMobileNumber) : [];
+            let studentListFromAllMobileNumbers = Array.from(new Set([...studentListFromMobileNumber, ...studentListFromSecondMobileNumber, ...[student]]));
+            let siblingsFound = false;
+            siblingListList.every(studentListLoop => {
+                if (studentListLoop.find(value => studentListFromAllMobileNumbers.includes(value)) != undefined) {
+                    studentListLoop = Array.from(new Set([...studentListLoop, ...studentListFromAllMobileNumbers]));
+                    siblingsFound = true;
+                    return false;
+                }
+                return true;
+            });
+            if (!siblingsFound) {
+                siblingListList.push(studentListFromAllMobileNumbers);
+            }
+            return siblingListList;
+        }, []).slice(0,20);
+    }
+
+    displayParentNameFn = (studentList?: any) => {
+        if (studentList) {
+            return this.selectedFilterType == this.FATHER_NAME ?
+                studentList[0].fathersName :
+                studentList[0].motherName;
+        }
+        return null;
+    }
+
+    getMotherName(siblingList: any): any {
+        let student = siblingList.find(student => {
+            return student.motherName
+        });
+        if (student!=undefined) return student.motherName;
+        return '';
+    }
+
+    handleSiblingListSelection(studentList: any): void {
         this.onStudentListSelected.emit([studentList, this.getFilteredStudentSectionListByStudentList(studentList)]);
     }
 
