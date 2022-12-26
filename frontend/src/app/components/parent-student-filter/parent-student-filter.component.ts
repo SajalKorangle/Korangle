@@ -156,7 +156,7 @@ export class ParentStudentFilterComponent implements OnInit {
                 student.name.toLowerCase().indexOf(value.toLowerCase()) != -1 ||
                 (student.scholarNumber && student.scholarNumber.toLowerCase().indexOf(value.toLowerCase()) != -1)
             );
-        }).slice(0,20);
+        }).slice(0, 20);
     }
 
     displayStudentFunction(student?: any): any {
@@ -251,7 +251,7 @@ export class ParentStudentFilterComponent implements OnInit {
                 siblingListList.push(studentListFromAllMobileNumbers);
             }
             return siblingListList;
-        }, []).slice(0,20);
+        }, []).slice(0, 20);
     }
 
     displayParentNameFn = (studentList?: any) => {
@@ -265,9 +265,9 @@ export class ParentStudentFilterComponent implements OnInit {
 
     getMotherName(siblingList: any): any {
         let student = siblingList.find(student => {
-            return student.motherName
+            return student.motherName;
         });
-        if (student!=undefined) return student.motherName;
+        if (student != undefined) return student.motherName;
         return '';
     }
 
