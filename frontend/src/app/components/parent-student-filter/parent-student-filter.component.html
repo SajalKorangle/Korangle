@@ -93,6 +93,12 @@
                     (optionSelected)="handleSiblingListSelection($event.option.value)"
                     [displayWith]="displayParentNameFn"
                 >
+                    <mat-option
+                        style="font-size: 12px; color: lightgrey; height: 18px;"
+                        [disabled]="true"
+                    >
+                        Siblings are connected only through mobile numbers
+                    </mat-option>
                     <mat-option *ngFor="let siblingList of filteredSiblingListList | async" [value]="siblingList">
                         <div class="box">
                             <span>
@@ -104,6 +110,9 @@
                                                 getMotherName(siblingList)
                                         )
                                     }}
+                                </span>
+                                <span *ngIf="siblingList.length>1" style="font-size: 12px;">
+                                    ({{siblingList.length}} children)
                                 </span>
                                 <p class="paraDown">
                                     <ng-container *ngFor="let student of siblingList; let last=last;">
