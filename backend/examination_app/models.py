@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_delete
+from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
 
 # Create your models here.
@@ -145,6 +145,12 @@ class TestSecond(models.Model):
         unique_together = ('parentExamination', 'parentSubject', 'parentClass', 'parentDivision', 'testType')
 
 
+@receiver(post_delete, sender=TestSecond)
+def delete_test_second_student_test(sender, instance, **kwargs):
+    for student_section in StudentSection.objects.filter(parentStudent__parentSchool=instance.parentExamination.parentSchool,parentClass=instance.parentClass,parentDivision=instance.parentDivision,parentSession=instance.parentExamination.parentSession):
+        StudentTest.objects.filter(testType=instance.testType,parentExamination=instance.parentExamination,parentSubject=instance.parentSubject,parentStudent=student_section.parentStudent).delete()
+
+
 class StudentTest(models.Model):
 
     parentExamination = models.ForeignKey(Examination, models.PROTECT, null=False, default=0, verbose_name='parentExamination')
@@ -163,10 +169,17 @@ class StudentTest(models.Model):
         unique_together = ('parentExamination', 'parentSubject', 'parentStudent', 'testType')
 
 
-@receiver(post_delete, sender=TestSecond)
-def delete_test_second_student_test(sender, instance, **kwargs):
-    for student_section in StudentSection.objects.filter(parentStudent__parentSchool=instance.parentExamination.parentSchool,parentClass=instance.parentClass,parentDivision=instance.parentDivision,parentSession=instance.parentExamination.parentSession):
-        StudentTest.objects.filter(testType=instance.testType,parentExamination=instance.parentExamination,parentSubject=instance.parentSubject,parentStudent=student_section.parentStudent).delete()
+@receiver(pre_save, sender=StudentTest)
+def stop_student_test_marks_duplication(sender, instance, **kwargs):
+
+    if instance.id is None: # if object is getting created instead of being updated
+        if StudentTest.objects.filter(
+            parentExamination = instance.parentExamination,
+            parentSubject = instance.parentSubject,
+            parentStudent = instance.parentStudent,
+            testType = instance.testType
+        ).count() > 0:
+            raise "Student Test Marks already exists!!!"
 
 
 class StudentExtraSubField(models.Model):
