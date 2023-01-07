@@ -144,7 +144,7 @@ class GenericSerializerInterface():
 
         ## Child Nested Data Query Starts ##
         for key, value in child_field_name_mapped_by_query.items():
-            assert key in self.Model._meta.fields_map[key], 'Invalid Child Name in Child Query, child name: {0}, query: {1}'.format(key, value)
+            assert key in self.Model._meta.fields_map, 'Invalid Child Name in Child Query, child name: {0}, query: {1}'.format(key, value)
             child_field_name = self.Model._meta.fields_map[key].field.name
             child_model = self.Model._meta.fields_map[key].related_model
             value.update({   # added parent<Model> filter

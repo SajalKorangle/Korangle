@@ -116,6 +116,10 @@ class Examination(models.Model):
     def __str__(self):
         return self.name
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
+
     class Meta:
         db_table = 'examination'
         unique_together = ('name', 'parentSchool', 'parentSession')
@@ -139,6 +143,10 @@ class TestSecond(models.Model):
     endTime = models.DateTimeField(null=False, verbose_name='endTime')
     testType = models.CharField(max_length=10, choices=TEST_TYPE, null=True, default=None, verbose_name='testType')
     maximumMarks = models.PositiveIntegerField(null=False, verbose_name='maximumMarks', default=100)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentExamination__parentSchool__id']
+        RelationsToStudent = []
 
     class Meta:
         db_table = 'test_second'
@@ -180,6 +188,17 @@ def stop_student_test_marks_duplication(sender, instance, **kwargs):
             testType = instance.testType
         ).count() > 0:
             raise "Student Test Marks already exists!!!"
+    
+    else: # if object is getting updated instead of being created
+        # Delete all other student test marks with same exam, subject, and test type
+        StudentTest.objects.filter(
+            parentExamination = instance.parentExamination,
+            parentSubject = instance.parentSubject,
+            parentStudent = instance.parentStudent,
+            testType = instance.testType
+        ).exclude(
+            id = instance.id
+        ).delete()
 
 
 class StudentExtraSubField(models.Model):

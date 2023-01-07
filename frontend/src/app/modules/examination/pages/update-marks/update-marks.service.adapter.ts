@@ -387,12 +387,12 @@ export class UpdateMarksServiceAdapter {
         ])
         .then(
             (response) => {
-                let studentTestList = this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList;
+                let selectedTestList = this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList;
 
                 // clean the result
                 let cleanedResponse = [];
                 response[0].forEach((item) => {
-                    studentTestList.forEach((test) => {
+                    selectedTestList.forEach((test) => {
                         if (test.subject.id === item.parentSubject) {
                             if ( (test.testType == null && item.testType == null) || (test.testType === item.testType)) {
                                 cleanedResponse.push(item);
@@ -505,6 +505,29 @@ export class UpdateMarksServiceAdapter {
                     studentData.push(item);
                 }
             });
+
+            // Starts :- Remove Duplicate Marks for same test from student Data
+            let indexToBeDeletedList = [];
+            studentData.forEach((itemOne, indexOne) => {
+                studentData.forEach((itemTwo, indexTwo) => {
+                    if (
+                        itemOne.parentSubject == itemTwo.parentSubject &&
+                        itemOne.testType == itemTwo.testType &&
+                        itemOne.id != itemTwo.id
+                    ) {
+                        let index = itemOne.id < itemTwo.id ? indexTwo : indexOne;
+                        if (!(indexToBeDeletedList.includes(index))) {
+                            indexToBeDeletedList.push(index);
+                        }
+                    }
+                });
+            });
+            for (let loop=0; loop<indexToBeDeletedList.length; loop++) {
+                delete studentData[indexToBeDeletedList[loop]];
+            }
+            studentData = studentData.filter(item => item != undefined);
+            // Ends :- Remove Duplicate Marks for same test from student Data
+
             if (studentData.length < this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.length) {
                 this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.forEach((test) => {
                     if (studentData.filter((item) => item.parentSubject === test.subject.id && item.testType === test.testType).length === 0) {

@@ -50,6 +50,11 @@ const routes: Routes = [
         data: { moduleName: 'examinations' },
     },
     {
+        path: 'remove_duplicate_marks',
+        loadChildren: 'app/modules/examination/pages/remove-duplicate-marks/remove-duplicate-marks.module#RemoveDuplicateMarksModule',
+        data: { moduleName: 'examinations' },
+    },
+    {
         path: '',
         component: ExaminationComponent,
     },

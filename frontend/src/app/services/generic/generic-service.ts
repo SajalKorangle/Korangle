@@ -154,8 +154,8 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     class_app: 'Class' | 'Division';
     school_app: 'Session' | 'BusStop';
     tc_app: 'TransferCertificateNew';
-    subject_app: 'StudentSubject';
-    examination_app: 'StudentTest' | 'StudentExtraSubField' | 'CCEMarks';
+    subject_app: 'StudentSubject' | 'SubjectSecond';
+    examination_app: 'Examination' | 'StudentTest' | 'StudentExtraSubField' | 'CCEMarks';
     sms_app: 'SMSId' | 'SMSIdSchool' | 'SMSTemplate' | 'SMSEventSettings';
     complaints_app: 'SchoolComplaintType' | 'SchoolComplaintStatus' | 'StatusComplaintType' | 'Complaint' | 'Comment' | 'EmployeeComplaintType' | 'EmployeeComplaint' | 'CountAllComplaints';
     employee_app: 'Employee' | 'EmployeePermission' | 'EmployeeParameter';
