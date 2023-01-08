@@ -36,6 +36,11 @@ const routes: Routes = [
         data: { moduleName: 'sms' },
     },
     {
+        path: 'purchase_sms_2',
+        loadChildren: 'app/modules/sms/pages/purchase-sms-2/purchase-sms.module#PurchaseSmsModule',
+        data: { moduleName: 'sms' },
+    },
+    {
         path: '',
         component: SmsComponent,
     },
