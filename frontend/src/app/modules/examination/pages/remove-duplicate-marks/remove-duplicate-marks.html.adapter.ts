@@ -16,11 +16,11 @@ export class RemoveDuplicateMarksHtmlAdapter {
     getMaximumMarks(examination: any, studentTest: any): any {
         let test = examination.testsecond.find(test => {
             return test.parentSubject == studentTest.parentSubject &&
-                test.parentClass == studentTest.parentStudentInstance.studentSectionList[0].parentClass && 
-                test.parentDivision == studentTest.parentStudentInstance.studentSectionList[0].parentDivision
+                test.parentClass == studentTest.parentStudentInstance.studentSectionList[0].parentClass &&
+                test.parentDivision == studentTest.parentStudentInstance.studentSectionList[0].parentDivision;
         });
         if (test) { return Number(test.maximumMarks.toString()); }
-        else { return null };
+        else { return null; }
     }
 
     buttonClicked(result: any, studentTest: any) {
@@ -29,7 +29,7 @@ export class RemoveDuplicateMarksHtmlAdapter {
             if (result.id != resultOne.id) {
                 resultOne.selected = false;
             }
-        })
+        });
     }
 
 }

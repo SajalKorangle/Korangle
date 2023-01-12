@@ -32,7 +32,7 @@ export class RemoveDuplicateMarksComponent implements OnInit {
 
         this.htmlAdapter = new RemoveDuplicateMarksHtmlAdapter();
         this.htmlAdapter.initialize(this);
-        
+
         this.serviceAdapter = new RemoveDuplicateMarksServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();

@@ -522,7 +522,7 @@ export class UpdateMarksServiceAdapter {
                     }
                 });
             });
-            for (let loop=0; loop<indexToBeDeletedList.length; loop++) {
+            for (let loop = 0; loop < indexToBeDeletedList.length; loop++) {
                 delete studentData[indexToBeDeletedList[loop]];
             }
             studentData = studentData.filter(item => item != undefined);
@@ -550,9 +550,9 @@ export class UpdateMarksServiceAdapter {
             studentData.forEach(studentDataItem => {
                 studentDataItem.studentSubjectExists = studentSubjectList.find(studentSubject => {
                     return studentSubject.parentSubject == studentDataItem.parentSubject &&
-                        studentSubject.parentStudent == studentDataItem.parentStudent
+                        studentSubject.parentStudent == studentDataItem.parentStudent;
                 }) != undefined;
-            })
+            });
             // Ends: Deciding whether student is studing the subject of selected tests or not
 
             student['testData'] = studentData;

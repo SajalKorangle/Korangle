@@ -39,11 +39,11 @@ export class RemoveDuplicateMarksServiceAdapter {
             'studenttest',
             new Query()
             .filter({testType: null})
-            .orderBy('parentSubject','parentStudent','id')
+            .orderBy('parentSubject', 'parentStudent', 'id')
             .addParentQuery(
                 'parentStudent',
                 new Query()
-                .setFields('id','name','fathersName')
+                .setFields('id', 'name', 'fathersName')
                 .addChildQuery(
                     'studentSectionList',
                     new Query()
@@ -72,7 +72,12 @@ export class RemoveDuplicateMarksServiceAdapter {
                 if (!studentTestOne) {
                     return;
                 }
-                studentTestOne['marksList'] = [{id: studentTestOne.id, marks: Number(studentTestOne.marksObtained.toString()), absent: studentTestOne.absent, selected: false}];
+                studentTestOne['marksList'] = [{
+                    id: studentTestOne.id,
+                    marks: Number(studentTestOne.marksObtained.toString()),
+                    absent: studentTestOne.absent,
+                    selected: false
+                }];
                 examination.studenttest.forEach((studentTestTwo, studentTestTwoIndex) => {
                     if (!studentTestTwo) {
                         return;
@@ -88,7 +93,11 @@ export class RemoveDuplicateMarksServiceAdapter {
                         ) {
                             studentTestIdToBeDeletedList.push(studentTestTwo.id);
                         } else {
-                            studentTestOne.marksList.push({id: studentTestTwo.id, marks: Number(studentTestTwo.marksObtained.toString()), absent: studentTestTwo.absent, selected: false});
+                            studentTestOne.marksList.push({
+                                id: studentTestTwo.id,
+                                marks: Number(studentTestTwo.marksObtained.toString()),
+                                absent: studentTestTwo.absent, selected: false
+                            });
                         }
                         delete examination.studenttest[studentTestTwoIndex];
                     }
@@ -110,7 +119,7 @@ export class RemoveDuplicateMarksServiceAdapter {
         .deleteObjectList({examination_app: 'StudentTest'});
 
         if (deleteCount > 0) {
-            alert('Deleted '+deleteCount+' duplicate marks successfully');
+            alert('Deleted ' + deleteCount + ' duplicate marks successfully');
         }
 
         this.vm.isLoading = false;
@@ -118,14 +127,14 @@ export class RemoveDuplicateMarksServiceAdapter {
     }
 
     async removeDuplicateMarks() {
-        
+
         let studentTestIdToBeDeletedList = [];
         this.vm.examinationList.forEach((examination, examIndex) => {
             examination.studenttest.forEach((studentTest, index) => {
                 let filteredMarksList = studentTest.marksList.filter(marks => {
                     return !marks.selected;
                 });
-                if (filteredMarksList.length == studentTest.marksList.length-1) {
+                if (filteredMarksList.length == studentTest.marksList.length - 1) {
                     studentTestIdToBeDeletedList = studentTestIdToBeDeletedList.concat(
                         filteredMarksList.map(item => item.id)
                     );
@@ -151,9 +160,9 @@ export class RemoveDuplicateMarksServiceAdapter {
         .deleteObjectList({examination_app: 'StudentTest'});
 
         if (deleteCount > 0) {
-            alert('Deleted '+deleteCount+' duplicate marks successfully');
+            alert('Deleted ' + deleteCount + ' duplicate marks successfully');
         }
-        
+
         this.vm.isLoading = false;
 
     }
