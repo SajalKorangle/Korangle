@@ -2,6 +2,7 @@ from django.db.models import Q
 from rest_framework import serializers
 from django.db.models.fields.related import ForeignKey
 from common.json_encoding import make_dict_list_serializable
+from helloworld_project.settings import AWS_S3_BASE_URL
 
 from django.db.models import Count
 
@@ -114,13 +115,16 @@ class GenericSerializerInterface():
 
         ## Response Structure(fields_list) Processing Starts ##
         processed_field_list = ['__all__']
+        file_field_list = []
         if 'fields_list' in self.data:
             processed_field_list = self.data['fields_list']
+            file_field_list = [field.name for field in self.Model._meta.concrete_fields if field.name in self.data['fields_list'] and self.Model._meta.get_field(field.name).get_internal_type() == 'FileField']
             del self.data['fields_list']
 
         if '__all__' in processed_field_list:
             __all__index = processed_field_list.index('__all__')
             processed_field_list[__all__index: __all__index + 1] = [field.name for field in self.Model._meta.concrete_fields]  # Replacing __all__ with concrete fields
+            file_field_list = [field.name for field in self.Model._meta.concrete_fields if self.Model._meta.get_field(field.name).get_internal_type() == 'FileField']
 
         if 'parent_query' in self.data:
             parent_field_name_mapped_by_query = self.data['parent_query']
@@ -138,6 +142,14 @@ class GenericSerializerInterface():
         pk_field_name = self.Model._meta.pk.name
         processed_field_list.append(pk_field_name)  # ensuring pk field is always included, duplicates are allowed
         return_data = list(query_set.values(*processed_field_list))
+
+        # Starts :- Make file fields' url absolute
+        if len(file_field_list) > 0:
+            for row in return_data:
+                for field in file_field_list:
+                    row[field] = AWS_S3_BASE_URL + row[field] if row[field] and row[field] != '' else row[field]
+        # Ends :- Make file fields' url absolute
+
         return_data = make_dict_list_serializable(return_data)  # making json serializable
 
         pk_list = [instance_data[pk_field_name] for instance_data in return_data]

@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { PrintService } from '../../../../print/print-service';
-import { environment } from 'environments/environment';
 
 @Component({
     selector: 'app-print-student-profile',
@@ -90,10 +89,6 @@ export class PrintStudentProfileComponent implements OnInit {
                 return busStop.id == currentBusStop;
             }).stopName;
         }
-    }
-
-    getFullUrl(path: string): string {
-        return environment.MEDIA_URL + path;
     }
 
 }
