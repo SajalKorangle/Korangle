@@ -6,4 +6,5 @@ export const environment = {
     DJANGO_SERVER: 'https://app.korangle.com:8443',
     CASHFREE_CHECKOUT_URL: 'https://www.cashfree.com/checkout/post/submit',
     api_version: '/v2.0',
+    MEDIA_URL: "https://korangleplus.s3.amazonaws.com/",
 };

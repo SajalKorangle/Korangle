@@ -11,4 +11,5 @@ export const environment = {
     DJANGO_SERVER: 'http://' + window.location.hostname + ':8000', //for mobile + normal debugging over LAN
     CASHFREE_CHECKOUT_URL: 'https://test.cashfree.com/billpay/checkout/post/submit',
     api_version: '/v2.0',
+    MEDIA_URL: "https://korangletesting.s3.amazonaws.com/",
 };
