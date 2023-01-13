@@ -1,0 +1,17 @@
+/* Starts: Container */
+.card-content {
+    min-height: 90vh;
+}
+/* Ends: Container */
+
+
+/* Starts: Tab Section */
+.tabs {
+    display: flex;
+    align-items: center;
+}
+
+.inactive-tab {
+    color: rgba(0, 0, 0, 0.7);
+}
+/* Ends: Tab Section */
