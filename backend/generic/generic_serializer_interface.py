@@ -4,10 +4,11 @@ from django.db.models.fields.related import ForeignKey
 from common.json_encoding import make_dict_list_serializable
 from helloworld_project.settings import AWS_S3_BASE_URL
 
-from django.db.models import Count
+from django.db.models import Count, Sum
 
 AGGREGATOR_FUNCTION_MAPPED_BY_NAME = {
     'Count': Count,
+    'Sum': Sum,
 }
 
 
@@ -82,11 +83,19 @@ class GenericSerializerInterface():
                     query = query.union(parsed_query)
             elif key == 'annotate':
                 for alias_name, alias_generator_data in value.items():
-                    parsed_filter = self.parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else get_default_filter()
+                    parsed_filter = self.parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else self.parseFilter(alias_generator_data['exclude']) if 'exclude' in alias_generator_data else get_default_filter()
                     annotate_field_name = alias_generator_data['field']
                     annotate_function = AGGREGATOR_FUNCTION_MAPPED_BY_NAME[alias_generator_data['function']]
-                    query = query.annotate(**{alias_name: annotate_function(annotate_field_name, filter=Q(*
-                                                                                                          parsed_filter['filter_args'], **parsed_filter['filter_kwargs']))})
+                    if 'exclude' in alias_generator_data:
+                        query = query.annotate(**{alias_name: annotate_function(
+                            annotate_field_name,
+                            filter=~Q(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs']),
+                        )})
+                    else: 
+                        query = query.annotate(**{alias_name: annotate_function(
+                            annotate_field_name,
+                            filter=Q(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs']),
+                        )})
             elif key in ['order_by', 'pagination']:
                 pass
             else:
