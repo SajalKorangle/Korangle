@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { ServiceObject } from '../../common/service-object';
 
 import { BOARD_CONSTANT } from './models/board';
-import { SESSION_CONSTANT } from './models/session';
 
 import { HttpClient } from '@angular/common/http';
 
@@ -13,13 +12,11 @@ export class SchoolService extends ServiceObject {
 
     // objects urls
     public board = '/board';
-    public session = '/session';
     public bus_stop = '/bus-stops';
     public school_summary = '/school-summary';
 
     constructor(private http_class: HttpClient) {
         super(http_class);
-        this.constant_list[this.session] = SESSION_CONSTANT;
         this.constant_list[this.board] = BOARD_CONSTANT;
     }
 }

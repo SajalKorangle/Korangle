@@ -55,13 +55,19 @@ class QueryGeneratorMixin {
         return this;
     }
 
-    annotate(key: string, field: string, function_name: string, filter?: FILTER_TYPE) { // annotate
+    annotate(key: string, field: string, function_name: string, filter?: FILTER_TYPE, exclude?: FILTER_TYPE) { // annotate
         if (!this.query_data.annotate) {
             this.query_data.annotate = {};
         }
         this.query_data.annotate[key] = { field, function: function_name };
+        if (filter && exclude) {
+            alert('Query is wrong, both filter and exclude shouldnt exist in annotate');
+        }
         if (filter) {
             this.query_data.annotate[key].filter = filter;
+        }
+        if (exclude) {
+            this.query_data.annotate[key].exclude = exclude;
         }
         return this;
     }
