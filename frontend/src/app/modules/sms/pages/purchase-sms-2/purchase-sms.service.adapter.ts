@@ -20,13 +20,13 @@ export class PurchaseSmsServiceAdapter {
 
         let purchaseQuery = new Query()
         .filter({id: this.vm.user.activeSchool.dbId})
-        .annotate('purchaseCount','smsPurchaseList__numberOfSMS','Sum')
+        .annotate('purchaseCount', 'smsPurchaseList__numberOfSMS', 'Sum')
         .setFields('purchaseCount')
         .getObject({school_app: 'School'});
 
         let spentQuery = new Query()
         .filter({id: this.vm.user.activeSchool.dbId})
-        .annotate('spentCount','sms__count','Sum',null,{sms__sentStatus: 'FAILED'})
+        .annotate('spentCount', 'sms__count', 'Sum', null, {sms__sentStatus: 'FAILED'})
         .setFields('spentCount')
         .getObject({school_app: 'School'});
 

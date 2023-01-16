@@ -9,7 +9,7 @@ export class PurchaseSmsHtmlAdapter {
 
     smsBalance: number;
 
-    noOfSMS: number =100;
+    noOfSMS: number = 100;
 
     smsPlanList = getDefaultSMSPlans();
 
