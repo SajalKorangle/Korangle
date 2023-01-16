@@ -131,6 +131,10 @@ class School(models.Model):
     def __str__(self):
         return str(self.pk) + ' - ' + self.printName
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['id']
+        RelationsToStudent = []
+
     class Meta:
         db_table = 'school'
 

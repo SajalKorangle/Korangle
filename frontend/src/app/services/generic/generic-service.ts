@@ -150,7 +150,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     activity_record_app: 'ActivityRecord';
     student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue' | 'CountAllTable';
     class_app: 'Class' | 'Division';
-    school_app: 'Session' | 'BusStop';
+    school_app: 'Session' | 'BusStop' | 'School';
     tc_app: 'TransferCertificateNew';
     subject_app: 'StudentSubject' | 'SubjectSecond';
     examination_app: 'Examination' | 'StudentTest' | 'StudentExtraSubField' | 'CCEMarks';
@@ -191,6 +191,7 @@ export interface QUERY_INTERFACE {
             field: string,
             function: string,
             filter?: FILTER_TYPE,
+            exclude?: FILTER_TYPE,
         };
     };
     order_by?: Array<string>;
