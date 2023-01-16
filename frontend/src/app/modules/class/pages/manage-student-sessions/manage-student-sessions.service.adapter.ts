@@ -93,16 +93,16 @@ export class ManageStudentSessionsServiceAdapter {
             });
         });
 
-        this.sortStudentSessionListBySessionID();
+        this.sortStudentSessionListBySessionOrderNumber();
     }
     // END: populate the studentSessionList
 
-    // START: sorting the studentsessions by session ID
-    sortStudentSessionListBySessionID(): void {
+    // START: sorting the studentsessions by session order number
+    sortStudentSessionListBySessionOrderNumber(): void {
         this.vm.studentSessionList.sort((a, b) => {
-            if (a.parentSession.id && b.parentSession.id && a.parentSession.id < b.parentSession.id) {
+            if (a.parentSession.orderNumber && b.parentSession.orderNumber && a.parentSession.orderNumber < b.parentSession.orderNumber) {
                 return 1;
-            } else if (a.parentSession.id && b.parentSession.id && a.parentSession.id > b.parentSession.id) {
+            } else if (a.parentSession.orderNumber && b.parentSession.orderNumber && a.parentSession.orderNumber > b.parentSession.orderNumber) {
                 return -1;
             } else {
                 return 0;
