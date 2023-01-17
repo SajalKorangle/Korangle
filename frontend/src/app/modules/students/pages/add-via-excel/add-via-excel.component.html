@@ -1,3 +1,35 @@
-<div class="card-content">
-    Yet to be implemented !!!
+<div *ngIf="!htmlAdapter.isLoading" class="card-content table-responsive">
+
+    <!-- Starts: Upload Excel file & Download-Template -->
+    <div class="display-flex-section">
+
+        <!-- Starts: Excel file -->
+        <div style="display: flex; align-items: center;">
+            <b class="text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-right: 1rem;">Upload Excel file:</b>
+            <input type="file" (change)="uploadSheetAdapter.uploadSheet($event)" (click)="$event.target.value=null" multiple="false" accept=".xlsx" />
+        </div>
+        <!-- Ends: Excel file -->
+
+    </div><br />
+    <!-- Ends: Upload Excel file & Download-Template -->
+
+    <!-- Starts: Student Data in table view -->
+    <cdk-virtual-scroll-viewport *ngIf="tableAdapter.excelDataFromUser.length > 0" itemSize="0" class="example-viewport">
+        <table class="table table-hover">
+            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                <tr>
+                    <th *ngFor="let columnHeader of tableAdapter.excelDataFromUser[0]">{{columnHeader}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *cdkVirtualFor="let studentRow of tableAdapter.excelDataFromUser.slice(1)">
+                    <tr>
+                        <td *ngFor="let column of studentRow">{{column}}</td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </cdk-virtual-scroll-viewport>
+    <!-- Ends: Student Data in table view -->
+
 </div>
