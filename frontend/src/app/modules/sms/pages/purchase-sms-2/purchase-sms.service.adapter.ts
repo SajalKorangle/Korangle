@@ -30,18 +30,39 @@ export class PurchaseSmsServiceAdapter {
         .setFields('spentCount')
         .getObject({school_app: 'School'});
 
-        let [
+        let modeOfPaymentQuery = new Query()
+        .addChildQuery(
+            'modeofpaymentcharges',
+            new Query()
+        )
+        .addParentQuery(
+            'parentPaymentGateway',
+            new Query()
+        )
+        .getObjectList({payment_app: 'ModeOfPayment'});
+
+        let purchaseValue, spentValue;
+
+        [
             purchaseValue,
             spentValue,
+            this.vm.htmlAdapter.modeOfPaymentList,
         ] = await Promise.all([
             purchaseQuery,
-            spentQuery
+            spentQuery,
+            modeOfPaymentQuery
         ]);
 
         this.vm.htmlAdapter.smsBalance = purchaseValue.purchaseCount - spentValue.spentCount;
 
+        this.vm.htmlAdapter.selectedModeOfPayment = this.vm.htmlAdapter.modeOfPaymentList[0];
+
         this.vm.htmlAdapter.isInitialLoading = false;
 
+    }
+
+    async makeSmsPurchase() {
+        alert('Yet to be implemented');
     }
 
 }

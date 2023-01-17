@@ -2,6 +2,8 @@
 import { PurchaseSmsComponent } from "./purchase-sms.component";
 import { getDefaultSMSPlans, SMS_CHARGE } from '@modules/sms/class/constants';
 import { CommonFunctions } from '@classes/common-functions';
+import { ModeOfPayment } from "./purchase-sms.models";
+import { VALIDATORS_REGX } from "@classes/regx-validators";
 
 export class PurchaseSmsHtmlAdapter {
 
@@ -13,9 +15,18 @@ export class PurchaseSmsHtmlAdapter {
 
     smsPlanList = getDefaultSMSPlans();
 
+    modeOfPaymentList: ModeOfPayment[];
+
+    selectedModeOfPayment: ModeOfPayment;
+
+    validatorRegex = VALIDATORS_REGX;
+
     isMobile = CommonFunctions.getInstance().isMobileMenu;
 
     email: string = '';
+
+    korangle_charge = 5.9;
+    gst_charge = 0.18;
 
     isInitialLoading: boolean;
     isLoading: boolean;
@@ -65,6 +76,39 @@ export class PurchaseSmsHtmlAdapter {
             else
                 this.smsPlanList[i].selected = false;
         }
+    }
+
+    getTotalAmount(modeOfPayment: ModeOfPayment): number {
+        let transaction_amount = 0;
+        modeOfPayment.modeofpaymentcharges.every(charge => {
+            transaction_amount = 0;
+            if (charge.chargeType == 'Flat') {
+                transaction_amount =
+                    parseFloat((
+                        this.getPrice(this.noOfSMS) +
+                        this.korangle_charge +
+                        charge.charge*(1+this.gst_charge)
+                    ).toFixed(2));
+            } else if (charge.chargeType == 'Percentage') {
+                transaction_amount =
+                    parseFloat((
+                        (this.getPrice(this.noOfSMS) + this.korangle_charge) * 100
+                        /
+                        (100 - charge.charge * (1 + this.gst_charge))
+                    ).toFixed(2));
+            }
+            if (transaction_amount >= charge.minimumAmount
+                && (charge.maximumAmount == -1
+                    || transaction_amount <= charge.maximumAmount)) {
+                return false;
+            }
+            return true;
+        })
+        return transaction_amount;
+    }
+
+    getPlatformCharges(modeOfPayment: ModeOfPayment): number {
+        return parseFloat((this.getTotalAmount(modeOfPayment) - this.getPrice(this.noOfSMS)).toFixed(2));
     }
 
 }

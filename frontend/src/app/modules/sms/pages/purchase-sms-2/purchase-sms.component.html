@@ -1,4 +1,4 @@
-<div class="card-content" style="max-height: 88vh;" *ngIf="!htmlAdapter.isInitialLoading">
+<div class="card-content table-responsive" *ngIf="!htmlAdapter.isInitialLoading">
 
     <!--- Header and SMS Balance Starts --->
     <div class="row" style="margin-top:20px">
@@ -62,6 +62,53 @@
     <!--Standard Plan Ends-->
 
     <div class="row" style="margin-top: 30px; border-bottom: 1px solid#BFBFBF;">
+    </div>
+
+    <!-- Payment Mode Starts -->
+    <div style="margin-top: 30px; margin-left: 20px;">
+        <span><strong>Payment Mode</strong> </span>
+        <mat-form-field style="margin-left:10px">
+            <mat-select [(value)]="htmlAdapter.selectedModeOfPayment">
+                    <mat-option *ngFor="let modeOfPayment of htmlAdapter.modeOfPaymentList"
+                        [value]="modeOfPayment">
+                        {{modeOfPayment.parentPaymentGatewayInstance.name}} - {{modeOfPayment.name}}
+                    </mat-option>
+            </mat-select>
+            </mat-form-field>
+    </div>
+    <!-- Payment Mode Ends -->
+
+    <!-- Payment Details Starts -->
+    <div style="background-color:#FAFAFA; padding-top: 20px;">
+
+        <!-- No. of SMS and Price Starts -->
+        <div class="flex-row" style="font-size:15px;font-weight: 900;margin:1vh 1vw;">
+            <p>{{htmlAdapter.noOfSMS}} SMS</p>
+            <p>₹{{htmlAdapter.getPrice(htmlAdapter.noOfSMS)}}</p>
+        </div>
+        <!-- No. of SMS and Price Ends -->
+
+        <!-- Platform Charges Starts -->
+        <div class="flex-row" style="margin:1vh 1vw;">
+            <p>Platform Charges</p>
+            <p>₹{{htmlAdapter.getPlatformCharges(htmlAdapter.selectedModeOfPayment)}}</p>
+        </div>
+        <!-- Platform Charges Ends -->
+
+        <div style="border-bottom: 1px solid#BFBFBF;">
+        </div>
+
+        <!-- Total Amount Starts -->
+        <div class="flex-row" style="color: #4CA750;font-size:15px;font-weight: 900;margin:1vh 1vw;">
+            <p>Total Amount</p>
+            <p>₹{{htmlAdapter.getTotalAmount(htmlAdapter.selectedModeOfPayment)}}</p>
+        </div>
+        <!-- Total Amount Ends -->
+
+        <!-- Payment Details Ends -->
+        <div style="border-bottom: 1px solid#BFBFBF;">
+        </div>
+
     </div>
 
 </div>

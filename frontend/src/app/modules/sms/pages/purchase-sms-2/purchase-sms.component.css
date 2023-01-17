@@ -9,6 +9,12 @@ EDIT ON
   margin: 0 auto 3rem;
 }
 
+@media (min-width: 992px) {
+    .card-content {
+        max-height: 88vh;
+    }
+}
+
 .range {
   width: 30vw;
   min-width: 280px;
@@ -64,3 +70,7 @@ body {
   text-align: center;
 }
 
+.flex-row{
+    display: flex;
+    justify-content: space-between;
+}
