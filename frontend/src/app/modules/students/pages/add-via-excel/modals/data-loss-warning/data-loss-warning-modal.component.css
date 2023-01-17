@@ -1,0 +1,41 @@
+/* Starts: Modal Container */
+/*.data-loss-warning-modal {
+    height: 30vh;
+    width: 45vw;
+}*/
+/* Ends: Modal Container */
+
+/* Starts: header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #C4C4C4;   /* Light Gray */
+}
+
+.title {
+    font-weight: 500;
+}
+
+.close-btn {
+    color: red;
+    cursor: pointer;
+}
+/* Ends: header */
+
+/* Starts: Notice */
+.notice {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+}
+/* Ends: Notice */
+
+/* Starts: Button Section */
+.bottom-btn-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+/* Ends: Button Section */

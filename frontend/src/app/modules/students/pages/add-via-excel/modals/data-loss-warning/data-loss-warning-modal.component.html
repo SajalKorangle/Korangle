@@ -1,0 +1,38 @@
+<mat-dialog-content class="data-loss-warning-modal">
+    <!-- Starts: Header -->
+    <div class="header">
+        <div class="title">Update Via Excel >> Data Loss Warning</div>
+        <div><i class="material-icons close-btn" (click)="closeClicked()">highlight_off</i></div>
+    </div>
+    <br />
+    <!-- Ends: Header -->
+
+    <!-- Starts: Notice -->
+    <div class="notice">
+        Your current changes will be lost. <br />
+        Are you sure you want to continue?
+    </div>
+    <!-- Ends: Notice -->
+
+    <!-- Starts: Button Section -->
+    <br /><br />
+    <div class="bottom-btn-section">
+        <button
+            type="button"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 12px 15px; margin-right: 17px"
+            (click)="sendAction('continue')"
+        >
+            Continue
+        </button>
+        <button
+            type="button"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 12px 15px; margin-right: 17px"
+            (click)="sendAction('cancel')"
+        >
+            Cancel
+        </button>
+    </div>
+    <!-- Ends: Button Section -->
+</mat-dialog-content>
