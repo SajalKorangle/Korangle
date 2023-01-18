@@ -151,12 +151,33 @@ export class ParentStudentFilterComponent implements OnInit {
         if (value === null || value === '') {
             return [];
         }
+
         return this.studentList.filter((student) => {
             return (
                 student.name.toLowerCase().indexOf(value.toLowerCase()) != -1 ||
                 (student.scholarNumber && student.scholarNumber.toLowerCase().indexOf(value.toLowerCase()) != -1)
             );
-        }).slice(0, 20);
+        })
+        .sort((a, b) => {
+            if (getStudentIndex(a) == getStudentIndex(b)) {
+                return 0;
+            } else if (getStudentIndex(a) > getStudentIndex(b)) {
+                return 1;
+            } else {
+                return -1;
+            }
+        })
+        .slice(0, 20);
+
+        function getStudentIndex(student: any): number {
+            let index = 100000;
+            let nameIndex = student.name.toLowerCase().indexOf(value.toLowerCase());
+            let scholarNumberIndex = student.scholarNumber ? student.scholarNumber.toLowerCase().indexOf(value.toLowerCase()) : -1;
+            index = (nameIndex != -1 && nameIndex < index) ? nameIndex : index;
+            index = (scholarNumberIndex != -1 && scholarNumberIndex < index) ? scholarNumberIndex : index;
+            return index;
+        }
+
     }
 
     displayStudentFunction(student?: any): any {
@@ -195,9 +216,23 @@ export class ParentStudentFilterComponent implements OnInit {
         }
         return this.mobileNumberList
             .filter((mobileNumber) => {
-                return mobileNumber.toString().indexOf(value.toString()) === 0;
+                return mobileNumber.toString().indexOf(value.toString()) != -1;
+            })
+            .sort((a, b) => {
+                if (getMobileNumberIndex(a) == getMobileNumberIndex(b)) {
+                    return 0;
+                } else if (getMobileNumberIndex(a) > getMobileNumberIndex(b)) {
+                    return 1;
+                } else {
+                    return -1;
+                }
             })
             .slice(0, 10);
+
+        function getMobileNumberIndex(mobileNumber: any): number {
+            return mobileNumber.toString().indexOf(value.toString());
+        }
+
     }
 
     displayMobileNumberFn(mobileNumber?: any): any {
@@ -228,16 +263,38 @@ export class ParentStudentFilterComponent implements OnInit {
         if (this.selectedFilterType == this.FATHER_NAME) {
             filteredStudentList = this.studentList.filter((student) => {
                 return student.fathersName.toLowerCase().indexOf(strValue) != -1;
+            })
+            .sort((a, b) => {
+                let indexA = a.fathersName.toLowerCase().indexOf(strValue);
+                let indexB = b.fathersName.toLowerCase().indexOf(strValue);
+                if (indexA == indexB) {
+                    return 0;
+                } else if (indexA > indexB) {
+                    return 1;
+                } else {
+                    return -1;
+                }
             });
         } else {
             filteredStudentList = this.studentList.filter((student) => {
                 return student.motherName && student.motherName.toLowerCase().indexOf(strValue) != -1;
+            })
+            .sort((a, b) => {
+                let indexA = a.motherName.toLowerCase().indexOf(strValue);
+                let indexB = b.motherName.toLowerCase().indexOf(strValue);
+                if (indexA == indexB) {
+                    return 0;
+                } else if (indexA > indexB) {
+                    return 1;
+                } else {
+                    return -1;
+                }
             });
         }
         return filteredStudentList.reduce( (siblingListList, student) => {
             let studentListFromMobileNumber = student.mobileNumber ? this.getFilteredStudentListByMobileNumber(student.mobileNumber) : [];
             let studentListFromSecondMobileNumber = student.secondMobileNumber ? this.getFilteredStudentListByMobileNumber(student.secondMobileNumber) : [];
-            let studentListFromAllMobileNumbers = Array.from(new Set([...studentListFromMobileNumber, ...studentListFromSecondMobileNumber, ...[student]]));
+            let studentListFromAllMobileNumbers = Array.from(new Set([...[student], ...studentListFromMobileNumber, ...studentListFromSecondMobileNumber]));
             let siblingsFound = false;
             siblingListList.every(studentListLoop => {
                 if (studentListLoop.find(value => studentListFromAllMobileNumbers.includes(value)) != undefined) {
