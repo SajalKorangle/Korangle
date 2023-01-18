@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 
 import { DataStorage } from '../../../../classes/data-storage';
 
@@ -24,7 +24,8 @@ export class AddViaExcelComponent implements OnInit {
     tableAdapter: AddViaExcelTableAdapter;
 
     constructor(
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        public elRef:ElementRef,
     ) { }
 
     ngOnInit() {
