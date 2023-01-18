@@ -1,12 +1,31 @@
-<div *ngIf="!htmlAdapter.isLoading" class="card-content table-responsive">
+<!-- Starts: For Mobile & Tablet Devices -->
+<div *ngIf="htmlAdapter.isMobileDevice()" class="card-content table-responsive">
+    This page is not availble on mobile / Tablets
+</div>
+<!-- Ends: For Mobile & Tablet Devices -->
+
+<!-- Starts: For Desktop -->
+<div *ngIf="!uploadSheetAdapter.isFileLoading && !htmlAdapter.isMobileDevice()" class="card-content table-responsive">
 
     <!-- Starts: Upload Excel file & Download-Template -->
     <div class="display-flex-section">
 
         <!-- Starts: Excel file -->
         <div style="display: flex; align-items: center;">
-            <b class="text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-right: 1rem;">Upload Excel file:</b>
-            <input type="file" (change)="uploadSheetAdapter.uploadSheet($event)" (click)="$event.target.value=null" multiple="false" accept=".xlsx" />
+
+            <!-- Starts: Upload Button and Chosen file name -->
+            <button class="btn btn-indigo"
+                style="padding: 4px 7px;"
+                (click)="uploadSheetAdapter.clickInputFileButton()">
+                Upload xlsx
+            </button>
+            <span style="margin-left: 5px;">{{uploadSheetAdapter.chosenFileName}}</span>
+            <!-- Starts: Upload Button and Chosen file name -->
+
+            <!-- Starts: Hidden Input Element -->
+            <input type="file" id="input-file-button" style="display: none;" (change)="uploadSheetAdapter.uploadSheet($event)" multiple="false" accept=".xlsx" />
+            <!-- Ends: Hidden Input Element -->
+
         </div>
         <!-- Ends: Excel file -->
 
@@ -33,3 +52,10 @@
     <!-- Ends: Student Data in table view -->
 
 </div>
+<!-- Ends: For Desktop -->
+
+<!-- Start: Loader -->
+<ng-container *ngIf="uploadSheetAdapter.isFileLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- Ends: Loader -->
