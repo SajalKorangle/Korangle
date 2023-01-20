@@ -52,6 +52,8 @@ export class AddViaExcelUploadSheetAdapter {
 
         }
 
+        event.target.value = null;
+
     }
     // Ends :- Upload Excel File
 
