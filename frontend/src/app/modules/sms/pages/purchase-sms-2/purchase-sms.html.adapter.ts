@@ -87,7 +87,7 @@ export class PurchaseSmsHtmlAdapter {
                     parseFloat((
                         this.getPrice(this.noOfSMS) +
                         this.korangle_charge +
-                        charge.charge*(1+this.gst_charge)
+                        charge.charge * (1 + this.gst_charge)
                     ).toFixed(2));
             } else if (charge.chargeType == 'Percentage') {
                 transaction_amount =
@@ -103,7 +103,7 @@ export class PurchaseSmsHtmlAdapter {
                 return false;
             }
             return true;
-        })
+        });
         return transaction_amount;
     }
 

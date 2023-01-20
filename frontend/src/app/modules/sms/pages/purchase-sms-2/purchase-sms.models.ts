@@ -6,12 +6,12 @@ export type ModeOfPayment = {
     apiCode: string,
     parentPaymentGatewayInstance: PaymentGateway,
     modeofpaymentcharges: ModeOfPaymentCharges[],
-}
+};
 
 export type PaymentGateway = {
     id: number,
     name: string,
-}
+};
 
 export type ModeOfPaymentCharges = {
     id: number,
@@ -20,4 +20,4 @@ export type ModeOfPaymentCharges = {
     charge: number,
     minimumAmount: number,
     maximumAmount: number,
-}
+};
