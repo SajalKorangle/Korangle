@@ -27,13 +27,13 @@ export class DataLossWarningModalComponent implements OnInit {
     }
     // Ends :- Close Modal
 
-    // Starts :- 
+    // Starts :- Send user selected action
     sendAction(action: any) {
         let data = {};
         data["action"] = action;
 
         this.dialogRef.close(data);
     }
-    // Ends :-
+    // Ends :- Send user selected action
 
 }

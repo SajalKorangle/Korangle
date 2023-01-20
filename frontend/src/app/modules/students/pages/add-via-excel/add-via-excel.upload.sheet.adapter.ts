@@ -57,7 +57,7 @@ export class AddViaExcelUploadSheetAdapter {
     }
     // Ends :- Upload Excel File
 
-    // Starts: Open Data Loss Warning Dialog when 
+    // Starts: Open Data Loss Warning Dialog when
     openDataLossWarningDialog(file: any) {
 
         const dialogRef = this.dialog.open(DataLossWarningModalComponent);

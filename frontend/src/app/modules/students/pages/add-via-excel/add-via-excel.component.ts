@@ -25,7 +25,7 @@ export class AddViaExcelComponent implements OnInit {
 
     constructor(
         public dialog: MatDialog,
-        public elRef:ElementRef,
+        public elRef: ElementRef,
     ) { }
 
     ngOnInit() {
