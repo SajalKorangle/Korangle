@@ -1,6 +1,9 @@
 import { AddViaExcelComponent } from './add-via-excel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DataLossWarningModalComponent } from './modals/data-loss-warning/data-loss-warning-modal.component';
+import { FilePreviewImageModalComponent } from './modals/file-preview-image-modal/file-preview-image-modal.component';
+
+import xlsx = require('xlsx');
 
 export class AddViaExcelUploadSheetAdapter {
 
@@ -9,6 +12,41 @@ export class AddViaExcelUploadSheetAdapter {
     reader: FileReader = new FileReader();
 
     chosenFileName = "No File Chosen";
+
+    columnHeaderList = [
+        "Student Name",
+        "Father's Name",
+        "Class",
+        "Division",
+        "Roll No.",
+        "Mobile Number",
+        "Alternate Mobile Number",
+        "Scholar Number",
+        "Date of Birth",
+        "Remarks",
+        "Mother's Name",
+        "Gender",
+        "Caste",
+        "Category",
+        "Religion",
+        "Father's Occupation",
+        "Address",
+        "Family SSMID",
+        "Child SSMID",
+        "Bank Name",
+        "IFSC Code",
+        "Bank Account No.",
+        "Aadhar Number",
+        "Blood Group",
+        "Father's Annual Income",
+        "Bus Stop",
+        "RTE",
+        "Admission Session",
+        "Admission Class",
+        "Date of Admission",
+    ];
+
+    currentSessionName: string;
 
     isFileLoading = false;
 
@@ -30,6 +68,18 @@ export class AddViaExcelUploadSheetAdapter {
 
     }
 
+    // Starts: Open Sample-File-Image Preview Modal
+    openFilePreviewImage(): void {
+        const dialogRef = this.dialog.open(FilePreviewImageModalComponent);
+    }
+    // Ends: Open Sample-File-Image Preview Modal
+
+    // Starts: Open guidline modal
+    openGuidelines(): void {
+        alert('Yet to be implemented');
+    }
+    // Ends: Open guidline modal
+
     // Starts :- Click Input file button to choose file from computer
     clickInputFileButton(): void {
         let inputFileButton = this.vm.elRef.nativeElement.querySelector('#input-file-button');
@@ -40,17 +90,30 @@ export class AddViaExcelUploadSheetAdapter {
     // Starts :- Upload Excel File
     uploadSheet(event: any): void {
 
+        // Starts: If a file is chosen
         if (event.target.files.length > 0) {
 
+            // Comment: Get the first file if mulitple files are chosen
             let file = event.target.files[0];
+
+            // Starts: Open Data Loss warning modal if some data is already present in the page
             if (this.vm.tableAdapter.excelDataFromUser.length > 0) {
                 this.openDataLossWarningDialog(file);
-            } else {
-                this.reader.readAsBinaryString(file);
-                this.chosenFileName = file.name;
             }
+            // Ends: Open Data Loss warning modal if some data is already present in the page
+
+            // Starts: No previous data is displayed, directly go to read the file
+            else {
+                this.reader.readAsBinaryString(file);
+                this.chosenFileName = file.name; // Comment: Last read file name should be displayed to the user.
+            }
+            // Ends: No previous data is displayed, directly go to read the file
 
         }
+        // Ends: If a file is chosen
+
+        // Comment: Make the target value null so that last file can be chosen again, if wanted.
+        event.target.value = null;
 
     }
     // Ends :- Upload Excel File
@@ -74,5 +137,18 @@ export class AddViaExcelUploadSheetAdapter {
 
     }
     //  Ends: openDataLossWarningDialog
+
+    // Starts: Download Sheet Template
+    downloadSheetTemplate(): void {
+        let sheetTemplate = []; // to be downloaded
+
+        sheetTemplate.push(this.columnHeaderList);
+
+        let ws = xlsx.utils.aoa_to_sheet(sheetTemplate);
+        let wb = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
+        xlsx.writeFile(wb, 'Sheet.xlsx');
+    } 
+    //  Ends: Download Sheet Template
 
 }

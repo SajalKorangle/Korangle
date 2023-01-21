@@ -4,12 +4,14 @@ import { AddViaExcelRoutingModule } from './add-via-excel.routing';
 import { ComponentsModule } from '../../../../components/components.module';
 import { AddViaExcelComponent } from './add-via-excel.component';
 import { DataLossWarningModalComponent } from './modals/data-loss-warning/data-loss-warning-modal.component';
+import { FilePreviewImageModalComponent } from './modals/file-preview-image-modal/file-preview-image-modal.component';
 
 
 @NgModule({
     declarations: [
         AddViaExcelComponent,
         DataLossWarningModalComponent,
+        FilePreviewImageModalComponent,
     ],
 
     imports: [
@@ -20,7 +22,8 @@ import { DataLossWarningModalComponent } from './modals/data-loss-warning/data-l
     providers: [],
     bootstrap: [AddViaExcelComponent],
     entryComponents: [
-        DataLossWarningModalComponent
+        DataLossWarningModalComponent,
+        FilePreviewImageModalComponent,
     ],
 })
 export class AddViaExcelModule {}

@@ -23,6 +23,8 @@ export class AddViaExcelComponent implements OnInit {
     uploadSheetAdapter: AddViaExcelUploadSheetAdapter;
     tableAdapter: AddViaExcelTableAdapter;
 
+    isLoading = false;
+
     constructor(
         public dialog: MatDialog,
         public elRef:ElementRef,
