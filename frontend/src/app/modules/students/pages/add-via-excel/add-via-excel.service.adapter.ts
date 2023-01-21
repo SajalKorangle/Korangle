@@ -14,7 +14,7 @@ export class AddViaExcelServiceAdapter {
     /* Initialize Data */
     async initializeData() {
 
-        this.vm.isLoading;
+        this.vm.isLoading = true;
 
         let studentParameterQuery = new Query()
         .filter({
@@ -44,7 +44,7 @@ export class AddViaExcelServiceAdapter {
             return session.id == this.vm.user.activeSchool.currentSessionDbId;
         }).name;
 
-        this.vm.isLoading;
+        this.vm.isLoading = false;
 
     }
     // Ends: initializeData()
