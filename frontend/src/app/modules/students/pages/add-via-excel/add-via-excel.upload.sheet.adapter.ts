@@ -2,6 +2,7 @@ import { AddViaExcelComponent } from './add-via-excel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DataLossWarningModalComponent } from './modals/data-loss-warning/data-loss-warning-modal.component';
 import { FilePreviewImageModalComponent } from './modals/file-preview-image-modal/file-preview-image-modal.component';
+import { GuidelinesModalComponent } from './modals/guidelines-modal/guidelines-modal.component';
 
 import xlsx = require('xlsx');
 
@@ -76,7 +77,7 @@ export class AddViaExcelUploadSheetAdapter {
 
     // Starts: Open guidline modal
     openGuidelines(): void {
-        alert('Yet to be implemented');
+        const dialogRef = this.dialog.open(GuidelinesModalComponent);
     }
     // Ends: Open guidline modal
 

@@ -1,0 +1,24 @@
+<!-- Starts: Modal Container -->
+<mat-dialog-content>
+
+    <!-- Starts: Header -->
+    <div class="header">
+        <div class="title">Add Via Excel >> Guidelines and Troubleshooting</div>
+        <div><i class="material-icons close-btn" (click)="closeClicked()">highlight_off</i></div>
+    </div>
+    <br />
+    <!-- Ends: Header -->
+
+    <!-- Starts: Guidelines -->
+    <ol>
+        <li>As of now, the software will accept only one sheet.</li>
+        <li>File should have xlsx extension.</li>
+        <li>If you have created multiple table in one sheet, it will only accept one table at a time.</li>
+        <li>Remove unnecessary details. (Links, Images, etc. )</li>
+        <li>Each cell should contain only one value. (Ex: mobile number.)</li>
+        <li>Column headers are fetched from row 1 of the xlsx file.</li>
+    </ol>
+    <!-- Ends: Guidelines -->
+
+</mat-dialog-content>
+<!-- Ends: Modal Container -->

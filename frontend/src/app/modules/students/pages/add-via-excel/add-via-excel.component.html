@@ -12,27 +12,22 @@
 
         <!-- Starts: Note -->
         <div style="flex-basis: 70%;">
-            <b>Note: </b>
             <p>
-                Column headers are fetched from row 1 of the xlsx file.
-                <span (click)="uploadSheetAdapter.openFilePreviewImage()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline; font-weight: 300; cursor: pointer;">Click Here</span>
-                to view sample file.
-                <span (click)="uploadSheetAdapter.openGuidelines()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline; font-weight: 300; cursor: pointer;">Click Here</span>
-                to view guidelines and troubleshooting.
-                <span (click)="uploadSheetAdapter.downloadSheetTemplate()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline; font-weight: 300; cursor: pointer;">Click Here</span>
-                to download template.
+                <span (click)="uploadSheetAdapter.openGuidelines()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline; font-weight: 300; cursor: pointer;">View Guidelines</span> <span style="font-weight: 800;"> | </span>
+                <span (click)="uploadSheetAdapter.openFilePreviewImage()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline; font-weight: 300; cursor: pointer;">View Sample File</span> <span style="font-weight: 800;"> | </span>
+                <span (click)="uploadSheetAdapter.downloadSheetTemplate()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline; font-weight: 300; cursor: pointer;">Download Template</span>
             </p>
         </div>
         <!-- Ends: Note -->
 
         <!-- Starts: Current Session -->
         <div class="current-session-section" align="end">
-            <p style="font-size: 14px; color: rgba(0, 0, 0, 0.6);">Uploading for Current Session</p>
+            <p style="font-size: 14px; color: rgba(0, 0, 0, 0.6); margin: 0px;">Uploading for Current Session</p>
             <b>{{ uploadSheetAdapter.currentSessionName }}</b>
         </div>
         <!-- Ends: Current Session -->
 
-    </div><br />
+    </div>
     <!-- Ends: Note & Current Session -->
     
     <!-- Starts: Upload Excel file & Download-Template -->
@@ -45,7 +40,7 @@
             <button class="btn btn-indigo"
                 style="padding: 4px 7px;"
                 (click)="uploadSheetAdapter.clickInputFileButton()">
-                Upload xlsx
+                Choose File (xlsx)
             </button>
             <span style="margin-left: 5px;">{{uploadSheetAdapter.chosenFileName}}</span>
             <!-- Ends: Upload Button and Chosen file name -->
