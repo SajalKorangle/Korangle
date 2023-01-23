@@ -1,0 +1,44 @@
+<!-- Starts: Modal Container -->
+<mat-dialog-content style="max-height: 70vh;">
+
+    <!-- Starts: Header -->
+    <div class="header">
+        <div class="title">Add Via Excel >> Map Headers</div>
+        <div><i class="material-icons close-btn" (click)="closeClicked()">highlight_off</i></div>
+    </div>
+    <br />
+    <!-- Ends: Header -->
+
+    <!-- Starts: Map excel column to software student field -->
+    <table class="table table-hover">
+        <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+            <tr>
+                <th>Excel Columns</th>
+                <th>Student Fields</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngFor="let columnHeader of tableData[0]">
+                <tr [class.red]="columnHeader.softwareColumnHeader==undefined">
+                    <td>{{columnHeader.excelHeaderName}}</td>
+                    <td>
+                        <mat-form-field style="width: 100%">
+                            <mat-select
+                                [(ngModel)]="columnHeader.softwareColumnHeader"
+                            >
+                                <mat-option [value]="0">Ignore</mat-option>
+                                <mat-option *ngFor="let softwareColumnHeader of getFilteredSoftwareColumnHeaderList(columnHeader);"
+                                    [value]="softwareColumnHeader">
+                                    {{ softwareColumnHeader }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                </tr>
+            </ng-container>
+        </tbody>
+    </table>
+    <!-- Ends: Map excel column to software student field -->
+    
+</mat-dialog-content>
+<!-- Ends: Modal Container -->

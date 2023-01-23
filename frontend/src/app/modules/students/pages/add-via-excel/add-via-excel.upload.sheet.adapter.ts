@@ -14,39 +14,6 @@ export class AddViaExcelUploadSheetAdapter {
 
     chosenFileName = "No File Chosen";
 
-    columnHeaderList = [
-        "Student Name",
-        "Father's Name",
-        "Class",
-        "Division",
-        "Roll No.",
-        "Mobile Number",
-        "Alternate Mobile Number",
-        "Scholar Number",
-        "Date of Birth",
-        "Remarks",
-        "Mother's Name",
-        "Gender",
-        "Caste",
-        "Category",
-        "Religion",
-        "Father's Occupation",
-        "Address",
-        "Family SSMID",
-        "Child SSMID",
-        "Bank Name",
-        "IFSC Code",
-        "Bank Account No.",
-        "Aadhar Number",
-        "Blood Group",
-        "Father's Annual Income",
-        "Bus Stop",
-        "RTE",
-        "Admission Session",
-        "Admission Class",
-        "Date of Admission",
-    ];
-
     currentSessionName: string;
 
     isFileLoading = false;
@@ -143,7 +110,7 @@ export class AddViaExcelUploadSheetAdapter {
     downloadSheetTemplate(): void {
         let sheetTemplate = []; // to be downloaded
 
-        sheetTemplate.push(this.columnHeaderList);
+        sheetTemplate.push(this.vm.softwareColumnHeaderList);
 
         let ws = xlsx.utils.aoa_to_sheet(sheetTemplate);
         let wb = xlsx.utils.book_new();

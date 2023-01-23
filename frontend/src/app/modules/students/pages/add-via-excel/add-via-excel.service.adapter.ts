@@ -35,8 +35,8 @@ export class AddViaExcelServiceAdapter {
             sessionQuery,
         ]);
 
-        this.vm.uploadSheetAdapter.columnHeaderList =
-            this.vm.uploadSheetAdapter.columnHeaderList.concat(
+        this.vm.softwareColumnHeaderList =
+            this.vm.softwareColumnHeaderList.concat(
                 studentParameterList.map(item => item.name)
             );
 

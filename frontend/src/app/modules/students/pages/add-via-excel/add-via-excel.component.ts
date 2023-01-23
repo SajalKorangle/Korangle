@@ -23,6 +23,39 @@ export class AddViaExcelComponent implements OnInit {
     uploadSheetAdapter: AddViaExcelUploadSheetAdapter;
     tableAdapter: AddViaExcelTableAdapter;
 
+    softwareColumnHeaderList = [
+        "Student Name",
+        "Father's Name",
+        "Class",
+        "Division",
+        "Roll No.",
+        "Mobile Number",
+        "Alternate Mobile Number",
+        "Scholar Number",
+        "Date of Birth",
+        "Remarks",
+        "Mother's Name",
+        "Gender",
+        "Caste",
+        "Category",
+        "Religion",
+        "Father's Occupation",
+        "Address",
+        "Family SSMID",
+        "Child SSMID",
+        "Bank Name",
+        "IFSC Code",
+        "Bank Account No.",
+        "Aadhar Number",
+        "Blood Group",
+        "Father's Annual Income",
+        "Bus Stop",
+        "RTE",
+        "Admission Session",
+        "Admission Class",
+        "Date of Admission",
+    ];
+
     isLoading = false;
 
     constructor(

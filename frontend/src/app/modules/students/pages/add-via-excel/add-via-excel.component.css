@@ -35,3 +35,7 @@
     justify-content: center;
     text-align: center;
 }
+
+.red {
+    background-color: red;
+}
