@@ -118,7 +118,7 @@ export class AddViaExcelUploadSheetAdapter {
     }
     // Ends :- Upload Excel File
 
-    // Starts: Open Data Loss Warning Dialog when 
+    // Starts: Open Data Loss Warning Dialog
     openDataLossWarningDialog(file: any) {
 
         const dialogRef = this.dialog.open(DataLossWarningModalComponent);
@@ -136,7 +136,7 @@ export class AddViaExcelUploadSheetAdapter {
         // Ends :- on closing of modal.
 
     }
-    //  Ends: openDataLossWarningDialog
+    // Starts: Open Data Loss Warning Dialog
 
     // Starts: Download Sheet Template
     downloadSheetTemplate(): void {
@@ -148,7 +148,7 @@ export class AddViaExcelUploadSheetAdapter {
         let wb = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
         xlsx.writeFile(wb, 'Sheet.xlsx');
-    } 
+    }
     //  Ends: Download Sheet Template
 
 }
