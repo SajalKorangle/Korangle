@@ -13,6 +13,39 @@ export class AddViaExcelServiceAdapter {
 
     /* Initialize Data */
     async initializeData() {
+
+        this.vm.isLoading = true;
+
+        let studentParameterQuery = new Query()
+        .filter({
+            parentSchool: this.vm.user.activeSchool.dbId,
+            parameterType__in: ['TEXT', 'FILTER'],
+        })
+        .getObjectList({student_app: 'StudentParameter'});
+
+        let sessionQuery = new Query()
+        .getObjectList({school_app: 'Session'});
+
+        let studentParameterList, sessionList;
+        [
+            studentParameterList,
+            sessionList,
+        ] = await Promise.all([
+            studentParameterQuery,
+            sessionQuery,
+        ]);
+
+        this.vm.uploadSheetAdapter.columnHeaderList =
+            this.vm.uploadSheetAdapter.columnHeaderList.concat(
+                studentParameterList.map(item => item.name)
+            );
+
+        this.vm.uploadSheetAdapter.currentSessionName = sessionList.find(session => {
+            return session.id == this.vm.user.activeSchool.currentSessionDbId;
+        }).name;
+
+        this.vm.isLoading = false;
+
     }
     // Ends: initializeData()
 
