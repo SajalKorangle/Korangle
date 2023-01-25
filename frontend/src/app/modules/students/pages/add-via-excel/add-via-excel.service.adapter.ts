@@ -37,11 +37,11 @@ export class AddViaExcelServiceAdapter {
 
         this.vm.softwareColumnHeaderList =
             this.vm.softwareColumnHeaderList.concat(
-                studentParameterList.map(item => { 
+                studentParameterList.map(item => {
                     return {
                         name: item.name,
                         possibleExcelHeaderNameList: [],
-                    }
+                    };
                 })
             );
 

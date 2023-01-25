@@ -62,8 +62,7 @@ export class AddViaExcelComponent implements OnInit {
         },
         {
             name: "Remarks",
-            possibleExcelHeaderNameList:[
-            ],
+            possibleExcelHeaderNameList: []
         },
         {
             name: "Mother's Name",
