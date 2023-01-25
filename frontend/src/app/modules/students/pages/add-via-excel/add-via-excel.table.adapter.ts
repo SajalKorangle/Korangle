@@ -80,7 +80,7 @@ export class AddViaExcelTableAdapter {
             return this.tableData[0].find(columnHeader => {
                 return tableColumnHeader != columnHeader &&
                     columnHeader.softwareColumnHeader &&
-                    columnHeader.softwareColumnHeader == softwareColumnHeader;
+                    columnHeader.softwareColumnHeader.name == softwareColumnHeader.name;
             }) == undefined;
         });
     }

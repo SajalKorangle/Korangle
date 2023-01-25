@@ -87,7 +87,7 @@
                                 <mat-option [value]="0">Ignore</mat-option>
                                 <mat-option *ngFor="let softwareColumnHeader of tableAdapter.getFilteredSoftwareColumnHeaderList(columnHeader)"
                                     [value]="softwareColumnHeader">
-                                    {{ softwareColumnHeader }}
+                                    {{ softwareColumnHeader.name }}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>

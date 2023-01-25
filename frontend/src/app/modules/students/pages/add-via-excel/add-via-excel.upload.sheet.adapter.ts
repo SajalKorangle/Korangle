@@ -110,7 +110,7 @@ export class AddViaExcelUploadSheetAdapter {
     downloadSheetTemplate(): void {
         let sheetTemplate = []; // to be downloaded
 
-        sheetTemplate.push(this.vm.softwareColumnHeaderList);
+        sheetTemplate.push(this.vm.softwareColumnHeaderList.map(item => item.name));
 
         let ws = xlsx.utils.aoa_to_sheet(sheetTemplate);
         let wb = xlsx.utils.book_new();

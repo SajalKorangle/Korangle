@@ -32,7 +32,7 @@ export class MapHeadersModalComponent implements OnInit {
             return this.tableData[0].find(columnHeader => {
                 return tableColumnHeader != columnHeader &&
                     columnHeader.softwareColumnHeader &&
-                    columnHeader.softwareColumnHeader == softwareColumnHeader;
+                    columnHeader.softwareColumnHeader.name == softwareColumnHeader.name;
             }) == undefined;
         });
     }

@@ -24,36 +24,127 @@ export class AddViaExcelComponent implements OnInit {
     tableAdapter: AddViaExcelTableAdapter;
 
     softwareColumnHeaderList = [
-        "Student Name",
-        "Father's Name",
-        "Class",
-        "Division",
-        "Roll No.",
-        "Mobile Number",
-        "Alternate Mobile Number",
-        "Scholar Number",
-        "Date of Birth",
-        "Remarks",
-        "Mother's Name",
-        "Gender",
-        "Caste",
-        "Category",
-        "Religion",
-        "Father's Occupation",
-        "Address",
-        "Family SSMID",
-        "Child SSMID",
-        "Bank Name",
-        "IFSC Code",
-        "Bank Account No.",
-        "Aadhar Number",
-        "Blood Group",
-        "Father's Annual Income",
-        "Bus Stop",
-        "RTE",
-        "Admission Session",
-        "Admission Class",
-        "Date of Admission",
+        {
+            name: "Student Name",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Father's Name",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Class",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Section",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Roll No.",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Mobile Number",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Alternate Mobile Number",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Scholar Number",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Date of Birth",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Remarks",
+            possibleExcelHeaderNameList:[
+            ],
+        },
+        {
+            name: "Mother's Name",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Gender",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Caste",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Category",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Religion",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Father's Occupation",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Address",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Family SSMID",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Child SSMID",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Bank Name",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "IFSC Code",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Bank Account No.",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Aadhar Number",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Blood Group",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Father's Annual Income",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Bus Stop",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "RTE",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Admission Session",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Admission Class",
+            possibleExcelHeaderNameList: []
+        },
+        {
+            name: "Date of Admission",
+            possibleExcelHeaderNameList: []
+        },
     ];
 
     isLoading = false;
