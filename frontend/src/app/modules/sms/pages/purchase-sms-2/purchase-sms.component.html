@@ -53,7 +53,8 @@
 
     <div class="row" style="margin-top: 30px;">
         <div *ngFor="let plan of htmlAdapter.smsPlanList" style="display: inline-block; margin-left: 20px;">
-            <div (click)="htmlAdapter.noOfSMS = plan.noOfSms; htmlAdapter.callSetBubble(htmlAdapter.noOfSMS)" [ngClass]="plan.selected ? 'selectedMobile' : 'unselectedMobile'">
+            <div (click)="htmlAdapter.noOfSMS = plan.noOfSms; htmlAdapter.callSetBubble(htmlAdapter.noOfSMS)"
+                [ngClass]="plan.selected ? 'selectedMobile' : 'unselectedMobile'">
                 <span style="font-weight: 400;">{{plan.noOfSms}} SMS for
                     ₹{{htmlAdapter.getPrice(plan.noOfSms)}}</span>
             </div>
@@ -69,12 +70,11 @@
         <span><strong>Payment Mode</strong> </span>
         <mat-form-field style="margin-left:10px">
             <mat-select [(value)]="htmlAdapter.selectedModeOfPayment">
-                    <mat-option *ngFor="let modeOfPayment of htmlAdapter.modeOfPaymentList"
-                        [value]="modeOfPayment">
-                        {{modeOfPayment.parentPaymentGatewayInstance.name}} - {{modeOfPayment.name}}
-                    </mat-option>
+                <mat-option *ngFor="let modeOfPayment of htmlAdapter.modeOfPaymentList" [value]="modeOfPayment">
+                    {{modeOfPayment.parentPaymentGatewayInstance.name}} - {{modeOfPayment.name}}
+                </mat-option>
             </mat-select>
-            </mat-form-field>
+        </mat-form-field>
     </div>
     <!-- Payment Mode Ends -->
 
@@ -106,8 +106,21 @@
         <!-- Total Amount Ends -->
 
         <!-- Payment Details Ends -->
-        <div style="border-bottom: 1px solid#BFBFBF;">
+        <div
+            style="display: flex; justify-content: flex-end; flex-direction: row; gap: 5rem; padding: 1vh 1vw; align-items: center;">
+            <div>
+                <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input required matInput [(ngModel)]="htmlAdapter.email" [pattern]="validatorRegex.email"
+                        [value]="user.email">
+                </mat-form-field>
+            </div>
+            <div style="display: block; padding-bottom: 1rem;">
+                <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="makeSmsPurchase()">Pay</button>
+            </div>
         </div>
+
 
     </div>
 
