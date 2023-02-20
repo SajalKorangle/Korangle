@@ -16,4 +16,4 @@ import { SalaryOldService } from '../../services/modules/salary/salary-old.servi
     providers: [SalaryOldService],
     bootstrap: [Salary2Component],
 })
-export class SalaryModule {}
+export class Salary2Module {}

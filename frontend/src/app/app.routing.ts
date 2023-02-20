@@ -94,7 +94,7 @@ const routes: Routes = [
             },
             {
                 path: 'salary2',
-                loadChildren: 'app/modules/salary/salary2.module#Salary2Module',
+                loadChildren: 'app/modules/salary2/salary2.module#Salary2Module',
             },
             {
                 path: 'expenses',
