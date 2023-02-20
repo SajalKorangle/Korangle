@@ -50,8 +50,11 @@ urlpatterns = [
 
 
 ## VERSION FREE URLS STARTS ##
-from payment_app.views import OrderCompletionView
+from payment_app.views import OrderCompletionView, EaseBuzzOrderCompletionView
 urlpatterns += [
-    url(r'^payment/order-completion/', OrderCompletionView.as_view(), name='cashfree_order_completion'),
+    url(r'^payment/order-completion/', OrderCompletionView.as_view(),
+        name='cashfree_order_completion'),
+    url(r'^payment/easebuzz-order-completion/', EaseBuzzOrderCompletionView.as_view(),
+        name='easebuzz_order_completion'),
 ]
 ## VERSION FREE URLS ENDS ##
