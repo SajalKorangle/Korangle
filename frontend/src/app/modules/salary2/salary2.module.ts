@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
-
 import { ComponentsModule } from '../../components/components.module';
-
 import { Salary2Component } from './salary2.component';
 import { Salary2RoutingModule } from './salary2.routing';
-import { SalaryOldService } from '../../services/modules/salary/salary-old.service';
 
 @NgModule({
     declarations: [
@@ -13,7 +10,7 @@ import { SalaryOldService } from '../../services/modules/salary/salary-old.servi
 
     imports: [ComponentsModule, Salary2RoutingModule],
     exports: [],
-    providers: [SalaryOldService],
+    providers: [],
     bootstrap: [Salary2Component],
 })
 export class Salary2Module {}
