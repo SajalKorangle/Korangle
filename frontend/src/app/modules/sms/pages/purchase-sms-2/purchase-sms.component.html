@@ -106,20 +106,27 @@
         <!-- Total Amount Ends -->
 
         <!-- Payment Details Ends -->
+
+        <!-- Email Input and Pay Button Starts -->
         <div
             style="display: flex; justify-content: flex-end; flex-direction: row; gap: 5rem; padding: 1vh 1vw; align-items: center;">
+            <!-- User Email Input Starts -->
             <div>
-                <mat-form-field>
-                    <mat-label>Email</mat-label>
-                    <input required matInput [(ngModel)]="htmlAdapter.email" [pattern]="validatorRegex.email"
-                        [value]="user.email">
+                <mat-label>Email</mat-label>
+                <input required matInput [(ngModel)]="htmlAdapter.email" [pattern]="validatorRegex.email"
+                    [value]="user.email">
                 </mat-form-field>
             </div>
+            <!-- User Email Input Ends -->
+
+            <!-- Pay Button Starts  -->
             <div style="display: block; padding-bottom: 1rem;">
                 <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                     (click)="makeSmsPurchase()">Pay</button>
             </div>
+            <!-- Pay Button Ends -->
         </div>
+        <!-- Email Input and Pay Button Ends -->
 
 
     </div>

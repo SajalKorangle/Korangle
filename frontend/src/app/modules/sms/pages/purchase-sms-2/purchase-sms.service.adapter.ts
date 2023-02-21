@@ -72,9 +72,9 @@ export class PurchaseSmsServiceAdapter {
         // Data Validation Ends
 
         // New SMS Purchase Order Starts
-
         const currentRedirectParams = new URLSearchParams(location.search);
         const frontendReturnUrlParams = new URLSearchParams();
+
         // redirect_to params decides the frontend page and state at which the user is redirected after payment
         frontendReturnUrlParams.append('redirect_to', location.origin + location.pathname + '?' + currentRedirectParams.toString());
 
@@ -95,7 +95,7 @@ export class PurchaseSmsServiceAdapter {
             customerPhone: this.vm.user.username,
             customerEmail: this.vm.htmlAdapter.email,
             returnData: {
-                origin: environment.DJANGO_SERVER,  // backend url api which will be hit by cashfree to verify the completion of payment on their portal
+                origin: environment.DJANGO_SERVER,  // backend url api which will be hit by easebuzz to verify the completion of payment on their portal
                 searchParams: frontendReturnUrlParams.toString()
             },
             orderNote: `payment towards sms purchase for school with KID ${this.vm.user.activeSchool.dbId}`,
@@ -105,6 +105,7 @@ export class PurchaseSmsServiceAdapter {
 
         const newOrderResponse = await this.vm.paymentService.createObject(this.vm.paymentService.easebuzz_order_self, newOrder);
         console.log("new order", newOrderResponse)
+        //Incomplete (Redirect to the payment url coming in the response)
     }
 
 }
