@@ -2,7 +2,7 @@ from .cashfree.cashfree import getResponseSignature
 from .cashfree.cashfree import createAndSignCashfreeOrderForKorangle
 from .cashfree.cashfree import createAndSignCashfreeOrderForSchool
 from .models import Order
-from .easebuzz_lib.helpersForKorangle import createOrder
+from .easebuzz_lib.helpersForKorangle import createOrder, verifyPayment
 
 from common.common_views_3 import CommonView, CommonListView, APIView
 from common.common_serializer_interface_3 import get_object
@@ -182,9 +182,8 @@ class EaseBuzzOrderSelfView(CommonView, APIView):
 
 class EaseBuzzOrderCompletionView(APIView):
     permission_classes = []
-"""
     def post(self, request):
-        final_response = easebuzzObj.easebuzzResponse(request.POST)
+        final_response = verifyPayment(request)
         # Status 0 if hashes dont match
         if final_response["status"] == 0:
             return HttpResponseForbidden()
@@ -210,4 +209,3 @@ class EaseBuzzOrderCompletionView(APIView):
             orderInstance.orderId
         )
         return HttpResponseRedirect(redirectUrl)
-"""

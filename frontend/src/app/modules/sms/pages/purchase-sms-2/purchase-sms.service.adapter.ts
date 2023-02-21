@@ -71,6 +71,9 @@ export class PurchaseSmsServiceAdapter {
 
         // Data Validation Ends
 
+        // Showing loading screen
+        this.vm.htmlAdapter.isLoading = true;
+
         // New SMS Purchase Order Starts
         const currentRedirectParams = new URLSearchParams(location.search);
         const frontendReturnUrlParams = new URLSearchParams();
@@ -98,14 +101,18 @@ export class PurchaseSmsServiceAdapter {
                 origin: environment.DJANGO_SERVER,  // backend url api which will be hit by easebuzz to verify the completion of payment on their portal
                 searchParams: frontendReturnUrlParams.toString()
             },
-            orderNote: `payment towards sms purchase for school with KID ${this.vm.user.activeSchool.dbId}`,
+            orderNote: `sms purchase for school with KID ${this.vm.user.activeSchool.dbId}`,
             smsPurchaseOrderList: [smsPurchaseOrder],
             paymentMode: this.vm.htmlAdapter.selectedModeOfPayment
         };
 
-        const newOrderResponse = await this.vm.paymentService.createObject(this.vm.paymentService.easebuzz_order_self, newOrder);
-        console.log("new order", newOrderResponse)
-        //Incomplete (Redirect to the payment url coming in the response)
+        const newOrderResponse:any = await this.vm.paymentService.createObject(this.vm.paymentService.easebuzz_order_self, newOrder);
+        if (newOrderResponse.success) {
+            window.location.href = newOrderResponse.success;
+        } else {
+            this.vm.htmlAdapter.isLoading = false;
+            alert("Unable to initiate payment request.")
+        }
     }
 
 }

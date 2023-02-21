@@ -1,4 +1,4 @@
-<div class="card-content table-responsive" *ngIf="!htmlAdapter.isInitialLoading">
+<div class="card-content table-responsive" *ngIf="!htmlAdapter.isInitialLoading && !htmlAdapter.isLoading">
 
     <!--- Header and SMS Balance Starts --->
     <div class="row" style="margin-top:20px">
@@ -112,9 +112,10 @@
             style="display: flex; justify-content: flex-end; flex-direction: row; gap: 5rem; padding: 1vh 1vw; align-items: center;">
             <!-- User Email Input Starts -->
             <div>
-                <mat-label>Email</mat-label>
-                <input required matInput [(ngModel)]="htmlAdapter.email" [pattern]="validatorRegex.email"
-                    [value]="user.email">
+                <mat-form-field style="float: right; margin-right: 1vw; margin-top: 12px;">
+                    <mat-label>Email</mat-label>
+                    <input required matInput [(ngModel)]="htmlAdapter.email" [pattern]="validatorRegex.email"
+                        [value]="user.email">
                 </mat-form-field>
             </div>
             <!-- User Email Input Ends -->
@@ -132,6 +133,17 @@
     </div>
 
 </div>
+
+<!-- Loader to show before redirecting to the EaseBuzz Site Starts -->
+<ng-container *ngIf="htmlAdapter.isLoading">
+    <app-loading-spinner [user]="user">
+    </app-loading-spinner>
+    <div style="padding: 60px;">
+        <h2 style="text-align: center;">Please Wait...</h2>
+        <p style="text-align: center;">You will be redirected to payment site.</p>
+    </div>
+</ng-container>
+<!-- Loader to show before redirecting to the EaseBuzz Site Ends -->
 
 <ng-container *ngIf="htmlAdapter.isInitialLoading">
     <app-loading-spinner [user]="user"></app-loading-spinner>
