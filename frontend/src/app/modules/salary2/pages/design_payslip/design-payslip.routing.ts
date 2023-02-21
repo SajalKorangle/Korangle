@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
-import { PlaceHolderComponent } from './placeholder.component';
+import { DesignPayslipComponent } from './design-payslip.component';
 
 const routes: Routes = [
     {
         path: '',
-        component: PlaceHolderComponent,
+        component: DesignPayslipComponent,
     },
 ];
 
@@ -14,4 +14,4 @@ const routes: Routes = [
     imports: [CommonModule, RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
-export class PlaceHolderRoutingModule {}
+export class DesignPayslipRoutingModule {}
