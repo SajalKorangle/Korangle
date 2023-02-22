@@ -93,6 +93,10 @@ const routes: Routes = [
                 loadChildren: 'app/modules/salary/salary.module#SalaryModule',
             },
             {
+                path: 'salary2',
+                loadChildren: 'app/modules/salary2/salary2.module#Salary2Module',
+            },
+            {
                 path: 'expenses',
                 loadChildren: 'app/modules/expenses/expense.module#ExpenseModule',
             },
