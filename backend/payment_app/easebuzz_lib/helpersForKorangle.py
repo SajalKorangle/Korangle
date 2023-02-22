@@ -32,7 +32,8 @@ def calculateAmount(order):
             final_amount = (amount * 100)/(100-price*(1+GST))
         if final_amount >= charge.minimumAmount and (charge.maximumAmount == -1 or final_amount <= charge.maximumAmount):
             break
-    if final_amount != order["orderTotalAmount"]:
+
+    if round(final_amount, 2) != order["orderTotalAmount"]:
         return False
     return str(round(final_amount, 2))
 
