@@ -19,11 +19,11 @@ def calculateAmount(order):
     final_amount = amount
 
     # Calculating final charges including korangle and easebuzz charges
-    mop = ModeOfPayment.objects.filter(
+    mode = ModeOfPayment.objects.filter(
         apiCode=order["paymentMode"]["apiCode"],
         parentPaymentGateway__name="Easebuzz"
         ).first()
-    mopCharges = ModeOfPaymentCharges.objects.filter(parentModeOfPayment=mop).all()
+    mopCharges = ModeOfPaymentCharges.objects.filter(parentModeOfPayment=mode).all()
     for charge in mopCharges:
         price = float(charge.charge)
         if charge.chargeType == "Flat":
@@ -32,7 +32,8 @@ def calculateAmount(order):
             final_amount = (amount * 100)/(100-price*(1+GST))
         if final_amount >= charge.minimumAmount and (charge.maximumAmount == -1 or final_amount <= charge.maximumAmount):
             break
-
+    if final_amount != order["orderTotalAmount"]:
+        return False
     return str(round(final_amount, 2))
 
 def createOrder(orderData, orderId):
@@ -51,6 +52,9 @@ def createOrder(orderData, orderId):
         "furl": snfurl,
         "show_payment_mode": orderData["paymentMode"]["apiCode"]
     })
+
+    if(order["amount"]==False):
+        return {"failure": "Could not generate url"}
 
     final_response = easebuzz.initiatePaymentAPI(order)
 

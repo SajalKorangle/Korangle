@@ -174,8 +174,9 @@ class EaseBuzzOrderSelfView(CommonView, APIView):
         
         easebuzz_order = createOrder(data, orderData["orderId"])
 
-        GenericSerializerInterface(
-            Model=self.Model, data=orderData, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeStudentID']).create_object()
+        if(easebuzz_order.get("success", False)!=False):
+            GenericSerializerInterface(
+                Model=self.Model, data=orderData, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeStudentID']).create_object()
         
         return easebuzz_order
 

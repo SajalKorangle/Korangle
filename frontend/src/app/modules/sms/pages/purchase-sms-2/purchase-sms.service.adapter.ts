@@ -103,7 +103,8 @@ export class PurchaseSmsServiceAdapter {
             },
             orderNote: `sms purchase for school with KID ${this.vm.user.activeSchool.dbId}`,
             smsPurchaseOrderList: [smsPurchaseOrder],
-            paymentMode: this.vm.htmlAdapter.selectedModeOfPayment
+            paymentMode: this.vm.htmlAdapter.selectedModeOfPayment,
+            orderTotalAmount: this.vm.htmlAdapter.getTotalAmount(this.vm.htmlAdapter.selectedModeOfPayment)
         };
 
         const newOrderResponse:any = await this.vm.paymentService.createObject(this.vm.paymentService.easebuzz_order_self, newOrder);
