@@ -107,12 +107,12 @@ export class PurchaseSmsServiceAdapter {
             orderTotalAmount: this.vm.htmlAdapter.getTotalAmount(this.vm.htmlAdapter.selectedModeOfPayment)
         };
 
-        const newOrderResponse:any = await this.vm.paymentService.createObject(this.vm.paymentService.easebuzz_order_self, newOrder);
+        const newOrderResponse: any = await this.vm.paymentService.createObject(this.vm.paymentService.easebuzz_order_self, newOrder);
         if (newOrderResponse.success) {
             window.location.href = newOrderResponse.success;
         } else {
             this.vm.htmlAdapter.isLoading = false;
-            alert("Unable to initiate payment request.")
+            alert("Unable to initiate payment request.");
         }
     }
 

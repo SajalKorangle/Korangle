@@ -25,7 +25,7 @@ export class PurchaseSmsComponent implements OnInit {
     validatorRegex = VALIDATORS_REGX;
 
 
-    constructor(public dialog: MatDialog,public paymentService: PaymentService) { }
+    constructor(public dialog: MatDialog, public paymentService: PaymentService) { }
 
     ngOnInit() {
 
@@ -40,7 +40,7 @@ export class PurchaseSmsComponent implements OnInit {
 
     }
 
-        makeSmsPurchase() {
+    makeSmsPurchase() {
         if (!this.htmlAdapter.email) {
             alert("Email is required");
             return;
@@ -50,7 +50,6 @@ export class PurchaseSmsComponent implements OnInit {
             return;
         }
         this.htmlAdapter.isLoading = true;
-        this.serviceAdapter.makeSmsPurchase(this.htmlAdapter.noOfSMS, this.htmlAdapter.email)    
+        this.serviceAdapter.makeSmsPurchase(this.htmlAdapter.noOfSMS, this.htmlAdapter.email);
     }
-
 }
