@@ -39,6 +39,9 @@ export class ParentStudentFilterComponent implements OnInit {
     mobileNumberFormControl = new FormControl();
     parentNameFormControl = new FormControl();
 
+    motherNameFormControlValue : any;
+    fatherNameFormControlValue : any;
+
     filteredStudentList: any;
     filteredMobileNumberList: any;
     filteredSiblingListList: any;
@@ -360,5 +363,17 @@ export class ParentStudentFilterComponent implements OnInit {
             return name.substring(ind, ind + text.length);
         return '';
     }
+
+    onChangeSelectedFilterType(event : any) : any {
+        if (this.selectedFilterType == this.FATHER_NAME){
+            this.fatherNameFormControlValue = this.parentNameFormControl.value 
+            this.parentNameFormControl.setValue(this.motherNameFormControlValue)
+        } else {
+            this.motherNameFormControlValue = this.parentNameFormControl.value 
+            this.parentNameFormControl.setValue(this.fatherNameFormControlValue)
+        }
+        this.selectedFilterType = event
+    }
+    
 
 }
