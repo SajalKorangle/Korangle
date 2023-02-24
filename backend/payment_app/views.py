@@ -148,6 +148,12 @@ class OrderCompletionView(APIView):
                     orderInstance.status = 'Refund Pending'
                     orderInstance.save()
 
+        # Save the order with status "Failed" on payment failure
+        elif request.POST["txStatus"] == "FAILED":
+            orderInstance.status = "Failed"
+            with transaction.atomic():
+                orderInstance.save()
+
         # Redirect to the redirect to params with orderId as extra params
         redirectUrl = request.GET['redirect_to'] + '&orderId={0}'.format(orderInstance.orderId)
         return HttpResponseRedirect(redirectUrl)
@@ -204,6 +210,12 @@ class EaseBuzzOrderCompletionView(APIView):
                 with transaction.atomic():
                     orderInstance.status = "Refund Pending"
                     orderInstance.save()
+        
+        # Save the order with status "Failed" on payment failure
+        elif request.POST["status"] == "failure":
+            orderInstance.status = "Failed"
+            with transaction.atomic():
+                orderInstance.save()
 
         # Redirect to the params with orderId as extra params
         redirectUrl = request.GET["redirect_to"] + "&orderId={0}".format(

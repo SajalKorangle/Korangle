@@ -109,6 +109,7 @@ export class PurchaseSmsServiceAdapter {
 
         const newOrderResponse: any = await this.vm.paymentService.createObject(this.vm.paymentService.easebuzz_order_self, newOrder);
         if (newOrderResponse.success) {
+            this.vm.htmlAdapter.isLoading = false;
             window.location.href = newOrderResponse.success;
         } else {
             this.vm.htmlAdapter.isLoading = false;
