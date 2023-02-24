@@ -365,15 +365,13 @@ export class ParentStudentFilterComponent implements OnInit {
     }
 
     onChangeSelectedFilterType(event : any) : any {
-        if (this.selectedFilterType == this.FATHER_NAME){
-            this.fatherNameFormControlValue = this.parentNameFormControl.value 
-            this.parentNameFormControl.setValue(this.motherNameFormControlValue)
+        if (this.selectedFilterType == this.FATHER_NAME) {
+            this.fatherNameFormControlValue = this.parentNameFormControl.value;
+            this.parentNameFormControl.setValue(this.motherNameFormControlValue);
         } else {
-            this.motherNameFormControlValue = this.parentNameFormControl.value 
-            this.parentNameFormControl.setValue(this.fatherNameFormControlValue)
+            this.motherNameFormControlValue = this.parentNameFormControl.value;
+            this.parentNameFormControl.setValue(this.fatherNameFormControlValue);
         }
-        this.selectedFilterType = event
+        this.selectedFilterType = event;
     }
-    
-
 }
