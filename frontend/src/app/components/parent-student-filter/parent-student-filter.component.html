@@ -142,7 +142,6 @@
         <mat-form-field>
             <mat-select
                 placeholder="Select Filter Type"
-                (ngModelChange)="selectedFilterType = $event;"
                 [ngModel]="selectedFilterType"
                 [disabled]="!bothFilters"
                 (ngModelChange)="onChangeSelectedFilterType($event)"
