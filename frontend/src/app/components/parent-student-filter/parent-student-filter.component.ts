@@ -29,6 +29,9 @@ export class ParentStudentFilterComponent implements OnInit {
 
     @Output() onStudentListSelected = new EventEmitter<any>();
 
+    // added by me
+    @Output() onStudentFilterSelected = new EventEmitter<any>();
+
     classList = [];
     sectionList = [];
     studentSectionList = [];
@@ -365,13 +368,8 @@ export class ParentStudentFilterComponent implements OnInit {
     }
 
     onChangeSelectedFilterType(event : any) : any {
-        if (this.selectedFilterType == this.FATHER_NAME) {
-            this.fatherNameFormControlValue = this.parentNameFormControl.value;
-            this.parentNameFormControl.setValue(this.motherNameFormControlValue);
-        } else {
-            this.motherNameFormControlValue = this.parentNameFormControl.value;
-            this.parentNameFormControl.setValue(this.fatherNameFormControlValue);
-        }
-        this.selectedFilterType = event;
+        this.parentNameFormControl.reset();
+        this.onStudentFilterSelected.emit();
     }
+
 }
