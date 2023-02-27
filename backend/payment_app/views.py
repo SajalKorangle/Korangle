@@ -212,7 +212,7 @@ class EaseBuzzOrderCompletionView(APIView):
                     orderInstance.save()
         
         # Save the order with status "Failed" on payment failure
-        elif request.POST["status"] == "failure":
+        elif request.POST["status"] == "failure" or request.POST["status"] == "userCancelled":
             orderInstance.status = "Failed"
             with transaction.atomic():
                 orderInstance.save()
