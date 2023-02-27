@@ -5,11 +5,15 @@ import { ComponentsModule } from '../../../../components/components.module';
 import { SendSmsComponent } from './send-sms.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
+import { PurchaseSmsSelectComponent } from './components/purchase-sms-select/purchase-sms-select.component';
+import { PurchaseSmsDialogEasebuzzComponent } from './components/purchase-sms-dialog-easebuzz/purchase-sms-dialog-easebuzz.component';
 
 @NgModule({
     declarations: [
         SendSmsComponent,
         PurchaseSmsDialogComponent,
+        PurchaseSmsSelectComponent,
+        PurchaseSmsDialogEasebuzzComponent
     ],
 
     imports: [
@@ -19,7 +23,11 @@ import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/pur
     ],
     exports: [],
     providers: [],
-    entryComponents: [PurchaseSmsDialogComponent],
+    entryComponents: [
+        PurchaseSmsDialogComponent,
+        PurchaseSmsSelectComponent,
+        PurchaseSmsDialogEasebuzzComponent
+    ],
     bootstrap: [SendSmsComponent],
 })
 export class SendSmsModule { }

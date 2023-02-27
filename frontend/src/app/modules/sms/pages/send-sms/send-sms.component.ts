@@ -17,6 +17,7 @@ import {InformationService} from '@services/modules/information/information.serv
 import { MatDialog } from '@angular/material';
 
 import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
+import { PurchaseSmsSelectComponent } from './components/purchase-sms-select/purchase-sms-select.component';
 
 import { CommonFunctions } from '@classes/common-functions';
 @Component({
@@ -404,11 +405,19 @@ export class SendSmsComponent implements OnInit {
     }
 
     openPurchaseSMSDialog(): void {
-        this.dialog.open(PurchaseSmsDialogComponent, {
-            data: {
-                vm: this,
-            }
-        });
+        if (DataStorage.getInstance().isFeatureEnabled("Easebuzz Online Payment Gateway Feature Flag")) {
+            this.dialog.open(PurchaseSmsSelectComponent, {
+                data: {
+                    vm: this,
+                }
+            });
+        } else {
+            this.dialog.open(PurchaseSmsDialogComponent, {
+                data: {
+                    vm: this,
+                }
+            });
+        }
     }
 
 }
