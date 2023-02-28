@@ -1,15 +1,18 @@
 from .cashfree.cashfree import getResponseSignature
-from django.http import HttpResponseRedirect, HttpResponseForbidden
 from .cashfree.cashfree import createAndSignCashfreeOrderForKorangle
 from .cashfree.cashfree import createAndSignCashfreeOrderForSchool
 from .models import Order
+from .easebuzz_lib.helpersForKorangle import createOrder, verifyPayment
+
 from common.common_views_3 import CommonView, CommonListView, APIView
 from common.common_serializer_interface_3 import get_object
 from generic.generic_serializer_interface import GenericSerializerInterface
 from decorators import user_permission_3
+
+from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.urls import reverse
 from django.db import transaction
 from time import time
-from django.urls import reverse
 
 
 ########### Online Payment Account #############
@@ -145,6 +148,77 @@ class OrderCompletionView(APIView):
                     orderInstance.status = 'Refund Pending'
                     orderInstance.save()
 
+        # Save the order with status "Failed" on payment failure
+        elif request.POST["txStatus"] == "FAILED":
+            orderInstance.status = "Failed"
+            with transaction.atomic():
+                orderInstance.save()
+
         # Redirect to the redirect to params with orderId as extra params
         redirectUrl = request.GET['redirect_to'] + '&orderId={0}'.format(orderInstance.orderId)
+        return HttpResponseRedirect(redirectUrl)
+
+
+class EaseBuzzOrderSelfView(CommonView, APIView):
+    Model = Order
+    permittedMethods = ['get', 'post', ]
+
+    @user_permission_3
+    def post(self, request, *args, **kwargs):
+        order = self.createOrder(request.data, request.user, kwargs)
+        return order
+
+    def createOrder(self, data, user, kwargs):
+        orderData = {
+            'orderId': str(int(time() * 1000000)),
+            'parentUser': user.id,
+            'amount': data['orderAmount']
+        }
+        for child_field in [key for key in data if key in self.Model._meta.fields_map]:
+            orderData[child_field] = data[child_field]
+            del data[child_field]
+        
+        easebuzz_order = createOrder(data, orderData["orderId"])
+
+        if(easebuzz_order.get("success", False)!=False):
+            GenericSerializerInterface(
+                Model=self.Model, data=orderData, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeStudentID']).create_object()
+        
+        return easebuzz_order
+
+
+class EaseBuzzOrderCompletionView(APIView):
+    permission_classes = []
+    def post(self, request):
+        final_response = verifyPayment(request)
+        # Status 0 if hashes dont match
+        if final_response["status"] == 0:
+            return HttpResponseForbidden()
+
+        orderInstance = Order.objects.get(orderId=request.POST["txnid"])
+        if request.POST["status"] == "success":
+            orderInstance.status = "Completed"
+            orderInstance.referenceId = request.POST["easepayid"]
+            try:
+                # On save django pre save signals will be fired.
+                # It will try to use the received amount to create fee receipt or purchase sms.
+                # In case of failure we will refund the amount.
+                with transaction.atomic():
+                    orderInstance.save()
+            except:
+                # Order Save has failed with status as Completed, so we will refund the amount.
+                with transaction.atomic():
+                    orderInstance.status = "Refund Pending"
+                    orderInstance.save()
+        
+        # Save the order with status "Failed" on payment failure
+        elif request.POST["status"] == "failure" or request.POST["status"] == "userCancelled":
+            orderInstance.status = "Failed"
+            with transaction.atomic():
+                orderInstance.save()
+
+        # Redirect to the params with orderId as extra params
+        redirectUrl = request.GET["redirect_to"] + "&orderId={0}".format(
+            orderInstance.orderId
+        )
         return HttpResponseRedirect(redirectUrl)
