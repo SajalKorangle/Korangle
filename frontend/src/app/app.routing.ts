@@ -126,6 +126,10 @@ const routes: Routes = [
                 loadChildren: 'app/modules/class/class.module#ClassModule',
             },
             {
+                path: 'library',
+                loadChildren: 'app/modules/library/library.module#LibraryModule',
+            },
+            {
                 path: 'school',
                 loadChildren: 'app/modules/school/school.module#SchoolModule',
             },
