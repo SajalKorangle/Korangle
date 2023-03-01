@@ -3,13 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 
 @Component({
-    selector: 'page-name',
-    templateUrl: './page-name.component.html',
-    styleUrls: ['./page-name.component.css'],
+    selector: 'add-via-excel',
+    templateUrl: './add-via-excel.component.html',
+    styleUrls: ['./add-via-excel.component.css'],
     providers: [ ],
 })
 
-export class PageNameComponent implements OnInit {
+export class AddViaExcelComponent implements OnInit {
 
     user: any;
 

@@ -3,13 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 
 @Component({
-    selector: 'page-name',
-    templateUrl: './page-name.component.html',
-    styleUrls: ['./page-name.component.css'],
+    selector: 'delete-book',
+    templateUrl: './delete-book.component.html',
+    styleUrls: ['./delete-book.component.css'],
     providers: [ ],
 })
 
-export class PageNameComponent implements OnInit {
+export class DeleteBookComponent implements OnInit {
 
     user: any;
 

@@ -3,13 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 
 @Component({
-    selector: 'page-name',
-    templateUrl: './page-name.component.html',
-    styleUrls: ['./page-name.component.css'],
+    selector: 'view-all',
+    templateUrl: './view-all.component.html',
+    styleUrls: ['./view-all.component.css'],
     providers: [ ],
 })
 
-export class PageNameComponent implements OnInit {
+export class ViewAllComponent implements OnInit {
 
     user: any;
 

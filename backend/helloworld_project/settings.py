@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     'payment_app',
     'activity_record_app',
     'feature_flag_app',
+    'library_app',
 
     'corsheaders',
 
