@@ -366,6 +366,8 @@ export class ParentStudentFilterComponent implements OnInit {
 
     onChangeSelectedFilterType(event : any) : any {
         this.parentNameFormControl.reset();
+        this.studentFormControl.reset();
+        this.mobileNumberFormControl.reset();
         this.onStudentFilterSelected.emit();
         this.selectedFilterType = event;
     }
