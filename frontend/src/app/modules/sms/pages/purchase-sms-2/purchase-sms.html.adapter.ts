@@ -35,6 +35,7 @@ export class PurchaseSmsHtmlAdapter {
 
     initializeAdapter(vm: PurchaseSmsComponent): void {
         this.vm = vm;
+        this.email = this.vm.user.email;
     }
 
     initializeData(): void {
