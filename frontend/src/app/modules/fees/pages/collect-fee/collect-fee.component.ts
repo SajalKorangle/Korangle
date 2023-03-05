@@ -188,6 +188,10 @@ export class CollectFeeComponent implements OnInit {
         this.showDetails = true;
     }
 
+    handleStudentFilterSelection() : void {
+        this.showDetails = false;
+    }
+
     handleStudentFeeProfile(): void {
         this.selectedStudentList.forEach((student) => {
             this.sessionList.forEach((session) => {

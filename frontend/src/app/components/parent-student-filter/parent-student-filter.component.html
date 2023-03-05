@@ -144,7 +144,7 @@
                 placeholder="Select Filter Type"
                 [ngModel]="selectedFilterType"
                 [disabled]="!bothFilters"
-                (ngModelChange)="selectedFilterType = $event"
+                (ngModelChange)="onChangeSelectedFilterType($event)"
             >
                 <mat-option *ngFor="let filterType of filterTypeList" [value]="filterType">
                     {{ filterType }}
