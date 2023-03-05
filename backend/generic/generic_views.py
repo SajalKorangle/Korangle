@@ -18,7 +18,8 @@ class GenericBaseView(APIView):
 
     def initial(self, request, *args, **kwargs):
         request.GET._mutable = True
-        model = apps.get_model(request.GET['app_name'], request.GET['model_name'])
+        model = apps.get_model(
+            request.GET['app_name'], request.GET['model_name'])
         del request.GET['app_name']
         del request.GET['model_name']
         request.GET._mutable = False

@@ -8,12 +8,22 @@
         <th></th>
         <th></th>
       </tr>
-      <tr>
-        <td>Under Construction</td>
-        <td>Under Construction</td>
-        <td>Under Construction</td>
-        <td>Under Construction</td>
-      </tr>
+      <div *ngIf="!is_leaves_types_empty">
+        <tr *ngFor="let item of leave_types">
+          <td>Under Construction</td>
+          <td>Under Construction</td>
+          <td>Under Construction</td>
+          <td>Under Construction</td>
+        </tr>
+      </div>
+      <div *ngIf="is_leaves_types_empty">
+        <tr>
+          <td>No</td>
+          <td>Types</td>
+          <td>Available</td>
+          <td></td>
+        </tr>
+      </div>
     </table>
   </div>
   <div class="add-new-type-container">
