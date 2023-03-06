@@ -113,7 +113,7 @@
 
     </div>
 
-    <!-- Loader to show before redirecting to the EaseBuzz Site Starts -->
+    <!-- Payment Redirect Loader Starts -->
     <ng-container *ngIf="htmlAdapter.isLoading">
         <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%);">
             <app-loading-spinner [user]="user">
@@ -124,13 +124,16 @@
             </div>
         </div>
     </ng-container>
+    <!-- Payment Redirect Loader Ends -->
 
+    <!-- Initial Loader Starts -->
     <ng-container *ngIf="htmlAdapter.isInitialLoading">
         <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%);">
             <app-loading-spinner [user]="user">
             </app-loading-spinner>
         </div>
     </ng-container>
+    <!-- Initial Loader Ends -->
 
 </mat-dialog-content>
 
