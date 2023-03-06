@@ -182,7 +182,7 @@
                   background: color == '' ? '#FFFFFF' : color
                 }"
               >
-                <div>Select Color</div>
+                <div>{{ color == "" ? "Select Color" : "Change Color" }}</div>
                 <div class="material-icons" style="font-size: medium">
                   arrow_drop_down
                 </div>
@@ -230,15 +230,28 @@
               display: flex;
               height: 35.5px;
               flex-direction: row;
+              flex-wrap: wrap;
               padding: 5px 5px 5px 20px;
               margin-top: 12px;
               margin-bottom: 12px;
             "
           >
-            <label style="color: black"
+            <label style="color: black; width: 100%"
               >Carryforwarding and encashments -
             </label>
           </div>
+        </div>
+        <div
+          style="
+            display: flex;
+            height: 35.5px;
+            flex-direction: row;
+            padding: 5px 5px 5px 20px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+          "
+        >
+          Form under-construction
         </div>
         <!-- Horizontal Break -->
         <div
@@ -248,6 +261,71 @@
             margin-top: 10px;
           "
         ></div>
+        <!-- Set Encashment Formula -->
+        <div
+          style="
+            display: flex;
+            height: 35.5px;
+            flex-direction: row;
+            padding: 5px 5px 5px 20px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+          "
+        >
+          Form under-construction
+        </div>
+        <!-- Horizontal Break -->
+        <div
+          style="
+            border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+            width: 100%;
+            margin-top: 10px;
+          "
+        ></div>
+        <!-- Close / Save -->
+        <div
+          style="
+            display: flex;
+            flex-direction: row;
+            padding: 5px 5px 5px 20px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+            justify-content: end;
+          "
+        >
+          <button
+            (click)="saveLeaveType($event)"
+            style="
+              min-width: 100px;
+              padding: 10px;
+              font-size: medium;
+              color: white;
+              outline: none;
+              box-shadow: none;
+              background: #fe9800;
+              border-radius: 5px;
+              border: none;
+              margin: 5px;
+            "
+          >
+            Save
+          </button>
+          <button
+            (click)="closeAddNewType($event)"
+            style="
+              min-width: 100px;
+              padding: 10px;
+              font-size: medium;
+              outline: none;
+              box-shadow: none;
+              border-radius: 5px;
+              border: 1px solid #fe9800;
+              margin: 5px;
+            "
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -38,14 +38,21 @@ export class ManageTypeComponent implements OnInit {
     constructor (private genericService: GenericService) { }
     
     // handle Modal
-    addNewType($event): void {
+    addNewType(event): void {
         this.is_form_visible = true;
         this.is_colorList_visible = false;
         this.name = "";
         this.leaveType = -1;
         this.color = "";
     }
-    closeAddNewType($event) : void {
+    closeAddNewType(event) : void {
         this.is_form_visible = false;
+        this.is_colorList_visible = false;
+        this.name = "";
+        this.leaveType = -1;
+        this.color = "";
+    }
+    saveLeaveType(event) : void {
+        alert('Under Construction!');
     }
 }
