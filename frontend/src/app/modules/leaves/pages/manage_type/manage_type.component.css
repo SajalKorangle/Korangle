@@ -8,14 +8,14 @@
   width: 100%;
   font-family: roboto;
 }
-.leave-type-table > tr > th {
+.tableHeading {
   font-weight: 400;
   font-size: medium;
   color: #fc9701;
   padding-bottom: 18px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
-.leave-type-table > tr > td {
+.tableItem {
   font-weight: 300;
   font-size: medium;
   padding-bottom: 6px;
@@ -33,4 +33,62 @@
   background: #fd9700;
   box-shadow: none;
   border: none;
+}
+
+.addBtn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.modalWrapper {
+  position: absolute;
+  padding: 32px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-family: "Roboto";
+}
+.closeBtn {
+  color: red;
+  background: none;
+  height: 25px;
+  width: 25px;
+  font-size: medium;
+  border-radius: 50%;
+  outline: none;
+  border: 2px solid red;
+  padding: 0px;
+}
+
+.modalContainer {
+  width: 600px;
+  border-radius: 8px;
+  background: white;
+  height: fit-content;
+}
+.titleBar {
+  width: 100%;
+  display: flex;
+  font-size: large;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 18px;
+  font-weight: 500;
+}
+.modalInput {
+  width: 33%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+  .modalContainer {
+    width: 100%;
+  }
 }
