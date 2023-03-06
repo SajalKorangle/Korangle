@@ -29,6 +29,8 @@ export class ParentStudentFilterComponent implements OnInit {
 
     @Output() onStudentListSelected = new EventEmitter<any>();
 
+    @Output() onStudentFilterSelected = new EventEmitter<any>();
+
     classList = [];
     sectionList = [];
     studentSectionList = [];
@@ -38,6 +40,7 @@ export class ParentStudentFilterComponent implements OnInit {
     studentFormControl = new FormControl();
     mobileNumberFormControl = new FormControl();
     parentNameFormControl = new FormControl();
+
 
     filteredStudentList: any;
     filteredMobileNumberList: any;
@@ -359,6 +362,14 @@ export class ParentStudentFilterComponent implements OnInit {
         if (ind != -1)
             return name.substring(ind, ind + text.length);
         return '';
+    }
+
+    onChangeSelectedFilterType(event : any) : any {
+        this.parentNameFormControl.reset();
+        this.studentFormControl.reset();
+        this.mobileNumberFormControl.reset();
+        this.onStudentFilterSelected.emit();
+        this.selectedFilterType = event;
     }
 
 }
