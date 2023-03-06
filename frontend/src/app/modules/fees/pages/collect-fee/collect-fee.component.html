@@ -1,6 +1,7 @@
 <div class="card-content main-page table-responsive">
     <parent-student-filter [user]="user" (onDataLoaded)="handleDetailsFromParentStudentFilter($event)"
         (onStudentListSelected)="handleStudentListSelection($event)" (onStudentListLoading)="isStudentListLoading = $event" [selectedFilterType]="'Student'"
+        (onStudentFilterSelected)="handleStudentFilterSelection()"
         [studentTcGenerated]="false"></parent-student-filter>
 
     <div class="row" style="margin-bottom: 30px">
