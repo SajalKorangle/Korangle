@@ -40,7 +40,7 @@
   </div>
   <div *ngIf="is_form_visible">
     <div class="modalWrapper">
-      <div class="modalContainer">
+      <div class="modalContainer" (click)="closeColorList($event)">
         <!-- Title-bar -->
         <div class="titleBar">
           <div
@@ -158,6 +158,8 @@
             </span>
             <!-- Select Color Dropdown -->
             <span
+              class="colorSelector"
+              (click)="is_colorList_visible = !is_colorList_visible"
               style="
                 width: 30%;
                 display: flex;
@@ -167,7 +169,7 @@
               "
             >
               <div
-                (click)="is_colorList_visible = !is_colorList_visible"
+                class="colorSelector"
                 style="
                   cursor: pointer;
                   border-bottom: 1px solid rgba(0, 0, 0, 0.25);
@@ -182,8 +184,13 @@
                   background: color == '' ? '#FFFFFF' : color
                 }"
               >
-                <div>{{ color == "" ? "Select Color" : "Change Color" }}</div>
-                <div class="material-icons" style="font-size: medium">
+                <div class="colorSelector">
+                  {{ color == "" ? "Select Color" : "Change Color" }}
+                </div>
+                <div
+                  class="material-icons colorSelector"
+                  style="font-size: medium"
+                >
                   arrow_drop_down
                 </div>
               </div>
@@ -191,7 +198,6 @@
                 *ngIf="is_colorList_visible"
                 style="
                   margin-top: 35px;
-                  margin-left: -10px;
                   position: absolute;
                   display: flex;
                   flex-direction: row;
@@ -201,7 +207,7 @@
                   background-color: white;
                   border: 1px solid rgba(0, 0, 0, 0.25);
                   border-radius: 4px;
-                  width: 100px;
+                  width: 150px;
                   padding: 2.5px;
                 "
               >
