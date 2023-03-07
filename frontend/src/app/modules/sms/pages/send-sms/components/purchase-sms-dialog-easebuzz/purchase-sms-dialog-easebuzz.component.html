@@ -94,7 +94,8 @@
             <!-- Platform Charges Starts -->
             <div class="flex-row" style="margin:1vh 1vw;">
                 <p>Platform Charges</p>
-                <p>₹{{htmlAdapter.getPlatformCharges(htmlAdapter.selectedModeOfPayment)}}</p>
+                <p *ngIf="htmlAdapter.selectedModeOfPayment">
+                    ₹{{htmlAdapter.getPlatformCharges(htmlAdapter.selectedModeOfPayment)}}</p>
             </div>
             <!-- Platform Charges Ends -->
 
@@ -104,7 +105,8 @@
             <!-- Total Amount Starts -->
             <div class="flex-row" style="color: #4CA750;font-size:15px;font-weight: 900;margin:1vh 1vw;">
                 <p>Total Amount</p>
-                <p>₹{{htmlAdapter.getTotalAmount(htmlAdapter.selectedModeOfPayment)}}</p>
+                <p *ngIf="htmlAdapter.selectedModeOfPayment">
+                    ₹{{htmlAdapter.getTotalAmount(htmlAdapter.selectedModeOfPayment)}}</p>
             </div>
             <!-- Total Amount Ends -->
 

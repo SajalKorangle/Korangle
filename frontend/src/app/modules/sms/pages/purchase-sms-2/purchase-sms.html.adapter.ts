@@ -81,33 +81,30 @@ export class PurchaseSmsHtmlAdapter {
 
     getTotalAmount(modeOfPayment: ModeOfPayment): number {
         let transaction_amount = 0;
-        if (modeOfPayment) {
-            
-            modeOfPayment.modeofpaymentcharges.every(charge => {
-                transaction_amount = 0;
-                if (charge.chargeType == 'Flat') {
-                    transaction_amount =
-                    parseFloat((
-                        this.getPrice(this.noOfSMS) +
-                        this.korangle_charge +
-                        charge.charge * (1 + this.gst_charge)
-                    ).toFixed(2));
-                } else if (charge.chargeType == 'Percentage') {
-                    transaction_amount =
-                    parseFloat((
-                        (this.getPrice(this.noOfSMS) + this.korangle_charge) * 100
-                        /
-                    (100 - charge.charge * (1 + this.gst_charge))
-                    ).toFixed(2));
-                }
-                if (transaction_amount >= charge.minimumAmount
-                    && (charge.maximumAmount == -1
-                    || transaction_amount <= charge.maximumAmount)) {
-                        return false;
-                }
-                return true;
-            });
-        }
+        modeOfPayment.modeofpaymentcharges.every(charge => {
+            transaction_amount = 0;
+            if (charge.chargeType == 'Flat') {
+                transaction_amount =
+                parseFloat((
+                    this.getPrice(this.noOfSMS) +
+                    this.korangle_charge +
+                    charge.charge * (1 + this.gst_charge)
+                ).toFixed(2));
+            } else if (charge.chargeType == 'Percentage') {
+                transaction_amount =
+                parseFloat((
+                    (this.getPrice(this.noOfSMS) + this.korangle_charge) * 100
+                    /
+                (100 - charge.charge * (1 + this.gst_charge))
+                ).toFixed(2));
+            }
+            if (transaction_amount >= charge.minimumAmount
+                && (charge.maximumAmount == -1
+                || transaction_amount <= charge.maximumAmount)) {
+                    return false;
+            }
+            return true;
+        });
         return transaction_amount;
     }
 
