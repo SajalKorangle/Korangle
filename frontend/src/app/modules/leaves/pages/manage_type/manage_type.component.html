@@ -96,7 +96,7 @@
               "
               [(ngModel)]="leaveType"
             >
-              <option value="-1">eg. PL</option>
+              <option value="-1">None</option>
               <option value="0">Paid Leaves</option>
               <option value="1">Unpaid Leaves</option>
             </select>
@@ -197,25 +197,26 @@
               <div
                 *ngIf="is_colorList_visible"
                 style="
-                  margin-top: 35px;
+                  margin-top: 250px;
+                  margin-left: -80px;
                   position: absolute;
                   display: flex;
                   flex-direction: row;
                   flex-wrap: wrap;
-                  height: 135px;
+                  height: 200px;
                   overflow-y: scroll;
                   background-color: white;
                   border: 1px solid rgba(0, 0, 0, 0.25);
                   border-radius: 4px;
-                  width: 150px;
+                  width: 250px;
                   padding: 2.5px;
                 "
               >
                 <div
                   *ngFor="let colorCode of colorCodes"
                   style="
-                    width: 100%;
-                    height: 30px;
+                    width: 10%;
+                    height: 25px;
                     margin-top: 2.5px;
                     margin-bottom: 2.5px;
                     border-radius: 2px;
@@ -314,7 +315,7 @@
               margin: 5px;
             "
           >
-            Save
+            Add
           </button>
           <button
             (click)="closeAddNewType($event)"
