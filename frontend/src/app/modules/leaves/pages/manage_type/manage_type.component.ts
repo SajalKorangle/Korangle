@@ -77,7 +77,7 @@ export class ManageTypeComponent implements OnInit {
         console.log(colorCode);
         this.color = colorCode;
         console.log(this.color);
-        this.is_colorList_visible = !this.is_colorList_visible
+        this.is_colorList_visible = !this.is_colorList_visible;
     }
 
 }
