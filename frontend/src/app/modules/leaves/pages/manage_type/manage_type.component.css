@@ -43,7 +43,7 @@
 
 .modalWrapper {
   position: absolute;
-  padding: 32px;
+  padding: 10px;
   top: 0;
   left: 0;
   bottom: 0;
@@ -74,21 +74,89 @@
   height: fit-content;
 }
 .titleBar {
-  width: 100%;
-  display: flex;
   font-size: large;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 18px;
+  justify-content: space-between !important;
   font-weight: 500;
 }
+.modalRow {
+  font-size: medium;
+  display: flex;
+  min-height: 36px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.modalRowItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  min-height: 36px;
+}
+.modalColItem {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+.modalLabel {
+  color: black;
+  text-align: left !important;
+}
 .modalInput {
-  width: 33%;
-  overflow-x: hidden;
+  height: 100%;
+  background: none;
+  outline: none;
+  box-shadow: none;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+.modalButton {
+  min-width: 100px;
+  padding: 10px;
+  font-size: medium;
+  outline: none;
+  box-shadow: none;
+  border-radius: 5px;
+  border: none;
+  margin: 5px;
+}
+.modalColorContainer {
+  position: absolute;
+  width: 360px;
+  height: 200px;
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  margin-top: 250px;
+  margin-left: -10px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.modalColorContainer::-webkit-scrollbar {
+  display: none;
+}
+.modalBreakLine {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 @media (max-width: 600px) {
   .modalContainer {
     width: 100%;
+  }
+  .modalColorContainer {
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin-left: 0px;
   }
 }

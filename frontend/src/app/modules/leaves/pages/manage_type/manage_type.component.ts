@@ -65,11 +65,19 @@ export class ManageTypeComponent implements OnInit {
         alert('Under Construction!');
     }
     closeColorList(event): void {
+        const classNames = event.target.className.split(' ');
         if (
-          this.is_colorList_visible &&
-          event.target.className !== "colorSelector"
+            this.is_colorList_visible &&
+            classNames[0] !== "colorSelector"
         ) {
-          this.is_colorList_visible = false;
+            this.is_colorList_visible = false;
         }
-      }
+    }
+    updateColor(event, colorCode) : void {
+        console.log(colorCode);
+        this.color = colorCode;
+        console.log(this.color);
+        this.is_colorList_visible = !this.is_colorList_visible
+    }
+
 }
