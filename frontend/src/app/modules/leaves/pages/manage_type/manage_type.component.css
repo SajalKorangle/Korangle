@@ -136,11 +136,6 @@
   border-radius: 4px;
   margin-top: 250px;
   margin-left: -10px;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.modalColorContainer::-webkit-scrollbar {
-  display: none;
 }
 .modalBreakLine {
   border-bottom: 1px solid rgba(0, 0, 0, 0.5);
