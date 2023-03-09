@@ -22,7 +22,7 @@ class LeaveTypes(models.Model):
     leave_type = models.IntegerField(null=False, default=0)
 
     # School
-    parent_school = models.ForeignKey(
+    parentSchool = models.ForeignKey(
         School, on_delete=models.PROTECT, null=True, verbose_name='parentSchool')
 
     # Color Code for this Type

@@ -74,9 +74,7 @@ export class ManageTypeComponent implements OnInit {
         }
     }
     updateColor(event, colorCode) : void {
-        console.log(colorCode);
         this.color = colorCode;
-        console.log(this.color);
         this.is_colorList_visible = !this.is_colorList_visible;
     }
 
