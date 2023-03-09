@@ -153,7 +153,97 @@
               </div>
             </div>
           </div>
-          <div class="modalRow">Form under-construction</div>
+          <div class="modalRow">
+            <div
+              class="modalRowItem"
+              style="width: 5ch; padding-left: 5px; padding-right: 5px"
+            >
+              <div class="modalColItem" style="text-align: center"></div>
+            </div>
+            <div
+              class="modalRowItem"
+              style="width: 100px; padding-left: 5px; padding-right: 5px"
+            >
+              <div class="modalColItem" style="text-align: left">Value</div>
+            </div>
+            <div
+              class="modalRowItem"
+              style="width: fit-content; padding-left: 5px; padding-right: 5px"
+            >
+              <div class="modalColItem" style="text-align: left">
+                Remaining Leaves
+              </div>
+            </div>
+          </div>
+          <div class="modalRow" *ngFor="let month of months">
+            <div
+              class="modalRowItem"
+              style="width: 5ch; padding-left: 5px; padding-right: 5px"
+            >
+              <div
+                class="modalColItem"
+                style="text-align: center; text-transform: capitalize"
+              >
+                {{ month }}
+              </div>
+            </div>
+            <div
+              class="modalRowItem"
+              style="width: 100px; padding-left: 5px; padding-right: 5px"
+            >
+              <div class="modalColItem" style="text-align: left">
+                <input
+                  class="modalInput"
+                  type="number"
+                  [(ngModel)]="leaves_per_month[month][0]"
+                />
+              </div>
+            </div>
+            <div
+              class="modalRowItem"
+              style="width: 100px; padding-left: 5px; padding-right: 5px"
+            >
+              <div class="modalColItem" style="text-align: left">
+                <select
+                  (change)="updateLeaves($event, month)"
+                  class="modalInput"
+                >
+                  <option value="0" [selected]="leaves_per_month[month][1] == 0">
+                    CFW
+                  </option>
+                  <option value="1" [selected]="leaves_per_month[month][1] == 1">
+                    Lapse
+                  </option>
+                  <option value="2" [selected]="leaves_per_month[month][1] == 2">
+                    ENC
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modalRow">
+            <div class="modalRowItem" style="width: 100%">
+              <div class="modalColItem">
+                <span
+                  (click)="is_note_visible = !is_note_visible"
+                  style="
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    font-size: small;
+                    cursor: pointer;
+                  "
+                  [ngStyle]="{
+                    display: !is_note_visible ? 'inline-block' : 'block',
+                    whiteSpace: !is_note_visible ? 'nowrap' : 'normal'
+                  }"
+                >
+                  Note - Policies are applicable for the next month. CFW for
+                  January will decide if leaves will be carry-forwarded from
+                  January to February
+                </span>
+              </div>
+            </div>
+          </div>
           <!-- Horizontal Break -->
           <div class="modalBreakLine"></div>
           <!-- Set Encashments Formula -->

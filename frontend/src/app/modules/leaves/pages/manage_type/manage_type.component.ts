@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from '@classes/user';
 import { GenericService } from '@services/generic/generic-service';
-
+import { MonthVsLeaves } from '../../../classes/leaves';
 @Component({
     selector: 'manage-type',
     templateUrl: './manage_type.component.html',
@@ -13,7 +13,7 @@ export class ManageTypeComponent implements OnInit {
 
     @Input() user: User;
     // page variables
-    colorCodes: string[] = [
+    colorCodes: Array<string> = [
         '#f9ebea', '#f2d7d5', '#e6b0aa', '#d98880', '#cd6155', '#c0392b', '#a93226', '#922b21', '#943126', '#78281f',
         '#f5eef8', '#ebdef0', '#d7bde2', '#c39bd3', '#af7ac5', '#9b59b6', '#884ea0', '#76448a', '#633974', '#512e5f',
         '#eaf2f8', '#d4e6f1', '#a9cce3', '#7fb3d5', '#5499c7', '#2980b9', '#2471a3', '#1f618d', '#1a5276', '#154360',
@@ -30,11 +30,13 @@ export class ManageTypeComponent implements OnInit {
     is_leaves_types_empty: boolean = false;
     is_form_visible : boolean = false;
     is_colorList_visible: boolean = false;
+    is_note_visible: boolean = false;
     // form items
     name: string = "";
     leaveType: number = -1;
     color: string = "";
-
+    leaves_per_month : MonthVsLeaves;
+    months: Array<string> = [];
 
     ngOnInit() {
         this.genericService.getObjectList({leaves_app: 'LeaveTypes'}, {}).then((value) => {
@@ -43,16 +45,27 @@ export class ManageTypeComponent implements OnInit {
                 this.is_leaves_types_empty = true;
             }
         });
+        this.leaves_per_month = {
+            jan: [0, 0],
+            feb: [0, 0],
+            mar: [0, 0],
+            apr: [0, 0],
+            may: [0, 0],
+            jun: [0, 0],
+            jul: [0, 0],
+            aug: [0, 0],
+            sep: [0, 0],
+            oct: [0, 0],
+            nov: [0, 0],
+            dec: [0, 0],
+        };
+        this.months = Object.keys(this.leaves_per_month);
     }
 
     constructor (private genericService: GenericService) { }
     // handle Modal
     addNewType(event): void {
         this.is_form_visible = true;
-        this.is_colorList_visible = false;
-        this.name = "";
-        this.leaveType = -1;
-        this.color = "";
     }
     closeAddNewType(event) : void {
         this.is_form_visible = false;
@@ -60,6 +73,20 @@ export class ManageTypeComponent implements OnInit {
         this.name = "";
         this.leaveType = -1;
         this.color = "";
+        this.leaves_per_month = {
+            jan: [0, 0],
+            feb: [0, 0],
+            mar: [0, 0],
+            apr: [0, 0],
+            may: [0, 0],
+            jun: [0, 0],
+            jul: [0, 0],
+            aug: [0, 0],
+            sep: [0, 0],
+            oct: [0, 0],
+            nov: [0, 0],
+            dec: [0, 0],
+        };
     }
     saveLeaveType(event) : void {
         alert('Under Construction!');
@@ -77,5 +104,7 @@ export class ManageTypeComponent implements OnInit {
         this.color = colorCode;
         this.is_colorList_visible = !this.is_colorList_visible;
     }
-
+    updateLeaves(event, month) : void {
+        this.leaves_per_month[month][1] = parseInt(event.target.value);
+    }
 }
