@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 
-import ssl
 import os
 import datetime
 
@@ -154,22 +153,22 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
-    ),
-    'COERCE_DECIMAL_TO_STRING': False,
+	'DEFAULT_PERMISSION_CLASSES': (
+		'rest_framework.permissions.IsAuthenticated',
+	),
+  'DEFAULT_AUTHENTICATION_CLASSES': (
+    'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    # 'rest_framework.authentication.BasicAuthentication',
+    # 'rest_framework.authentication.SessionAuthentication',
+    # 'rest_framework.authentication.TokenAuthentication',
+  ),
+  'COERCE_DECIMAL_TO_STRING': False,
 }
 
 JWT_AUTH = {
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1000),
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1000),
+	'JWT_AUTH_HEADER_PREFIX': 'JWT',
+	'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1000),
+	'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1000),
 }
 
 
@@ -198,6 +197,7 @@ PUSH_NOTIFICATIONS_SETTINGS = {
 }
 
 # the next monkey patch is necessary if you use dots in the bucket name
+import ssl
 if hasattr(ssl, '_create_unverified_context'):
     ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -213,6 +213,7 @@ DEFAULT_FROM_EMAIL = 'admin@iitcounseling.in'
 EMAIL_HOST_USER = 'AKIAJALB2TZGPCWOEIQA'
 EMAIL_HOST_PASSWORD = 'AqtgnMQN6VuP6cz9KOOX85r1UUCAR7NpH4xychXFJTBr'
 EMAIL_PORT = 587
+
 
 
 # AWS_ACCESS_KEY_ID = 'AKIAI36KL2QN3UUM4TWQ'

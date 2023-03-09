@@ -1,192 +1,49 @@
 <div class="card-content">
-  <div class="title">Leave types</div>
-  <div *ngIf="!is_leaves_types_empty">
-    <table class="leave-type-table">
-      <tr>
-        <th class="tableHeading">Name</th>
-        <th class="tableHeading">Leave Type</th>
-        <th class="tableHeading"></th>
-        <th class="tableHeading"></th>
-      </tr>
-      <tr *ngFor="let item of leave_types">
-        <td class="tableItem">Under Construction</td>
-        <td class="tableItem">Under Construction</td>
-        <td class="tableItem">Under Construction</td>
-        <td class="tableItem">Under Construction</td>
-      </tr>
-    </table>
-  </div>
-  <div *ngIf="is_leaves_types_empty">
-    <table class="leave-type-table">
-      <tr>
-        <th class="tableHeading">Name</th>
-        <th class="tableHeading">Leave Type</th>
-        <th class="tableHeading"></th>
-        <th class="tableHeading"></th>
-      </tr>
-      <tr>
-        <td class="tableItem">No Types Available Currently</td>
-        <td class="tableItem"></td>
-        <td class="tableItem"></td>
-        <td class="tableItem"></td>
-      </tr>
-    </table>
-  </div>
-  <div class="add-new-type-container">
-    <button (click)="addNewType($event)" class="addBtn">
-      <span class="material-icons" style="font-size: large">add</span>
-      <span style="margin-left: 8px">Add Type</span>
-    </button>
-  </div>
-  <div *ngIf="is_form_visible">
-    <div class="modalWrapper">
-      <div class="modalContainer" (click)="closeColorList($event)">
-        <!-- Title-bar -->
-        <div class="modalRow titleBar">
-          <div class="modalRowItem">
-            <span class="modalColItem">Leave >> Add Leave Type</span>
-          </div>
-          <div class="modalRowItem">
-            <div class="modalColItem">
-              <button
-                class="material-icons closeBtn"
-                (click)="closeAddNewType($event)"
-              >
-                close
-              </button>
-            </div>
-          </div>
-        </div>
-        <!-- Horizontal Break -->
-        <div class="modalBreakLine"></div>
-        <!-- Leave Type -->
-        <div class="modalRow">
-          <div class="modalRowItem" style="width: 40%">
-            <div class="modalColItem">
-              <label class="modalLabel">Select Type</label>
-            </div>
-          </div>
-          <div class="modalRowItem" style="width: 60%">
-            <div class="modalColItem">
-              <select class="modalInput" [(ngModel)]="leaveType">
-                <option value="-1">None</option>
-                <option value="0">Paid Leaves</option>
-                <option value="1">Unpaid Leaves</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <!-- give Name and select Color -->
-        <div class="modalRow">
-          <div class="modalRowItem" style="width: 40%">
-            <div class="modalColItem">
-              <label class="modalLabel">Set Denotation</label>
-            </div>
-          </div>
-          <div class="modalRowItem" style="width: 60%">
-            <div class="modalColItem">
-              <input
-                class="modalInput"
-                [(ngModel)]="name"
-                [value]="name"
-                placeholder="CL"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="modalRow">
-          <div class="modalRowItem" style="width: 40%">
-            <div class="modalColItem">
-              <label class="modalLabel">Set Colour</label>
-            </div>
-          </div>
-          <div class="modalRowItem" style="width: 60%">
-            <div class="modalColItem">
-              <span
-                class="colorSelector"
-                (click)="is_colorList_visible = !is_colorList_visible"
-              >
-                <div
-                  id="colorIndicator"
-                  class="colorSelector modalInput"
-                  style="
-                    cursor: pointer;
-                    width: 100%;
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-                  "
-                  [ngStyle]="{ backgroundColor: color }"
-                >
-                  <div class="colorSelector">
-                    {{ color == "" ? "Select Color" : "Change Color" }}
-                  </div>
-                  <div class="colorSelector material-icons">
-                    arrow_drop_down
-                  </div>
-                </div></span
-              >
-              <div *ngIf="is_colorList_visible" class="modalColorContainer">
-                <div
-                  *ngFor="let colorCode of colorCodes"
-                  style="
-                    width: 10%;
-                    height: 25px;
-                    margin-top: 2.5px;
-                    margin-bottom: 2.5px;
-                    border-radius: 2px;
-                    cursor: pointer;
-                  "
-                  [ngStyle]="{ background: colorCode }"
-                  (click)="updateColor($event, colorCode)"
-                ></div>
-              </div>
-            </div>
-          </div>
-          <!-- CarryForward and Encashments -->
-          <div class="modalRow">
-            <div class="modalRowItem" style="width: 100%">
-              <div class="modalColItem">
-                <label class="modalLabel"
-                  >Carry-Forwarding and Encashments -</label
-                >
-              </div>
-            </div>
-          </div>
-          <div class="modalRow">Form under-construction</div>
-          <!-- Horizontal Break -->
-          <div class="modalBreakLine"></div>
-          <!-- Set Encashments Formula -->
-          <div class="modalRow">Form under-construction</div>
-          <!-- Horizontal Break -->
-          <div class="modalBreakLine"></div>
-          <!-- Close / Save -->
-          <div
-            class="modalRow"
-            style="
-              padding: 5px 5px 5px 20px;
-              margin-top: 12px;
-              margin-bottom: 12px;
-              justify-content: end;
-            "
-          >
-            <button
-              (click)="saveLeaveType($event)"
-              class="modalButton"
-              style="color: white; background: #fe9800"
-            >
-              Add
-            </button>
-            <button
-              class="modalButton"
-              (click)="closeAddNewType($event)"
-              style="border: 1px solid #fe9800"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      </div>
+  <div *ngIf="!isLoading">
+    <div class="title">Leave types</div>
+    <div *ngIf="leaveTypeList.length">
+      <table class="leave-type-table">
+        <tr>
+          <th class="tableHeading">Name</th>
+          <th class="tableHeading">Leave Type</th>
+          <th class="tableHeading"></th>
+          <th class="tableHeading"></th>
+        </tr>
+        <tr *ngFor="let item of leaveTypeList">
+          <td class="tableItem">Under Construction</td>
+          <td class="tableItem">Under Construction</td>
+          <td class="tableItem">Under Construction</td>
+          <td class="tableItem">Under Construction</td>
+        </tr>
+      </table>
     </div>
+    <div *ngIf="!leaveTypeList.length">
+      <table class="leave-type-table">
+        <tr>
+          <th class="tableHeading">Name</th>
+          <th class="tableHeading">Leave Type</th>
+          <th class="tableHeading"></th>
+          <th class="tableHeading"></th>
+        </tr>
+        <tr>
+          <td class="tableItem">No Types Available Currently</td>
+          <td class="tableItem"></td>
+          <td class="tableItem"></td>
+          <td class="tableItem"></td>
+        </tr>
+      </table>
+    </div>
+    <div class="add-new-type-container">
+      <button (click)="addNewType($event)" class="addBtn">
+        <span class="material-icons" style="font-size: large">add</span>
+        <span style="margin-left: 8px">Add Type</span>
+      </button>
+    </div>
+    <div *ngIf="isFormVisible">
+      <leave-type-dialog [handleSave]="saveLeaveType" [closeModal]="closeAddNewType" *ngIf="isFormVisible"></leave-type-dialog>
+    </div>
+  </div>
+  <div *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
   </div>
 </div>
