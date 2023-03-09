@@ -1,0 +1,149 @@
+<div class="modalWrapper">
+  <div class="modalContainer" (click)="closeColorList($event)">
+    <!-- Title-bar -->
+    <div class="modalRow titleBar">
+      <div class="modalRowItem">
+        <span class="modalColItem">Leave >> Add Leave Type</span>
+      </div>
+      <div class="modalRowItem">
+        <div class="modalColItem">
+          <button
+            class="material-icons closeBtn"
+            (click)="closeDialog($event)"
+          >
+            close
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Horizontal Break -->
+    <div class="modalBreakLine"></div>
+    <!-- Leave Type -->
+    <div class="modalRow">
+      <div class="modalRowItem" style="width: 40%">
+        <div class="modalColItem">
+          <label class="modalLabel">Select Type</label>
+        </div>
+      </div>
+      <div class="modalRowItem" style="width: 60%">
+        <div class="modalColItem">
+          <select class="modalInput" [(ngModel)]="leaveType">
+            <option value="-1">None</option>
+            <option value="0">Paid Leaves</option>
+            <option value="1">Unpaid Leaves</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <!-- give Name and select Color -->
+    <div class="modalRow">
+      <div class="modalRowItem" style="width: 40%">
+        <div class="modalColItem">
+          <label class="modalLabel">Set Denotation</label>
+        </div>
+      </div>
+      <div class="modalRowItem" style="width: 60%">
+        <div class="modalColItem">
+          <input
+            class="modalInput"
+            [(ngModel)]="name"
+            [value]="name"
+            placeholder="CL"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="modalRow">
+      <div class="modalRowItem" style="width: 40%">
+        <div class="modalColItem">
+          <label class="modalLabel">Set Colour</label>
+        </div>
+      </div>
+      <div class="modalRowItem" style="width: 60%">
+        <div class="modalColItem">
+          <span
+            class="colorSelector"
+            (click)="isColorListVisible = !isColorListVisible"
+          >
+            <div
+              id="colorIndicator"
+              class="colorSelector modalInput"
+              style="
+                cursor: pointer;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+              "
+              [ngStyle]="{ backgroundColor: color }"
+            >
+              <div class="colorSelector">
+                {{ color == "" ? "Select Color" : "Change Color" }}
+              </div>
+              <div class="colorSelector material-icons">
+                arrow_drop_down
+              </div>
+            </div></span
+          >
+          <div *ngIf="isColorListVisible" class="modalColorContainer">
+            <div
+              *ngFor="let colorCode of colorCodes"
+              style="
+                width: 10%;
+                height: 25px;
+                margin-top: 2.5px;
+                margin-bottom: 2.5px;
+                border-radius: 2px;
+                cursor: pointer;
+              "
+              [ngStyle]="{ background: colorCode }"
+              (click)="updateColor($event, colorCode)"
+            ></div>
+          </div>
+        </div>
+      </div>
+      <!-- CarryForward and Encashments -->
+      <div class="modalRow">
+        <div class="modalRowItem" style="width: 100%">
+          <div class="modalColItem">
+            <label class="modalLabel"
+              >Carry-Forwarding and Encashments -</label
+            >
+          </div>
+        </div>
+      </div>
+      <div class="modalRow">Form under-construction</div>
+      <!-- Horizontal Break -->
+      <div class="modalBreakLine"></div>
+      <!-- Set Encashments Formula -->
+      <div class="modalRow">Form under-construction</div>
+      <!-- Horizontal Break -->
+      <div class="modalBreakLine"></div>
+      <!-- Close / Save -->
+      <div
+        class="modalRow"
+        style="
+          padding: 5px 5px 5px 20px;
+          margin-top: 12px;
+          margin-bottom: 12px;
+          justify-content: end;
+        "
+      >
+        <button
+          (click)="saveData($event)"
+          class="modalButton"
+          style="color: white; background: #fe9800"
+        >
+          Add
+        </button>
+        <button
+          class="modalButton"
+          (click)="closeDialog($event)"
+          style="border: 1px solid #fe9800"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
