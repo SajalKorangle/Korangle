@@ -14,9 +14,9 @@ export class ManageTypeComponent implements OnInit {
 
     @Input() user: User;
     // service Adapter
-    serviceAdapter : ManageTypeServiceAdapter;
+    serviceAdapter : ManageTypeServiceAdapter = new ManageTypeServiceAdapter();
     // page variables
-    leaveTypeList: any;
+    leaveTypeList: any = [];
     isFormVisible : boolean = false;
     isLoading: boolean = false;
 

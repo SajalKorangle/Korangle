@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import LeaveTypes
+from .models import EmployeeLeaveTypes
 # Register your models here.
-admin.site.register(LeaveTypes)
+admin.site.register(EmployeeLeaveTypes)

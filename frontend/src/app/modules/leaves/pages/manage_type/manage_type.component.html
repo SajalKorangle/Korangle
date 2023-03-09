@@ -26,10 +26,10 @@
           <th class="tableHeading"></th>
         </tr>
         <tr>
-          <td class="tableItem">No Types Available Currently</td>
-          <td class="tableItem"></td>
-          <td class="tableItem"></td>
-          <td class="tableItem"></td>
+          <td class="tableItem">No</td>
+          <td class="tableItem">Types</td>
+          <td class="tableItem">Available</td>
+          <td class="tableItem">Currently</td>
         </tr>
       </table>
     </div>
@@ -40,7 +40,7 @@
       </button>
     </div>
     <div *ngIf="isFormVisible">
-      <leave-type-dialog [handleSave]="saveLeaveType" [closeModal]="closeAddNewType" *ngIf="isFormVisible"></leave-type-dialog>
+      <leave-type-dialog (save)="saveLeaveType($event)" (close)="closeAddNewType($event)" *ngIf="isFormVisible"></leave-type-dialog>
     </div>
   </div>
   <div *ngIf="isLoading">

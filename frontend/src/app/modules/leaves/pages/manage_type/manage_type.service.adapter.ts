@@ -9,7 +9,7 @@ export default class ManageTypeServiceAdapter {
 
   async initializeData() : Promise<void> {
     this.vm.isLoading = true;
-    this.vm.leaveTypeList = await this.vm.genericService.getObjectList({leaves_app: 'LeaveTypes'}, {});
+    this.vm.leaveTypeList = await this.vm.genericService.getObjectList({leaves_app: "EmployeeLeaveTypes"}, {});
     this.vm.isLoading = false;
   }
 }

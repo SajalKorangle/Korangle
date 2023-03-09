@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 
 @Component({
   selector: "leave-type-dialog",
@@ -6,8 +6,8 @@ import { Component, Input } from "@angular/core";
   styleUrls: ["./leave-type.component.css"],
 })
 export class LeaveTypeDialog {
-  @Input() handleSave : Function;
-  @Input() closeModal : Function;
+  @Output() save : EventEmitter<any> = new EventEmitter<any>();
+  @Output() close : EventEmitter<any> = new EventEmitter<any>();
   // dialog variables
   colorCodes: string[] = [
     '#f9ebea', '#f2d7d5', '#e6b0aa', '#d98880', '#cd6155', '#c0392b', '#a93226', '#922b21', '#943126', '#78281f',
@@ -38,13 +38,13 @@ export class LeaveTypeDialog {
     this.isColorListVisible = !this.isColorListVisible;
   }
   saveData(event) : void {
-    this.handleSave();
+    this.save.emit(event);
   }
   closeDialog(event) : void {
     this.name = "";
     this.leaveType = -1;
     this.color = "";
     this.isColorListVisible = false;
-    this.closeModal();
+    this.close.emit(event);
   }
 }
