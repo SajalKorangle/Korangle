@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from "@angular/core";
+import { MonthVsLeaves } from "@modules/leaves/classes/leaves";
 
 @Component({
   selector: "leave-type-dialog",
@@ -23,10 +24,31 @@ export class LeaveTypeDialog {
     '#eaecee', '#d5d8dc', '#abb2b9', '#808b96', '#566573', '#2c3e50', '#273746', '#212f3d', '#1c2833', '#17202a'
   ];
   isColorListVisible: boolean = false;
+  isNoteVisible: boolean = false;
   // data variables
   name: string = "";
   leaveType: number = -1;
   color: string = "";
+  leavesPerMonth: MonthVsLeaves;
+  months: Array<string> = [];
+  // Initialize Data
+  ngOnInit() {
+    this.leavesPerMonth = {
+      jan: [0, 0],
+      feb: [0, 0],
+      mar: [0, 0],
+      apr: [0, 0],
+      may: [0, 0],
+      jun: [0, 0],
+      jul: [0, 0],
+      aug: [0, 0],
+      sep: [0, 0],
+      oct: [0, 0],
+      nov: [0, 0],
+      dec: [0, 0],
+    };
+    this.months = Object.keys(this.leavesPerMonth);
+  }
   closeColorList(event): void {
     const classNames = event.target.className.split(" ");
     if (this.isColorListVisible && classNames[0] !== "colorSelector") {
@@ -45,6 +67,23 @@ export class LeaveTypeDialog {
     this.leaveType = -1;
     this.color = "";
     this.isColorListVisible = false;
+    this.leavesPerMonth = {
+      jan: [0, 0],
+      feb: [0, 0],
+      mar: [0, 0],
+      apr: [0, 0],
+      may: [0, 0],
+      jun: [0, 0],
+      jul: [0, 0],
+      aug: [0, 0],
+      sep: [0, 0],
+      oct: [0, 0],
+      nov: [0, 0],
+      dec: [0, 0],
+  };
     this.close.emit(event);
+  }
+  updateLeaves(event, month) : void {
+    this.leavesPerMonth[month][1] = parseInt(event.target.value);
   }
 }
