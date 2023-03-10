@@ -15,6 +15,8 @@ export class AddBookComponent implements OnInit {
     frontImage: any;
     backImage: any;
 
+    isLoading = false;
+
     constructor () { }
 
     ngOnInit(): void {
