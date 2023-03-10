@@ -21,7 +21,7 @@ export class AddBookComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
     }
 
-    informWIP(){
+    informWIP() {
         alert("Under construction");
     }
 
@@ -54,9 +54,9 @@ export class AddBookComponent implements OnInit {
         const reader = new FileReader();
         reader.onload = (e) => {
             // this.profileImage = reader.result;
-            if (side === 'back'){
+            if (side === 'back') {
                 this.backImage = reader.result;
-            } else if (side === 'front'){
+            } else if (side === 'front') {
                 this.frontImage = reader.result;
             }
         };
@@ -101,7 +101,7 @@ export class AddBookComponent implements OnInit {
             image.onerror = reject;
         });
     }
-    
+
     resizeImage(file: File): Promise<Blob> {
         return new Promise((resolve, reject) => {
             let image = new Image();
