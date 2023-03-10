@@ -1,3 +1,220 @@
 <div class="card-content">
-    Under Construction !!!
+    <ng-container *ngIf="!isLoading">
+        <!-- Top half -->
+        <div class="row">            
+            <!-- Front cover img - if mobile-->
+            <div class="col-md-3 visible-sm visible-xs" align="center">
+                <img *ngIf="this.frontImage" src="{{ this.frontImage }}" style="width: 50%" />
+
+                <img
+                    *ngIf="!this.frontImage"
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                    style="width: 50%"
+                />
+
+                <br />
+
+                <input type="file" (change)="onImageSelect($event, 'front')" multiple="false" style="display: none" accept="image/*" #imageInput />
+
+                <a (click)="imageInput.click()" style="cursor: pointer">Upload front image</a>
+            </div>
+
+            <!-- Top half form fields -->
+            <div class="col-md-9">
+                <!-- Top half form fields - row 1 -->
+                <div class="row">
+                    <!-- Book name -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>*Book name</mat-label>
+                            <input matInput name="name" type="text">
+                        </mat-form-field>
+                    </div>
+    
+                    <!-- Author -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Author</mat-label>
+                            <input matInput name="name" type="text">
+                        </mat-form-field>
+                    </div>
+    
+                    <!-- Publisher -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Publisher</mat-label>
+                            <input matInput name="name" type="text">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Top half form fields - row 2 -->
+                <div class="row">
+                    <!-- Date of purchase -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Date of purchase</mat-label>
+                            <input matInput name="name" type="text">
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Book No. -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Book No.</mat-label>
+                            <input matInput name="name" type="text">
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Publisher -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Edition</mat-label>
+                            <input matInput name="name" type="text">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Front cover img - if desktop -->
+            <div class="col-md-3 visible-md visible-lg visible-xl" align="center">
+                <img *ngIf="this.frontImage" src="{{ this.frontImage }}" style="width: 50%" />
+
+                <img
+                    *ngIf="!this.frontImage"
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                    style="width: 50%"
+                />
+
+                <br />
+
+                <input
+                    type="file"
+                    (change)="onImageSelect($event, 'front')"
+                    multiple="false"
+                    style="display: none"
+                    accept="image/*"
+                    #imageInputTwo
+                />
+
+                <a (click)="imageInputTwo.click()" style="cursor: pointer">Upload front image</a>
+            </div>
+        </div>
+
+        <!-- Bottom half -->
+        <div class="row">
+            <!-- Back cover img - if mobile-->
+            <div class="col-md-3 visible-sm visible-xs" align="center">
+                <img *ngIf="this.backImage" src="{{ this.backImage }}" style="width: 50%" />
+
+                <img
+                    *ngIf="!this.backImage"
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                    style="width: 50%"
+                />
+
+                <br />
+
+                <input type="file" (change)="onImageSelect($event, 'back')" multiple="false" style="display: none" accept="image/*" #imageInput />
+
+                <a (click)="imageInput.click()" style="cursor: pointer">Upload back image</a>
+            </div>
+
+            <!-- Bottom half form fields -->
+            <div class="col-md-9">
+                <!-- Bottom half form fields - row 1 -->
+                <div class="row">
+                    <!-- NO. of pages-->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>No. of pages</mat-label>
+                            <input matInput name="name" type="number">
+                        </mat-form-field>
+                    </div>
+    
+                    <!-- Printed cost -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Printed cost</mat-label>
+                            <input matInput name="name" type="text">
+                        </mat-form-field>
+                    </div>
+    
+                    <!-- Cover type -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Cover type</mat-label>
+                            <input matInput name="name" type="text">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Bottom half form fields - row 2 -->
+                <div class="row">
+                    <!-- Type of book-->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Type of book</mat-label>
+                            <input matInput name="name" type="text">
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Location</mat-label>
+                            <input matInput name="name" type="text">
+                        </mat-form-field>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Back cover img - if desktop -->
+            <div class="col-md-3 visible-md visible-lg visible-xl" align="center">
+                <img *ngIf="this.backImage" src="{{ this.backImage }}" style="width: 50%" />
+
+                <img
+                    *ngIf="!this.backImage"
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                    style="width: 50%"
+                />
+
+                <br />
+
+                <input
+                    type="file"
+                    (change)="onImageSelect($event,  'back')"
+                    multiple="false"
+                    style="display: none"
+                    accept="image/*"
+                    #imageInputTwo
+                />
+
+                <a (click)="imageInputTwo.click()" style="cursor: pointer">Upload back image</a>
+            </div>
+        </div>
+        <button
+            *ngIf="!isMobile()"
+            type="submit"
+            id="action-add-student"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            (click)="informWIP()"
+        >
+        Add
+        </button>
+        <button
+            [ngClass]="'sticky mobileButton-' + user.activeSchool.secondaryThemeColor"
+            *ngIf="isMobile()"
+            mat-fab
+            color="primary"
+            (click)="informWIP()"
+        >
+            <mat-icon>check</mat-icon>
+        </button>
+    </ng-container>
 </div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
