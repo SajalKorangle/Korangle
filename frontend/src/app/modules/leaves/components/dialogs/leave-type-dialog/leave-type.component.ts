@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { MonthVsLeaves } from "@modules/leaves/classes/leaves";
 
 @Component({
@@ -9,6 +9,7 @@ import { MonthVsLeaves } from "@modules/leaves/classes/leaves";
 export class LeaveTypeDialog {
     @Output() save: EventEmitter<any> = new EventEmitter<any>();
     @Output() close: EventEmitter<any> = new EventEmitter<any>();
+    @Input() data: any = {};
     // dialog variables
     // prettier-ignore
     colorCodes: string[] = [
@@ -29,12 +30,13 @@ export class LeaveTypeDialog {
     isSalaryComponentSelectorVisible: boolean = false;
     activeComponentCount: number = 0;
     salaryComponents: Array<string> = ["Base Salary", "HRA", "DA"];
+    months: Array<string> = [];
+    isSaving: boolean = false;
     // data variables
     name: string = "";
     leaveType: number = -1;
     color: string = "";
     leavesPerMonth: MonthVsLeaves;
-    months: Array<string> = [];
     salaryComponentValue: { [id: string]: number } = {
         "Base Salary": 0,
         HRA: 0,
@@ -44,20 +46,43 @@ export class LeaveTypeDialog {
     dividingFactorValue: number = 30;
     // Initialize Data
     ngOnInit() {
-        this.leavesPerMonth = {
-            jan: [0, 0],
-            feb: [0, 0],
-            mar: [0, 0],
-            apr: [0, 0],
-            may: [0, 0],
-            jun: [0, 0],
-            jul: [0, 0],
-            aug: [0, 0],
-            sep: [0, 0],
-            oct: [0, 0],
-            nov: [0, 0],
-            dec: [0, 0],
-        };
+        console.log(this.data);
+        if (JSON.stringify(this.data) === "{}" || !JSON.stringify(this.data).length) {
+            this.name = "";
+            this.leaveType = -1;
+            this.color = "";
+            this.isColorListVisible = false;
+            this.isSalaryComponentSelectorVisible = false;
+            this.leavesPerMonth = {
+                jan: [0, 0],
+                feb: [0, 0],
+                mar: [0, 0],
+                apr: [0, 0],
+                may: [0, 0],
+                jun: [0, 0],
+                jul: [0, 0],
+                aug: [0, 0],
+                sep: [0, 0],
+                oct: [0, 0],
+                nov: [0, 0],
+                dec: [0, 0],
+            };
+            this.salaryComponentValue = {
+                "Base Salary": 0,
+                HRA: 0,
+                DA: 0,
+            };
+            this.dividingFactorType = -1;
+            this.dividingFactorValue = 30;
+        } else {
+            this.name = this.data.leaveTypeName;
+            this.leaveType = this.data.leaveType;
+            this.color = this.data.color;
+            this.leavesPerMonth = JSON.parse(this.data.assignedLeavesMonthWise);
+            this.salaryComponentValue = JSON.parse(this.data.salaryComponents);
+            this.dividingFactorValue = this.data.divisionFactor;
+            this.dividingFactorType = this.data.divisionFactorType;
+        }
         this.months = Object.keys(this.leavesPerMonth);
     }
     closeColorList(event): void {
@@ -69,40 +94,40 @@ export class LeaveTypeDialog {
             this.isSalaryComponentSelectorVisible = false;
         }
     }
-    updateColor(colorCode): void {
+    updateColor(event, colorCode): void {
         this.color = colorCode;
         this.isColorListVisible = !this.isColorListVisible;
     }
-    saveData(event): void {
-        this.save.emit(event);
+    async saveData(event): Promise<void> {
+        this.isSaving = true;
+        let counter: number = 0;
+        this.salaryComponents.forEach((component) => {
+            counter += this.salaryComponentValue[component] !== 0 ? 1 : 0;
+        });
+        if (this.name.length === 0 || this.leaveType === -1 || this.color.length === 0) {
+            alert("Please fill all the fields before saving the changes.");
+        } else if (counter === 0) {
+            alert("Please select at-least one salary component to save.");
+        } else if (this.dividingFactorType === -1 || this.dividingFactorValue === 0) {
+            alert("Please select a valid division factor type / value.");
+        } else {
+            event.data = {
+                leaveTypeName: this.name,
+                leaveType: this.leaveType,
+                color: this.color,
+                assignedLeavesMonthWise: JSON.stringify(this.leavesPerMonth),
+                salaryComponents: JSON.stringify(this.salaryComponentValue),
+                divisionFactor: this.dividingFactorValue,
+                divisionFactorType: this.dividingFactorType,
+            };
+            const response = await this.save.emit(event);
+            this.isSaving = false;
+            // if (response !== null) {
+            //     this.closeDialog(null);
+            // }
+        }
     }
     closeDialog(event): void {
-        this.name = "";
-        this.leaveType = -1;
-        this.color = "";
-        this.isColorListVisible = false;
-        this.isSalaryComponentSelectorVisible = false;
-        this.leavesPerMonth = {
-            jan: [0, 0],
-            feb: [0, 0],
-            mar: [0, 0],
-            apr: [0, 0],
-            may: [0, 0],
-            jun: [0, 0],
-            jul: [0, 0],
-            aug: [0, 0],
-            sep: [0, 0],
-            oct: [0, 0],
-            nov: [0, 0],
-            dec: [0, 0],
-        };
-        this.salaryComponentValue = {
-            "Base Salary": 0,
-            HRA: 0,
-            DA: 0,
-        };
-        this.dividingFactorType = -1;
-        this.dividingFactorValue = 30;
         this.close.emit(event);
     }
     updateLeaves(event, month): void {

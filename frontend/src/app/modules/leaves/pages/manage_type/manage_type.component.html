@@ -34,13 +34,13 @@
       </table>
     </div>
     <div class="add-new-type-container">
-      <button (click)="addNewType($event)" class="addBtn">
+      <button (click)="addNewType($event, {})" class="addBtn">
         <span class="material-icons" style="font-size: large">add</span>
         <span style="margin-left: 8px">Add Type</span>
       </button>
     </div>
     <div *ngIf="isFormVisible">
-      <leave-type-dialog (save)="saveLeaveType($event)" (close)="closeAddNewType($event)" *ngIf="isFormVisible"></leave-type-dialog>
+      <leave-type-dialog [data]="formData" (save)="saveLeaveType($event)" (close)="closeAddNewType($event)" *ngIf="isFormVisible"></leave-type-dialog>
     </div>
   </div>
   <div *ngIf="isLoading">
