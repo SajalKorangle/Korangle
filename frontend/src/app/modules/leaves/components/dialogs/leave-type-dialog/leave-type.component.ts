@@ -32,6 +32,7 @@ export class LeaveTypeDialog {
     salaryComponents: Array<string> = ["Base Salary", "HRA", "DA"];
     months: Array<string> = [];
     isSaving: boolean = false;
+    isNew: boolean = false;
     // data variables
     name: string = "";
     leaveType: number = -1;
@@ -46,7 +47,6 @@ export class LeaveTypeDialog {
     dividingFactorValue: number = 30;
     // Initialize Data
     ngOnInit() {
-        console.log(this.data);
         if (JSON.stringify(this.data) === "{}" || !JSON.stringify(this.data).length) {
             this.name = "";
             this.leaveType = -1;
@@ -74,6 +74,7 @@ export class LeaveTypeDialog {
             };
             this.dividingFactorType = -1;
             this.dividingFactorValue = 30;
+            this.isNew = true;
         } else {
             this.name = this.data.leaveTypeName;
             this.leaveType = this.data.leaveType;
@@ -82,7 +83,12 @@ export class LeaveTypeDialog {
             this.salaryComponentValue = JSON.parse(this.data.salaryComponents);
             this.dividingFactorValue = this.data.divisionFactor;
             this.dividingFactorType = this.data.divisionFactorType;
+            this.isNew = false;
         }
+        this.activeComponentCount = 0;
+        this.salaryComponents.forEach((component) => {
+            this.activeComponentCount += this.salaryComponentValue[component] === 0 ? 0 : 1;
+        });
         this.months = Object.keys(this.leavesPerMonth);
     }
     closeColorList(event): void {
@@ -112,6 +118,7 @@ export class LeaveTypeDialog {
             alert("Please select a valid division factor type / value.");
         } else {
             event.data = {
+                isNew: this.isNew,
                 leaveTypeName: this.name,
                 leaveType: this.leaveType,
                 color: this.color,
@@ -120,12 +127,12 @@ export class LeaveTypeDialog {
                 divisionFactor: this.dividingFactorValue,
                 divisionFactorType: this.dividingFactorType,
             };
-            const response = await this.save.emit(event);
-            this.isSaving = false;
-            // if (response !== null) {
-            //     this.closeDialog(null);
-            // }
+            if (!this.isNew) {
+                event.data.id = this.data.id;
+            }
+            await this.save.emit(event.data);
         }
+        this.isSaving = false;
     }
     closeDialog(event): void {
         this.close.emit(event);

@@ -16,8 +16,16 @@ export default class ManageTypeServiceAdapter {
     }
 
     async insertData(data): Promise<any> {
-        data.parentSchool = this.vm.user.activeSchool;
+        data.parentSchool = this.vm.user.activeSchool.dbId;
         const response = await this.vm.genericService.createObject({ leaves_app: "EmployeeLeaveTypes" }, data);
+        if (response !== null) {
+            await this.initializeData();
+        }
+        return response;
+    }
+    async updateData(data): Promise<any> {
+        data.parentSchool = this.vm.user.activeSchool.dbId;
+        const response = await this.vm.genericService.partiallyUpdateObject({ leaves_app: "EmployeeLeaveTypes" }, data);
         if (response !== null) {
             await this.initializeData();
         }

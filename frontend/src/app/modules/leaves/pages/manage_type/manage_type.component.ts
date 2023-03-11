@@ -31,8 +31,22 @@ export class ManageTypeComponent implements OnInit {
     closeAddNewType(event): void {
         this.isFormVisible = false;
     }
-    async saveLeaveType(event): Promise<any> {
-        const response = await this.serviceAdapter.insertData(event.data);
-        return response;
+    async saveLeaveType(data): Promise<any> {
+        const isNew: boolean = data.isNew;
+        delete data.isNew;
+        if (isNew) {
+            const response = await this.serviceAdapter.insertData(data);
+            if (response !== null && response !== undefined && JSON.stringify(response) !== "{}") {
+                this.closeAddNewType(null);
+            }
+        } else {
+            const response = await this.serviceAdapter.updateData(data);
+            if (response !== null && response !== undefined && JSON.stringify(response) !== "{}") {
+                this.closeAddNewType(null);
+            }
+        }
+    }
+    async deleteType(event, data): Promise<any> {
+        alert("under construction!");
     }
 }

@@ -273,7 +273,9 @@
             <div class="modalBreakLine"></div>
             <!-- Close / Save -->
             <div class="modalRow" style="padding: 5px 5px 5px 20px; margin-top: 12px; margin-bottom: 12px; justify-content: end">
-                <button (click)="saveData($event)" class="modalButton" style="color: white; background: #fe9800" [disabled]="isSaving">Add</button>
+                <button (click)="saveData($event)" class="modalButton" style="color: white; background: #fe9800" [disabled]="isSaving">
+                    {{ isNew ? "Add" : "Update" }}
+                </button>
                 <button class="modalButton" (click)="closeDialog($event)" style="border: 1px solid #fe9800" [disabled]="isSaving">Cancel</button>
             </div>
         </div>

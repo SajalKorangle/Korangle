@@ -57,3 +57,4 @@ class EmployeeLeaveTypes(models.Model):
 
     class Meta:
         db_table = 'employee_leave_type'
+        unique_together = (("leaveTypeName", "parentSchool", ))
