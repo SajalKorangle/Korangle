@@ -47,6 +47,6 @@ export class ManageTypeComponent implements OnInit {
         }
     }
     async deleteType(event, data): Promise<any> {
-        alert("under construction!");
+        await this.serviceAdapter.deleteData(data);
     }
 }

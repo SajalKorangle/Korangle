@@ -24,11 +24,23 @@ export default class ManageTypeServiceAdapter {
         return response;
     }
     async updateData(data): Promise<any> {
+        this.vm.isLoading = true;
         data.parentSchool = this.vm.user.activeSchool.dbId;
         const response = await this.vm.genericService.partiallyUpdateObject({ leaves_app: "EmployeeLeaveTypes" }, data);
         if (response !== null) {
             await this.initializeData();
         }
+        this.vm.isLoading = false;
+        return response;
+    }
+    async deleteData(data): Promise<any> {
+        this.vm.isLoading = true;
+        data.parentSchool = this.vm.user.activeSchool.dbId;
+        const response = await this.vm.genericService.deleteObjectList({ leaves_app: "EmployeeLeaveTypes" }, { filter: data });
+        if (response !== null) {
+            await this.initializeData();
+        }
+        this.vm.isLoading = false;
         return response;
     }
 }
