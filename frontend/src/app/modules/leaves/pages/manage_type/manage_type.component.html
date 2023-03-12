@@ -1,44 +1,66 @@
 <div class="card-content">
+    <!-- Main Page content -->
     <div *ngIf="!isLoading">
+        <!-- Page Title -->
         <div class="title">Leave types</div>
+        <!-- End of Page Title -->
+        <!-- Table-1 to display data if data is present -->
         <div *ngIf="leaveTypeList.length">
             <table class="leave-type-table">
+                <!-- Table Heading -->
                 <tr>
                     <th class="tableHeading">Name</th>
                     <th class="tableHeading">Leave Type</th>
                     <th class="tableHeading"></th>
                     <th class="tableHeading"></th>
                 </tr>
+                <!-- End of Table Heading -->
+                <!-- Table Rows / Data -->
                 <tr *ngFor="let item of leaveTypeList">
                     <td class="tableItem">Under Construction</td>
                     <td class="tableItem">Under Construction</td>
                     <td class="tableItem">Under Construction</td>
                     <td class="tableItem">Under Construction</td>
                 </tr>
+                <!-- End of Table Rows / Data -->
             </table>
         </div>
+        <!-- End of Table-1 -->
+        <!-- Table-2 to display a message that data is not present -->
         <div *ngIf="!leaveTypeList.length">
             <table class="leave-type-table">
+                <!-- Table Heading -->
                 <tr>
                     <th class="tableHeading">Name</th>
                     <th class="tableHeading">Leave Type</th>
                     <th class="tableHeading"></th>
                     <th class="tableHeading"></th>
                 </tr>
+                <!-- End of Table Heading -->
             </table>
+            <!-- Message to show that the data is not present -->
             <span style="color: rgba(0, 0, 0, 0.5)">No Type Available Currently</span>
+            <!-- End of Message -->
         </div>
+        <!-- End of Table-2 -->
+        <!-- Button to add new type -->
         <div class="add-new-type-container">
             <button (click)="addNewType($event)" class="addBtn">
                 <span class="material-icons" style="font-size: large">add</span>
                 <span style="margin-left: 8px">Add Type</span>
             </button>
         </div>
+        <!-- End of Button -->
+        <!-- Modal to display the form -->
         <div *ngIf="isFormVisible">
             <leave-type-dialog (save)="saveLeaveType($event)" (close)="closeAddNewType($event)" *ngIf="isFormVisible"></leave-type-dialog>
         </div>
+        <!-- End of Modal -->
     </div>
+    <!-- End of Main Page -->
+    <!-- Spinner (to be displayed when the data is being loaded) -->
     <div *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </div>
+    <!-- End of Spinner -->
 </div>
