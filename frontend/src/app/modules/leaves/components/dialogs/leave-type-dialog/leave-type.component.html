@@ -1,8 +1,10 @@
-<!-- Modal Wrapper (absolute wrapper to contain the from and display above everything) -->
+<!-- Starts :- Modal Wrapper (absolute wrapper to contain the from and display above everything) -->
 <div class="modalWrapper">
-    <!-- Modal Container (Responsive container to contain the form) -->
+
+    <!-- Starts :- Modal Container (Responsive container to contain the form) -->
     <div class="modalContainer" (click)="closeColorList($event)">
-        <!-- Form Title-bar -->
+
+        <!-- Starts :- Form Title-bar -->
         <div class="modalRow titleBar">
             <div class="modalRowItem">
                 <span class="modalColItem">Leave >> Add Leave Type</span>
@@ -13,11 +15,13 @@
                 </div>
             </div>
         </div>
-        <!-- End of Title-bar -->
-        <!-- Horizontal Break -->
+        <!-- Ends :- Form Title-bar -->
+
+        <!-- Starts :- Horizontal Break -->
         <div class="modalBreakLine"></div>
-        <!-- End of Horizontal Break -->
-        <!-- Leave Type (Form Row) -->
+        <!-- Ends :- Horizontal Break -->
+
+        <!-- Starts :- Leave Type (Form Row) -->
         <div class="modalRow">
             <div class="modalRowItem" style="width: 40%">
                 <div class="modalColItem">
@@ -34,10 +38,12 @@
                 </div>
             </div>
         </div>
-        <!-- End of Leave Type -->
-        <!-- Form Row to give Leave Name -->
+        <!-- Ends :- Leave Type (Form Row) -->
+
+        <!-- Starts :- Form Row to give Leave Name -->
         <div class="modalRow">
-            <!-- Input Field to accept Leave Name -->
+
+            <!-- Starts :- Input Field to accept Leave Name -->
             <div class="modalRowItem" style="width: 40%">
                 <div class="modalColItem">
                     <label class="modalLabel">Set Denotation</label>
@@ -48,19 +54,25 @@
                     <input class="modalInput" [(ngModel)]="name" [value]="name" placeholder="CL" />
                 </div>
             </div>
-            <!-- End Input Field -->
+            <!-- Ends :- Input Field -->
+
         </div>
-        <!-- Form Row to accept Color Code -->
+        <!-- Ends :- Form Row to give Leave Name -->
+
         <div class="modalRow">
-            <!-- Custom Input Selector to accept color code for this leave type -->
+
+            <!-- Starts :- Custom Input Selector to accept color code for this leave type -->
             <div class="modalRowItem" style="width: 40%">
                 <div class="modalColItem">
                     <label class="modalLabel">Set Colour</label>
                 </div>
             </div>
+
             <div class="modalRowItem" style="width: 60%">
+
                 <div class="modalColItem">
-                    <!-- Button to activate drop-down -->
+
+                    <!-- Starts :- Button to activate drop-down -->
                     <span class="colorSelector" (click)="isColorListVisible = !isColorListVisible">
                         <div
                             id="colorIndicator"
@@ -72,9 +84,11 @@
                                 {{ color == "" ? "Select Color" : "Change Color" }}
                             </div>
                             <div class="colorSelector material-icons">arrow_drop_down</div>
-                        </div></span
-                    >
-                    <!-- Drop-down color selector -->
+                        </div>
+                    </span>
+                    <!-- Ends :- Button to activate drop-down -->
+
+                    <!-- Starts :- Drop-down color selector -->
                     <div *ngIf="isColorListVisible" class="modalColorContainer">
                         <div
                             *ngFor="let colorCode of colorCodeList"
@@ -83,10 +97,14 @@
                             (click)="updateColor($event, colorCode)"
                         ></div>
                     </div>
+                    <!-- Ends :- Drop-down color selector -->
+
                 </div>
-                <!-- End of Custom Input Selector -->
+
             </div>
-            <!-- CarryForward and Encashments -->
+            <!-- Ends :- Custom Input Selector -->
+
+            <!-- Starts :- CarryForward and Encashments -->
             <div class="modalRow">
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
@@ -94,23 +112,33 @@
                     </div>
                 </div>
             </div>
+
             <div class="modalRow">Form under-construction</div>
-            <!-- End of CarryForward and Encashments -->
-            <!-- Horizontal Break -->
+            <!-- Ends :- CarryForward and Encashments -->
+
+            <!-- Starts :- Horizontal Break -->
             <div class="modalBreakLine"></div>
-            <!-- End of Horizontal Break -->
-            <!-- Set Encashments Formula -->
+            <!-- Ends :- Horizontal Break -->
+
+            <!-- Starts :- Set Encashments Formula -->
             <div class="modalRow">Form under-construction</div>
-            <!-- End of Set Encashments Formula -->
-            <!-- Horizontal Break -->
+            <!-- Ends :- Set Encashments Formula -->
+
+            <!-- Starts :- Horizontal Break -->
             <div class="modalBreakLine"></div>
-            <!-- End of Horizontal Break -->
-            <!-- Buttons to Close / Save the form -->
+            <!-- Ends :- Horizontal Break -->
+
+            <!-- Starts :- Buttons to Close / Save the form -->
             <div class="modalRow" style="padding: 5px 5px 5px 20px; margin-top: 12px; margin-bottom: 12px; justify-content: end">
                 <button (click)="saveData($event)" class="modalButton" style="color: white; background: #fe9800">Add</button>
                 <button class="modalButton" (click)="closeDialog($event)" style="border: 1px solid #fe9800">Cancel</button>
             </div>
-            <!-- End of Buttons -->
+            <!-- Ends :- Buttons to Close / Save the form -->
+
         </div>
+
     </div>
+    <!-- Ends :- Modal Container (Responsive container to contain the form) -->
+
 </div>
+<!-- Ends :- Modal Wrapper (absolute wrapper to contain the from and display above everything) -->
