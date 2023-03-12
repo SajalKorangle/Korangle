@@ -69,7 +69,7 @@
                     >
                     <div *ngIf="isColorListVisible" class="modalOptionsContainer">
                         <div
-                            *ngFor="let colorCode of colorCodes"
+                            *ngFor="let colorCode of colorCodeList"
                             style="width: 10%; height: 25px; margin-top: 2.5px; margin-bottom: 2.5px; border-radius: 2px; cursor: pointer"
                             [ngStyle]="{ background: colorCode }"
                             (click)="updateColor($event, colorCode)"

@@ -11,13 +11,13 @@ export default class ManageTypeServiceAdapter {
 
     async initializeData(): Promise<void> {
         this.vm.isLoading = true;
-        this.vm.leaveTypeList = await this.vm.genericService.getObjectList({ leaves_app: "EmployeeLeaveTypes" }, {});
+        this.vm.leaveTypeList = await this.vm.genericService.getObjectList({ leaves_app: "SchoolLeaveType" }, {});
         this.vm.isLoading = false;
     }
 
     async insertData(data): Promise<any> {
         data.parentSchool = this.vm.user.activeSchool.dbId;
-        const response = await this.vm.genericService.createObject({ leaves_app: "EmployeeLeaveTypes" }, data);
+        const response = await this.vm.genericService.createObject({ leaves_app: "SchoolLeaveType" }, data);
         if (response !== null) {
             await this.initializeData();
         }
@@ -26,7 +26,7 @@ export default class ManageTypeServiceAdapter {
     async updateData(data): Promise<any> {
         this.vm.isLoading = true;
         data.parentSchool = this.vm.user.activeSchool.dbId;
-        const response = await this.vm.genericService.partiallyUpdateObject({ leaves_app: "EmployeeLeaveTypes" }, data);
+        const response = await this.vm.genericService.partiallyUpdateObject({ leaves_app: "SchoolLeaveType" }, data);
         if (response !== null) {
             await this.initializeData();
         }
@@ -36,7 +36,7 @@ export default class ManageTypeServiceAdapter {
     async deleteData(data): Promise<any> {
         this.vm.isLoading = true;
         data.parentSchool = this.vm.user.activeSchool.dbId;
-        const response = await this.vm.genericService.deleteObjectList({ leaves_app: "EmployeeLeaveTypes" }, { filter: data });
+        const response = await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeaveType" }, { filter: data });
         if (response !== null) {
             await this.initializeData();
         }
