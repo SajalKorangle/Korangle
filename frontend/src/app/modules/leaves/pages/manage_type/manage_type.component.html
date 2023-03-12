@@ -1,49 +1,44 @@
 <div class="card-content">
-  <div *ngIf="!isLoading">
-    <div class="title">Leave types</div>
-    <div *ngIf="leaveTypeList.length">
-      <table class="leave-type-table">
-        <tr>
-          <th class="tableHeading">Name</th>
-          <th class="tableHeading">Leave Type</th>
-          <th class="tableHeading"></th>
-          <th class="tableHeading"></th>
-        </tr>
-        <tr *ngFor="let item of leaveTypeList">
-          <td class="tableItem">Under Construction</td>
-          <td class="tableItem">Under Construction</td>
-          <td class="tableItem">Under Construction</td>
-          <td class="tableItem">Under Construction</td>
-        </tr>
-      </table>
+    <div *ngIf="!isLoading">
+        <div class="title">Leave types</div>
+        <div *ngIf="leaveTypeList.length">
+            <table class="leave-type-table">
+                <tr>
+                    <th class="tableHeading">Name</th>
+                    <th class="tableHeading">Leave Type</th>
+                    <th class="tableHeading"></th>
+                    <th class="tableHeading"></th>
+                </tr>
+                <tr *ngFor="let item of leaveTypeList">
+                    <td class="tableItem">Under Construction</td>
+                    <td class="tableItem">Under Construction</td>
+                    <td class="tableItem">Under Construction</td>
+                    <td class="tableItem">Under Construction</td>
+                </tr>
+            </table>
+        </div>
+        <div *ngIf="!leaveTypeList.length">
+            <table class="leave-type-table">
+                <tr>
+                    <th class="tableHeading">Name</th>
+                    <th class="tableHeading">Leave Type</th>
+                    <th class="tableHeading"></th>
+                    <th class="tableHeading"></th>
+                </tr>
+            </table>
+            <span style="color: rgba(0, 0, 0, 0.5)">No Type Available Currently</span>
+        </div>
+        <div class="add-new-type-container">
+            <button (click)="addNewType($event)" class="addBtn">
+                <span class="material-icons" style="font-size: large">add</span>
+                <span style="margin-left: 8px">Add Type</span>
+            </button>
+        </div>
+        <div *ngIf="isFormVisible">
+            <leave-type-dialog (save)="saveLeaveType($event)" (close)="closeAddNewType($event)" *ngIf="isFormVisible"></leave-type-dialog>
+        </div>
     </div>
-    <div *ngIf="!leaveTypeList.length">
-      <table class="leave-type-table">
-        <tr>
-          <th class="tableHeading">Name</th>
-          <th class="tableHeading">Leave Type</th>
-          <th class="tableHeading"></th>
-          <th class="tableHeading"></th>
-        </tr>
-        <tr>
-          <td class="tableItem">No</td>
-          <td class="tableItem">Types</td>
-          <td class="tableItem">Available</td>
-          <td class="tableItem">Currently</td>
-        </tr>
-      </table>
+    <div *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
     </div>
-    <div class="add-new-type-container">
-      <button (click)="addNewType($event)" class="addBtn">
-        <span class="material-icons" style="font-size: large">add</span>
-        <span style="margin-left: 8px">Add Type</span>
-      </button>
-    </div>
-    <div *ngIf="isFormVisible">
-      <leave-type-dialog (save)="saveLeaveType($event)" (close)="closeAddNewType($event)" *ngIf="isFormVisible"></leave-type-dialog>
-    </div>
-  </div>
-  <div *ngIf="isLoading">
-    <app-loading-spinner [user]="user"></app-loading-spinner>
-  </div>
 </div>

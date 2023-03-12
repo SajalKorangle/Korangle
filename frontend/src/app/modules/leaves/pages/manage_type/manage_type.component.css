@@ -1,42 +1,42 @@
 .title {
-  font-size: large;
-  font-weight: 400;
-  padding-bottom: 30px;
-  font-family: roboto;
+    font-size: large;
+    font-weight: 400;
+    padding-bottom: 30px;
+    font-family: roboto;
 }
 .leave-type-table {
-  width: 100%;
-  font-family: roboto;
+    width: 100%;
+    font-family: roboto;
 }
 .tableHeading {
-  font-weight: 400;
-  font-size: medium;
-  color: #fc9701;
-  padding-bottom: 18px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    font-weight: 400;
+    font-size: medium;
+    color: #fc9701;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
 .tableItem {
-  font-weight: 300;
-  font-size: medium;
-  padding-bottom: 6px;
-  padding-top: 24px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    font-weight: 300;
+    font-size: medium;
+    padding-bottom: 6px;
+    padding-top: 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
 }
 .add-new-type-container {
-  padding-top: 30px;
+    padding-top: 30px;
 }
 .add-new-type-container > button {
-  border-radius: 5px;
-  padding: 12px 24px 12px 24px;
-  font-size: medium;
-  color: #ffffff;
-  background: #fd9700;
-  box-shadow: none;
-  border: none;
+    border-radius: 5px;
+    padding: 12px 24px 12px 24px;
+    font-size: medium;
+    color: #ffffff;
+    background: #fd9700;
+    box-shadow: none;
+    border: none;
 }
 
 .addBtn {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }

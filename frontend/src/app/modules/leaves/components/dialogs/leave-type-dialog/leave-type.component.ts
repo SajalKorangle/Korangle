@@ -1,15 +1,16 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 
 @Component({
-  selector: "leave-type-dialog",
-  templateUrl: "./leave-type.component.html",
-  styleUrls: ["./leave-type.component.css"],
+    selector: "leave-type-dialog",
+    templateUrl: "./leave-type.component.html",
+    styleUrls: ["./leave-type.component.css"],
 })
 export class LeaveTypeDialog {
-  @Output() save : EventEmitter<any> = new EventEmitter<any>();
-  @Output() close : EventEmitter<any> = new EventEmitter<any>();
-  // dialog variables
-  colorCodes: string[] = [
+    @Output() save: EventEmitter<any> = new EventEmitter<any>();
+    @Output() close: EventEmitter<any> = new EventEmitter<any>();
+    // dialog variables
+    // prettier-ignore
+    colorCodeList: string[] = [
     '#f9ebea', '#f2d7d5', '#e6b0aa', '#d98880', '#cd6155', '#c0392b', '#a93226', '#922b21', '#943126', '#78281f',
     '#f5eef8', '#ebdef0', '#d7bde2', '#c39bd3', '#af7ac5', '#9b59b6', '#884ea0', '#76448a', '#633974', '#512e5f',
     '#eaf2f8', '#d4e6f1', '#a9cce3', '#7fb3d5', '#5499c7', '#2980b9', '#2471a3', '#1f618d', '#1a5276', '#154360',
@@ -21,30 +22,30 @@ export class LeaveTypeDialog {
     '#f4f6f6', '#eaeded', '#d5dbdb', '#bfc9ca', '#aab7b8', '#95a5a6', '#839192', '#717d7e', '#5f6a6a', '#4d5656',
     '#ebedef', '#d6dbdf', '#aeb6bf', '#85929e', '#5d6d7e', '#34495e', '#2e4053', '#283747', '#212f3c', '#1b2631',
     '#eaecee', '#d5d8dc', '#abb2b9', '#808b96', '#566573', '#2c3e50', '#273746', '#212f3d', '#1c2833', '#17202a'
-  ];
-  isColorListVisible: boolean = false;
-  // data variables
-  name: string = "";
-  leaveType: number = -1;
-  color: string = "";
-  closeColorList(event): void {
-    const classNames = event.target.className.split(" ");
-    if (this.isColorListVisible && classNames[0] !== "colorSelector") {
-      this.isColorListVisible = false;
+    ];
+    isColorListVisible: boolean = false;
+    // data variables
+    name: string = "";
+    leaveType: number = -1;
+    color: string = "";
+    closeColorList(event): void {
+        const classNames = event.target.className.split(" ");
+        if (this.isColorListVisible && classNames[0] !== "colorSelector") {
+            this.isColorListVisible = false;
+        }
     }
-  }
-  updateColor(event, colorCode): void {
-    this.color = colorCode;
-    this.isColorListVisible = !this.isColorListVisible;
-  }
-  saveData(event) : void {
-    this.save.emit(event);
-  }
-  closeDialog(event) : void {
-    this.name = "";
-    this.leaveType = -1;
-    this.color = "";
-    this.isColorListVisible = false;
-    this.close.emit(event);
-  }
+    updateColor(event, colorCode): void {
+        this.color = colorCode;
+        this.isColorListVisible = !this.isColorListVisible;
+    }
+    saveData(event): void {
+        this.save.emit(event);
+    }
+    closeDialog(event): void {
+        this.name = "";
+        this.leaveType = -1;
+        this.color = "";
+        this.isColorListVisible = false;
+        this.close.emit(event);
+    }
 }
