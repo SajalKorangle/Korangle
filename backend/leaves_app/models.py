@@ -9,7 +9,7 @@ User = get_user_model()
 # Create your models here.
 
 
-class EmployeeLeaveTypes(models.Model):
+class SchoolLeaveType(models.Model):
 
     # Leave Type Title
     # if name is invalid_type then it will not be considered
@@ -56,5 +56,5 @@ class EmployeeLeaveTypes(models.Model):
         RelationsToSchool = ['parentSchool__id']
 
     class Meta:
-        db_table = 'employee_leave_type'
+        db_table = 'school_leave_type'
         unique_together = (("leaveTypeName", "parentSchool", ))

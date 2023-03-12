@@ -12,7 +12,7 @@ export class LeaveTypeDialog {
     @Input() data: any = {};
     // dialog variables
     // prettier-ignore
-    colorCodes: string[] = [
+    colorCodeList: string[] = [
         "#f9ebea", "#f2d7d5", "#e6b0aa", "#d98880", "#cd6155", "#c0392b", "#a93226", "#922b21", "#943126", "#78281f",
         "#f5eef8", "#ebdef0", "#d7bde2", "#c39bd3", "#af7ac5", "#9b59b6", "#884ea0", "#76448a", "#633974", "#512e5f",
         "#eaf2f8", "#d4e6f1", "#a9cce3", "#7fb3d5", "#5499c7", "#2980b9", "#2471a3", "#1f618d", "#1a5276", "#154360",
