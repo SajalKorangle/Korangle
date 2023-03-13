@@ -1,17 +1,28 @@
 import { SettingsComponent } from './settings.component';
-import { KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE } from '@modules/fees/classes/constants';
+import { DataStorage } from '@classes/data-storage';
+// import { KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE } from '@modules/fees/classes/constants';
 
 export class SettingsHtmlRenderer {
 
-    constructor(public vm: SettingsComponent) { }
+    isEasebuzzInPayFeesFeatureFlagEnabled: boolean;
+
+    constructor(public vm: SettingsComponent) { 
+        this.isEasebuzzInPayFeesFeatureFlagEnabled = DataStorage.getInstance().isFeatureEnabled("Easebuzz in Pay Fees page feature flag");
+    }
 
     getParentPlatformFeePercentage() {
-        const absoluteProcessingChargeOnParent = KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE - this.getSchoolPlatformFeePercentage();
-        return (100 * absoluteProcessingChargeOnParent) / (100 - absoluteProcessingChargeOnParent);  // new platform charge
+        return 100 - this.getSchoolPlatformFeePercentage();  // new platform charge
     }
 
     getSchoolPlatformFeePercentage() {
-        return (this.vm.backendData.schoolMerchantAccount.percentageOfPlatformFeeOnSchool * KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE) / 100;
+        return this.vm.backendData.schoolMerchantAccount.percentageOfPlatformFeeOnSchool;
+    }
+
+    isUpdatingOnlineFeePaymentAllowed() {
+        if (this.isEasebuzzInPayFeesFeatureFlagEnabled) {
+            return this.vm.backendData.schoolMerchantAccount.isAllowed;
+        }
+        return true;
     }
 
 }

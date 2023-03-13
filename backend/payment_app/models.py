@@ -8,10 +8,18 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class SchoolMerchantAccount(models.Model):
+    platformFeeTypes = (
+        ("Percentage", "Percentage"),   # School wishes to pay a percentage of the total platform fee
+        ("Flat", "Flat")                # School has a maximum amount of platform fee that it is willing to pay
+    )
     parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE, related_name='SchoolMerchantAccountList')
     vendorId = models.CharField(max_length=20, unique=True)
+    easebuzzBankLabel = models.CharField(max_length=20, default="")
     isEnabled = models.BooleanField(default=True)
+    isAllowed = models.BooleanField(default=True)
+    platformFeeOnSchoolType = models.CharField(max_length=15, choices=platformFeeTypes, default="Percentage")
     percentageOfPlatformFeeOnSchool = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    maxPlatformFeeOnSchool = models.PositiveIntegerField(default=0)
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']

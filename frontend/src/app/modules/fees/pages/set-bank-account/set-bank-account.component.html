@@ -1,15 +1,13 @@
 <div class="card-content table-responsive" *ngIf="!isLoading else Loader">
 
     <!-- Contact Technical Support starts -->
-    <div *ngIf="!this.htmlRenderer.isBankAccountUpdationEnabled()"
-        style="color: red;">
-        Contact Technical Support to get your account updation enabled.
+    <div *ngIf="!this.htmlRenderer.isBankAccountUpdationEnabled()" style="color: red;">
+        {{htmlRenderer.isUpdatingBankDetailsAllowed() ? "Contact Technical Support to get your account updation enabled." : "Your previous changes are under process, please wait while they are updated."}}
     </div>
     <!-- Contact Technical Support ends -->
 
     <!-- Number of tries Left starts -->
-    <div *ngIf="this.htmlRenderer.isBankAccountUpdationEnabled()"
-        style="color: green;">
+    <div *ngIf="this.htmlRenderer.isBankAccountUpdationEnabled()" style="color: green;">
         {{this.htmlRenderer.numberOfTriesLeftStatement()}}
     </div>
     <!-- Number of tries Left ends -->
@@ -20,18 +18,24 @@
         <div style="display: flex; flex-wrap: wrap;">
             <mat-form-field>
                 <mat-label>Account Holder Name</mat-label>
-                <input name="name" required matInput type="text" [(ngModel)]="schoolMerchantAccount.vendorData.bank.accountHolder">
+                <input name="name" required matInput type="text"
+                    [(ngModel)]="schoolMerchantAccount.vendorData.bank.accountHolder"
+                    [disabled]="!htmlRenderer.isUpdatingBankDetailsAllowed()">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Account Number</mat-label>
-                <input name="accountNumber" required matInput type="text" [(ngModel)]="schoolMerchantAccount.vendorData.bank.accountNumber">
+                <input name="accountNumber" required matInput type="text"
+                    [(ngModel)]="schoolMerchantAccount.vendorData.bank.accountNumber"
+                    [disabled]="!htmlRenderer.isUpdatingBankDetailsAllowed()">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>IFSC</mat-label>
                 <input name="ifsc" required matInput type="text" [errorStateMatcher]="{isErrorState: displayIfscError}"
-                    [ngModel]="schoolMerchantAccount.vendorData.bank.ifsc" (ngModelChange)="schoolMerchantAccount.vendorData.bank.ifsc = $event.toUpperCase() ; serviceAdapter.getBankDetailsFromIFSC()">
+                    [ngModel]="schoolMerchantAccount.vendorData.bank.ifsc"
+                    (ngModelChange)="schoolMerchantAccount.vendorData.bank.ifsc = $event.toUpperCase() ; serviceAdapter.getBankDetailsFromIFSC()"
+                    [disabled]="!htmlRenderer.isUpdatingBankDetailsAllowed()">
                 <mat-error>Invalid IFSC</mat-error>
             </mat-form-field>
 
@@ -39,7 +43,8 @@
 
         <mat-form-field style="width: 300px;">
             <mat-label>Settlement Cycle</mat-label>
-            <mat-select name="settlementId" required [(ngModel)]="schoolMerchantAccount.vendorData.settlementCycleId">
+            <mat-select name="settlementId" required [(ngModel)]="schoolMerchantAccount.vendorData.settlementCycleId"
+                [disabled]="!htmlRenderer.isUpdatingBankDetailsAllowed()">
                 <ng-container *ngFor="let settlementOption of settlementCycleList">
                     <mat-option [value]="settlementOption.id">{{settlementOption.desc}}</mat-option>
                 </ng-container>
@@ -63,21 +68,23 @@
         <div style="display: flex; flex-wrap: wrap;">
             <mat-form-field>
                 <mat-label>Mobile Number</mat-label>
-                <input name="mobileNumber" required matInput type="text" maxlength="10" [pattern]="validators.phoneNumber"
-                    [(ngModel)]="schoolMerchantAccount.vendorData.phone">
+                <input name="mobileNumber" required matInput type="text" maxlength="10"
+                    [pattern]="validators.phoneNumber" [(ngModel)]="schoolMerchantAccount.vendorData.phone"
+                    [disabled]="!htmlRenderer.isUpdatingBankDetailsAllowed()">
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Email</mat-label>
-                <input name="email" required matInput type="email" [pattern]="validators.email" [(ngModel)]="schoolMerchantAccount.vendorData.email">
+                <input name="email" required matInput type="email" [pattern]="validators.email"
+                    [(ngModel)]="schoolMerchantAccount.vendorData.email"
+                    [disabled]="!htmlRenderer.isUpdatingBankDetailsAllowed()">
             </mat-form-field>
 
         </div>
         <!--Personal Information Ends-->
 
-        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                type="submit"
-                [disabled]="this.htmlRenderer.isUpdateButtonDisabled()">
+        <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" type="submit"
+            [disabled]="this.htmlRenderer.isUpdateButtonDisabled()">
             {{schoolMerchantAccount.id?'Update':'Submit'}}
         </button>
         <br /><span *ngIf="errorMessage">{{errorMessage}}</span>
@@ -87,14 +94,16 @@
 <ng-template #Loader>
     <div class="card-content table-responsive" style="height: 90vh;">
         <div *ngIf="isUpdating()">
-            <span class="intermediate-loaders-wrapper">IFSC Verification: <mat-spinner style="display: inline; margin: 12px;" [diameter]="20"
+            <span class="intermediate-loaders-wrapper">IFSC Verification: <mat-spinner
+                    style="display: inline; margin: 12px;" [diameter]="20"
                     *ngIf="intermediateUpdateState.ifscVerificationLoading else CheckIcon">
                 </mat-spinner> </span><br />
-            <span class="intermediate-loaders-wrapper">Account Verification: <mat-spinner style="display: inline; margin: 12px;" [diameter]="20"
+            <span class="intermediate-loaders-wrapper">Account Verification: <mat-spinner
+                    style="display: inline; margin: 12px;" [diameter]="20"
                     *ngIf="intermediateUpdateState.accountVerificationLoading else CheckIcon"></mat-spinner>
             </span><br />
-            <span class="intermediate-loaders-wrapper">Registration: <mat-spinner style="display: inline; margin: 12px;" [diameter]="20"
-                    *ngIf="intermediateUpdateState.registrationLoading else CheckIcon">
+            <span class="intermediate-loaders-wrapper">Registration: <mat-spinner style="display: inline; margin: 12px;"
+                    [diameter]="20" *ngIf="intermediateUpdateState.registrationLoading else CheckIcon">
                 </mat-spinner> </span><br />
         </div>
         <app-loading-spinner *ngIf="!isUpdating()" [user]="user"></app-loading-spinner>
