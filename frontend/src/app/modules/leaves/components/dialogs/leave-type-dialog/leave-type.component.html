@@ -1,7 +1,7 @@
-<!-- Starts :- Modal Wrapper (absolute wrapper to contain the from and display above everything) -->
 <div class="modalWrapper">
+    <!-- Starts :- Modal Container (Responsive container to contain the form) -->
     <div class="modalContainer" (click)="closeColorList($event)">
-        <!-- Title-bar -->
+        <!-- Starts :- Form Title-bar -->
         <div class="modalRow titleBar">
             <div class="modalRowItem">
                 <span class="modalColItem">
@@ -10,13 +10,17 @@
             </div>
             <div class="modalRowItem">
                 <div class="modalColItem">
-                    <button class="material-icons closeBtn" (click)="closeDialog($event)">close</button>
+                    <button class="material-icons closeBtn" (click)="close.emit($event)">close</button>
                 </div>
             </div>
         </div>
-        <!-- Horizontal Break -->
+        <!-- Ends :- Form Title-bar -->
+
+        <!-- Starts :- Horizontal Break -->
         <div class="modalBreakLine"></div>
-        <!-- Leave Type -->
+        <!-- Ends :- Horizontal Break -->
+
+        <!-- Starts :- Leave Type (Form Row) -->
         <div class="modalRow">
             <div class="modalRowItem" style="width: 40%">
                 <div class="modalColItem">
@@ -33,8 +37,11 @@
                 </div>
             </div>
         </div>
-        <!-- give Name and select Color -->
+        <!-- Ends :- Leave Type (Form Row) -->
+
+        <!-- Starts :- Form Row to give Leave Name -->
         <div class="modalRow">
+            <!-- Starts :- Input Field to accept Leave Name -->
             <div class="modalRowItem" style="width: 40%">
                 <div class="modalColItem">
                     <span class="modalLabel">Set Denotation</span>
@@ -45,8 +52,12 @@
                     <input class="modalInput" [(ngModel)]="name" [value]="name" placeholder="CL" />
                 </div>
             </div>
+            <!-- Ends :- Input Field -->
         </div>
+        <!-- Ends :- Form Row to give Leave Name -->
+
         <div class="modalRow">
+            <!-- Starts :- Custom Input Selector to accept color code for this leave type -->
             <div class="modalRowItem" style="width: 40%">
                 <div class="modalColItem">
                     <span class="modalLabel">Set Colour</span>
@@ -54,6 +65,7 @@
             </div>
             <div class="modalRowItem" style="width: 60%">
                 <div class="modalColItem">
+                    <!-- Starts :- Button to activate drop-down -->
                     <span class="colorSelector" (click)="isColorListVisible = !isColorListVisible">
                         <span
                             id="colorIndicator"
@@ -67,6 +79,9 @@
                             <div class="colorSelector material-icons">arrow_drop_down</div>
                         </span></span
                     >
+                    <!-- Ends :- Button to activate drop-down -->
+
+                    <!-- Starts :- Drop-down color selector -->
                     <div *ngIf="isColorListVisible" class="modalOptionsContainer">
                         <div
                             *ngFor="let colorCode of colorCodeList"
@@ -75,9 +90,12 @@
                             (click)="updateColor($event, colorCode)"
                         ></div>
                     </div>
+                    <!-- Ends :- Drop-down color selector -->
                 </div>
             </div>
-            <!-- CarryForward and Encashments -->
+            <!-- Ends :- Custom Input Selector -->
+
+            <!-- Starts :- CarryForward and Encashments -->
             <div class="modalRow">
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
@@ -135,9 +153,13 @@
                     </div>
                 </div>
             </div>
-            <!-- Horizontal Break -->
+            <!-- Ends :- CarryForward and Encashments -->
+
+            <!-- Starts :- Horizontal Break -->
             <div class="modalBreakLine"></div>
-            <!-- Set Encashments Formula -->
+            <!-- Ends :- Horizontal Break -->
+
+            <!-- Starts :- Set Encashments Formula -->
             <div class="modalRow">
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
@@ -270,15 +292,22 @@
                     </div>
                 </div>
             </div>
-            <!-- Horizontal Break -->
+            <!-- Ends :- Set Encashments Formula -->
+
+            <!-- Starts :- Horizontal Break -->
             <div class="modalBreakLine"></div>
-            <!-- Close / Save -->
+            <!-- Ends :- Horizontal Break -->
+
+            <!-- Starts :- Buttons to Close / Save the form -->
             <div class="modalRow" style="padding: 5px 5px 5px 20px; margin-top: 12px; margin-bottom: 12px; justify-content: end">
                 <button (click)="saveData($event)" class="modalButton" style="color: white; background: #fe9800" [disabled]="isSaving">
                     {{ isNew ? "Add" : "Update" }}
                 </button>
-                <button class="modalButton" (click)="closeDialog($event)" style="border: 1px solid #fe9800" [disabled]="isSaving">Cancel</button>
+                <button class="modalButton" (click)="close.emit($event)" style="border: 1px solid #fe9800" [disabled]="isSaving">Cancel</button>
             </div>
+            <!-- Ends :- Buttons to Close / Save the form -->
         </div>
     </div>
+    <!-- Ends :- Modal Container (Responsive container to contain the form) -->
 </div>
+<!-- Ends :- Modal Wrapper (absolute wrapper to contain the from and display above everything) -->
