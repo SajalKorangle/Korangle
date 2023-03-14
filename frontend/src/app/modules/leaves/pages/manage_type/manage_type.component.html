@@ -27,41 +27,43 @@
                         </div>
                     </div>
                 </div>
-                <div class="leaveTypeTableRowContainer" *ngIf="leaveTypeList.length">
-                    <div class="leaveTableRow" *ngFor="let item of leaveTypeList">
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem">
-                                <span class="leaveTableColDataContainer">{{ item.leaveTypeName }}</span>
+                <div *ngIf="leaveTypeList.length" style="width: 100%">
+                    <div class="leaveTypeTableRowContainer" *ngFor="let item of leaveTypeList">
+                        <div class="leaveTableRow">
+                            <div class="leaveTableRowItem">
+                                <div class="leaveTableColItem">
+                                    <span class="leaveTableColDataContainer">{{ item.leaveTypeName }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem">
-                                <span class="leaveTableColDataContainer">{{ item.leaveType === 0 ? "Paid" : "Unpaid" }}</span>
+                            <div class="leaveTableRowItem">
+                                <div class="leaveTableColItem">
+                                    <span class="leaveTableColDataContainer">{{ item.leaveType === 0 ? "Paid" : "Unpaid" }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem">
-                                <span class="leaveTableColDataContainer"
-                                    ><span style="display: flex; width: 100%"
-                                        ><span
-                                            style="height: 25px; width: 25px; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.25)"
-                                            [ngStyle]="{ backgroundColor: item.color }"
-                                        ></span></span
-                                ></span>
+                            <div class="leaveTableRowItem">
+                                <div class="leaveTableColItem">
+                                    <span class="leaveTableColDataContainer"
+                                        ><span style="display: flex; width: 100%"
+                                            ><span
+                                                style="height: 25px; width: 25px; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.25)"
+                                                [ngStyle]="{ backgroundColor: item.color }"
+                                            ></span></span
+                                    ></span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem" style="cursor: pointer" (click)="addNewType($event, item)">
-                                <span class="leaveTableColDataContainer"
-                                    ><span style="color: rgba(128, 128, 128, 0.5)" class="material-icons-outlined">edit</span></span
-                                >
+                            <div class="leaveTableRowItem">
+                                <div class="leaveTableColItem" style="cursor: pointer" (click)="addNewType($event, item)">
+                                    <span class="leaveTableColDataContainer"
+                                        ><span style="color: rgba(128, 128, 128, 0.5)" class="material-icons-outlined">edit</span></span
+                                    >
+                                </div>
                             </div>
-                        </div>
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem" style="cursor: pointer" (click)="deleteType($event, item)">
-                                <span class="leaveTableColDataContainer"
-                                    ><span style="color: rgba(255, 0, 0, 0.5)" class="material-icons-outlined">delete_forever</span></span
-                                >
+                            <div class="leaveTableRowItem">
+                                <div class="leaveTableColItem" style="cursor: pointer" (click)="deleteType($event, item)">
+                                    <span class="leaveTableColDataContainer"
+                                        ><span style="color: rgba(255, 0, 0, 0.5)" class="material-icons-outlined">delete_forever</span></span
+                                    >
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -69,7 +71,9 @@
                 <div class="leaveTypeTableRowContainerHeading" *ngIf="!leaveTypeList.length">
                     <div class="leaveTableRow">
                         <!-- Starts :- Message (to show that the data is not present) -->
-                        <span style="color: rgba(0, 0, 0, 0.5)">No Type Available Currently</span>
+                        <div class="leaveTableRowItem" style="width: 100%">
+                            <div class="leaveTableColItem"><span style="color: rgba(0, 0, 0, 0.5)">No Type Available Currently</span></div>
+                        </div>
                         <!-- Ends :- Message -->
                     </div>
                 </div>
