@@ -10,8 +10,7 @@ export class LeaveTypeDialog {
     @Output() save: EventEmitter<any> = new EventEmitter<any>();
     @Output() close: EventEmitter<any> = new EventEmitter<any>();
     @Input() data: any = {};
-    // dialog variables
-    // prettier-ignore
+    // dialog variables prettier-ignore
     colorCodeList: string[] = [
         '#f9ebea', '#f2d7d5', '#e6b0aa', '#d98880', '#cd6155', '#c0392b', '#a93226', '#922b21', '#943126', '#78281f',
         '#f5eef8', '#ebdef0', '#d7bde2', '#c39bd3', '#af7ac5', '#9b59b6', '#884ea0', '#76448a', '#633974', '#512e5f',
@@ -38,7 +37,6 @@ export class LeaveTypeDialog {
     leaveType: number = -1;
     color: string = "";
     leavesPerMonth: MonthVsLeaves;
-    // prettier-ignore
     salaryComponentValue: { [id: string]: number } = {
         "Base Salary": 0, HRA: 0, DA: 0,
     };
@@ -52,12 +50,10 @@ export class LeaveTypeDialog {
             this.color = "";
             this.isColorListVisible = false;
             this.isSalaryComponentSelectorVisible = false;
-            // prettier-ignore
             this.leavesPerMonth = {
                 jan: [0, 0], feb: [0, 0], mar: [0, 0], apr: [0, 0], may: [0, 0], jun: [0, 0],
                 jul: [0, 0], aug: [0, 0], sep: [0, 0], oct: [0, 0], nov: [0, 0], dec: [0, 0],
             };
-            // prettier-ignore
             this.salaryComponentValue = {
                 "Base Salary": 0, HRA: 0, DA: 0,
             };
@@ -106,7 +102,6 @@ export class LeaveTypeDialog {
         } else if (this.dividingFactorType === -1 || this.dividingFactorValue === 0) {
             alert("Please select a valid division factor type / value.");
         } else {
-            // prettier-ignore
             event.data = {
                 isNew: this.isNew, leaveTypeName: this.name, leaveType: this.leaveType,
                 color: this.color, assignedLeavesMonthWise: JSON.stringify(this.leavesPerMonth),

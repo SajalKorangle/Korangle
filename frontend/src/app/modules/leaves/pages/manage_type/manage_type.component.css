@@ -68,13 +68,11 @@
     box-shadow: none;
     border: none;
 }
-
 .addBtn {
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
-
 @media (max-width: 991px) {
     .leaveTableRow {
         width: 100%;

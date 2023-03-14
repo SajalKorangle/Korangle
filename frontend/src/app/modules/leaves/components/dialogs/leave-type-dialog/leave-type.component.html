@@ -68,27 +68,21 @@
                 <div class="modalColItem">
                     <!-- Starts :- Button to activate drop-down -->
                     <span class="colorSelector" (click)="isColorListVisible = !isColorListVisible">
-                        <span
-                            id="colorIndicator"
-                            class="colorSelector modalInput"
+                        <span id="colorIndicator" class="colorSelector modalInput" [ngStyle]="{ backgroundColor: color === '' ? '#ffffff' : color }"
                             style="cursor: pointer; width: 100%; display: flex; flex-direction: row; justify-content: space-between"
-                            [ngStyle]="{ backgroundColor: color === '' ? '#ffffff' : color }"
                         >
                             <div class="colorSelector">
                                 {{ color == "" ? "Select Color" : "Change Color" }}
                             </div>
                             <div class="colorSelector material-icons">arrow_drop_down</div>
-                        </span></span
-                    >
+                        </span>
+                    </span>
                     <!-- Ends :- Button to activate drop-down -->
 
                     <!-- Starts :- Drop-down color selector -->
                     <div *ngIf="isColorListVisible" class="modalOptionsContainer">
-                        <div
-                            *ngFor="let colorCode of colorCodeList"
+                        <div *ngFor="let colorCode of colorCodeList" (click)="updateColor($event, colorCode)" [ngStyle]="{ background: colorCode }"
                             style="width: 10%; height: 25px; margin-top: 2.5px; margin-bottom: 2.5px; border-radius: 2px; cursor: pointer"
-                            [ngStyle]="{ background: colorCode }"
-                            (click)="updateColor($event, colorCode)"
                         ></div>
                     </div>
                     <!-- Ends :- Drop-down color selector -->
@@ -139,14 +133,9 @@
             <div class="modalRow">
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
-                        <div
-                            (click)="isNoteVisible = !isNoteVisible"
-                            class="modalNote"
-                            [ngStyle]="{
-                                cursor: 'pointer',
-                                display: !isNoteVisible ? 'inline-block' : 'block',
-                                whiteSpace: !isNoteVisible ? 'nowrap' : 'normal'
-                            }"
+                        <div (click)="isNoteVisible = !isNoteVisible" class="modalNote"
+                            [ngStyle]="{ cursor: 'pointer', display: !isNoteVisible ? 'inline-block' : 'block',
+                                whiteSpace: !isNoteVisible ? 'nowrap' : 'normal'}"
                         >
                             Note - Policies are applicable for the next month. CFW for January will decide if leaves will be carry-forwarded from January to
                             February
@@ -165,8 +154,8 @@
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
                         <span class="modalTitle" style="text-overflow: ellipsis; overflow: hidden; display: inline-block; white-space: nowrap"
-                            >Set Encashments Formula -</span
-                        >
+                            >Set Encashments Formula -
+                        </span>
                     </div>
                 </div>
             </div>
@@ -178,48 +167,33 @@
                 </div>
                 <div class="componentSelector modalRowItem" style="width: 60%">
                     <div class="componentSelector modalColItem">
-                        <div
-                            (click)="isSalaryComponentSelectorVisible = !isSalaryComponentSelectorVisible"
-                            class="componentSelector modalInput"
+                        <div class="componentSelector modalInput" (click)="isSalaryComponentSelectorVisible = !isSalaryComponentSelectorVisible"
                             style="cursor: pointer; width: 100%; display: flex; flex-direction: row; justify-content: space-between"
                         >
                             <div class="componentSelector">{{ activeComponentCount > 0 ? "SELECTED " + activeComponentCount : "SELECT" }}</div>
                             <div class="componentSelector material-icons">arrow_drop_down</div>
                         </div>
                         <div *ngIf="isSalaryComponentSelectorVisible" class="componentSelector modalOptionsContainer" style="height: 80px; margin-top: 130px">
-                            <div
-                                class="componentSelector"
-                                (click)="enableComponent($event, salaryComponent)"
-                                *ngFor="let salaryComponent of salaryComponents"
+                            <div class="componentSelector" (click)="enableComponent($event, salaryComponent)" *ngFor="let salaryComponent of salaryComponents"
                                 style="width: 100%; display: flex; flex-direction: row; cursor: pointer"
                             >
-                                <span
-                                    class="componentSelector"
+                                <span class="componentSelector"
                                     style="height: 25px; display: flex; flex-direction: column; justify-content: center; text-align: center"
                                 >
-                                    <input
-                                        class="componentSelector"
-                                        type="checkbox"
-                                        aria-label="select"
-                                        style="border-radius: 2px"
+                                    <input class="componentSelector" type="checkbox" aria-label="select" style="border-radius: 2px"
                                         [checked]="salaryComponentValue[salaryComponent] != 0"
                                     />
                                 </span>
-                                <span
-                                    class="componentSelector"
+                                <span class="componentSelector"
                                     style="height: 25px; display: flex; flex-direction: column; justify-content: center; flex-grow: 1; text-align: center"
-                                    >{{ salaryComponent }}</span
-                                >
+                                    >{{ salaryComponent }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modalRow" *ngIf="activeComponentCount > 0">
-                <div
-                    *ngFor="let salaryComponent of salaryComponents"
-                    class="modalRowItem"
-                    style="width: 100%"
+                <div *ngFor="let salaryComponent of salaryComponents" class="modalRowItem" style="width: 100%"
                     [ngStyle]="{ minHeight: salaryComponentValue[salaryComponent] !== 0 ? '36px' : '0px' }"
                 >
                     <div class="modalRowItem" *ngIf="salaryComponentValue[salaryComponent] !== 0" style="width: 100%">
@@ -228,25 +202,17 @@
                         </div>
                         <div class="modalColItem" style="width: 60%">
                             <div style="display: flex; flex-direction: row; flex-wrap: nowrap; width: 100%; justify-content: space-evenly">
-                                <span
+                                <span (click)="salaryComponentValue[salaryComponent] = 1"
                                     style="flex-grow: 1; display: flex; overflow: hidden; flex-wrap: nowrap; justify-content: space-evenly"
-                                    (click)="salaryComponentValue[salaryComponent] = 1"
                                     ><span style="height: 100%; display: flex; flex-direction: column; justify-content: center"
-                                        ><input
-                                            type="radio"
-                                            class="modalRadio"
-                                            [checked]="salaryComponentValue[salaryComponent] === 1"
+                                        ><input type="radio" class="modalRadio" [checked]="salaryComponentValue[salaryComponent] === 1"
                                             (click)="salaryComponentValue[salaryComponent] = 1" /></span
                                     ><span style="height: 100%; display: flex; flex-direction: column; justify-content: center">Additive</span></span
                                 >
-                                <span
+                                <span (click)="salaryComponentValue[salaryComponent] = -1"
                                     style="flex-grow: 1; display: flex; overflow: hidden; flex-wrap: nowrap; justify-content: space-evenly"
-                                    (click)="salaryComponentValue[salaryComponent] = -1"
                                     ><span style="height: 100%; display: flex; flex-direction: column; justify-content: center"
-                                        ><input
-                                            type="radio"
-                                            class="modalRadio"
-                                            [checked]="salaryComponentValue[salaryComponent] === -1"
+                                        ><input type="radio" class="modalRadio" [checked]="salaryComponentValue[salaryComponent] === -1"
                                             (click)="salaryComponentValue[salaryComponent] = -1" /></span
                                     ><span style="height: 100%; display: flex; flex-direction: column; justify-content: center">Deductive</span></span
                                 >
@@ -263,9 +229,7 @@
                 </div>
                 <div class="modalRowItem" style="width: 30%">
                     <div class="modalColItem">
-                        <select
-                            (change)="updateDFType($event)"
-                            class="modalInput"
+                        <select (change)="updateDFType($event)" class="modalInput"
                             style="display: inline-block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis"
                         >
                             <option value="-1" [selected]="dividingFactorType === -1">Select</option>

@@ -5,8 +5,8 @@
         <div class="title">Leave types</div>
         <!-- Ends :- Page Title -->
 
-        <!-- Starts :- Table-1 (to display data if data is present) -->
-        <div *ngIf="leaveTypeList.length">
+        <!-- Starts :- Table (to display data if data is present) -->
+        <div>
             <div class="leaveTypeTable">
                 <div class="leaveTypeTableRowContainerHeading">
                     <div class="leaveTableRow">
@@ -20,18 +20,14 @@
                             <div class="leaveTableColItem"><span class="leaveTableColDataContainer">Colour</span></div>
                         </div>
                         <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem">
-                                <!-- empty -->
-                            </div>
+                            <div class="leaveTableColItem"></div>
                         </div>
                         <div class="leaveTypeRowItem">
-                            <div class="leaveTypeColItem">
-                                <!-- empty -->
-                            </div>
+                            <div class="leaveTypeColItem"></div>
                         </div>
                     </div>
                 </div>
-                <div class="leaveTypeTableRowContainer">
+                <div class="leaveTypeTableRowContainer" *ngIf="leaveTypeList.length">
                     <div class="leaveTableRow" *ngFor="let item of leaveTypeList">
                         <div class="leaveTableRowItem">
                             <div class="leaveTableColItem">
@@ -70,58 +66,16 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- Ends :- Table-1 -->
-
-        <!-- Starts :- Table-2 (to display a message that data is not present) -->
-        <div *ngIf="!leaveTypeList.length">
-            <div class="leaveTypeTable">
-                <div class="leaveTypeTableRowContainerHeading">
+                <div class="leaveTypeTableRowContainerHeading" *ngIf="!leaveTypeList.length">
                     <div class="leaveTableRow">
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem">Name</div>
-                        </div>
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem">Leave Type</div>
-                        </div>
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem">Color</div>
-                        </div>
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem">
-                                <!-- empty -->
-                            </div>
-                        </div>
-                        <div class="leaveTypeRowItem">
-                            <div class="leaveTypeColItem">
-                                <!-- empty -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="leaveTypeTableRowContainer">
-                    <div class="leaveTableRow">
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem">No</div>
-                        </div>
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem">Types</div>
-                        </div>
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem">Available</div>
-                        </div>
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem">Currently</div>
-                        </div>
-                        <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem"></div>
-                        </div>
+                        <!-- Starts :- Message (to show that the data is not present) -->
+                        <span style="color: rgba(0, 0, 0, 0.5)">No Type Available Currently</span>
+                        <!-- Ends :- Message -->
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Ends :- Table-2 -->
+        <!-- Ends :- Table -->
 
         <!-- Starts :- Button (to add new type) -->
         <div class="add-new-type-container">

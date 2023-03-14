@@ -139,7 +139,6 @@
     background-color: #fc9701;
     border: 1px solid rgba(0, 0, 0, 0.8);
 }
-
 @media (max-width: 600px) {
     .modalContainer {
         width: 100%;

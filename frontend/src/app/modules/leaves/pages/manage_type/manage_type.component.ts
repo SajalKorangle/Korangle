@@ -15,13 +15,12 @@ export class ManageTypeComponent implements OnInit {
     // page variables
     leaveTypeList: any = [];
     isFormVisible: boolean = false;
-    isLoading: boolean = false;
+    isLoading: boolean = true;
     formData: any = {};
     ngOnInit() {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
     }
-
     constructor(public genericService: GenericService) {}
     // handle Modal
     addNewType(event, data): void {
@@ -34,19 +33,12 @@ export class ManageTypeComponent implements OnInit {
     async saveLeaveType(data): Promise<any> {
         const isNew: boolean = data.isNew;
         delete data.isNew;
-        if (isNew) {
-            const response = await this.serviceAdapter.insertData(data);
-            if (response !== null && response !== undefined && JSON.stringify(response) !== "{}") {
-                this.closeAddNewType(null);
-            }
-        } else {
-            const response = await this.serviceAdapter.updateData(data);
-            if (response !== null && response !== undefined && JSON.stringify(response) !== "{}") {
-                this.closeAddNewType(null);
-            }
+        let response = isNew ? (await this.serviceAdapter.handleDataChange(data, 'insert')) : (await this.serviceAdapter.handleDataChange(data, 'update'));
+        if (response !== null && response !== undefined && JSON.stringify(response) !== "{}") {
+            this.closeAddNewType(null);
         }
     }
     async deleteType(event, data): Promise<any> {
-        await this.serviceAdapter.deleteData(data);
+        await this.serviceAdapter.handleDataChange(data, 'delete');
     }
 }
