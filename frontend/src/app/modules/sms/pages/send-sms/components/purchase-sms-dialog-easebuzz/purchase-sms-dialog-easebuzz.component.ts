@@ -45,5 +45,5 @@ export class PurchaseSmsDialogEasebuzzComponent implements OnInit {
         }
         this.htmlAdapter.isLoading = true;
         this.serviceAdapter.makeSmsPurchase(this.htmlAdapter.noOfSMS, this.htmlAdapter.email);
-    } 
+    }
 }
