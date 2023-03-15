@@ -1,9 +1,8 @@
 from django.db import models
 from school_app.model.models import School
 from django.contrib.auth import get_user_model
+from django.contrib.postgres.fields import CITextField
 from common.common import BasePermission
-from django.contrib.postgres.fields import ArrayField
-
 User = get_user_model()
 
 # Create your models here.
@@ -13,7 +12,7 @@ class SchoolLeaveType(models.Model):
 
     # Leave Type Title
     # if name is invalid_type then it will not be considered
-    leaveTypeName = models.TextField(
+    leaveTypeName = CITextField(
         null=False, verbose_name='leave_name', default='invalid_type')
 
     # Leave Paid Status
@@ -57,4 +56,4 @@ class SchoolLeaveType(models.Model):
 
     class Meta:
         db_table = 'school_leave_type'
-        unique_together = (("leaveTypeName", "parentSchool", ))
+        unique_together = (("leaveTypeName", "parentSchool", ), ("color", "parentSchool"))
