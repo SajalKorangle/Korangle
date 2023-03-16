@@ -173,7 +173,7 @@
             <div class="modalRow">
                 <div class="modalRowItem" style="width: 30%">
                     <div class="modalColItem">
-                        <span class="modalLabel">Select Salary Components</span>
+                        <span title="Select Salary Components" class="modalLabel">Select Salary Components</span>
                     </div>
                 </div>
                 <div class="componentSelector modalRowItem" style="width: 70%">
@@ -224,7 +224,7 @@
                 >
                     <div class="modalRowItem" *ngIf="salaryComponentValue[salaryComponent] !== 0" style="width: 100%">
                         <div class="modalColItem" style="width: 30%">
-                            <span class="modalLabel">{{ salaryComponent }}</span>
+                            <span [title]="salaryComponent" class="modalLabel">{{ salaryComponent }}</span>
                         </div>
                         <div class="modalColItem" style="width: 70%">
                             <div style="display: flex; flex-direction: row; flex-wrap: nowrap; width: 100%; justify-content: space-evenly">
@@ -256,7 +256,7 @@
             <div class="modalRow" *ngIf="activeComponentCount !== 0">
                 <div class="modalRowItem" style="width: 30%">
                     <div class="modalColItem">
-                        <span class="modalLabel">Select dividing factor</span>
+                        <span title="Select dividing factor" class="modalLabel">Select dividing factor</span>
                     </div>
                 </div>
                 <div class="modalRowItem" style="width: 50%">
