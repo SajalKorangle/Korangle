@@ -87,7 +87,7 @@
                         <div
                             *ngFor="let colorCode of colorCodeList"
                             (click)="updateColor($event, colorCode)"
-                            [ngStyle]="{ background: colorCode }"
+                            [ngStyle]="{ background: colorCode, border: color === colorCode ? '2px solid black' : 'none' }"
                             style="width: 10%; height: 25px; margin-top: 2.5px; margin-bottom: 2.5px; border-radius: 2px; cursor: pointer"
                         ></div>
                     </div>
