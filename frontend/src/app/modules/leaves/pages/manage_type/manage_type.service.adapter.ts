@@ -31,16 +31,12 @@ export default class ManageTypeServiceAdapter {
         }
         let response = null;
         data.parentSchool = this.vm.user.activeSchool.dbId;
-        switch (operation) {
-            case "insert":
-                response = await this.vm.genericService.createObject({ leaves_app: "SchoolLeaveType" }, data);
-                break;
-            case "update":
-                response = await this.vm.genericService.partiallyUpdateObject({ leaves_app: "SchoolLeaveType" }, data);
-                break;
-            case "delete":
-                response = await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeaveType" }, { filter: data });
-                break;
+        if (operation === "insert") {
+            response = await this.vm.genericService.createObject({ leaves_app: "SchoolLeaveType" }, data);
+        } else if (operation === "update") {
+            response = await this.vm.genericService.partiallyUpdateObject({ leaves_app: "SchoolLeaveType" }, data);
+        } else if (operation === "delete") {
+            response = await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeaveType" }, { filter: data });
         }
         if (response !== null) {
             await this.initializeData();

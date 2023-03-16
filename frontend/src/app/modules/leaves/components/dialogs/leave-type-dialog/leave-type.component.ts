@@ -54,23 +54,12 @@ export class LeaveTypeDialog {
             this.isColorListVisible = false;
             this.isSalaryComponentSelectorVisible = false;
             this.leavesPerMonth = {
-                jan: [0, 0],
-                feb: [0, 0],
-                mar: [0, 0],
-                apr: [0, 0],
-                may: [0, 0],
-                jun: [0, 0],
-                jul: [0, 0],
-                aug: [0, 0],
-                sep: [0, 0],
-                oct: [0, 0],
-                nov: [0, 0],
-                dec: [0, 0],
+                jan: [0, 0], feb: [0, 0], mar: [0, 0], apr: [0, 0],
+                may: [0, 0], jun: [0, 0], jul: [0, 0], aug: [0, 0],
+                sep: [0, 0], oct: [0, 0], nov: [0, 0], dec: [0, 0],
             };
             this.salaryComponentValue = {
-                "Base Salary": 0,
-                HRA: 0,
-                DA: 0,
+                "Base Salary": 0, HRA: 0, DA: 0,
             };
             this.dividingFactorType = -1;
             this.dividingFactorValue = 30;
@@ -118,14 +107,11 @@ export class LeaveTypeDialog {
             alert("Please select a valid division factor type / value.");
         } else {
             event.data = {
-                isNew: this.isNew,
-                leaveTypeName: this.name,
-                leaveType: this.leaveType,
-                color: this.color,
+                isNew: this.isNew, leaveTypeName: this.name,
+                leaveType: this.leaveType, color: this.color,
                 assignedLeavesMonthWise: JSON.stringify(this.leavesPerMonth),
                 salaryComponents: JSON.stringify(this.salaryComponentValue),
-                divisionFactor: this.dividingFactorValue,
-                divisionFactorType: this.dividingFactorType,
+                divisionFactor: this.dividingFactorValue, divisionFactorType: this.dividingFactorType,
             };
             event.data.id = !this.isNew ? this.data.id : -1;
             await this.save.emit(event.data);
@@ -144,7 +130,7 @@ export class LeaveTypeDialog {
         this.salaryComponents.forEach((component, index) => {
             if (this.salaryComponentValue[component] !== 0) {
                 formula +=
-                    index == 0 ? (this.salaryComponentValue[component] === -1 ? " - " : " ") : this.salaryComponentValue[component] === 1 ? " + " : " - ";
+                    (index == 0 ? (this.salaryComponentValue[component] === -1 ? " - " : " ") : this.salaryComponentValue[component] === 1 ? " + " : " - ");
                 formula += component;
             }
         });
