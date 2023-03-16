@@ -67,18 +67,6 @@
     font-weight: 400;
     font-size: small;
 }
-.modalLabel:active:after,
-.modalLabel:hover:after,
-.modalLabel:focus:after {
-    position: absolute;
-    content: attr(title);
-    padding: 5px;
-    border: 1px solid rgba(0, 0, 0, 0.25);
-    border-radius: 5px;
-    left: 10px;
-    background: rgba(255, 255, 255, 0.5);
-    z-index: 10;
-}
 .modalTitle {
     text-align: left !important;
     overflow: hidden;
@@ -161,5 +149,19 @@ input[type="radio"]:checked {
         right: 0;
         width: 100%;
         margin-left: 0px;
+    }
+}
+@media (max-width: 991px) {
+    .modalLabel:active:after,
+    .modalLabel:hover:after,
+    .modalLabel:focus:after {
+        position: absolute;
+        content: attr(title);
+        padding: 5px;
+        left: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.8);
+        z-index: 10;
     }
 }
