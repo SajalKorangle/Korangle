@@ -13,14 +13,33 @@ export default class ManageTypeServiceAdapter {
     }
     async handleDataChange(data, operation): Promise<any> {
         this.vm.isLoading = true;
+        if (operation === "insert" || operation === "update") {
+            this.vm.leaveTypeList = await this.vm.genericService.getObjectList({ leaves_app: "SchoolLeaveType" }, {});
+            const similarObject = this.vm.leaveTypeList.find((leaveType) => {
+                return (
+                    leaveType.leaveTypeName.toString().toLowerCase() === data.leaveTypeName.toString().toLowerCase() ||
+                    leaveType.color.toString().toLowerCase() === data.color.toString().toLowerCase()
+                );
+            });
+            if (similarObject !== undefined && similarObject !== null) {
+                const isNameSame: boolean = similarObject.leaveTypeName.toString().toLowerCase() === data.leaveTypeName.toString().toLowerCase();
+                const isColorSame: boolean = similarObject.color.toString().toLowerCase() === data.color.toString().toLowerCase();
+                alert(`${isNameSame ? "Name" : ""}${isColorSame ? (isNameSame ? " and Color" : "Color") : ""} already exists!`);
+                this.vm.isLoading = false;
+                return null;
+            }
+        }
         let response = null;
         data.parentSchool = this.vm.user.activeSchool.dbId;
         switch (operation) {
-            case "insert": response = await this.vm.genericService.createObject({ leaves_app: "SchoolLeaveType" }, data);
+            case "insert":
+                response = await this.vm.genericService.createObject({ leaves_app: "SchoolLeaveType" }, data);
                 break;
-            case "update": response = await this.vm.genericService.partiallyUpdateObject({ leaves_app: "SchoolLeaveType" }, data);
+            case "update":
+                response = await this.vm.genericService.partiallyUpdateObject({ leaves_app: "SchoolLeaveType" }, data);
                 break;
-            case "delete": response = await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeaveType" }, { filter: data });
+            case "delete":
+                response = await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeaveType" }, { filter: data });
                 break;
         }
         if (response !== null) {
