@@ -124,7 +124,7 @@ export class LeaveTypeDialog {
         let encCount: number = 0;
         Object.keys(this.leavesPerMonth).map((month) => {
             encCount += this.leavesPerMonth[month][1] === 2 ? 1 : 0;
-        })
+        });
         this.isEncFormulaVisible = encCount == 0 ? false : true;
     }
     enableComponent(event, salaryComponent): void {
