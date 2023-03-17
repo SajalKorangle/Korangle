@@ -87,7 +87,7 @@
                         <div
                             *ngFor="let colorCode of colorCodeList"
                             (click)="updateColor($event, colorCode)"
-                            [ngStyle]="{ background: colorCode, border: color === colorCode ? '2px solid black' : 'none' }"
+                            [ngStyle]="{ background: colorCode, border: color === colorCode ? '1px solid black' : 'none' }"
                             style="width: 10%; height: 25px; margin-top: 2.5px; margin-bottom: 2.5px; border-radius: 2px; cursor: pointer"
                         ></div>
                     </div>
@@ -161,7 +161,7 @@
             <!-- Ends :- Horizontal Break -->
 
             <!-- Starts :- Set Encashments Formula -->
-            <div class="modalRow">
+            <div class="modalRow" *ngIf="isEncFormulaVisible">
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
                         <span class="modalTitle" style="text-overflow: ellipsis; overflow: hidden; display: inline-block; white-space: nowrap"
@@ -170,7 +170,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modalRow">
+            <div class="modalRow" *ngIf="isEncFormulaVisible">
                 <div class="modalRowItem" style="width: 30%">
                     <div class="modalColItem">
                         <span title="Select Salary Components" class="modalLabel">Select Salary Components</span>
@@ -215,7 +215,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modalRow" *ngIf="activeComponentCount > 0">
+            <div class="modalRow" *ngIf="activeComponentCount > 0 && isEncFormulaVisible">
                 <div
                     *ngFor="let salaryComponent of salaryComponents"
                     class="modalRowItem"
@@ -253,7 +253,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modalRow" *ngIf="activeComponentCount !== 0">
+            <div class="modalRow" *ngIf="activeComponentCount !== 0 && isEncFormulaVisible">
                 <div class="modalRowItem" style="width: 30%">
                     <div class="modalColItem">
                         <span title="Select dividing factor" class="modalLabel">Select dividing factor</span>
@@ -277,14 +277,14 @@
                     </div>
                 </div>
             </div>
-            <div class="modalRow" *ngIf="activeComponentCount !== 0">
+            <div class="modalRow" *ngIf="activeComponentCount !== 0 && isEncFormulaVisible">
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
                         <span class="modalNote">Formula = {{ dividingFactorType !== -1 ? getFormula() : "please select a division factor" }}</span>
                     </div>
                 </div>
             </div>
-            <div class="modalRow" *ngIf="activeComponentCount === 0">
+            <div class="modalRow" *ngIf="activeComponentCount === 0 && isEncFormulaVisible">
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
                         <span class="modalNote">Select a component to generate the formula</span>
@@ -294,7 +294,7 @@
             <!-- Ends :- Set Encashments Formula -->
 
             <!-- Starts :- Horizontal Break -->
-            <div class="modalBreakLine"></div>
+            <div class="modalBreakLine" *ngIf="isEncFormulaVisible"></div>
             <!-- Ends :- Horizontal Break -->
 
             <!-- Starts :- Buttons to Close / Save the form -->

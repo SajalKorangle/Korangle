@@ -33,6 +33,7 @@ export class LeaveTypeDialog {
     months: Array<string> = [];
     isSaving: boolean = false;
     isNew: boolean = false;
+    isEncFormulaVisible: boolean = false;
     // data variables
     name: string = "";
     leaveType: number = -1;
@@ -101,9 +102,9 @@ export class LeaveTypeDialog {
         });
         if (this.name.length === 0 || this.leaveType === -1 || this.color.length === 0) {
             alert("Please fill all the fields before saving the changes.");
-        } else if (counter === 0) {
+        } else if (this.isEncFormulaVisible && counter === 0) {
             alert("Please select at-least one salary component to save.");
-        } else if (this.dividingFactorType === -1 || this.dividingFactorValue === 0) {
+        } else if (this.isEncFormulaVisible && (this.dividingFactorType === -1 || this.dividingFactorValue === 0)) {
             alert("Please select a valid division factor type / value.");
         } else {
             event.data = {
@@ -120,6 +121,11 @@ export class LeaveTypeDialog {
     }
     updateLeaves(event, month): void {
         this.leavesPerMonth[month][1] = parseInt(event.target.value);
+        let encCount: number = 0;
+        Object.keys(this.leavesPerMonth).map((month) => {
+            encCount += this.leavesPerMonth[month][1] === 2 ? 1 : 0;
+        })
+        this.isEncFormulaVisible = encCount == 0 ? false : true;
     }
     enableComponent(event, salaryComponent): void {
         this.activeComponentCount += this.salaryComponentValue[salaryComponent] == 0 ? 1 : -1;
