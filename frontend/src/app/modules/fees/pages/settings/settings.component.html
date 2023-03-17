@@ -18,22 +18,33 @@
             </div>
 
             <span *ngIf="!backendData.schoolMerchantAccount">Merchant Bank Account not set.</span>
+
+            <!-- Bank Account details updating message starts  -->
             <span *ngIf="!htmlRenderer.isUpdatingOnlineFeePaymentAllowed()" style="color: red;">Online Fees Payments are
                 disabled while your Bank Account details are being updated, you can resume collecting Online Fees
                 Payments when the details are changed
                 successfully.</span>
+            <!-- Bank Account details updating message ends  -->
 
+            <!-- Platform Charges Division starts -->
             <div *ngIf="backendData.schoolMerchantAccount">
                 <h4>Platform Charges Division between parent and school</h4>
                 <div style="opacity: 65%; margin-bottom: 1rem;">* Choose how you want to distribute platform charges
                     between school and parent</div>
+
+                <!-- New Platform Charges Divider starts -->
                 <mat-radio-group aria-label="Select one" style="display: flex; flex-direction: column; gap: 1rem;"
                     [(ngModel)]="backendData.schoolMerchantAccount.platformFeeOnSchoolType"
                     *ngIf="htmlRenderer.isEasebuzzInPayFeesFeatureFlagEnabled">
+
+                    <!-- Percentage based radio button starts -->
                     <mat-radio-button value="Percentage">
                         <span style="color: black;">School will bear a particular percentage of total platform
                             charges.</span>
                     </mat-radio-button>
+                    <!-- Percentage based radio button ends -->
+
+                    <!-- Percentage Based Divider starts -->
                     <div class="flex-desktop-row-mobile-col" style="align-items: center; margin-left: 1rem; gap: 4px;"
                         *ngIf="backendData.schoolMerchantAccount.platformFeeOnSchoolType=='Percentage'">
                         <mat-chip>Parent:
@@ -45,10 +56,16 @@
                         <mat-chip>School:
                             {{htmlRenderer.getSchoolPlatformFeePercentage().toFixed(2)}}%</mat-chip>
                     </div>
+                    <!-- Percentage Based Divider ends -->
+
+                    <!-- Max budget based radio button starts -->
                     <mat-radio-button value="Flat">
                         <span style="color: black;">School will bear complete platform charges upto a particular
                             amount.</span>
                     </mat-radio-button>
+                    <!-- Max budget based radio button ends -->
+
+                    <!-- Max Platform charge budget input starts -->
                     <div style="margin-left: 2rem;"
                         *ngIf="backendData.schoolMerchantAccount.platformFeeOnSchoolType=='Flat'">
                         <mat-form-field>
@@ -57,7 +74,12 @@
                                 [(ngModel)]="backendData.schoolMerchantAccount.maxPlatformFeeOnSchool">
                         </mat-form-field>
                     </div>
+                    <!-- Max Platform charge budget input ends -->
+
                 </mat-radio-group>
+                <!-- New Platform Charges Divider ends -->
+
+                <!-- Old Platform Charges Divider starts -->
                 <div class="flex-desktop-row-mobile-col" style="align-items: center; margin-left: 1rem; gap: 4px;"
                     *ngIf="!htmlRenderer.isEasebuzzInPayFeesFeatureFlagEnabled">
                     <mat-chip>Parent:
@@ -69,8 +91,10 @@
                     <mat-chip>School:
                         {{htmlRenderer.getSchoolPlatformFeePercentage().toFixed(2)}}%</mat-chip>
                 </div>
+                <!-- Old Platform Charges Divider ends -->
 
             </div>
+            <!-- Platform Charges Division ends -->
 
         </div>
 
