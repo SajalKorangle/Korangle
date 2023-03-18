@@ -8,5 +8,8 @@ import { GenericService } from "@services/generic/generic-service";
     providers: [GenericService],
 })
 export class ManagePlanComponent {
-    constructor() {}
+    constructor(public genericService: GenericService) {}
+    // page manage variables
+    isLoading: boolean = false;
+    isLeavePlanOpen: boolean = false;
 }

@@ -1,0 +1,14 @@
+.navBar {
+    width: 100%;
+    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+.title {
+    color: #fc9701;
+    font-size: large;
+}
+.navBtn {
+    text-decoration: underline;
+    font-size: medium;
+}
