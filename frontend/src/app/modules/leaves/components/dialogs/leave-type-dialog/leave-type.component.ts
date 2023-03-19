@@ -120,6 +120,13 @@ export class LeaveTypeDialog {
     }
     addComponent(event): void {
         this.componentName = this.componentName.toLowerCase();
+        if (this.componentName.split(" ").length !== 1) {
+            let tempComponent = "";
+            this.componentName.split(" ").map((subComponent, index) => {
+                tempComponent += subComponent + (index === this.componentName.split(" ").length - 1 ? "" : "_");
+            });
+            this.componentName = tempComponent;
+        }
         if (this.componentName !== "" && this.encashmentComponentList.indexOf(this.componentName) == -1) {
             this.encashmentComponentList.push(this.componentName.toLocaleUpperCase());
         }
