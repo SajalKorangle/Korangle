@@ -34,18 +34,15 @@ export class LeaveTypeDialog {
     isSaving: boolean = false;
     isNew: boolean = false;
     isEncFormulaVisible: boolean = false;
+    isEncFormulaValid: boolean = true;
     // data variables
+    componentName: string = "";
     name: string = "";
     leaveType: number = -1;
     color: string = "";
     leavesPerMonth: MonthVsLeaves;
-    salaryComponentValue: { [id: string]: number } = {
-        "Base Salary": 0,
-        HRA: 0,
-        DA: 0,
-    };
-    dividingFactorType: number = -1;
-    dividingFactorValue: number = 30;
+    encashmentComponentList: Array<string> = [];
+    encashmentFormula: string = "";
     // Initialize Data
     ngOnInit() {
         if (JSON.stringify(this.data) === "{}" || !JSON.stringify(this.data).length) {
@@ -54,31 +51,26 @@ export class LeaveTypeDialog {
             this.color = "";
             this.isColorListVisible = false;
             this.isSalaryComponentSelectorVisible = false;
+            // prettier-ignore
             this.leavesPerMonth = {
-                jan: [0, 0], feb: [0, 0], mar: [0, 0], apr: [0, 0],
-                may: [0, 0], jun: [0, 0], jul: [0, 0], aug: [0, 0],
-                sep: [0, 0], oct: [0, 0], nov: [0, 0], dec: [0, 0],
+                jan: [0, 0], feb: [0, 0], mar: [0, 0],
+                apr: [0, 0], may: [0, 0], jun: [0, 0],
+                jul: [0, 0], aug: [0, 0], sep: [0, 0],
+                oct: [0, 0], nov: [0, 0], dec: [0, 0],
             };
-            this.salaryComponentValue = {
-                "Base Salary": 0, HRA: 0, DA: 0,
-            };
-            this.dividingFactorType = -1;
-            this.dividingFactorValue = 30;
+            this.encashmentComponentList = [];
+            this.encashmentFormula = "";
             this.isNew = true;
         } else {
             this.name = this.data.leaveTypeName;
             this.leaveType = this.data.leaveType;
             this.color = this.data.color;
             this.leavesPerMonth = JSON.parse(this.data.assignedLeavesMonthWise);
-            this.salaryComponentValue = JSON.parse(this.data.salaryComponents);
-            this.dividingFactorValue = this.data.divisionFactor;
-            this.dividingFactorType = this.data.divisionFactorType;
+            this.encashmentComponentList = JSON.parse(this.data.encashmentComponentList);
             this.isNew = false;
+            this.encashmentFormula = this.data.encashmentFormula;
         }
-        this.activeComponentCount = 0;
-        this.salaryComponents.forEach((component) => {
-            this.activeComponentCount += this.salaryComponentValue[component] === 0 ? 0 : 1;
-        });
+        this.activeComponentCount = this.encashmentComponentList.length;
         this.months = Object.keys(this.leavesPerMonth);
     }
     closeColorList(event): void {
@@ -96,23 +88,19 @@ export class LeaveTypeDialog {
     }
     async saveData(event): Promise<void> {
         this.isSaving = true;
-        let counter: number = 0;
-        this.salaryComponents.forEach((component) => {
-            counter += this.salaryComponentValue[component] !== 0 ? 1 : 0;
-        });
+        let counter: number = this.encashmentComponentList.length;
         if (this.name.length === 0 || this.leaveType === -1 || this.color.length === 0) {
             alert("Please fill all the fields before saving the changes.");
         } else if (this.isEncFormulaVisible && counter === 0) {
-            alert("Please select at-least one salary component to save.");
-        } else if (this.isEncFormulaVisible && (this.dividingFactorType === -1 || this.dividingFactorValue === 0)) {
-            alert("Please select a valid division factor type / value.");
+            alert("Please insert at-least one encashment component before saving.");
+        } else if (this.isEncFormulaValid && (this.encashmentFormula === "" || !this.isEncFormulaValid)) {
+            alert("Please enter a valid encashment formula before saving.");
         } else {
+            // prettier-ignore
             event.data = {
-                isNew: this.isNew, leaveTypeName: this.name,
-                leaveType: this.leaveType, color: this.color,
-                assignedLeavesMonthWise: JSON.stringify(this.leavesPerMonth),
-                salaryComponents: JSON.stringify(this.salaryComponentValue),
-                divisionFactor: this.dividingFactorValue, divisionFactorType: this.dividingFactorType,
+                isNew: this.isNew, leaveTypeName: this.name,leaveType: this.leaveType,
+                color: this.color, assignedLeavesMonthWise: JSON.stringify(this.leavesPerMonth),
+                salaryComponents: JSON.stringify(this.encashmentComponentList), encashmentFormula: this.encashmentFormula,
             };
             event.data.id = !this.isNew ? this.data.id : -1;
             await this.save.emit(event.data);
@@ -127,24 +115,47 @@ export class LeaveTypeDialog {
         });
         this.isEncFormulaVisible = encCount == 0 ? false : true;
     }
-    enableComponent(event, salaryComponent): void {
-        this.activeComponentCount += this.salaryComponentValue[salaryComponent] == 0 ? 1 : -1;
-        this.salaryComponentValue[salaryComponent] = this.salaryComponentValue[salaryComponent] == 0 ? 1 : 0;
+    insertComponent(event, encashmentComponent): void {
+        this.encashmentComponentList.push(encashmentComponent);
     }
-    getFormula(): string {
-        let formula: string = "(";
-        this.salaryComponents.forEach((component, index) => {
-            if (this.salaryComponentValue[component] !== 0) {
-                formula +=
-                    (index == 0 ? (this.salaryComponentValue[component] === -1 ? " - " : " ") : this.salaryComponentValue[component] === 1 ? " + " : " - ");
-                formula += component;
-            }
+    addComponent(event): void {
+        this.componentName = this.componentName.toLowerCase();
+        if (this.componentName !== "" && this.encashmentComponentList.indexOf(this.componentName) == -1) {
+            this.encashmentComponentList.push(this.componentName.toLocaleUpperCase());
+        }
+        this.componentName = "";
+        this.activeComponentCount = this.encashmentComponentList.length;
+    }
+    removeComponent(event, component): void {
+        const index: number = this.encashmentComponentList.indexOf(component);
+        if (index > -1) {
+            this.encashmentComponentList.splice(index, 1);
+        }
+        this.activeComponentCount = this.encashmentComponentList.length;
+        this.encashmentFormula = "";
+        this.isEncFormulaValid = true;
+    }
+    updateEncashmentFormula(event, component): void {
+        let currentEncashmentList = this.encashmentFormula.split(" ");
+        if (component === -1) {
+            currentEncashmentList.pop();
+        } else {
+            currentEncashmentList.push(component);
+        }
+        this.encashmentFormula = "";
+        let parseAbleString: string = "";
+        currentEncashmentList.map((encComponent, index) => {
+            this.encashmentFormula += encComponent + (index === currentEncashmentList.length - 1 ? "" : " ");
+            parseAbleString +=
+                (this.encashmentComponentList.indexOf(encComponent) > -1 && encComponent !== "" ? "1" : encComponent) +
+                (index === currentEncashmentList.length - 1 ? "" : " ");
         });
-        formula += ` ) / ${this.dividingFactorValue}`;
-        return formula;
-    }
-    updateDFType(event): void {
-        this.dividingFactorType = parseInt(event.target.value);
+        try {
+            eval(parseAbleString);
+            this.isEncFormulaValid = true;
+        } catch (err) {
+            this.isEncFormulaValid = false;
+        }
     }
     checkInput(event): void {
         event.target.value = isNaN(parseInt(event.target.value)) ? "0" : parseInt(event.target.value) < 0 ? "0" : parseInt(event.target.value).toString();

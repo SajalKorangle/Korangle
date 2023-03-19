@@ -36,21 +36,12 @@ class SchoolLeaveType(models.Model):
     assignedLeavesMonthWise = models.TextField(
         null=False, verbose_name='Leaves Vs Month', default='{}')
 
-    # Active Salary Components (!0 - active, 0 - inactive)
-    # JSON encoded map with 3 keys (Base Salary, HRA, DA)
-    # if any component is greater than 0 then it is additive
-    # else if it is less than 0 it is deductive
-    # and equal to zero means it is inactive
-    salaryComponents = models.TextField(
-        null=False, verbose_name='Leaves Vs Month', default='{}')
-
-    # division Factor
-    divisionFactor = models.IntegerField(null = False, default = 1)
-
-    # division Factor type
-    # 0 -> Total Number of days in month
-    divisionFactorType = models.IntegerField(null = False, default = 0)
-
+    # List of components to be used while calculating encashment
+    salaryComponentList = models.TextField(
+        null=False, verbose_name='Leaves Vs Month', default='[]')
+    # encashment Formula
+    encashmentFormula = models.TextField(null=False, verbose_name='Encashment Formula', default='')
+    
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']
 
