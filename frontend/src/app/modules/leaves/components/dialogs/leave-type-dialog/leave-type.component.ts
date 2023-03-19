@@ -98,7 +98,7 @@ export class LeaveTypeDialog {
         } else {
             // prettier-ignore
             event.data = {
-                isNew: this.isNew, leaveTypeName: this.name,leaveType: this.leaveType,
+                isNew: this.isNew, leaveTypeName: this.name, leaveType: this.leaveType,
                 color: this.color, assignedLeavesMonthWise: JSON.stringify(this.leavesPerMonth),
                 salaryComponents: JSON.stringify(this.encashmentComponentList), encashmentFormula: this.encashmentFormula,
             };
