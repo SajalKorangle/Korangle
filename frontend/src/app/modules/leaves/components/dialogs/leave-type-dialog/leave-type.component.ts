@@ -27,22 +27,15 @@ export class LeaveTypeDialog {
     ];
     isColorListVisible: boolean = false;
     isNoteVisible: boolean = false;
-    isSalaryComponentSelectorVisible: boolean = false;
-    activeComponentCount: number = 0;
-    salaryComponents: Array<string> = ["Base Salary", "HRA", "DA"];
     months: Array<string> = [];
     isSaving: boolean = false;
     isNew: boolean = false;
     isEncFormulaVisible: boolean = false;
-    isEncFormulaValid: boolean = true;
     // data variables
-    componentName: string = "";
     name: string = "";
     leaveType: number = -1;
     color: string = "";
     leavesPerMonth: MonthVsLeaves;
-    encashmentComponentList: Array<string> = [];
-    encashmentFormula: string = "";
     // Initialize Data
     ngOnInit() {
         if (JSON.stringify(this.data) === "{}" || !JSON.stringify(this.data).length) {
@@ -50,7 +43,6 @@ export class LeaveTypeDialog {
             this.leaveType = -1;
             this.color = "";
             this.isColorListVisible = false;
-            this.isSalaryComponentSelectorVisible = false;
             // prettier-ignore
             this.leavesPerMonth = {
                 jan: [0, 0], feb: [0, 0], mar: [0, 0],
@@ -58,28 +50,25 @@ export class LeaveTypeDialog {
                 jul: [0, 0], aug: [0, 0], sep: [0, 0],
                 oct: [0, 0], nov: [0, 0], dec: [0, 0],
             };
-            this.encashmentComponentList = [];
-            this.encashmentFormula = "";
             this.isNew = true;
         } else {
             this.name = this.data.leaveTypeName;
             this.leaveType = this.data.leaveType;
             this.color = this.data.color;
             this.leavesPerMonth = JSON.parse(this.data.assignedLeavesMonthWise);
-            this.encashmentComponentList = JSON.parse(this.data.encashmentComponentList);
             this.isNew = false;
-            this.encashmentFormula = this.data.encashmentFormula;
+            let encCount: number = 0;
+            Object.keys(this.leavesPerMonth).map((month) => {
+                encCount += this.leavesPerMonth[month][1] === 2 ? 1 : 0;
+            });
+            this.isEncFormulaVisible = encCount == 0 ? false : true;
         }
-        this.activeComponentCount = this.encashmentComponentList.length;
         this.months = Object.keys(this.leavesPerMonth);
     }
     closeColorList(event): void {
         const classNames = event.target.className.split(" ");
         if (this.isColorListVisible && classNames[0] !== "colorSelector") {
             this.isColorListVisible = false;
-        }
-        if (this.isSalaryComponentSelectorVisible && classNames[0] !== "componentSelector") {
-            this.isSalaryComponentSelectorVisible = false;
         }
     }
     updateColor(event, colorCode): void {
@@ -88,19 +77,13 @@ export class LeaveTypeDialog {
     }
     async saveData(event): Promise<void> {
         this.isSaving = true;
-        let counter: number = this.encashmentComponentList.length;
         if (this.name.length === 0 || this.leaveType === -1 || this.color.length === 0) {
             alert("Please fill all the fields before saving the changes.");
-        } else if (this.isEncFormulaVisible && counter === 0) {
-            alert("Please insert at-least one encashment component before saving.");
-        } else if (this.isEncFormulaVisible && (this.encashmentFormula === "" || !this.isEncFormulaValid)) {
-            alert("Please enter a valid encashment formula before saving.");
         } else {
             // prettier-ignore
             event.data = {
                 isNew: this.isNew, leaveTypeName: this.name, leaveType: this.leaveType,
                 color: this.color, assignedLeavesMonthWise: JSON.stringify(this.leavesPerMonth),
-                salaryComponents: JSON.stringify(this.encashmentComponentList), encashmentFormula: this.encashmentFormula,
             };
             event.data.id = !this.isNew ? this.data.id : -1;
             await this.save.emit(event.data);
@@ -113,62 +96,7 @@ export class LeaveTypeDialog {
         Object.keys(this.leavesPerMonth).map((month) => {
             encCount += this.leavesPerMonth[month][1] === 2 ? 1 : 0;
         });
-        this.isEncFormulaVisible = encCount === 0 ? false : true;
-        if (!this.isEncFormulaVisible) {
-            this.encashmentComponentList = [];
-            this.encashmentFormula = "";
-            this.activeComponentCount = 0;
-            this.isEncFormulaValid = true;
-        }
-    }
-    insertComponent(event, encashmentComponent): void {
-        this.encashmentComponentList.push(encashmentComponent);
-    }
-    addComponent(event): void {
-        this.componentName = this.componentName.toLowerCase();
-        if (this.componentName.split(" ").length !== 1) {
-            let tempComponent = "";
-            this.componentName.split(" ").map((subComponent, index) => {
-                tempComponent += subComponent + (index === this.componentName.split(" ").length - 1 ? "" : "_");
-            });
-            this.componentName = tempComponent;
-        }
-        if (this.componentName !== "" && this.encashmentComponentList.indexOf(this.componentName) == -1) {
-            this.encashmentComponentList.push(this.componentName.toLocaleUpperCase());
-        }
-        this.componentName = "";
-        this.activeComponentCount = this.encashmentComponentList.length;
-    }
-    removeComponent(event, component): void {
-        const index: number = this.encashmentComponentList.indexOf(component);
-        if (index > -1) {
-            this.encashmentComponentList.splice(index, 1);
-        }
-        this.activeComponentCount = this.encashmentComponentList.length;
-        this.encashmentFormula = "";
-        this.isEncFormulaValid = true;
-    }
-    updateEncashmentFormula(event, component): void {
-        let currentEncashmentList = this.encashmentFormula.split(" ");
-        if (component === -1) {
-            currentEncashmentList.pop();
-        } else {
-            currentEncashmentList.push(component);
-        }
-        this.encashmentFormula = "";
-        let parseAbleString: string = "";
-        currentEncashmentList.map((encComponent, index) => {
-            this.encashmentFormula += encComponent + (index === currentEncashmentList.length - 1 ? "" : " ");
-            parseAbleString +=
-                (this.encashmentComponentList.indexOf(encComponent) > -1 && encComponent !== "" ? "1" : encComponent) +
-                (index === currentEncashmentList.length - 1 ? "" : " ");
-        });
-        try {
-            eval(parseAbleString);
-            this.isEncFormulaValid = true;
-        } catch (err) {
-            this.isEncFormulaValid = false;
-        }
+        this.isEncFormulaVisible = encCount == 0 ? false : true;
     }
     checkInput(event): void {
         event.target.value = isNaN(parseInt(event.target.value)) ? "0" : parseInt(event.target.value) < 0 ? "0" : parseInt(event.target.value).toString();

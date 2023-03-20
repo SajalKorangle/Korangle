@@ -35,12 +35,6 @@ class SchoolLeaveType(models.Model):
     # leaves type       : CFW, Lapse, ENC (will these be accumulated or not)
     assignedLeavesMonthWise = models.TextField(
         null=False, verbose_name='Leaves Vs Month', default='{}')
-
-    # List of components to be used while calculating encashment
-    salaryComponentList = models.TextField(
-        null=False, verbose_name='Leaves Vs Month', default='[]')
-    # encashment Formula
-    encashmentFormula = models.TextField(null=False, verbose_name='Encashment Formula', default='')
     
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']
