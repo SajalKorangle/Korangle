@@ -1,3 +1,5 @@
+import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
+import { PurchaseSmsDialogEasebuzzComponent } from './components/purchase-sms-dialog-easebuzz/purchase-sms-dialog-easebuzz.component';
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 
 import {ClassService} from '../../../../services/modules/class/class.service';
@@ -16,7 +18,6 @@ import {InformationService} from '@services/modules/information/information.serv
 
 import { MatDialog } from '@angular/material';
 
-import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
 
 import { CommonFunctions } from '@classes/common-functions';
 @Component({
@@ -404,11 +405,19 @@ export class SendSmsComponent implements OnInit {
     }
 
     openPurchaseSMSDialog(): void {
-        this.dialog.open(PurchaseSmsDialogComponent, {
-            data: {
-                vm: this,
-            }
-        });
+        if (DataStorage.getInstance().isFeatureEnabled("Easebuzz Online Payment Gateway Feature Flag")) {
+            this.dialog.open(PurchaseSmsDialogEasebuzzComponent, {
+                data: {
+                    vm: this,
+                }
+            });
+        } else {
+            this.dialog.open(PurchaseSmsDialogComponent, {
+                data: {
+                    vm: this,
+                }
+            });
+        }
     }
 
 }
