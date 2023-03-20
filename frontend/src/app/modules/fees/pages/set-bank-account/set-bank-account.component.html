@@ -84,10 +84,10 @@
         <!--Personal Information Ends-->
 
         <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}" type="submit"
-            [disabled]="this.htmlRenderer.isUpdateButtonDisabled()">
+            [disabled]="htmlRenderer.isUpdateButtonDisabled()">
             {{schoolMerchantAccount.id?'Update':'Submit'}}
         </button>
-        <br /><span *ngIf="errorMessage">{{errorMessage}}</span>
+        <br /><span *ngIf="htmlRenderer.isUpdateButtonDisabled() && errorMessage">{{errorMessage}}</span>
     </form>
 </div>
 
