@@ -1,7 +1,51 @@
 <div class="card-content" *ngIf="!isLoading">
     <div class="navBar">
         <div class="title">Leave Plans -</div>
-        <div *ngIf="isLeavePlanOpen" class="navBtn">Go back</div>
+        <div *ngIf="isLeavePlanOpen" class="navBtn" (click)="isLeavePlanOpen = false; currentLeavePlan = {}">Go back</div>
+    </div>
+    <div class="Row" *ngIf="!isLeavePlanOpen">
+        <mat-card *ngFor="let leavePlan of leavePlanList" style="margin-top: 10px">
+            <mat-card-content>
+                <span class="matCardContentModifiedFlex" (click)="isLeavePlanOpen = true; currentLeavePlan = leavePlan" style="cursor: pointer">
+                    <span>{{ leavePlan.leavePlanName }}</span>
+                    <span class="material-icons-outlined"> navigate_next </span>
+                </span>
+            </mat-card-content>
+        </mat-card>
+        <mat-card *ngIf="!leavePlanList.length && !isAddNewOpen" style="margin-top: 10px">
+            <mat-card-content>
+                <span class="matCardContentModifiedFlex">
+                    <span>No Leave Plan Available</span>
+                    <span class="material-icons-outlined"> navigate_next </span>
+                </span>
+            </mat-card-content>
+        </mat-card>
+        <mat-card *ngIf="isAddNewOpen" style="margin-top: 10px">
+            <mat-card-content>
+                <span class="matCardContentAddNew">
+                    <span style="flex-grow: 1"
+                        ><input
+                            style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.25)"
+                            placeholder="Enter leave plan name"
+                            [(ngModel)]="leavePlanName"
+                    /></span>
+                    <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: green" (click)="savePlan()"> check </span>
+                    <span
+                        class="material-icons-outlined"
+                        style="width: fit; padding: 8px; cursor: pointer; color: red"
+                        (click)="isAddNewOpen = false; leavePlanName = ''"
+                    >
+                        clear
+                    </span>
+                </span>
+            </mat-card-content>
+        </mat-card>
+        <div style="padding-top: 20px">
+            <button (click)="isAddNewOpen = true" class="addBtn" [disabled]="isAddNewOpen">
+                <span class="material-icons" style="font-size: large">add</span>
+                <span style="margin-left: 8px">Add Plan</span>
+            </button>
+        </div>
     </div>
 </div>
 

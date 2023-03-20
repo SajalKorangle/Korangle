@@ -1,7 +1,19 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined");
 .navBar {
     width: 100%;
     padding: 8px;
     display: flex;
+    justify-content: space-between;
+}
+.Row {
+    width: 100%;
+    padding: 8px;
+}
+.matCardContentModifiedFlex {
+    font-size: medium;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
     justify-content: space-between;
 }
 .title {
@@ -11,4 +23,23 @@
 .navBtn {
     text-decoration: underline;
     font-size: medium;
+    cursor: pointer;
+}
+.matCardContentAddNew {
+    font-size: medium;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+}
+.addBtn {
+    border-radius: 5px;
+    padding: 12px 24px 12px 24px;
+    font-size: medium;
+    color: #ffffff;
+    background: #fd9700;
+    box-shadow: none;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
