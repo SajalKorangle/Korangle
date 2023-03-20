@@ -15,15 +15,20 @@ export default class ManageTypeServiceAdapter {
         this.vm.isLoading = true;
         if (operation === "insert" || operation === "update") {
             this.vm.leaveTypeList = await this.vm.genericService.getObjectList({ leaves_app: "SchoolLeaveType" }, {});
-            const similarObject = this.vm.leaveTypeList.find((leaveType) => {
+            const similarObjectList = this.vm.leaveTypeList.filter((leaveType) => {
                 return (
-                    leaveType.leaveTypeName.toString().toLowerCase() === data.leaveTypeName.toString().toLowerCase() ||
-                    leaveType.color.toString().toLowerCase() === data.color.toString().toLowerCase()
+                    data.id != leaveType.id &&
+                    (leaveType.leaveTypeName.toString().toLowerCase() === data.leaveTypeName.toString().toLowerCase() ||
+                        leaveType.color.toString().toLowerCase() === data.color.toString().toLowerCase())
                 );
             });
-            if (similarObject !== undefined && similarObject !== null) {
-                const isNameSame: boolean = similarObject.leaveTypeName.toString().toLowerCase() === data.leaveTypeName.toString().toLowerCase();
-                const isColorSame: boolean = similarObject.color.toString().toLowerCase() === data.color.toString().toLowerCase();
+            if (similarObjectList.length != 0) {
+                let isNameSame: boolean = false;
+                let isColorSame: boolean = false;
+                similarObjectList.map((similarObject) => {
+                    isNameSame = isNameSame || similarObject.leaveTypeName.toString().toLowerCase() === data.leaveTypeName.toString().toLowerCase();
+                    isColorSame = isColorSame || similarObject.color.toString().toLowerCase() === data.color.toString().toLowerCase();
+                });
                 alert(`${isNameSame ? "Name" : ""}${isColorSame ? (isNameSame ? " and Color" : "Color") : ""} already exists!`);
                 this.vm.isLoading = false;
                 return null;
