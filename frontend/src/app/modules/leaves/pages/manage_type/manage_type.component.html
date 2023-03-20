@@ -79,7 +79,26 @@
                 </div>
             </div>
         </div>
-        <!-- Ends :- Table -->
+        <!-- Ends :- Table-1 -->
+
+        <!-- Starts :- Table-2 (to display a message that data is not present) -->
+        <div *ngIf="!leaveTypeList.length">
+            <table class="leave-type-table">
+                <!-- Starts :- Table Heading -->
+                <tr>
+                    <th class="tableHeading">Name</th>
+                    <th class="tableHeading">Leave Type</th>
+                    <th class="tableHeading"></th>
+                    <th class="tableHeading"></th>
+                </tr>
+                <!-- Ends :- Table Heading -->
+            </table>
+
+            <!-- Starts :- Message (to show that the data is not present) -->
+            <span style="color: rgba(0, 0, 0, 0.5)">No Type Available Currently</span>
+            <!-- Ends :- Message -->
+        </div>
+        <!-- Ends :- Table-2 -->
 
         <!-- Starts :- Button (to add new type) -->
         <div class="add-new-type-container">
@@ -97,7 +116,7 @@
         <!-- Ends :- Modal -->
     </div>
     <!-- Ends :- Main Page -->
-
+    
     <!-- Starts :- Spinner (to be displayed when the data is being loaded) -->
     <div *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>

@@ -50,7 +50,7 @@
             </div>
             <div class="modalRowItem" style="width: 60%">
                 <div class="modalColItem">
-                    <input class="modalInput" [(ngModel)]="name" [value]="name" placeholder="CL" />
+                    <input class="modalInput" [(ngModel)]="name" [value]="name" placeholder="eg. CL" />
                 </div>
             </div>
             <!-- Ends :- Input Field -->
@@ -68,7 +68,10 @@
                 <div class="modalColItem">
                     <!-- Starts :- Button to activate drop-down -->
                     <span class="colorSelector" (click)="isColorListVisible = !isColorListVisible">
-                        <span id="colorIndicator" class="colorSelector modalInput" [ngStyle]="{ backgroundColor: color === '' ? '#ffffff' : color }"
+                        <span
+                            id="colorIndicator"
+                            class="colorSelector modalInput"
+                            [ngStyle]="{ backgroundColor: color === '' ? '#ffffff' : color }"
                             style="cursor: pointer; width: 100%; display: flex; flex-direction: row; justify-content: space-between"
                         >
                             <div class="colorSelector">
@@ -81,7 +84,10 @@
 
                     <!-- Starts :- Drop-down color selector -->
                     <div *ngIf="isColorListVisible" class="modalOptionsContainer">
-                        <div *ngFor="let colorCode of colorCodeList" (click)="updateColor($event, colorCode)" [ngStyle]="{ background: colorCode }"
+                        <div
+                            *ngFor="let colorCode of colorCodeList"
+                            (click)="updateColor($event, colorCode)"
+                            [ngStyle]="{ background: colorCode, border: color === colorCode ? '1px solid black' : 'none' }"
                             style="width: 10%; height: 25px; margin-top: 2.5px; margin-bottom: 2.5px; border-radius: 2px; cursor: pointer"
                         ></div>
                     </div>
@@ -117,15 +123,15 @@
                 </div>
                 <div class="modalRowItem" style="width: 100px; padding-left: 5px; padding-right: 5px">
                     <div class="modalColItem" style="text-align: left">
-                        <input class="modalInput" type="number" min="0" [(ngModel)]="leavesPerMonth[month][0]" />
+                        <input class="modalInput" (keyup)="checkInput($event)" type="number" min="0" [(ngModel)]="leavesPerMonth[month][0]" />
                     </div>
                 </div>
-                <div class="modalRowItem" style="width: 100px; padding-left: 5px; padding-right: 5px">
+                <div class="modalRowItem" style="max-width: 250px; flex-grow: 1; padding-left: 5px; padding-right: 5px">
                     <div class="modalColItem" style="text-align: left">
                         <select (change)="updateLeaves($event, month)" class="modalInput">
-                            <option value="0" [selected]="leavesPerMonth[month][1] == 0">CFW</option>
+                            <option value="0" [selected]="leavesPerMonth[month][1] == 0">CFW (Carry-forward)</option>
                             <option value="1" [selected]="leavesPerMonth[month][1] == 1">Lapse</option>
-                            <option value="2" [selected]="leavesPerMonth[month][1] == 2">ENC</option>
+                            <option value="2" [selected]="leavesPerMonth[month][1] == 2">ENC (Encashed)</option>
                         </select>
                     </div>
                 </div>
@@ -133,9 +139,14 @@
             <div class="modalRow">
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
-                        <div (click)="isNoteVisible = !isNoteVisible" class="modalNote"
-                            [ngStyle]="{ cursor: 'pointer', display: !isNoteVisible ? 'inline-block' : 'block',
-                                whiteSpace: !isNoteVisible ? 'nowrap' : 'normal'}"
+                        <div
+                            (click)="isNoteVisible = !isNoteVisible"
+                            class="modalNote"
+                            [ngStyle]="{
+                                cursor: 'pointer',
+                                display: !isNoteVisible ? 'inline-block' : 'block',
+                                whiteSpace: !isNoteVisible ? 'nowrap' : 'normal'
+                            }"
                         >
                             Note - Policies are applicable for the next month. CFW for January will decide if leaves will be carry-forwarded from January to
                             February
@@ -150,7 +161,7 @@
             <!-- Ends :- Horizontal Break -->
 
             <!-- Starts :- Set Encashments Formula -->
-            <div class="modalRow">
+            <div class="modalRow" *ngIf="isEncFormulaVisible">
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
                         <span class="modalTitle" style="text-overflow: ellipsis; overflow: hidden; display: inline-block; white-space: nowrap"
@@ -159,108 +170,18 @@
                     </div>
                 </div>
             </div>
-            <div class="modalRow">
-                <div class="modalRowItem" style="width: 40%">
+
+            <div class="modalRow" *ngIf="isEncFormulaVisible">
+                <div class="modalRowItem" style="flex-grow: 1">
                     <div class="modalColItem">
-                        <span class="modalLabel">Select Salary Components</span>
-                    </div>
-                </div>
-                <div class="componentSelector modalRowItem" style="width: 60%">
-                    <div class="componentSelector modalColItem">
-                        <div class="componentSelector modalInput" (click)="isSalaryComponentSelectorVisible = !isSalaryComponentSelectorVisible"
-                            style="cursor: pointer; width: 100%; display: flex; flex-direction: row; justify-content: space-between"
-                        >
-                            <div class="componentSelector">{{ activeComponentCount > 0 ? "SELECTED " + activeComponentCount : "SELECT" }}</div>
-                            <div class="componentSelector material-icons">arrow_drop_down</div>
-                        </div>
-                        <div *ngIf="isSalaryComponentSelectorVisible" class="componentSelector modalOptionsContainer" style="height: 80px; margin-top: 130px">
-                            <div class="componentSelector" (click)="enableComponent($event, salaryComponent)" *ngFor="let salaryComponent of salaryComponents"
-                                style="width: 100%; display: flex; flex-direction: row; cursor: pointer"
-                            >
-                                <span class="componentSelector"
-                                    style="height: 25px; display: flex; flex-direction: column; justify-content: center; text-align: center"
-                                >
-                                    <input class="componentSelector" type="checkbox" aria-label="select" style="border-radius: 2px"
-                                        [checked]="salaryComponentValue[salaryComponent] != 0"
-                                    />
-                                </span>
-                                <span class="componentSelector"
-                                    style="height: 25px; display: flex; flex-direction: column; justify-content: center; flex-grow: 1; text-align: center"
-                                    >{{ salaryComponent }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modalRow" *ngIf="activeComponentCount > 0">
-                <div *ngFor="let salaryComponent of salaryComponents" class="modalRowItem" style="width: 100%"
-                    [ngStyle]="{ minHeight: salaryComponentValue[salaryComponent] !== 0 ? '36px' : '0px' }"
-                >
-                    <div class="modalRowItem" *ngIf="salaryComponentValue[salaryComponent] !== 0" style="width: 100%">
-                        <div class="modalColItem" style="width: 40%">
-                            <span class="modalLabel">{{ salaryComponent }}</span>
-                        </div>
-                        <div class="modalColItem" style="width: 60%">
-                            <div style="display: flex; flex-direction: row; flex-wrap: nowrap; width: 100%; justify-content: space-evenly">
-                                <span (click)="salaryComponentValue[salaryComponent] = 1"
-                                    style="flex-grow: 1; display: flex; overflow: hidden; flex-wrap: nowrap; justify-content: space-evenly"
-                                    ><span style="height: 100%; display: flex; flex-direction: column; justify-content: center"
-                                        ><input type="radio" class="modalRadio" [checked]="salaryComponentValue[salaryComponent] === 1"
-                                            (click)="salaryComponentValue[salaryComponent] = 1" /></span
-                                    ><span style="height: 100%; display: flex; flex-direction: column; justify-content: center">Additive</span></span
-                                >
-                                <span (click)="salaryComponentValue[salaryComponent] = -1"
-                                    style="flex-grow: 1; display: flex; overflow: hidden; flex-wrap: nowrap; justify-content: space-evenly"
-                                    ><span style="height: 100%; display: flex; flex-direction: column; justify-content: center"
-                                        ><input type="radio" class="modalRadio" [checked]="salaryComponentValue[salaryComponent] === -1"
-                                            (click)="salaryComponentValue[salaryComponent] = -1" /></span
-                                    ><span style="height: 100%; display: flex; flex-direction: column; justify-content: center">Deductive</span></span
-                                >
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modalRow" *ngIf="activeComponentCount !== 0">
-                <div class="modalRowItem" style="width: 40%">
-                    <div class="modalColItem">
-                        <span class="modalLabel">Select dividing factor</span>
-                    </div>
-                </div>
-                <div class="modalRowItem" style="width: 30%">
-                    <div class="modalColItem">
-                        <select (change)="updateDFType($event)" class="modalInput"
-                            style="display: inline-block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis"
-                        >
-                            <option value="-1" [selected]="dividingFactorType === -1">Select</option>
-                            <option value="0" [selected]="dividingFactorType === 0">Total number of days in month</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modalRowItem" style="width: 30%">
-                    <div class="modalColItem">
-                        <input class="modalInput" min="1" type="number" [(ngModel)]="dividingFactorValue" [disabled]="dividingFactorType === -1" />
-                    </div>
-                </div>
-            </div>
-            <div class="modalRow" *ngIf="activeComponentCount !== 0">
-                <div class="modalRowItem" style="width: 100%">
-                    <div class="modalColItem">
-                        <span class="modalNote">Formula - {{ dividingFactorType !== -1 ? getFormula() : "please select a division factor" }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="modalRow" *ngIf="activeComponentCount === 0">
-                <div class="modalRowItem" style="width: 100%">
-                    <div class="modalColItem">
-                        <span class="modalNote">Select a component to generate the formula</span>
+                        Under Construction.
                     </div>
                 </div>
             </div>
             <!-- Ends :- Set Encashments Formula -->
 
             <!-- Starts :- Horizontal Break -->
-            <div class="modalBreakLine"></div>
+            <div class="modalBreakLine" *ngIf="isEncFormulaVisible"></div>
             <!-- Ends :- Horizontal Break -->
 
             <!-- Starts :- Buttons to Close / Save the form -->

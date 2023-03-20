@@ -1,9 +1,8 @@
 from django.db import models
 from school_app.model.models import School
 from django.contrib.auth import get_user_model
+from django.contrib.postgres.fields import CITextField
 from common.common import BasePermission
-from django.contrib.postgres.fields import ArrayField
-
 User = get_user_model()
 
 # Create your models here.
@@ -13,7 +12,7 @@ class SchoolLeaveType(models.Model):
 
     # Leave Type Title
     # if name is invalid_type then it will not be considered
-    leaveTypeName = models.TextField(
+    leaveTypeName = CITextField(
         null=False, verbose_name='leave_name', default='invalid_type')
 
     # Leave Paid Status
@@ -36,28 +35,13 @@ class SchoolLeaveType(models.Model):
     # leaves type       : CFW, Lapse, ENC (will these be accumulated or not)
     assignedLeavesMonthWise = models.TextField(
         null=False, verbose_name='Leaves Vs Month', default='{}')
-
-    # Active Salary Components (!0 - active, 0 - inactive)
-    # JSON encoded map with 3 keys (Base Salary, HRA, DA)
-    # if any component is greater than 0 then it is additive
-    # else if it is less than 0 it is deductive
-    # and equal to zero means it is inactive
-    salaryComponents = models.TextField(
-        null=False, verbose_name='Leaves Vs Month', default='{}')
-
-    # division Factor
-    divisionFactor = models.IntegerField(null = False, default = 1)
-
-    # division Factor type
-    # 0 -> Total Number of days in month
-    divisionFactorType = models.IntegerField(null = False, default = 0)
-
+    
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']
 
     class Meta:
         db_table = 'school_leave_type'
-        unique_together = (("leaveTypeName", "parentSchool", ))
+        unique_together = (("leaveTypeName", "parentSchool", ), ("color", "parentSchool"))
 
 class SchoolLeavePlan(models.Model):
     # name for leave plan

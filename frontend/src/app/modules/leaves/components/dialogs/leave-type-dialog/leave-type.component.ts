@@ -27,22 +27,15 @@ export class LeaveTypeDialog {
     ];
     isColorListVisible: boolean = false;
     isNoteVisible: boolean = false;
-    isSalaryComponentSelectorVisible: boolean = false;
-    activeComponentCount: number = 0;
-    salaryComponents: Array<string> = ["Base Salary", "HRA", "DA"];
     months: Array<string> = [];
     isSaving: boolean = false;
     isNew: boolean = false;
+    isEncFormulaVisible: boolean = false;
     // data variables
     name: string = "";
     leaveType: number = -1;
     color: string = "";
     leavesPerMonth: MonthVsLeaves;
-    salaryComponentValue: { [id: string]: number } = {
-        "Base Salary": 0, HRA: 0, DA: 0,
-    };
-    dividingFactorType: number = -1;
-    dividingFactorValue: number = 30;
     // Initialize Data
     ngOnInit() {
         if (JSON.stringify(this.data) === "{}" || !JSON.stringify(this.data).length) {
@@ -50,40 +43,32 @@ export class LeaveTypeDialog {
             this.leaveType = -1;
             this.color = "";
             this.isColorListVisible = false;
-            this.isSalaryComponentSelectorVisible = false;
+            // prettier-ignore
             this.leavesPerMonth = {
-                jan: [0, 0], feb: [0, 0], mar: [0, 0], apr: [0, 0], may: [0, 0], jun: [0, 0],
-                jul: [0, 0], aug: [0, 0], sep: [0, 0], oct: [0, 0], nov: [0, 0], dec: [0, 0],
+                jan: [0, 0], feb: [0, 0], mar: [0, 0],
+                apr: [0, 0], may: [0, 0], jun: [0, 0],
+                jul: [0, 0], aug: [0, 0], sep: [0, 0],
+                oct: [0, 0], nov: [0, 0], dec: [0, 0],
             };
-            this.salaryComponentValue = {
-                "Base Salary": 0, HRA: 0, DA: 0,
-            };
-            this.dividingFactorType = -1;
-            this.dividingFactorValue = 30;
             this.isNew = true;
         } else {
             this.name = this.data.leaveTypeName;
             this.leaveType = this.data.leaveType;
             this.color = this.data.color;
             this.leavesPerMonth = JSON.parse(this.data.assignedLeavesMonthWise);
-            this.salaryComponentValue = JSON.parse(this.data.salaryComponents);
-            this.dividingFactorValue = this.data.divisionFactor;
-            this.dividingFactorType = this.data.divisionFactorType;
             this.isNew = false;
+            let encCount: number = 0;
+            Object.keys(this.leavesPerMonth).map((month) => {
+                encCount += this.leavesPerMonth[month][1] === 2 ? 1 : 0;
+            });
+            this.isEncFormulaVisible = encCount == 0 ? false : true;
         }
-        this.activeComponentCount = 0;
-        this.salaryComponents.forEach((component) => {
-            this.activeComponentCount += this.salaryComponentValue[component] === 0 ? 0 : 1;
-        });
         this.months = Object.keys(this.leavesPerMonth);
     }
     closeColorList(event): void {
         const classNames = event.target.className.split(" ");
         if (this.isColorListVisible && classNames[0] !== "colorSelector") {
             this.isColorListVisible = false;
-        }
-        if (this.isSalaryComponentSelectorVisible && classNames[0] !== "componentSelector") {
-            this.isSalaryComponentSelectorVisible = false;
         }
     }
     updateColor(event, colorCode): void {
@@ -92,22 +77,13 @@ export class LeaveTypeDialog {
     }
     async saveData(event): Promise<void> {
         this.isSaving = true;
-        let counter: number = 0;
-        this.salaryComponents.forEach((component) => {
-            counter += this.salaryComponentValue[component] !== 0 ? 1 : 0;
-        });
         if (this.name.length === 0 || this.leaveType === -1 || this.color.length === 0) {
             alert("Please fill all the fields before saving the changes.");
-        } else if (counter === 0) {
-            alert("Please select at-least one salary component to save.");
-        } else if (this.dividingFactorType === -1 || this.dividingFactorValue === 0) {
-            alert("Please select a valid division factor type / value.");
         } else {
+            // prettier-ignore
             event.data = {
                 isNew: this.isNew, leaveTypeName: this.name, leaveType: this.leaveType,
                 color: this.color, assignedLeavesMonthWise: JSON.stringify(this.leavesPerMonth),
-                salaryComponents: JSON.stringify(this.salaryComponentValue), divisionFactor: this.dividingFactorValue,
-                divisionFactorType: this.dividingFactorType,
             };
             event.data.id = !this.isNew ? this.data.id : -1;
             await this.save.emit(event.data);
@@ -116,24 +92,13 @@ export class LeaveTypeDialog {
     }
     updateLeaves(event, month): void {
         this.leavesPerMonth[month][1] = parseInt(event.target.value);
-    }
-    enableComponent(event, salaryComponent): void {
-        this.activeComponentCount += this.salaryComponentValue[salaryComponent] == 0 ? 1 : -1;
-        this.salaryComponentValue[salaryComponent] = this.salaryComponentValue[salaryComponent] == 0 ? 1 : 0;
-    }
-    getFormula(): string {
-        let formula: string = "(";
-        this.salaryComponents.forEach((component, index) => {
-            if (this.salaryComponentValue[component] !== 0) {
-                formula +=
-                    index == 0 ? (this.salaryComponentValue[component] === -1 ? " - " : " ") : this.salaryComponentValue[component] === 1 ? " + " : " - ";
-                formula += component;
-            }
+        let encCount: number = 0;
+        Object.keys(this.leavesPerMonth).map((month) => {
+            encCount += this.leavesPerMonth[month][1] === 2 ? 1 : 0;
         });
-        formula += ` ) / ${this.dividingFactorValue}`;
-        return formula;
+        this.isEncFormulaVisible = encCount == 0 ? false : true;
     }
-    updateDFType(event): void {
-        this.dividingFactorType = parseInt(event.target.value);
+    checkInput(event): void {
+        event.target.value = isNaN(parseInt(event.target.value)) ? "0" : parseInt(event.target.value) < 0 ? "0" : parseInt(event.target.value).toString();
     }
 }
