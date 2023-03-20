@@ -93,7 +93,7 @@ export class LeaveTypeDialog {
             alert("Please fill all the fields before saving the changes.");
         } else if (this.isEncFormulaVisible && counter === 0) {
             alert("Please insert at-least one encashment component before saving.");
-        } else if (this.isEncFormulaValid && (this.encashmentFormula === "" || !this.isEncFormulaValid)) {
+        } else if (this.isEncFormulaVisible && (this.encashmentFormula === "" || !this.isEncFormulaValid)) {
             alert("Please enter a valid encashment formula before saving.");
         } else {
             // prettier-ignore
@@ -113,7 +113,13 @@ export class LeaveTypeDialog {
         Object.keys(this.leavesPerMonth).map((month) => {
             encCount += this.leavesPerMonth[month][1] === 2 ? 1 : 0;
         });
-        this.isEncFormulaVisible = encCount == 0 ? false : true;
+        this.isEncFormulaVisible = encCount === 0 ? false : true;
+        if (!this.isEncFormulaVisible) {
+            this.encashmentComponentList = [];
+            this.encashmentFormula = "";
+            this.activeComponentCount = 0;
+            this.isEncFormulaValid = true;
+        }
     }
     insertComponent(event, encashmentComponent): void {
         this.encashmentComponentList.push(encashmentComponent);
