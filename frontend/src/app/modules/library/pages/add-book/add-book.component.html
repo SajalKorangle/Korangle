@@ -16,7 +16,14 @@
 
                 <input type="file" (change)="onImageSelect($event, 'front')" multiple="false" style="display: none" accept="image/*" #imageInputFront />
 
-                <a (click)="imageInputFront.click()" style="cursor: pointer">Upload front image</a>
+                <!-- Front image controls - mobile -->
+                <div class="d-flex align-items-stretch">
+                    <a (click)="imageInputFront.click()" style="cursor: pointer">Upload front image</a>
+
+                    <a *ngIf="this.frontImage"
+                    style="cursor: pointer;" (click)="this.frontImage=''"
+                    ><mat-icon >delete_forever</mat-icon></a>
+                </div>
             </div>
 
             <!-- Top half form fields -->
@@ -97,7 +104,14 @@
                     #imageInputFrontTwo
                 />
 
-                <a (click)="imageInputFrontTwo.click()" style="cursor: pointer">Upload front image</a>
+                <!-- Front image controls -->
+                <div class="d-flex align-items-stretch">
+                    <a (click)="imageInputFrontTwo.click()" style="cursor: pointer">Upload front image</a>
+
+                    <a *ngIf="this.frontImage"
+                    style="cursor: pointer;" (click)="this.frontImage=''"
+                    ><mat-icon >delete_forever</mat-icon></a>
+                </div>
             </div>
         </div>
 
@@ -117,7 +131,14 @@
 
                 <input type="file" (change)="onImageSelect($event, 'back')" multiple="false" style="display: none" accept="image/*" #imageInputBack />
 
-                <a (click)="imageInputBack.click()" style="cursor: pointer">Upload back image</a>
+                <!-- Back image controls - mobile -->
+                <div class="d-flex align-items-stretch">
+                    <a (click)="imageInputBack.click()" style="cursor: pointer">Upload back image</a>
+
+                    <a *ngIf="this.backImage"
+                    style="cursor: pointer;" (click)="this.backImage=''"
+                    ><mat-icon >delete_forever</mat-icon></a>
+                </div>
             </div>
 
             <!-- Bottom half form fields -->
@@ -191,7 +212,14 @@
                     #imageInputBackTwo
                 />
 
-                <a (click)="imageInputBackTwo.click()" style="cursor: pointer">Upload back image</a>
+                <!-- Back image controls -->
+                <div class="d-flex align-items-stretch">
+                    <a (click)="imageInputBackTwo.click()" style="cursor: pointer">Upload back image</a>
+
+                    <a *ngIf="this.backImage"
+                    style="cursor: pointer;" (click)="this.backImage=''"
+                    ><mat-icon >delete_forever</mat-icon></a>
+                </div>
             </div>
         </div>
         <button
