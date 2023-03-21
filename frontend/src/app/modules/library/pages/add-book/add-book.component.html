@@ -14,9 +14,9 @@
 
                 <br />
 
-                <input type="file" (change)="onImageSelect($event, 'front')" multiple="false" style="display: none" accept="image/*" #imageInput />
+                <input type="file" (change)="onImageSelect($event, 'front')" multiple="false" style="display: none" accept="image/*" #imageInputFront />
 
-                <a (click)="imageInput.click()" style="cursor: pointer">Upload front image</a>
+                <a (click)="imageInputFront.click()" style="cursor: pointer">Upload front image</a>
             </div>
 
             <!-- Top half form fields -->
@@ -94,10 +94,10 @@
                     multiple="false"
                     style="display: none"
                     accept="image/*"
-                    #imageInputTwo
+                    #imageInputFrontTwo
                 />
 
-                <a (click)="imageInputTwo.click()" style="cursor: pointer">Upload front image</a>
+                <a (click)="imageInputFrontTwo.click()" style="cursor: pointer">Upload front image</a>
             </div>
         </div>
 
@@ -115,9 +115,9 @@
 
                 <br />
 
-                <input type="file" (change)="onImageSelect($event, 'back')" multiple="false" style="display: none" accept="image/*" #imageInput />
+                <input type="file" (change)="onImageSelect($event, 'back')" multiple="false" style="display: none" accept="image/*" #imageInputBack />
 
-                <a (click)="imageInput.click()" style="cursor: pointer">Upload back image</a>
+                <a (click)="imageInputBack.click()" style="cursor: pointer">Upload back image</a>
             </div>
 
             <!-- Bottom half form fields -->
@@ -188,10 +188,10 @@
                     multiple="false"
                     style="display: none"
                     accept="image/*"
-                    #imageInputTwo
+                    #imageInputBackTwo
                 />
 
-                <a (click)="imageInputTwo.click()" style="cursor: pointer">Upload back image</a>
+                <a (click)="imageInputBackTwo.click()" style="cursor: pointer">Upload back image</a>
             </div>
         </div>
         <button
