@@ -1,12 +1,12 @@
-<div class="card-content" *ngIf="!isLoading">
-    <div class="navBar">
+<div class="flexContainer" *ngIf="!isLoading">
+    <div class="navBar" style="height: fit-content">
         <div class="title">Leave Plans -</div>
-        <div *ngIf="isLeavePlanOpen" class="navBtn" (click)="isLeavePlanOpen = false; currentLeavePlan = {}">Go back</div>
+        <div *ngIf="isLeavePlanOpen" class="navBtn" (click)="resetComponent()">Go back</div>
     </div>
-    <div class="Row" *ngIf="!isLeavePlanOpen">
+    <div class="Row" style="flex-grow: 1" *ngIf="!isLeavePlanOpen">
         <mat-card *ngFor="let leavePlan of leavePlanList" style="margin-top: 10px">
             <mat-card-content>
-                <span class="matCardContentModifiedFlex" (click)="isLeavePlanOpen = true; currentLeavePlan = leavePlan" style="cursor: pointer">
+                <span class="matCardContentModifiedFlex" (click)="setPlan(leavePlan)" style="cursor: pointer">
                     <span>{{ leavePlan.leavePlanName }}</span>
                     <span class="material-icons-outlined"> navigate_next </span>
                 </span>
@@ -30,22 +30,51 @@
                             [(ngModel)]="leavePlanName"
                     /></span>
                     <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: green" (click)="savePlan()"> check </span>
-                    <span
-                        class="material-icons-outlined"
-                        style="width: fit; padding: 8px; cursor: pointer; color: red"
-                        (click)="isAddNewOpen = false; leavePlanName = ''"
-                    >
+                    <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: red" (click)="resetComponent()">
                         clear
                     </span>
                 </span>
             </mat-card-content>
         </mat-card>
         <div style="padding-top: 20px">
-            <button (click)="isAddNewOpen = true" class="addBtn" [disabled]="isAddNewOpen">
+            <button (click)="isAddNewOpen = true" class="contentButton" [disabled]="isAddNewOpen">
                 <span class="material-icons" style="font-size: large">add</span>
                 <span style="margin-left: 8px">Add Plan</span>
             </button>
         </div>
+    </div>
+    <div class="Row" style="flex-grow: 1" *ngIf="isLeavePlanOpen">
+        <mat-card style="margin-top: 10px" style="height: 100%">
+            <mat-card-content style="height: 100%">
+                <div style="width: 100%; height: 100%; display: flex; flex-direction: column">
+                    <div class="contentRow" style="justify-content: space-between">
+                        <div class="contentColItem" style="flex-grow: 1">
+                            <div class="contentRowItem" style="justify-content: flex-start">
+                                <div class="contentTitle">Plan Name :</div>
+                                <div style="margin-left: 10px; flex-grow: 1; max-width: 500px">
+                                    <input class="contentInput" placeholder="Enter plan name" [(ngModel)]="currentLeavePlan.leavePlanName" />
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width: fit-content; justify-content: center" class="contentColItem" (click)="handleDelete()" style="cursor: pointer">
+                            <div class="contentRowItem" style="color: red">
+                                <div class="material-icons-outlined">delete_forever</div>
+                                <div class="responsiveText" style="text-decoration: underline; padding: 2px">Delete Plan</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contentRow" style="flex-grow: 1; overflow-y: scroll">Under construction!</div>
+                    <div class="contentRow" style="flex-grow: 1; overflow-y: scroll">Under construction!</div>
+                    <div class="contentRow">
+                        <div class="contentColItem" style="flex-grow: 1">
+                            <div class="contentRowItem" style="justify-content: flex-end">
+                                <button class="contentButton">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
     </div>
 </div>
 

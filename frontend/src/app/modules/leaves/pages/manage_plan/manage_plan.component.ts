@@ -25,9 +25,22 @@ export class ManagePlanComponent implements OnInit {
     currentLeavePlan: any = {};
     // data variables
     leavePlanList: Array<{ [id: string]: string }> = [];
-
+    resetComponent(): void {
+        this.currentLeavePlan = {};
+        this.isLeavePlanOpen = false;
+        this.isAddNewOpen = false;
+        this.leavePlanName = "";
+    }
     savePlan(): void {
         this.serviceAdapter.handleDataChange({ leavePlanName: this.leavePlanName }, "insert");
-        this.isAddNewOpen = false;
+        this.resetComponent();
+    }
+    handleDelete(): void {
+        this.serviceAdapter.handleDataChange(this.currentLeavePlan, "delete");
+        this.resetComponent();
+    }
+    setPlan(leavePlan): void {
+        this.isLeavePlanOpen = true;
+        this.currentLeavePlan = leavePlan;
     }
 }
