@@ -156,6 +156,10 @@ const routes: Routes = [
             {
                 path: 'deprecated',
                 loadChildren: 'app/modules/deprecated/deprecated.module#DeprecatedModule',
+            },
+            {
+                path: 'website',
+                loadChildren: 'app/modules/website/website.module#WebsiteModule',
             }
         ]
     },
