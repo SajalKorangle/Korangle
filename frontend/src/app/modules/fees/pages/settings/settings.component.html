@@ -71,7 +71,8 @@
                         <mat-form-field>
                             <mat-label>Max Platform Fee</mat-label>
                             <input name="maxPlatformFeeOnSchool" required matInput type="number" min="0"
-                                [(ngModel)]="backendData.schoolMerchantAccount.maxPlatformFeeOnSchool">
+                                [(ngModel)]="backendData.schoolMerchantAccount.maxPlatformFeeOnSchool"
+                                (input)="htmlRenderer.forcePositiveNumber($event)">
                         </mat-form-field>
                     </div>
                     <!-- Max Platform charge budget input ends -->

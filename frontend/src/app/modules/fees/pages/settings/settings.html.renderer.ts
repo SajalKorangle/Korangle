@@ -24,5 +24,12 @@ export class SettingsHtmlRenderer {
         }
         return true;
     }
-
+    forcePositiveNumber(event: any) {
+        if (event.target.value !== "") {
+            event.target.value = Math.max(0, event.target.value);
+        }
+        if (event.target.value === "") {
+            event.target.value = "";
+        }
+    }
 }
