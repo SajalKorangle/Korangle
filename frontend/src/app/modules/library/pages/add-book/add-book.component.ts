@@ -41,6 +41,11 @@ export class AddBookComponent implements OnInit {
             alert('Image type should be either jpg, jpeg, or png');
             return;
         }
+        
+        if (image.size === 0){
+            alert('Image is blank. Please upload select another image')
+            return;
+        }
 
         image = await this.cropImage(image, [1, 1]);
 
@@ -52,6 +57,7 @@ export class AddBookComponent implements OnInit {
             alert('Image size should be less than 512kb');
             return;
         }
+  
 
         const reader = new FileReader();
         reader.onload = (e) => {
