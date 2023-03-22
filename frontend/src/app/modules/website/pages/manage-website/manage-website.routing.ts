@@ -4,14 +4,14 @@ import { ManageWebsiteComponent } from './manage-website.component';
 
 
 const routes: Routes = [
-  {
-    path: '',
-    component: ManageWebsiteComponent
-  }
+    {
+        path: '',
+        component: ManageWebsiteComponent
+    }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
 })
 export class ManageWebsiteRoutingModule { }

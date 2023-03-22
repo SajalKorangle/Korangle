@@ -8,7 +8,7 @@ export class WebsiteComponent implements OnInit {
 
     user: any;
 
-    constructor() {}
+    constructor() { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
