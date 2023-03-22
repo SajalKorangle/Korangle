@@ -51,7 +51,7 @@ export class ViewMarksComponent implements OnInit {
     isLoading = false;
     subjectFilterDisplay = false;
     sortBy = 'rollNumber';
-    AbsentRep = 'A';
+    absentRep = 'A';
     sortingOrder = 1; //1: ascending, -1: descending
 
     constructor(
@@ -168,21 +168,6 @@ export class ViewMarksComponent implements OnInit {
         }
     }
 
-    getStudentAbsentStatus(studentSection: any, test: any): any {
-        let studentTest = this.studentTestList.find((item) => {
-            return (
-                studentSection.parentStudent == item.parentStudent &&
-                test.parentSubject == item.parentSubject &&
-                test.testType == item.testType
-            );
-        });
-        if (studentTest) {
-            return studentTest.absent;
-        } else {
-            return false;
-        }
-    }
-
     getStudentFilteredTotalMarks(studentSection: any): any {
         return this.getFilteredTestList().reduce((total, test) => {
             return total + parseFloat(this.getStudentMarks(studentSection, test));
@@ -248,11 +233,7 @@ export class ViewMarksComponent implements OnInit {
             let marks = this.getStudentFilteredTotalMarks(studentSection);
             row.push(marks.toString() + ` (${((marks * 100) / maximumMarks).toFixed(2).toString()})%`);
             this.getFilteredTestList().forEach((test) => {
-                if(this.getStudentAbsentStatus(studentSection, test)) {
-                    row.push(this.AbsentRep);
-                } else {
-                    row.push(this.getStudentMarks(studentSection, test));
-                }
+                row.push(this.htmlRenderer.getStudentAbsentStatus(studentSection, test) ? this.absentRep : this.getStudentMarks(studentSection, test));
             });
             template.push(row);
         });
