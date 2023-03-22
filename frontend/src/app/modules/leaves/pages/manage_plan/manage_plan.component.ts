@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { User } from "@classes/user";
 import { GenericService } from "@services/generic/generic-service";
 import ManagePlanServiceAdapter from "./manage_plan.service.adapter";
+import { LeavePlan, LeavePlanToLeaveType, LeaveType } from "@modules/leaves/classes/leaves";
 
 @Component({
     selector: "manage-plan",
@@ -24,7 +25,9 @@ export class ManagePlanComponent implements OnInit {
     isAddNewOpen: boolean = false;
     currentLeavePlan: any = {};
     // data variables
-    leavePlanList: Array<{ [id: string]: string }> = [];
+    leavePlanList: Array<LeavePlan> = [];
+    leavePlanToLeaveTypeList: Array<LeavePlanToLeaveType> = [];
+    leaveTypeList: Array<LeaveType> = [];
     resetComponent(): void {
         this.currentLeavePlan = {};
         this.isLeavePlanOpen = false;

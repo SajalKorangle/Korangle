@@ -9,6 +9,11 @@ export default class ManagePlanServiceAdapter {
     }
     async initializeData(): Promise<void> {
         this.vm.leavePlanList = await this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlan" }, {});
+        this.vm.leavePlanToLeaveTypeList = await this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType"}, {});
+        this.vm.leaveTypeList = await this.vm.genericService.getObjectList({leaves_app: "SchoolLeaveType"}, {});
+        console.log(this.vm.leaveTypeList);
+        console.log(this.vm.leavePlanList);
+        console.log(this.vm.leavePlanToLeaveTypeList);
         this.vm.isLoading = false;
     }
     async handleDataChange(data, operation): Promise<any> {
