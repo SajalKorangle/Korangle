@@ -162,8 +162,7 @@ export class ViewMarksComponent implements OnInit {
         });
         if (studentTest) {
             return studentTest.marksObtained;
-        } 
-        else {
+        } else {
             return 0;
         }
     }
