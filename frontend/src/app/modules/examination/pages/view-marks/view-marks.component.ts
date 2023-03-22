@@ -51,7 +51,7 @@ export class ViewMarksComponent implements OnInit {
     isLoading = false;
     subjectFilterDisplay = false;
     sortBy = 'rollNumber';
-    absentRep = 'AB';
+    AbsentRep = 'A';
     sortingOrder = 1; //1: ascending, -1: descending
 
     constructor(
@@ -161,23 +161,31 @@ export class ViewMarksComponent implements OnInit {
             );
         });
         if (studentTest) {
-            if(studentTest.absent) {
-                return this.absentRep;
-            } else {
-                return studentTest.marksObtained;
-            }
-        } else {
+            return studentTest.marksObtained;
+        } 
+        else {
             return 0;
+        }
+    }
+
+    getStudentAbsentStatus(studentSection: any, test: any): any {
+        let studentTest = this.studentTestList.find((item) => {
+            return (
+                studentSection.parentStudent == item.parentStudent &&
+                test.parentSubject == item.parentSubject &&
+                test.testType == item.testType
+            );
+        });
+        if (studentTest) {
+            return studentTest.absent;
+        } else {
+            return false;
         }
     }
 
     getStudentFilteredTotalMarks(studentSection: any): any {
         return this.getFilteredTestList().reduce((total, test) => {
-            let marks = this.getStudentMarks(studentSection, test);
-            if(marks === this.absentRep) {
-                marks = 0;
-            }
-            return total + parseFloat(marks);
+            return total + parseFloat(this.getStudentMarks(studentSection, test));
         }, 0);
     }
 
@@ -240,7 +248,11 @@ export class ViewMarksComponent implements OnInit {
             let marks = this.getStudentFilteredTotalMarks(studentSection);
             row.push(marks.toString() + ` (${((marks * 100) / maximumMarks).toFixed(2).toString()})%`);
             this.getFilteredTestList().forEach((test) => {
-                row.push(this.getStudentMarks(studentSection, test));
+                if(this.getStudentAbsentStatus(studentSection, test)) {
+                    row.push(this.AbsentRep);
+                } else {
+                    row.push(this.getStudentMarks(studentSection, test));
+                }
             });
             template.push(row);
         });
