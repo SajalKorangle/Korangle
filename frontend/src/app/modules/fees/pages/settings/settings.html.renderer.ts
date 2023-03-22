@@ -6,7 +6,7 @@ export class SettingsHtmlRenderer {
 
     isEasebuzzInPayFeesFeatureFlagEnabled: boolean;
 
-    constructor(public vm: SettingsComponent) { 
+    constructor(public vm: SettingsComponent) {
         this.isEasebuzzInPayFeesFeatureFlagEnabled = DataStorage.getInstance().isFeatureEnabled("Easebuzz in Pay Fees page feature flag");
     }
 
