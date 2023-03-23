@@ -322,7 +322,7 @@ export class ViewTransactionsComponent implements OnInit {
     showUpdateColumn(list: any) {
         let isTrue = false;
         list.forEach(item => {
-            if(item['value']) {
+            if (item['value']) {
                 isTrue = true;
             }
         });
