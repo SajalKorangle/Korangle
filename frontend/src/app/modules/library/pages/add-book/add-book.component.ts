@@ -43,7 +43,7 @@ export class AddBookComponent implements OnInit {
         }
         
         if (image.size === 0){
-            alert('Image is blank. Please upload select another image')
+            alert('Image is blank. Please upload/select another image')
             return;
         }
 
