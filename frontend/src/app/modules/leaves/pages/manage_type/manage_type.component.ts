@@ -87,7 +87,6 @@ export class ManageTypeComponent implements OnInit {
         } else {
             this.isSaving = false;
         }
-        return response;
     }
     async deleteType(event, data): Promise<any> {
         alert("Under Construction");
