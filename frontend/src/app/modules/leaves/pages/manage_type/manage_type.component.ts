@@ -18,12 +18,10 @@ export class ManageTypeComponent implements OnInit {
     leaveTypeMonthList: Array<LeaveTypeMonth> = [];
     isFormVisible: boolean = false;
     isLoading: boolean = true;
+    invalidNameList: Array<string> = [];
     currentSchoolLeaveType: LeaveType = {
-        id: -1,
-        leaveTypeName: "",
-        color: "",
-        leaveType: "None",
-        parentSchool: "",
+        id: -1, leaveTypeName: "", color: "",
+        leaveType: "None", parentSchool: "",
     };
     isSaving: boolean = false;
     monthList: Array<string> = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -32,11 +30,8 @@ export class ManageTypeComponent implements OnInit {
         this.currentSchoolLeaveTypeMonthList = [];
         this.monthList.map((month) => {
             this.currentSchoolLeaveTypeMonthList.push({
-                id: -1,
-                parentSchoolLeaveType: -1,
-                month: month,
-                value: 0,
-                remainingLeavesAction: "",
+                id: -1, parentSchoolLeaveType: -1,
+                month: month, value: 0, remainingLeavesAction: "",
             });
         });
         this.serviceAdapter.initializeAdapter(this);
@@ -46,22 +41,20 @@ export class ManageTypeComponent implements OnInit {
     constructor(public genericService: GenericService) {}
     // handle Modal
     addOrUpdateLeaveType(isNew, schoolLeaveType): void {
+        this.invalidNameList = [];
+        this.leaveTypeList.map((leaveType) => {
+            this.invalidNameList.push(leaveType.leaveTypeName);
+        });
         if (isNew) {
             this.currentSchoolLeaveType = {
-                id: -1,
-                leaveTypeName: "",
-                color: "",
-                leaveType: "None",
-                parentSchool: "",
+                id: -1, leaveTypeName: "", color: "",
+                leaveType: "None", parentSchool: "",
             };
             this.currentSchoolLeaveTypeMonthList = [];
             this.monthList.map((month) => {
                 this.currentSchoolLeaveTypeMonthList.push({
-                    id: -1,
-                    parentSchoolLeaveType: -1,
-                    month: month,
-                    value: 0,
-                    remainingLeavesAction: "CarryForward",
+                    id: -1, parentSchoolLeaveType: -1, month: month,
+                    value: 0, remainingLeavesAction: "CarryForward",
                 });
             });
         } else {
@@ -91,6 +84,8 @@ export class ManageTypeComponent implements OnInit {
                 this.isSaving = false;
                 this.closeAddNewType(data);
             }
+        } else {
+            this.isSaving = false;
         }
         return response;
     }

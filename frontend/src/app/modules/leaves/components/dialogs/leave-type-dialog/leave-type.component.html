@@ -50,7 +50,8 @@
             </div>
             <div class="modalRowItem" style="width: 60%">
                 <div class="modalColItem">
-                    <input class="modalInput" [(ngModel)]="leaveTypeName" [value]="leaveTypeName" placeholder="eg. CL" />
+                    <input class="modalInput" [ngStyle]="{borderBottom: isNameValid ? (leaveTypeName === '' ?  '1px solid rgba(0, 0, 0, 0.25)' : '1px solid rgba(0, 255, 157, 0.4)') : '1px solid rgba(255, 0, 0, 0.4)'}" 
+                    (keyup)="updateName($event)" [value]="leaveTypeName" placeholder="eg. CL" />
                 </div>
             </div>
             <!-- Ends :- Input Field -->
@@ -68,9 +69,7 @@
                 <div class="modalColItem">
                     <!-- Starts :- Button to activate drop-down -->
                     <span class="colorSelector" (click)="isColorListVisible = !isColorListVisible">
-                        <span
-                            id="colorIndicator"
-                            class="colorSelector modalInput"
+                        <span id="colorIndicator" class="colorSelector modalInput"
                             [ngStyle]="{ backgroundColor: color === '' ? '#ffffff' : color }"
                             style="cursor: pointer; width: 100%; display: flex; flex-direction: row; justify-content: space-between"
                         >
@@ -84,9 +83,7 @@
 
                     <!-- Starts :- Drop-down color selector -->
                     <div *ngIf="isColorListVisible" class="modalOptionsContainer">
-                        <div
-                            *ngFor="let colorCode of colorCodeList"
-                            (click)="updateColor($event, colorCode)"
+                        <div *ngFor="let colorCode of colorCodeList" (click)="updateColor($event, colorCode)"
                             [ngStyle]="{ background: colorCode, border: color === colorCode ? '1px solid black' : 'none' }"
                             style="width: 10%; height: 25px; margin-top: 2.5px; margin-bottom: 2.5px; border-radius: 2px; cursor: pointer"
                         ></div>
@@ -123,7 +120,6 @@
 
             <!-- Starts :- Inputs for each month -->
             <div class="modalRow" *ngFor="let month of monthList">
-
                 <!-- Starts :- Month Title -->
                 <div class="modalRowItem" style="width: 5ch; padding-left: 5px; padding-right: 5px">
                     <div class="modalColItem" style="text-align: center; text-transform: capitalize">
@@ -135,11 +131,7 @@
                 <!-- Starts :- Input (Number of allowed leaves in a month) -->
                 <div class="modalRowItem" style="width: 100px; padding-left: 5px; padding-right: 5px">
                     <div class="modalColItem" style="text-align: left">
-                        <input
-                            class="modalInput"
-                            (keyup)="checkInput($event)"
-                            type="number"
-                            min="0"
+                        <input class="modalInput" (keyup)="checkInput($event)" type="number" min="0"
                             [(ngModel)]="SchoolLeaveTypeMonthMap[monthMap[month]].value"
                         />
                     </div>
@@ -161,7 +153,6 @@
                     </div>
                 </div>
                 <!-- Ends :- Select -->
-                
             </div>
             <!-- Ends :- Inputs -->
 
@@ -169,12 +160,8 @@
             <div class="modalRow">
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
-                        <div
-                            (click)="isNoteVisible = !isNoteVisible"
-                            class="modalNote"
-                            [ngStyle]="{
-                                cursor: 'pointer',
-                                display: !isNoteVisible ? 'inline-block' : 'block',
+                        <div (click)="isNoteVisible = !isNoteVisible" class="modalNote"
+                            [ngStyle]="{ cursor: 'pointer', display: !isNoteVisible ? 'inline-block' : 'block',
                                 whiteSpace: !isNoteVisible ? 'nowrap' : 'normal'
                             }"
                         >

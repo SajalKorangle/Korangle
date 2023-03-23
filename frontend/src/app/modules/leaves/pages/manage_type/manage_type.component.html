@@ -59,7 +59,9 @@
 
         <!-- Starts :- Modal (to display the form) -->
         <div *ngIf="isFormVisible">
-            <leave-type-dialog [isSaving]="isSaving" [schoolLeaveType]="currentSchoolLeaveType" [schoolLeaveTypeMonth]="currentSchoolLeaveTypeMonthList" (save)="saveLeaveType($event)" (close)="closeAddNewType($event)" *ngIf="isFormVisible"></leave-type-dialog>
+            <leave-type-dialog [isSaving]="isSaving" [schoolLeaveType]="currentSchoolLeaveType" [schoolLeaveTypeMonth]="currentSchoolLeaveTypeMonthList" (save)="saveLeaveType($event)"
+                (close)="closeAddNewType($event)" [InvalidNameList]="invalidNameList"
+            ></leave-type-dialog>
         </div>
         <!-- Ends :- Modal -->
     </div>

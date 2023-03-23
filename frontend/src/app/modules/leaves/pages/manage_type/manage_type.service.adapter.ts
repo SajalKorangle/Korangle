@@ -19,7 +19,7 @@ export default class ManageTypeServiceAdapter {
     }
     // ends :- Initialize Data
 
-    // starts :- Data Change Handler (handle Data changes by making requests to backend, single function to handle data change with specifying the operation type.)
+    // starts :- Data Change Handler (handle Data changes by making requests to backend)
     async handleDataChange(Operation: Operation, variableName: string): Promise<any> {
         this.vm.isLoading = true;
         if (Operation.operation === "insert" || Operation.operation === "update") {

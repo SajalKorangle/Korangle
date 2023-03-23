@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { DataStorage } from "@classes/data-storage";
 import { LeaveType, LeaveTypeMonth } from "@modules/leaves/classes/leaves";
 
 @Component({
@@ -13,6 +12,7 @@ export class LeaveTypeDialog {
     @Input() schoolLeaveType: LeaveType;
     @Input() schoolLeaveTypeMonth: Array<LeaveTypeMonth>;
     @Input() isSaving: boolean;
+    @Input() InvalidNameList: Array<string>;
     // dialog variables
     // prettier-ignore
     colorCodeList: string[] = [
@@ -31,6 +31,7 @@ export class LeaveTypeDialog {
     isColorListVisible: boolean = false;
     isNoteVisible: boolean = false;
     isEncFormulaVisible: boolean = false;
+    isNameValid: boolean = true;
     // prettier-ignore
     monthMap: { [id: string]: string } = {
         jan: "January", feb: "February", mar: "March", apr: "April",
@@ -93,9 +94,18 @@ export class LeaveTypeDialog {
         this.color = colorCode;
         this.isColorListVisible = !this.isColorListVisible;
     }
+    updateName(event): void {
+        this.leaveTypeName = event.target.value;
+        const similarName = this.InvalidNameList.find((name) => {
+            return name === this.leaveTypeName;
+        });
+        this.isNameValid = similarName ? false : true;
+    }
     async saveData(event): Promise<void> {
         if (this.leaveTypeName.length === 0 || this.leaveType === "None" || this.color.length === 0) {
             alert("Please fill all the fields before saving the changes.");
+        } else if(!this.isNameValid) {
+            alert("Please enter a valid name.")
         } else {
             this.schoolLeaveTypeMonthList = [];
             Object.keys(this.SchoolLeaveTypeMonthMap).map((month) => {
