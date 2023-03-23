@@ -31,19 +31,11 @@ export class LeaveTypeDialog {
     isColorListVisible: boolean = false;
     isNoteVisible: boolean = false;
     isEncFormulaVisible: boolean = false;
+    // prettier-ignore
     monthMap: { [id: string]: string } = {
-        jan: "January",
-        feb: "February",
-        mar: "March",
-        apr: "April",
-        may: "May",
-        jun: "June",
-        jul: "July",
-        aug: "August",
-        sep: "September",
-        oct: "October",
-        nov: "November",
-        dec: "December",
+        jan: "January", feb: "February", mar: "March", apr: "April",
+        may: "May", jun: "June", jul: "July", aug: "August",
+        sep: "September", oct: "October", nov: "November", dec: "December",
     };
     monthList = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
     // data variables
@@ -61,7 +53,7 @@ export class LeaveTypeDialog {
                 leaveTypeMonth.parentSchoolLeaveType = this.schoolLeaveType.id;
             });
             this.save.emit({
-                database: { leaves_app: "SchoolLeaveTypeMonth"  },
+                database: { leaves_app: "SchoolLeaveTypeMonth" },
                 operation: this.leaveTypeMonthId === -1 ? "insertBatch" : "updateBatch",
                 check: (data1, data2) => {
                     return [];

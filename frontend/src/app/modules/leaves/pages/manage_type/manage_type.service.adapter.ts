@@ -22,12 +22,7 @@ export default class ManageTypeServiceAdapter {
     // starts :- Data Change Handler (handle Data changes by making requests to backend, single function to handle data change with specifying the operation type.)
     async handleDataChange(Operation: Operation, variableName: string): Promise<any> {
         this.vm.isLoading = true;
-        if (
-            Operation.operation === "insert" ||
-            Operation.operation === "update" ||
-            Operation.operation === "insertBatch" ||
-            Operation.operation === "updateBatch"
-        ) {
+        if (Operation.operation === "insert" || Operation.operation === "update") {
             this.vm[variableName] = await this.vm.genericService.getObjectList(Operation.database, {});
             let sameVariableNameMap: { [id: string]: boolean } = {};
             const similarObjectList = this.vm[variableName].filter((object) => {
