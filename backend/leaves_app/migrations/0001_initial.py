@@ -1,6 +1,5 @@
 from django.db import migrations, models
 import django.db.models.deletion
-from django.contrib.postgres.operations import CITextExtension
 class Migration(migrations.Migration):
     initial = True
     dependencies = [
@@ -8,7 +7,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        CITextExtension(),
         migrations.CreateModel(
             name='SchoolLeaveType',
             fields=[

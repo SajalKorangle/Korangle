@@ -50,7 +50,7 @@
 
         <!-- Starts :- Button (to add new type) -->
         <div class="add-new-type-container">
-            <button (click)="addNewType($event, {})" class="addBtn">
+            <button (click)="addOrUpdateLeaveType(true, {})" class="addBtn">
                 <span class="material-icons" style="font-size: large">add</span>
                 <span style="margin-left: 8px">Add Type</span>
             </button>
@@ -59,12 +59,12 @@
 
         <!-- Starts :- Modal (to display the form) -->
         <div *ngIf="isFormVisible">
-            <leave-type-dialog [data]="formData" (save)="saveLeaveType($event)" (close)="closeAddNewType($event)" *ngIf="isFormVisible"></leave-type-dialog>
+            <leave-type-dialog [isSaving]="isSaving" [schoolLeaveType]="currentSchoolLeaveType" [schoolLeaveTypeMonth]="currentSchoolLeaveTypeMonthList" (save)="saveLeaveType($event)" (close)="closeAddNewType($event)" *ngIf="isFormVisible"></leave-type-dialog>
         </div>
         <!-- Ends :- Modal -->
     </div>
     <!-- Ends :- Main Page -->
-    
+
     <!-- Starts :- Spinner (to be displayed when the data is being loaded) -->
     <div *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>

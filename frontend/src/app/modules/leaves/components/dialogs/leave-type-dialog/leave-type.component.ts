@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { MonthVsLeaves } from "@modules/leaves/classes/leaves";
+import { DataStorage } from "@classes/data-storage";
+import { LeaveType, LeaveTypeMonth } from "@modules/leaves/classes/leaves";
 
 @Component({
     selector: "leave-type-dialog",
@@ -9,7 +10,9 @@ import { MonthVsLeaves } from "@modules/leaves/classes/leaves";
 export class LeaveTypeDialog {
     @Output() save: EventEmitter<any> = new EventEmitter<any>();
     @Output() close: EventEmitter<any> = new EventEmitter<any>();
-    @Input() data: any = {};
+    @Input() schoolLeaveType: LeaveType;
+    @Input() schoolLeaveTypeMonth: Array<LeaveTypeMonth>;
+    @Input() isSaving: boolean;
     // dialog variables
     // prettier-ignore
     colorCodeList: string[] = [
@@ -27,43 +30,66 @@ export class LeaveTypeDialog {
     ];
     isColorListVisible: boolean = false;
     isNoteVisible: boolean = false;
-    months: Array<string> = [];
-    isSaving: boolean = false;
-    isNew: boolean = false;
     isEncFormulaVisible: boolean = false;
+    monthMap: { [id: string]: string } = {
+        jan: "January",
+        feb: "February",
+        mar: "March",
+        apr: "April",
+        may: "May",
+        jun: "June",
+        jul: "July",
+        aug: "August",
+        sep: "September",
+        oct: "October",
+        nov: "November",
+        dec: "December",
+    };
+    monthList = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
     // data variables
-    name: string = "";
-    leaveType: number = -1;
+    leaveTypeId: number = -1;
+    leaveTypeMonthId: number = -1;
+    leaveTypeName: string = "";
+    leaveType: string = "";
     color: string = "";
-    leavesPerMonth: MonthVsLeaves;
+    SchoolLeaveTypeMonthMap: { [id: string]: LeaveTypeMonth } = {};
+    schoolLeaveTypeMonthList: Array<LeaveTypeMonth> = [];
     // Initialize Data
-    ngOnInit() {
-        if (JSON.stringify(this.data) === "{}" || !JSON.stringify(this.data).length) {
-            this.name = "";
-            this.leaveType = -1;
-            this.color = "";
-            this.isColorListVisible = false;
-            // prettier-ignore
-            this.leavesPerMonth = {
-                jan: [0, 0], feb: [0, 0], mar: [0, 0],
-                apr: [0, 0], may: [0, 0], jun: [0, 0],
-                jul: [0, 0], aug: [0, 0], sep: [0, 0],
-                oct: [0, 0], nov: [0, 0], dec: [0, 0],
-            };
-            this.isNew = true;
-        } else {
-            this.name = this.data.leaveTypeName;
-            this.leaveType = this.data.leaveType;
-            this.color = this.data.color;
-            this.leavesPerMonth = JSON.parse(this.data.assignedLeavesMonthWise);
-            this.isNew = false;
-            let encCount: number = 0;
-            Object.keys(this.leavesPerMonth).map((month) => {
-                encCount += this.leavesPerMonth[month][1] === 2 ? 1 : 0;
+    ngOnChanges() {
+        if (this.schoolLeaveType.id !== -1 && this.isSaving) {
+            this.schoolLeaveTypeMonth.map((leaveTypeMonth) => {
+                leaveTypeMonth.parentSchoolLeaveType = this.schoolLeaveType.id;
             });
-            this.isEncFormulaVisible = encCount == 0 ? false : true;
+            this.save.emit({
+                database: { leaves_app: "SchoolLeaveTypeMonth"  },
+                operation: this.leaveTypeMonthId === -1 ? "insertBatch" : "updateBatch",
+                check: (data1, data2) => {
+                    return [];
+                },
+                data: this.schoolLeaveTypeMonth,
+                setVariable: "leaveTypeMonthList",
+                close: true,
+            });
         }
-        this.months = Object.keys(this.leavesPerMonth);
+    }
+    ngOnInit() {
+        this.leaveTypeName = this.schoolLeaveType.leaveTypeName;
+        this.leaveType = this.schoolLeaveType.leaveType;
+        this.color = this.schoolLeaveType.color;
+        this.isColorListVisible = false;
+        this.monthList.map((month) => {
+            let monthObject = this.schoolLeaveTypeMonth.find((item) => {
+                return item.month === this.monthMap[month];
+            });
+            this.SchoolLeaveTypeMonthMap[this.monthMap[month]] = monthObject;
+        });
+        this.leaveTypeId = this.schoolLeaveType.id;
+        let encCount: number = 0;
+        this.schoolLeaveTypeMonthList = this.schoolLeaveTypeMonth;
+        Object.keys(this.SchoolLeaveTypeMonthMap).map((month) => {
+            encCount += this.SchoolLeaveTypeMonthMap[month].remainingLeavesAction === "Encashment" ? 1 : 0;
+        });
+        this.isEncFormulaVisible = encCount == 0 ? false : true;
     }
     closeColorList(event): void {
         const classNames = event.target.className.split(" ");
@@ -76,25 +102,41 @@ export class LeaveTypeDialog {
         this.isColorListVisible = !this.isColorListVisible;
     }
     async saveData(event): Promise<void> {
-        this.isSaving = true;
-        if (this.name.length === 0 || this.leaveType === -1 || this.color.length === 0) {
+        if (this.leaveTypeName.length === 0 || this.leaveType === "None" || this.color.length === 0) {
             alert("Please fill all the fields before saving the changes.");
         } else {
-            // prettier-ignore
-            event.data = {
-                isNew: this.isNew, leaveTypeName: this.name, leaveType: this.leaveType,
-                color: this.color, assignedLeavesMonthWise: JSON.stringify(this.leavesPerMonth),
-            };
-            event.data.id = !this.isNew ? this.data.id : -1;
-            await this.save.emit(event.data);
+            this.schoolLeaveTypeMonthList = [];
+            Object.keys(this.SchoolLeaveTypeMonthMap).map((month) => {
+                this.schoolLeaveTypeMonthList.push(this.SchoolLeaveTypeMonthMap[month]);
+            });
+            await this.save.emit({
+                database: { leaves_app: "SchoolLeaveType" },
+                operation: this.leaveTypeId === -1 ? "insert" : "update",
+                check: (data1, data2) => {
+                    let sameVariables = [];
+                    if (data1.id !== data2.id && data1.leaveTypeName.toLowerCase() === data2.leaveTypeName.toLowerCase()) sameVariables.push("Name");
+                    else if (data1.id != data2.id && data1.color.toLowerCase() === data2.color.toLowerCase()) sameVariables.push("Color");
+                    return sameVariables;
+                },
+                data: {
+                    leaveTypeName: this.leaveTypeName,
+                    leaveType: this.leaveType,
+                    color: this.color,
+                },
+                close: false,
+                setVariable: "leaveTypeList",
+                setVariableNameMap: {
+                    currentSchoolLeaveType: "response",
+                    currentSchoolLeaveTypeMonthList: this.schoolLeaveTypeMonthList,
+                },
+            });
         }
-        this.isSaving = false;
     }
     updateLeaves(event, month): void {
-        this.leavesPerMonth[month][1] = parseInt(event.target.value);
+        this.SchoolLeaveTypeMonthMap[this.monthMap[month]].remainingLeavesAction = event.target.value;
         let encCount: number = 0;
-        Object.keys(this.leavesPerMonth).map((month) => {
-            encCount += this.leavesPerMonth[month][1] === 2 ? 1 : 0;
+        Object.keys(this.SchoolLeaveTypeMonthMap).map((month) => {
+            encCount += this.SchoolLeaveTypeMonthMap[month].remainingLeavesAction === "Encashment" ? 1 : 0;
         });
         this.isEncFormulaVisible = encCount == 0 ? false : true;
     }
