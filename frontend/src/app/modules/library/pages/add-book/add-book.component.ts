@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Book } from '@services/modules/library/models/book';
 import { DataStorage } from "@classes/data-storage";
 
 @Component({
@@ -14,6 +14,8 @@ export class AddBookComponent implements OnInit {
     user: any;
     frontImage: any;
     backImage: any;
+
+    newBook: Book;
 
     isLoading = false;
 

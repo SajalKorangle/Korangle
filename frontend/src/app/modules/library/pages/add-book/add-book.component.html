@@ -1,7 +1,7 @@
 <div class="card-content">
     <ng-container *ngIf="!isLoading">
         <!-- Top half -->
-        <div class="row">            
+        <div class="row">
             <!-- Front cover img - if mobile-->
             <div class="col-md-3 visible-sm visible-xs" align="center">
                 <img *ngIf="this.frontImage" src="{{ this.frontImage }}" style="width: 50%" />
@@ -34,23 +34,29 @@
                     <div class="col-md-4">
                         <mat-form-field>
                             <mat-label>*Book name</mat-label>
-                            <input matInput name="name" type="text">
+                            <input
+                            [(ngModel)]="newBook.bookName"
+                            matInput name="name" type="text">
                         </mat-form-field>
                     </div>
-    
+
                     <!-- Author -->
                     <div class="col-md-4">
                         <mat-form-field>
                             <mat-label>Author</mat-label>
-                            <input matInput name="author" type="text">
+                            <input
+                            [(ngModel)]="newBook.author"
+                            matInput name="author" type="text">
                         </mat-form-field>
                     </div>
-    
+
                     <!-- Publisher -->
                     <div class="col-md-4">
                         <mat-form-field>
                             <mat-label>Publisher</mat-label>
-                            <input matInput name="publisher" type="text">
+                            <input
+                            [(ngModel)]="newBook.publisher"
+                            matInput name="publisher" type="text">
                         </mat-form-field>
                     </div>
                 </div>
@@ -61,7 +67,9 @@
                     <div class="col-md-4">
                         <mat-form-field>
                             <mat-label>Date of purchase</mat-label>
-                            <input matInput name="dateOfPurchase" type="date">
+                            <input
+                            [(ngModel)]="newBook.dateOfPurchase"
+                            matInput name="dateOfPurchase" type="date">
                         </mat-form-field>
                     </div>
 
@@ -69,15 +77,19 @@
                     <div class="col-md-4">
                         <mat-form-field>
                             <mat-label>*Book No.</mat-label>
-                            <input matInput name="bookNumber" type="number">
+                            <input
+                            [(ngModel)]="newBook.bookNumber"
+                            matInput name="bookNumber" type="number">
                         </mat-form-field>
                     </div>
 
-                    <!-- Publisher -->
+                    <!-- Edition -->
                     <div class="col-md-4">
                         <mat-form-field>
                             <mat-label>Edition</mat-label>
-                            <input matInput name="publisher" type="text">
+                            <input
+                            [(ngModel)]="newBook.edition"
+                            matInput name="edition" type="text">
                         </mat-form-field>
                     </div>
                 </div>
@@ -149,7 +161,9 @@
                     <div class="col-md-4">
                         <mat-form-field>
                             <mat-label>No. of pages</mat-label>
-                            <input matInput name="numberOfPages" type="number">
+                            <input
+                            [(ngModel)]="newBook.numberOfPages"
+                            matInput name="numberOfPages" type="number">
                         </mat-form-field>
                     </div>
     
@@ -157,7 +171,9 @@
                     <div class="col-md-4">
                         <mat-form-field>
                             <mat-label>Printed cost</mat-label>
-                            <input matInput name="printedCost" type="number">
+                            <input
+                            [(ngModel)]="newBook.printedCost"
+                            matInput name="printedCost" type="number">
                         </mat-form-field>
                     </div>
     
@@ -165,7 +181,9 @@
                     <div class="col-md-4">
                         <mat-form-field>
                             <mat-label>Cover type</mat-label>
-                            <input matInput name="coverType" type="text">
+                            <input
+                            [(ngModel)]="newBook.coverType"
+                            matInput name="coverType" type="text">
                         </mat-form-field>
                     </div>
                 </div>
@@ -176,7 +194,9 @@
                     <div class="col-md-4">
                         <mat-form-field>
                             <mat-label>Type of book</mat-label>
-                            <input matInput name="bookType" type="text">
+                            <input
+                            [(ngModel)]="newBook.bookType"
+                            matInput name="bookType" type="text">
                         </mat-form-field>
                     </div>
 
@@ -184,7 +204,9 @@
                     <div class="col-md-4">
                         <mat-form-field>
                             <mat-label>Location</mat-label>
-                            <input matInput name="location" type="text">
+                            <input
+                            [(ngModel)]="newBook.location"
+                            matInput name="location" type="text">
                         </mat-form-field>
                     </div>
 
