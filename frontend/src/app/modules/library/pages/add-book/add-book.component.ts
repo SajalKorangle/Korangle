@@ -15,7 +15,8 @@ export class AddBookComponent implements OnInit {
     frontImage: any;
     backImage: any;
 
-    newBook: Book;
+    newBook: Book = new Book();
+
 
     isLoading = false;
 
