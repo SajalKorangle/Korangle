@@ -13,7 +13,7 @@
             </mat-card-content>
         </mat-card>
         <mat-card *ngIf="!leavePlanList.length && !isAddNewOpen" style="margin-top: 10px">
-            <mat-card-content>
+            <mat-card-content (click)="isAddNewOpen = true" style="cursor: pointer">
                 <span class="matCardContentModifiedFlex">
                     <span>No Leave Plan Available</span>
                     <span class="material-icons-outlined"> navigate_next </span>
@@ -29,7 +29,13 @@
                             placeholder="Enter leave plan name"
                             [(ngModel)]="leavePlanName"
                     /></span>
-                    <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: green" (click)="savePlan()"> check </span>
+                    <span
+                        class="material-icons-outlined"
+                        style="width: fit; padding: 8px; cursor: pointer; color: green"
+                        (click)="savePlan({ leavePlanName: leavePlanName })"
+                    >
+                        check
+                    </span>
                     <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: red" (click)="resetComponent()">
                         clear
                     </span>
@@ -63,12 +69,107 @@
                             </div>
                         </div>
                     </div>
-                    <div class="contentRow" style="flex-grow: 1; overflow-y: scroll">Under construction!</div>
-                    <div class="contentRow" style="flex-grow: 1; overflow-y: scroll">Under construction!</div>
+                    <div class="contentRow" style="flex-grow: 1; overflow-y: scroll; max-height: 40%">
+                        <div class="contentColItem" style="flex-grow: 1; justify-content: flex-start">
+                            <div class="contentRowItem" style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px">
+                                <span class="contentColItem" style="width: 30%"
+                                    ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: #fc9701">Name</span></span
+                                >
+                                <span class="contentColItem" style="width: 30%"
+                                    ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: #fc9701"
+                                        >Component Type</span
+                                    ></span
+                                >
+                                <span class="contentColItem" style="width: 20%"
+                                    ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: #fc9701"
+                                        >Colour</span
+                                    ></span
+                                >
+                                <span class="contentColItem" style="width: 20%"></span>
+                            </div>
+                            <div
+                                class="contentRowItem"
+                                *ngFor="let LeaveTypeChoice of appliedLeaveTypeChoiceList"
+                                style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px"
+                            >
+                                <span class="contentColItem" style="width: 30%"
+                                    ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis">{{
+                                        LeaveTypeChoice.leaveTypeName
+                                    }}</span></span
+                                >
+                                <span class="contentColItem" style="width: 30%"
+                                    ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis">{{
+                                        LeaveTypeChoice.leaveType
+                                    }}</span></span
+                                >
+                                <span class="contentColItem" style="width: 20%">
+                                    <span
+                                        [ngStyle]="{ backgroundColor: LeaveTypeChoice.color }"
+                                        style="height: 25px; width: 25px; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.25)"
+                                    ></span>
+                                </span>
+                                <span class="contentColItem material-icons" style="width: 20%"
+                                    ><span
+                                        style="color: rgba(255, 0, 0, 0.5); cursor: pointer"
+                                        class="material-icons-outlined"
+                                        (click)="removeLeaveTypeChoice(LeaveTypeChoice)"
+                                        >delete_forever</span
+                                    ></span
+                                >
+                            </div>
+                            <div
+                                class="contentRowItem"
+                                *ngIf="appliedLeaveTypeChoiceList.length === 0"
+                                style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px"
+                            >
+                                <span class="contentColItem" style="flex-grow: 1">No Leave Type Available Currently</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contentRow">
+                        <div class="contentColItem" style="width: 100%">
+                            <div *ngIf="!isSelectLeavePlanToLeaveTypeVisible" class="contentRowItem">
+                                <button class="contentButton" style="padding: 5px" (click)="enableAddPlanToLeaveType()">
+                                    <div class="contentColItem material-icons">
+                                        <span class="contentRowItem"> add </span>
+                                    </div>
+                                    <div class="contentColItem">
+                                        <span class="contentRowItem"> Add LeaveType </span>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="contentRowItem" style="width: 100%" *ngIf="isSelectLeavePlanToLeaveTypeVisible">
+                                <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 500px">
+                                    <mat-label>Select Leave Type</mat-label>
+                                    <mat-select [(ngModel)]="currentLeaveTypeChoiceList" multiple [disabled]="leaveTypeChoiceList.length === 0">
+                                        <mat-option *ngFor="let leaveTypeChoice of leaveTypeChoiceList" [value]="leaveTypeChoice">
+                                            {{ leaveTypeChoice.leaveTypeName }} - {{ leaveTypeChoice.leaveType }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <span
+                                    class="material-icons-outlined"
+                                    style="width: fit; padding: 8px; cursor: pointer; color: green"
+                                    (click)="leaveTypeChoiceList.length !== 0 ? savePlanToLeaveType(currentLeaveTypeChoiceList):1"
+                                >
+                                    check
+                                </span>
+                                <span
+                                    class="material-icons-outlined"
+                                    style="width: fit; padding: 8px; cursor: pointer; color: red"
+                                    (click)="savePlanToLeaveType([])"
+                                >
+                                    clear
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contentRow" style="flex-grow: 1; overflow-y: scroll; max-height: 40%">Under construction!</div>
                     <div class="contentRow">
                         <div class="contentColItem" style="flex-grow: 1">
                             <div class="contentRowItem" style="justify-content: flex-end">
-                                <button class="contentButton">Save</button>
+                                <button class="contentButton" (click)="savePlan(currentLeavePlan)">Save</button>
+                                <button class="contentButtonHollow" (click)="resetComponent()">Cancel</button>
                             </div>
                         </div>
                     </div>

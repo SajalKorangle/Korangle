@@ -8,13 +8,13 @@ export interface MonthVsLeaves {
 // prettier-ignore
 export interface LeaveType {
     leaveTypeName: string; leaveType: number; parentSchool: string;
-    color: string; assignedLeavesMonthWise: string; id: string;
+    color: string; assignedLeavesMonthWise: string; id: number;
 }
 // prettier-ignore
 export interface LeavePlanToLeaveType {
-    parentSchoolLeavePlan: string; parentSchoolLeaveType: string; id: string;
+    parentSchoolLeavePlan: number; parentSchoolLeaveType: number; id: number;
 }
 // prettier-ignore
 export interface LeavePlan {
-    leavePlanName: string; parentSchool: string; id: string;
+    leavePlanName: string; parentSchool: string; id: number;
 }
