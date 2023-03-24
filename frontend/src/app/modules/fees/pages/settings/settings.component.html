@@ -3,12 +3,15 @@
     <ng-container *ngIf="!isLoading">
 
         <!-- Online Payment Settings Starts -->
-        <div [style.pointerEvents]="backendData.schoolMerchantAccount?'auto':'none'" [style.opacity]="backendData.schoolMerchantAccount?'1':'0.35'">
+        <div [style.pointerEvents]="backendData.schoolMerchantAccount?'auto':'none'"
+            [style.opacity]="backendData.schoolMerchantAccount?'1':'0.35'">
             <div style="display: flex; flex-direction: row; align-items: center;">
                 <mat-icon style="font-size: 30px">payments</mat-icon>
                 <h3 style="margin-left: 12px;">Online Fee Payment</h3>
-                
-                <mat-slide-toggle *ngIf="backendData.schoolMerchantAccount" style="margin-right: 16px; margin-left: auto;" [(ngModel)]="backendData.schoolMerchantAccount.isEnabled">
+
+                <mat-slide-toggle *ngIf="backendData.schoolMerchantAccount"
+                    style="margin-right: 16px; margin-left: auto;"
+                    [(ngModel)]="backendData.schoolMerchantAccount.isEnabled">
                     Online Fees Payment
                 </mat-slide-toggle>
 
@@ -16,18 +19,83 @@
 
             <span *ngIf="!backendData.schoolMerchantAccount">Merchant Bank Account not set.</span>
 
+            <!-- Bank Account details updating message starts  -->
+            <span *ngIf="!htmlRenderer.isUpdatingOnlineFeePaymentAllowed()" style="color: red;">Online Fees Payments are
+                disabled while your Bank Account details are being updated, you can resume collecting Online Fees
+                Payments when the details are changed
+                successfully.</span>
+            <!-- Bank Account details updating message ends  -->
+
+            <!-- Platform Charges Division starts -->
             <div *ngIf="backendData.schoolMerchantAccount">
-                <h4>Payment Transaction Fee Division between parent and school</h4>
-                <div class="flex-desktop-row-mobile-col" style="align-items: center;">
-                    <mat-chip style="margin: 4px;">School: {{htmlRenderer.getSchoolPlatformFeePercentage().toFixed(2)}}%</mat-chip>
-                    <mat-slider style="min-width: max(320px, 48vw);" 
-                        [ngModel]="100 - backendData.schoolMerchantAccount.percentageOfPlatformFeeOnSchool" 
+                <h4>Platform Charges Division between parent and school</h4>
+                <div style="opacity: 65%; margin-bottom: 1rem;">* Choose how you want to distribute platform charges
+                    between school and parent</div>
+
+                <!-- New Platform Charges Divider starts -->
+                <mat-radio-group aria-label="Select one" style="display: flex; flex-direction: column; gap: 1rem;"
+                    [(ngModel)]="backendData.schoolMerchantAccount.platformFeeOnSchoolType"
+                    *ngIf="htmlRenderer.isEasebuzzInPayFeesFeatureFlagEnabled">
+
+                    <!-- Percentage based radio button starts -->
+                    <mat-radio-button value="Percentage">
+                        <span style="color: black; white-space: normal;">School will bear a particular percentage of
+                            total platform charges.</span>
+                    </mat-radio-button>
+                    <!-- Percentage based radio button ends -->
+
+                    <!-- Percentage Based Divider starts -->
+                    <div class="flex-desktop-row-mobile-col" style="align-items: center; margin-left: 1rem; gap: 4px;"
+                        *ngIf="backendData.schoolMerchantAccount.platformFeeOnSchoolType=='Percentage'">
+                        <mat-chip>Parent:
+                            {{htmlRenderer.getParentPlatformFeePercentage().toFixed(2)}}%</mat-chip>
+                        <mat-slider style="min-width: max(320px, 48vw);"
+                            [ngModel]="100 - backendData.schoolMerchantAccount.percentageOfPlatformFeeOnSchool"
+                            (ngModelChange)="backendData.schoolMerchantAccount.percentageOfPlatformFeeOnSchool = 100 - $event"
+                            min="0" max="100" step="1"></mat-slider>
+                        <mat-chip>School:
+                            {{htmlRenderer.getSchoolPlatformFeePercentage().toFixed(2)}}%</mat-chip>
+                    </div>
+                    <!-- Percentage Based Divider ends -->
+
+                    <!-- Max budget based radio button starts -->
+                    <mat-radio-button value="Flat">
+                        <span style="color: black; white-space: normal;">School will bear complete platform charges upto
+                            a particular amount.</span>
+                    </mat-radio-button>
+                    <!-- Max budget based radio button ends -->
+
+                    <!-- Max Platform charge budget input starts -->
+                    <div style="margin-left: 2rem;"
+                        *ngIf="backendData.schoolMerchantAccount.platformFeeOnSchoolType=='Flat'">
+                        <mat-form-field>
+                            <mat-label>Max Platform Fee</mat-label>
+                            <input name="maxPlatformFeeOnSchool" required matInput type="number" min="0"
+                                [(ngModel)]="backendData.schoolMerchantAccount.maxPlatformFeeOnSchool"
+                                (input)="htmlRenderer.forcePositiveNumber($event)">
+                        </mat-form-field>
+                    </div>
+                    <!-- Max Platform charge budget input ends -->
+
+                </mat-radio-group>
+                <!-- New Platform Charges Divider ends -->
+
+                <!-- Old Platform Charges Divider starts -->
+                <div class="flex-desktop-row-mobile-col" style="align-items: center; margin-left: 1rem; gap: 4px;"
+                    *ngIf="!htmlRenderer.isEasebuzzInPayFeesFeatureFlagEnabled">
+                    <mat-chip>Parent:
+                        {{htmlRenderer.getParentPlatformFeePercentage().toFixed(2)}}%</mat-chip>
+                    <mat-slider style="min-width: max(320px, 48vw);"
+                        [ngModel]="100 - backendData.schoolMerchantAccount.percentageOfPlatformFeeOnSchool"
                         (ngModelChange)="backendData.schoolMerchantAccount.percentageOfPlatformFeeOnSchool = 100 - $event"
                         min="0" max="100" step="1"></mat-slider>
-                    <mat-chip style="margin: 4px;">Parent: {{htmlRenderer.getParentPlatformFeePercentage().toFixed(2)}}%</mat-chip>
-
+                    <mat-chip>School:
+                        {{htmlRenderer.getSchoolPlatformFeePercentage().toFixed(2)}}%</mat-chip>
                 </div>
+                <!-- Old Platform Charges Divider ends -->
+
             </div>
+            <!-- Platform Charges Division ends -->
 
         </div>
 
@@ -41,7 +109,8 @@
             <div style="display: flex; flex-direction: row; align-items: center;">
                 <mat-icon style="font-size: 30px">account_balance</mat-icon>
                 <h3 style="margin-left: 12px;">Accounting</h3>
-                <mat-slide-toggle style="margin-right: 16px; margin-left: auto;" [checked]="backendData.feeSettings.accountingSettingsJSON!=null"
+                <mat-slide-toggle style="margin-right: 16px; margin-left: auto;"
+                    [checked]="backendData.feeSettings.accountingSettingsJSON!=null"
                     (change)="toggleAccounting($event.checked)">Enable</mat-slide-toggle>
             </div>
 
@@ -53,12 +122,14 @@
                             <!--Search bar-->
                             <mat-form-field style="width: 100%;">
                                 <mat-icon matPrefix (click)="searchInput1.focus();">search</mat-icon>
-                                <input style="pointer-events: auto;" #searchInput1 (click)="$event.stopPropagation();" matInput>
+                                <input style="pointer-events: auto;" #searchInput1 (click)="$event.stopPropagation();"
+                                    matInput>
                             </mat-form-field>
                         </mat-option>
 
                         <ng-container *ngFor="let customAccountSession of customAccountSessionList">
-                            <mat-option *ngIf="customAccountSession.title.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
+                            <mat-option
+                                *ngIf="customAccountSession.title.toLowerCase().startsWith(searchInput1.value.toLowerCase())"
                                 [value]="customAccountSession.id">
                                 {{customAccountSession.title}}&nbsp;A/c
                             </mat-option>
@@ -67,7 +138,8 @@
                 </mat-form-field><br />
 
                 <ng-container *ngFor="let paymentMode of getPaymentModeList(); let i=index;">
-                    <div class="row" style="margin-top: 24px;" [style.margin-left]="commonFunctions.isMobileMenu()?'-8px':'16px'">
+                    <div class="row" style="margin-top: 24px;"
+                        [style.margin-left]="commonFunctions.isMobileMenu()?'-8px':'16px'">
                         <div class="col-md-3 col-xs-9">
                             <mat-form-field style="width: 100%;" (click)="searchInput2.focus()">
                                 <mat-label>Add Account</mat-label>
@@ -76,12 +148,14 @@
                                         <!--Search bar-->
                                         <mat-form-field style="width: 100%;">
                                             <mat-icon matPrefix>search</mat-icon>
-                                            <input style="pointer-events: auto;" #searchInput2 (click)="$event.stopPropagation();" matInput>
+                                            <input style="pointer-events: auto;" #searchInput2
+                                                (click)="$event.stopPropagation();" matInput>
                                         </mat-form-field>
                                     </mat-option>
 
                                     <ng-container *ngFor="let customAccountSession of customAccountSessionList;">
-                                        <mat-option *ngIf="customAccountSession.title.toLowerCase().startsWith(searchInput2.value.toLowerCase())"
+                                        <mat-option
+                                            *ngIf="customAccountSession.title.toLowerCase().startsWith(searchInput2.value.toLowerCase())"
                                             (click)="addNewAccountInFeePaymentAccountList(customAccountSession, paymentMode); $event.stopPropagation();">
                                             {{customAccountSession.title}}&nbsp;A/c
                                         </mat-option>
@@ -111,17 +185,21 @@
                 <!-- Online Fee Payment Credit Account Selector Start -->
                 <mat-form-field style="width: 200px;" (click)="searchInput3.focus();">
                     <mat-label>Online Payment Credit Account</mat-label>
-                    <mat-select [(ngModel)]="backendData.feeSettings.accountingSettingsJSON.parentOnlinePaymentCreditAccount" required>
+                    <mat-select
+                        [(ngModel)]="backendData.feeSettings.accountingSettingsJSON.parentOnlinePaymentCreditAccount"
+                        required>
                         <mat-option style="pointer-events: none;">
                             <!--Search bar-->
                             <mat-form-field style="width: 100%;">
                                 <mat-icon matPrefix (click)="searchInput3.focus();">search</mat-icon>
-                                <input style="pointer-events: auto;" #searchInput3 (click)="$event.stopPropagation();" matInput>
+                                <input style="pointer-events: auto;" #searchInput3 (click)="$event.stopPropagation();"
+                                    matInput>
                             </mat-form-field>
                         </mat-option>
 
                         <ng-container *ngFor="let customAccountSession of customAccountSessionList">
-                            <mat-option *ngIf="customAccountSession.title.toLowerCase().startsWith(searchInput3.value.toLowerCase())"
+                            <mat-option
+                                *ngIf="customAccountSession.title.toLowerCase().startsWith(searchInput3.value.toLowerCase())"
                                 [value]="customAccountSession.id">
                                 {{customAccountSession.title}}&nbsp;A/c
                             </mat-option>
@@ -145,7 +223,8 @@
             <h3 style="margin-left: 12px;">Single Fee Receipt Printing Toggle</h3>
         </div>
 
-        <mat-slide-toggle style="margin-right: 16px; margin-left: auto;" [(ngModel)]="printSingleReceipt" (change) = "serviceAdapter.updatePrintSingleReceipt()">
+        <mat-slide-toggle style="margin-right: 16px; margin-left: auto;" [(ngModel)]="printSingleReceipt"
+            (change)="serviceAdapter.updatePrintSingleReceipt()">
             Enable Single Fee Receipt Printing (Disable For Double Fee Receipts Printing)
         </mat-slide-toggle>
         <div *ngIf="isLoadingPrintSingleReceiptSetting" class="loader-custom"></div>

@@ -89,3 +89,5 @@ QUERYCOUNT = {
 QUERYCOUNT = {
     'IGNORE_REQUEST_PATTERNS': [r'^/admin/']
 }
+
+TECHSUPPORT_EMAIL = "anurag@korangle.com"
