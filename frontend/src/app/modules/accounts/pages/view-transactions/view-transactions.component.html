@@ -221,7 +221,7 @@
                         No Image
                     </i>
                 </td>
-                 <td *ngIf="canUserUpdate() && !isAccountLocked()" style="color: rgba(255, 152, 0, 1); cursor: pointer" class="text-center" (click)="openUpdateTransactionDialog(transaction)"><u>Update</u></td>
+                 <td *ngIf="showUpdateColumn(filterColumnsList) && canUserUpdate() && !isAccountLocked()" style="color: rgba(255, 152, 0, 1); cursor: pointer" class="text-center" (click)="openUpdateTransactionDialog(transaction)"><u>Update</u></td>
             </tr>
             
         </tbody>
