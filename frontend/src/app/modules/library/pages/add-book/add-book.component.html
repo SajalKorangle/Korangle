@@ -33,10 +33,11 @@
                     <!-- Book name -->
                     <div class="col-md-4">
                         <mat-form-field>
-                            <mat-label>*Book name</mat-label>
+                            <mat-label>Book name</mat-label>
                             <input
                             [(ngModel)]="newBook.bookName"
-                            matInput name="name" type="text">
+                            matInput name="name" type="text"
+                            [formControl]="bookName" required>
                         </mat-form-field>
                     </div>
 
@@ -76,11 +77,15 @@
                     <!-- Book No. -->
                     <div class="col-md-4">
                         <mat-form-field>
-                            <mat-label>*Book No.</mat-label>
+                            <mat-label>Book No.</mat-label>
                             <input
                             [(ngModel)]="newBook.bookNumber"
-                            matInput name="bookNumber" type="number">
+                            matInput name="bookNumber" type="number"
+                            [formControl]="bookNumber"
+                            required>
+                            <mat-error *ngIf="bookNumber.value < 0">Invalid input</mat-error>
                         </mat-form-field>
+
                     </div>
 
                     <!-- Edition -->
@@ -163,7 +168,9 @@
                             <mat-label>No. of pages</mat-label>
                             <input
                             [(ngModel)]="newBook.numberOfPages"
-                            matInput name="numberOfPages" type="number">
+                            matInput name="numberOfPages" type="number"
+                            [formControl]="numberOfPages">
+                            <mat-error *ngIf="numberOfPages.value < 0">Invalid input</mat-error>
                         </mat-form-field>
                     </div>
     

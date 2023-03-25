@@ -11,7 +11,10 @@ import { FormControl, Validators } from '@angular/forms';
 })
 
 export class AddBookComponent implements OnInit {
-    printedCost = new FormControl('', Validators.min(0));
+    printedCost = new FormControl('', [Validators.min(0)]);
+    bookNumber = new FormControl('', [Validators.min(0), Validators.required])
+    numberOfPages = new FormControl('', [Validators.min(0)]);
+    bookName = new FormControl('', [Validators.required]);
 
     user: any;
     frontImage: any;
