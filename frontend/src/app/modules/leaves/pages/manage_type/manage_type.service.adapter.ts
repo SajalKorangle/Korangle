@@ -23,6 +23,7 @@ export default class ManageTypeServiceAdapter {
     async handleDataChange(Operation: Operation, variableName: string): Promise<any> {
         this.vm.isLoading = true;
         if (Operation.operation === "insert" || Operation.operation === "update") {
+            // starts :- check for existing entry in the database by using Operation.check to compare 2 objects
             this.vm[variableName] = await this.vm.genericService.getObjectList(Operation.database, {});
             let sameVariableNameMap: { [id: string]: boolean } = {};
             const similarObjectList = this.vm[variableName].filter((object) => {
@@ -32,6 +33,8 @@ export default class ManageTypeServiceAdapter {
                 });
                 return variableList.length !== 0;
             });
+            // ends :- check for duplicate entry
+            // starts :- Alert if data is duplicate using list of variables provided in sameVariableNameList
             if (similarObjectList.length !== 0) {
                 let alertString: string = "";
                 const sameVariableNameList = Object.keys(sameVariableNameMap);
@@ -44,6 +47,7 @@ export default class ManageTypeServiceAdapter {
                 this.vm.isLoading = false;
                 return null;
             }
+            // ends :- alert for duplicate entry (returns null indicating error else moves ahead.)
         }
         let response = null;
         Operation.data.parentSchool = this.vm.user.activeSchool.dbId;
