@@ -23,6 +23,7 @@ import { VALIDATORS_REGX } from '@classes/regx-validators';
 import { Student } from '@services/modules/student/models/student';
 import { Session } from '@services/modules/school/models/session';
 import { PaymentService } from '@services/modules/payment/payment.service';
+import { SchoolMerchantAccount } from '@services/modules/payment/models/school-merchant-account';
 
 import { Order } from '@services/modules/payment/models/order';
 import { OnlineFeePaymentTransaction } from '@services/modules/fees/models/online-fee-payment-transaction';
@@ -86,7 +87,7 @@ export class PayFeesComponent implements OnInit {
     orderList: Array<Order>;
     parsedOrder: Array<ParsedOrder>;
 
-    schoolMerchantAccount;
+    schoolMerchantAccount: SchoolMerchantAccount;
 
     isMobile = CommonFunctions.getInstance().isMobileMenu;
 
@@ -107,6 +108,7 @@ export class PayFeesComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+        console.log(this.user);
 
         this.selectedStudentList = this.user.section.student.studentList;
 

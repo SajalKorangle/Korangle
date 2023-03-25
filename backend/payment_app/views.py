@@ -2,7 +2,7 @@ from .cashfree.cashfree import getResponseSignature
 from .cashfree.cashfree import createAndSignCashfreeOrderForKorangle
 from .cashfree.cashfree import createAndSignCashfreeOrderForSchool
 from .models import Order
-from .easebuzz_lib.helpersForKorangle import createOrder, verifyPayment
+from .easebuzz_lib.helpersForKorangle import createSelfOrder, createSchoolOrder, verifyPayment
 
 from common.common_views_3 import CommonView, CommonListView, APIView
 from common.common_serializer_interface_3 import get_object
@@ -105,7 +105,7 @@ class OrderSchoolView(CommonView, APIView):
         schoolOnlinePaymentAccount = SchoolMerchantAccount.objects.get(parentSchool=activeSchoolId)
         assert schoolOnlinePaymentAccount.isEnabled, "Online Payment is not enabled for this school"
         if(isFeatureFlagEnabled("Easebuzz in Pay Fees page feature flag")):
-            assert schoolOnlinePaymentAccount.isAllowed, "School is not able to recieve online payments at the moment, please retry later"
+            assert schoolOnlinePaymentAccount.easebuzzBankLabel!="", "School is not able to recieve online payments at the moment, please retry later"
         orderData = {
             'orderId': str(int(time() * 1000000)),
             'parentUser': request.user.id,
@@ -213,12 +213,42 @@ class EaseBuzzOrderSelfView(CommonView, APIView):
             orderData[child_field] = data[child_field]
             del data[child_field]
         
-        easebuzz_order = createOrder(data, orderData["orderId"])
+        easebuzz_order = createSelfOrder(data, orderData["orderId"])
 
         if(easebuzz_order.get("success", False)!=False):
             GenericSerializerInterface(
                 Model=self.Model, data=orderData, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeStudentID']).create_object()
         
+        return easebuzz_order
+    
+
+class EaseBuzzOrderSchoolView(CommonView, APIView):
+    Model = Order
+    permittedMethods = ['get', 'post', ]
+
+    @user_permission_3
+    def post(self, request, *args, **kwargs):
+        activeSchoolId = kwargs['activeSchoolID']
+        schoolOnlinePaymentAccount = SchoolMerchantAccount.objects.get(parentSchool=activeSchoolId)
+        assert schoolOnlinePaymentAccount.isEnabled, "Online Payment is not enabled for this school"
+        if(schoolOnlinePaymentAccount.easebuzzBankLabel == ""):
+            return {"failure": "EaseBuzz payments for this school are not set"}
+
+        orderData = {
+            'orderId': str(int(time() * 1000000)),
+            'parentUser': request.user.id,
+            'amount': request.data['orderAmount']
+        }
+        for child_field in [key for key in request.data if key in self.Model._meta.fields_map]:
+            orderData[child_field] = request.data[child_field]
+            del request.data[child_field]
+
+        easebuzz_order = createSchoolOrder(request.data, orderData["orderId"], schoolOnlinePaymentAccount)
+
+        if(easebuzz_order.get("success", False) != False):
+            GenericSerializerInterface(
+                Model=self.Model, data=orderData, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeStudentID']).create_object()
+
         return easebuzz_order
 
 
