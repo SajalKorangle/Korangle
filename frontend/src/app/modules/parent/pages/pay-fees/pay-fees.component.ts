@@ -108,7 +108,6 @@ export class PayFeesComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        console.log(this.user);
 
         this.selectedStudentList = this.user.section.student.studentList;
 
