@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Book } from '@services/modules/library/models/book';
 import { DataStorage } from "@classes/data-storage";
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
     selector: 'add-book',
@@ -10,6 +11,7 @@ import { DataStorage } from "@classes/data-storage";
 })
 
 export class AddBookComponent implements OnInit {
+    printedCost = new FormControl('', Validators.min(0));
 
     user: any;
     frontImage: any;

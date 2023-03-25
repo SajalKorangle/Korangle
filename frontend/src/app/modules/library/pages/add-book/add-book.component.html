@@ -173,7 +173,10 @@
                             <mat-label>Printed cost</mat-label>
                             <input
                             [(ngModel)]="newBook.printedCost"
-                            matInput name="printedCost" type="number">
+                            matInput name="printedCost" type="number"
+                            [formControl]="printedCost"
+                            >
+                            <mat-error *ngIf="printedCost.invalid">Invalid input</mat-error>
                         </mat-form-field>
                     </div>
     
