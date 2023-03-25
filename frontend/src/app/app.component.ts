@@ -14,16 +14,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { AppHtmlRenderer } from './app.html.renderer';
 import { PaymentResponseDialogComponent } from '@basic-components/payment-response-dialog/payment-response-dialog.component';
 import { FeatureFlagService } from '@services/feature-flag.service';
+import { GenericService } from '@services/generic/generic-service';
+
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    providers: [AuthenticationOldService, AuthenticationService, VersionCheckService, NotificationService, FeatureFlagService],
+    providers: [AuthenticationOldService, AuthenticationService, VersionCheckService, NotificationService, FeatureFlagService, GenericService],
 })
 export class AppComponent implements OnInit {
     isLoading = false;
-    public user = new User();
+    public user = new User(this.genericService);
 
     featureFlagListIsFetched = false;
 
@@ -33,6 +35,7 @@ export class AppComponent implements OnInit {
         private authenticationService: AuthenticationOldService,
         private versionCheckService: VersionCheckService,
         private featureFlagService: FeatureFlagService,
+        private genericService: GenericService,
         private dialog: MatDialog) { }
 
     ngOnInit() {

@@ -1,6 +1,7 @@
 import { School } from './school';
 
 import { EmitterService } from '../services/emitter.service';
+import { GenericService } from '@services/generic/generic-service';
 
 export class User {
     id: number;
@@ -18,6 +19,14 @@ export class User {
     activeSchool: any;
 
     schoolList: School[] = [];
+
+    session_list: {
+        id: number,
+        startDate: string,
+        endDate: string,
+        orderNumber: number,
+        name: string
+    }[] = [];
 
     isLazyLoading: boolean = false;
 
@@ -66,6 +75,10 @@ export class User {
             },
         ],
     };
+
+    constructor(
+        private genericService : GenericService
+    ) { }
 
     emptyUserDetails(): void {
         this.username = null;
@@ -124,83 +137,89 @@ export class User {
         let urlParams = new URLSearchParams(window.location.search);
         let module: any;
         let task: any;
+        this.genericService.getObjectList({school_app: 'Session'}, {}).then((value) => {
+            this.session_list = value;
+            if (!this.activeSchool) {
+                switch (modulePath) {
+                    case '/':
+                        module = undefined;
+                        break;
+                    case 'user-settings':
+                        module = this.settings;
+                        break;
+                    case 'notification':
+                        module = this.notification;
+                        break;
+                }
+                if (module) {
+                    task = module.taskList.find((t) => t.path == taskPath);
+                }
+            } else if (this.checkUserSchoolSessionPermission(urlParams)) {
+                // checking the school id  and session id in the url is valid for this user
+                switch (
+                    modulePath // from here we are populating module
+                ) {
+                    // if the user refreshes the notification or user - settings
+                    // (i.e) we dont have these two in our user's active school module list
 
-        if (!this.activeSchool) {
-            switch (modulePath) {
-                case '/':
-                    module = undefined;
-                    break;
-                case 'user-settings':
-                    module = this.settings;
-                    break;
-                case 'notification':
-                    module = this.notification;
-                    break;
-            }
-            if (module) {
-                task = module.taskList.find((t) => t.path == taskPath);
-            }
-        } else if (this.checkUserSchoolSessionPermission(urlParams)) {
-            // checking the school id  and session id in the url is valid for this user
-            switch (
-                modulePath // from here we are populating module
-            ) {
-                // if the user refreshes the notification or user - settings
-                // (i.e) we dont have these two in our user's active school module list
+                    case '/':
+                        module = undefined;
+                        break;
+                    case 'user-settings':
+                        module = this.settings;
+                        break;
+                    case 'notification':
+                        module = this.notification;
+                        break;
 
-                case '/':
-                    module = undefined;
-                    break;
-                case 'user-settings':
-                    module = this.settings;
-                    break;
-                case 'notification':
-                    module = this.notification;
-                    break;
-
-                // in case of parent, the modules are in  parentModuleList ( refreshing their students task lists are not handled yet)
-                case 'parent':
-                    // if only the active school has student list then we can change the role
-                    if (this.activeSchool.studentList.length > 0) {
-                        this.activeSchool.role = 'Parent';
-                        if (urlParams.get('student_id') != undefined) {
-                            module = this.activeSchool.studentList.find((s) => s.id == Number(urlParams.get('student_id')));
-                        } else {
-                            module = this.activeSchool.parentModuleList[0].taskList.some((t) => t.path == taskPath)
-                                ? this.activeSchool.parentModuleList[0]
-                                : undefined;
+                    // in case of parent, the modules are in  parentModuleList ( refreshing their students task lists are not handled yet)
+                    case 'parent':
+                        // if only the active school has student list then we can change the role
+                        if (this.activeSchool.studentList.length > 0) {
+                            this.activeSchool.role = 'Parent';
+                            if (urlParams.get('student_id') != undefined) {
+                                module = this.activeSchool.studentList.find((s) => s.id == Number(urlParams.get('student_id')));
+                            } else {
+                                module = this.activeSchool.parentModuleList[0].taskList.some((t) => t.path == taskPath)
+                                    ? this.activeSchool.parentModuleList[0]
+                                    : undefined;
+                            }
                         }
-                    }
-                    break;
+                        break;
 
-                // What if a url parameter contains a different school id and the active school is different from that.
-                // Is this case possible? Maybe when a url is entered into the address bar and user data has just come from backend
-                // active school is populated in initializeUserData function which doesn't match the urlParam. But we are changing the
-                // activeSchool in checkUserSchoolSessionPermission function, that should take care of such scenarios.
-                // activeSchool should always be handled by url for a good architecture implementation !!!
+                    // What if a url parameter contains a different school id and the active school is different from that.
+                    // Is this case possible? Maybe when a url is entered into the address bar and user data has just come from backend
+                    // active school is populated in initializeUserData function which doesn't match the urlParam. But we are changing the
+                    // activeSchool in checkUserSchoolSessionPermission function, that should take care of such scenarios.
+                    // activeSchool should always be handled by url for a good architecture implementation !!!
 
-                // for employee
-                default:
-                    module = this.activeSchool.moduleList.find((m) => m.path == modulePath);
+                    // for employee
+                    default:
+                        module = this.activeSchool.moduleList.find((m) => m.path == modulePath);
+                }
+                if (module) {
+                    // if module doesn't exist redirect to default school notification page
+                    task = module.taskList.find((t) => t.path == taskPath);
+                }
             }
-            if (module) {
-                // if module doesn't exist redirect to default school notification page
-                task = module.taskList.find((t) => t.path == taskPath);
+
+            if (!module || !task) {
+                module = this.notification;
+                task = this.notification.taskList[0];
             }
-        }
 
-        if (!module || !task) {
-            module = this.notification;
-            task = this.notification.taskList[0];
-        }
-
-        module.showTaskList = true;
-        this.populateSectionAndRoute(task, module);
+            module.showTaskList = true;
+            this.populateSectionAndRoute(task, module);
+        });
     }
 
     checkUserSchoolSessionPermission(urlParams: any): boolean {
         const school = this.schoolList.find((s) => s.dbId == Number(urlParams.get('school_id')));
-        if (school != undefined && Number(urlParams.get('session')) > 0 && Number(urlParams.get('session')) <= 5) {
+        let maxSessionID = 0;
+        this.session_list.forEach((session) => {
+                maxSessionID = Math.max(maxSessionID, session.id);
+            })
+        if (school != undefined && Number(urlParams.get('session')) > 0 && Number(urlParams.get('session')) <= maxSessionID) {
             this.activeSchool = school;
             if (this.activeSchool.currentSessionDbId != Number(urlParams.get('session')) && this.checkChangeSession()) {
                 this.activeSchool.currentSessionDbId = Number(urlParams.get('session'));

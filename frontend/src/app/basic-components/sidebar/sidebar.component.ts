@@ -6,7 +6,6 @@ import { EmitterService } from '../../services/emitter.service';
 
 import { User } from '../../classes/user';
 import { style, state, trigger, animate, transition } from '@angular/animations';
-import { GenericService } from '@services/generic/generic-service';
 import { environment } from '../../../environments/environment';
 import { Constants } from '../../classes/constants';
 import { CommonFunctions } from './../../classes/common-functions';
@@ -22,7 +21,6 @@ declare const $: any;
     styleUrls: ['./sidebar.component.css'],
     providers: [
         NotificationService,
-        GenericService,
     ],
     animations: [
         trigger('rotate', [
@@ -44,12 +42,10 @@ export class SidebarComponent implements OnInit {
 
     green = 'green';
     warning = 'warning';
-    session_list = [];
 
     constructor(
         private router: Router,
         private notificationService: NotificationService,
-        private genericService: GenericService
     ) {
         // We are using this routeReuseStrategy because the DashBoard Component should not re-render when changing pages.
         this.router.routeReuseStrategy.shouldReuseRoute = function (future: any, curr: any) {
@@ -81,9 +77,6 @@ export class SidebarComponent implements OnInit {
             } else if (event instanceof ActivationStart) {
                 CommonFunctions.scrollToTop();
             }
-        });
-        this.genericService.getObjectList({school_app: 'Session'}, {}).then((value) => {
-            this.session_list = value;
         });
         EmitterService.get('initialize-router').subscribe((value) => {
             // Navigating To '/' before any other route - because :
@@ -162,7 +155,7 @@ export class SidebarComponent implements OnInit {
     }
 
     getCurrentSession(): any {
-        return this.session_list.find(session => {
+        return this.user.session_list.find(session => {
             return session.id == this.user.activeSchool.currentSessionDbId;
         });
     }
