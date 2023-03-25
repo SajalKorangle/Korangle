@@ -39,7 +39,7 @@ class SchoolMerchantAccountView(CommonView, APIView):
         del data['vendorData']
         data.update({
             "vendorId": vendorId,
-            'isAllowed': False
+            'easebuzzBankLabel': ""
         })
         responseData = GenericSerializerInterface(
             Model=self.Model, data=data, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeSchoolID']).create_object()
@@ -49,11 +49,11 @@ class SchoolMerchantAccountView(CommonView, APIView):
         send_mail(
             f"School with KID {kwargs['activeSchoolID']} just added their Bank Account",
             f"""
-            School with KID {kwargs['activeSchoolID']} just added their new Bank Account, please send these Bank Details to EaseBuzz for creating a bank label:
-            Account Number: {responseData["vendorData"]["bank"]["accountNumber"]}
-            Account Holder: {responseData["vendorData"]["bank"]["accountHolder"]}
-            IFSC Code: {responseData["vendorData"]["bank"]["ifsc"]}
-            After recieving the Bank Label from EaseBuzz please add the bank label, using Django Admin, in School Merchant Account Table (present in Payment App) for the respective school. Also check the "isAllowed" field to allow school to recieve online payments.
+School with KID {kwargs['activeSchoolID']} just added their new Bank Account, please send these Bank Details to EaseBuzz for creating a bank label:
+Account Number: {responseData["vendorData"]["bank"]["accountNumber"]}
+Account Holder: {responseData["vendorData"]["bank"]["accountHolder"]}
+IFSC Code: {responseData["vendorData"]["bank"]["ifsc"]}
+After recieving the Bank Label from EaseBuzz please add the bank label, using Django Admin, in School Merchant Account Table (present in Payment App) for the respective school.
             """,
             None, [settings.TECHSUPPORT_EMAIL])
         return responseData
@@ -74,7 +74,7 @@ class SchoolMerchantAccountView(CommonView, APIView):
         updateVendor(vendorData)
         del data['vendorData']
         data.update({
-            'isAllowed': False
+            'easebuzzBankLabel': ""
         })
         responseData = GenericSerializerInterface(
             Model=self.Model, data=data, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeSchoolID']).update_object()
@@ -85,11 +85,11 @@ class SchoolMerchantAccountView(CommonView, APIView):
         send_mail(
             f"School with KID {kwargs['activeSchoolID']} just updated their Bank Account",
             f"""
-            School with KID {kwargs['activeSchoolID']} just updated their new Bank Account, please send these new Bank Details to EaseBuzz for creating a new bank label or updating the existing bank label:
-            Account Number: {responseData["vendorData"]["bank"]["accountNumber"]}
-            Account Holder: {responseData["vendorData"]["bank"]["accountHolder"]}
-            IFSC Code: {responseData["vendorData"]["bank"]["ifsc"]}
-            After recieving response from EaseBuzz, if a new bank label was created please change the bank label, using Django Admin, in School Merchant Account Table (present in Payment App) for the respective school. Also check the "isAllowed" field to allow school to continue recieving online payments.
+School with KID {kwargs['activeSchoolID']} just updated their new Bank Account, please send these new Bank Details to EaseBuzz for creating a new bank label or updating the existing bank label:
+Account Number: {responseData["vendorData"]["bank"]["accountNumber"]}
+Account Holder: {responseData["vendorData"]["bank"]["accountHolder"]}
+IFSC Code: {responseData["vendorData"]["bank"]["ifsc"]}
+After recieving response from EaseBuzz, if a new bank label was created please change the bank label, using Django Admin, in School Merchant Account Table (present in Payment App) for the respective school.
             """,
             None, [settings.TECHSUPPORT_EMAIL])
         return responseData
