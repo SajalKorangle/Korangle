@@ -248,4 +248,5 @@ def get_user_details(user_object):
         'schoolList': get_school_list(user_object),
         'session_list': Session.objects.values()
     }
+    
     return response
