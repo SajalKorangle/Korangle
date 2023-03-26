@@ -33,9 +33,7 @@ export class AppComponent implements OnInit {
         private authenticationService: AuthenticationOldService,
         private versionCheckService: VersionCheckService,
         private featureFlagService: FeatureFlagService,
-        private dialog: MatDialog) {
-            
-        }
+        private dialog: MatDialog) { }
 
     ngOnInit() {
 
