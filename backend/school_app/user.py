@@ -225,7 +225,6 @@ class LoginUserView(JSONWebTokenAPIView):
                 device_name=device_name,
                 response=response
         )
-        response_data['session_list']=get_session_list();
         return Response({"data": response_data})
 
 
