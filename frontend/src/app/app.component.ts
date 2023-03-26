@@ -16,7 +16,6 @@ import { PaymentResponseDialogComponent } from '@basic-components/payment-respon
 import { FeatureFlagService } from '@services/feature-flag.service';
 import { GenericService } from '@services/generic/generic-service';
 
-
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -25,7 +24,7 @@ import { GenericService } from '@services/generic/generic-service';
 })
 export class AppComponent implements OnInit {
     isLoading = false;
-    public user = new User(this.genericService);
+    public user: User;
 
     featureFlagListIsFetched = false;
 
@@ -35,8 +34,10 @@ export class AppComponent implements OnInit {
         private authenticationService: AuthenticationOldService,
         private versionCheckService: VersionCheckService,
         private featureFlagService: FeatureFlagService,
-        private genericService: GenericService,
-        private dialog: MatDialog) { }
+        private dialog: MatDialog,
+        private genericService: GenericService) {
+            this.user = new User(this.genericService)
+        }
 
     ngOnInit() {
 
