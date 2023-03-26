@@ -254,4 +254,3 @@ def get_user_details(user_object):
 
 def get_session_list():
     return Session.objects.values()
-    pass
