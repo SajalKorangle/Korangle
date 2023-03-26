@@ -246,9 +246,6 @@ def get_user_details(user_object):
         'email': user_object.email,
         'id': user_object.id,
         'schoolList': get_school_list(user_object),
-        'session_list': get_session_list()
+        'session_list': Session.objects.values()
     }
     return response
-
-def get_session_list():
-    return Session.objects.values()
