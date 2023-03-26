@@ -1,7 +1,6 @@
 import { School } from './school';
 
 import { EmitterService } from '../services/emitter.service';
-import { GenericService } from '@services/generic/generic-service';
 
 export class User {
     id: number;
@@ -76,10 +75,6 @@ export class User {
         ],
     };
 
-    constructor(
-        private genericService : GenericService
-    ) { }
-
     emptyUserDetails(): void {
         this.username = null;
         this.first_name = null;
@@ -120,12 +115,10 @@ export class User {
         this.first_name = data.first_name;
         this.last_name = data.last_name;
         this.email = data.email;
+        this.session_list = data.session_list;
         this.initializeSchoolList(data.schoolList);
         this.activeSchool = this.schoolList[0];
-        this.genericService.getObjectList({ school_app: 'Session' }, {}).then((value) => {
-            this.session_list = value;
-            this.initializeTask();
-        });
+        this.initializeTask();
     }
 
     // This function will be called after
