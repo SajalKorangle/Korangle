@@ -35,7 +35,7 @@ MONTH = (
     (DECEMBER, 'December'),
 )
 
-# choices for leave type
+# choices for leave type action
 CFW = 'CarryForward'
 ENC = 'Encashment'
 LAPSE = 'Lapse'
@@ -43,6 +43,14 @@ REMAINING_LEAVES_ACTION = (
     (CFW, 'CarryForward'),
     (ENC, 'Encashment'),
     (LAPSE, 'Lapse')
+)
+
+# choices for leave type
+PAID = 'Paid'
+UNPAID = 'Unpaid'
+LEAVE_TYPE = (
+    (PAID, 'Paid'),
+    (UNPAID, 'Unpaid')
 )
 
 # school leave types
@@ -54,7 +62,7 @@ class SchoolLeaveType(models.Model):
         null=False, verbose_name='leave_name', default='invalid_type')
 
     # Leave Paid Status
-    leaveType = models.TextField(null=False, default="Paid")
+    leaveType = models.TextField(null=False, choices=LEAVE_TYPE, default="Paid")
 
     # School
     parentSchool = models.ForeignKey(

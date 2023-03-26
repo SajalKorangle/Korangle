@@ -1,7 +1,9 @@
 <!-- Starts :- Modal Wrapper (absolute wrapper to contain the from and display above everything) -->
 <div class="modalWrapper">
+
     <!-- Starts :- Modal Container (Responsive container to contain the form) -->
     <div class="modalContainer" (click)="closeColorList($event)">
+        
         <!-- Starts :- Form Title-bar -->
         <div class="modalRow titleBar">
             <div class="modalRowItem">
@@ -42,6 +44,7 @@
 
         <!-- Starts :- Form Row to give Leave Name -->
         <div class="modalRow">
+
             <!-- Starts :- Input Field to accept Leave Name -->
             <div class="modalRowItem" style="width: 40%">
                 <div class="modalColItem">
@@ -55,18 +58,23 @@
                 </div>
             </div>
             <!-- Ends :- Input Field -->
+        
         </div>
         <!-- Ends :- Form Row to give Leave Name -->
 
         <div class="modalRow">
+
             <!-- Starts :- Custom Input Selector to accept color code for this leave type -->
             <div class="modalRowItem" style="width: 40%">
                 <div class="modalColItem">
                     <span class="modalLabel">Set Colour</span>
                 </div>
             </div>
+
             <div class="modalRowItem" style="width: 60%">
+                
                 <div class="modalColItem">
+                    
                     <!-- Starts :- Button to activate drop-down -->
                     <span class="colorSelector" (click)="isColorListVisible = !isColorListVisible">
                         <span id="colorIndicator" class="colorSelector modalInput"
@@ -89,7 +97,9 @@
                         ></div>
                     </div>
                     <!-- Ends :- Drop-down color selector -->
+
                 </div>
+                
             </div>
             <!-- Ends :- Custom Input Selector -->
 
