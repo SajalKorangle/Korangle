@@ -22,7 +22,7 @@
                     matTooltip="Accepted image types are jpg, jpeg, and png">Upload front image</a>
 
                     <a *ngIf="this.frontImage"
-                    style="cursor: pointer;" (click)="this.frontImage=''"
+                    style="cursor: pointer;" (click)="this.frontImage=''; imageInputFront.value='';"
                     ><mat-icon >delete_forever</mat-icon></a>
                 </div>
             </div>
@@ -127,7 +127,7 @@
                     <a (click)="imageInputFrontTwo.click()" style="cursor: pointer" matTooltip="Accepted image types are jpg, jpeg, and png">Upload front image</a>
 
                     <a *ngIf="this.frontImage"
-                    style="cursor: pointer;" (click)="this.frontImage=''"
+                    style="cursor: pointer;" (click)="this.frontImage=''; imageInputFrontTwo.value='';"
                     ><mat-icon >delete_forever</mat-icon></a>
                 </div>
             </div>
@@ -154,7 +154,7 @@
                     <a (click)="imageInputBack.click()" style="cursor: pointer" matTooltip="Accepted image types are jpg, jpeg, and png">Upload back image</a>
 
                     <a *ngIf="this.backImage"
-                    style="cursor: pointer;" (click)="this.backImage=''"
+                    style="cursor: pointer;" (click)="this.backImage=''; imageInputBack.value='';"
                     ><mat-icon >delete_forever</mat-icon></a>
                 </div>
             </div>
@@ -250,7 +250,8 @@
                     <a (click)="imageInputBackTwo.click()" style="cursor: pointer" matTooltip="Accepted image types are jpg, jpeg, and png">Upload back image</a>
 
                     <a *ngIf="this.backImage"
-                    style="cursor: pointer;" (click)="this.backImage=''"
+                    style="cursor: pointer;"
+                    (click)="this.backImage=''; imageInputBackTwo.value='';"
                     ><mat-icon >delete_forever</mat-icon></a>
                 </div>
             </div>
