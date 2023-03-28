@@ -18,7 +18,8 @@
 
                 <!-- Front image controls - mobile -->
                 <div class="d-flex align-items-stretch">
-                    <a (click)="imageInputFront.click()" style="cursor: pointer">Upload front image</a>
+                    <a (click)="imageInputFront.click()" style="cursor: pointer"
+                    matTooltip="Accepted image types are jpg, jpeg, and png">Upload front image</a>
 
                     <a *ngIf="this.frontImage"
                     style="cursor: pointer;" (click)="this.frontImage=''"
@@ -123,7 +124,7 @@
 
                 <!-- Front image controls -->
                 <div class="d-flex align-items-stretch">
-                    <a (click)="imageInputFrontTwo.click()" style="cursor: pointer">Upload front image</a>
+                    <a (click)="imageInputFrontTwo.click()" style="cursor: pointer" matTooltip="Accepted image types are jpg, jpeg, and png">Upload front image</a>
 
                     <a *ngIf="this.frontImage"
                     style="cursor: pointer;" (click)="this.frontImage=''"
@@ -150,7 +151,7 @@
 
                 <!-- Back image controls - mobile -->
                 <div class="d-flex align-items-stretch">
-                    <a (click)="imageInputBack.click()" style="cursor: pointer">Upload back image</a>
+                    <a (click)="imageInputBack.click()" style="cursor: pointer" matTooltip="Accepted image types are jpg, jpeg, and png">Upload back image</a>
 
                     <a *ngIf="this.backImage"
                     style="cursor: pointer;" (click)="this.backImage=''"
@@ -246,7 +247,7 @@
 
                 <!-- Back image controls -->
                 <div class="d-flex align-items-stretch">
-                    <a (click)="imageInputBackTwo.click()" style="cursor: pointer">Upload back image</a>
+                    <a (click)="imageInputBackTwo.click()" style="cursor: pointer" matTooltip="Accepted image types are jpg, jpeg, and png">Upload back image</a>
 
                     <a *ngIf="this.backImage"
                     style="cursor: pointer;" (click)="this.backImage=''"
