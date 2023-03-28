@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Book } from '@services/modules/library/models/book';
+import { Book } from '@modules/library/models/book';
 import { DataStorage } from "@classes/data-storage";
 import { FormControl, Validators } from '@angular/forms';
 
