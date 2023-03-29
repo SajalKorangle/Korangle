@@ -1,9 +1,7 @@
 <!-- Starts :- Modal Wrapper (absolute wrapper to contain the from and display above everything) -->
 <div class="modalWrapper">
-
     <!-- Starts :- Modal Container (Responsive container to contain the form) -->
     <div class="modalContainer" (click)="closeColorList($event)">
-        
         <!-- Starts :- Form Title-bar -->
         <div class="modalRow titleBar">
             <div class="modalRowItem">
@@ -44,7 +42,6 @@
 
         <!-- Starts :- Form Row to give Leave Name -->
         <div class="modalRow">
-
             <!-- Starts :- Input Field to accept Leave Name -->
             <div class="modalRowItem" style="width: 40%">
                 <div class="modalColItem">
@@ -53,17 +50,34 @@
             </div>
             <div class="modalRowItem" style="width: 60%">
                 <div class="modalColItem">
-                    <input class="modalInput" [ngStyle]="{borderBottom: isNameValid ? (leaveTypeName === '' ?  '1px solid rgba(0, 0, 0, 0.25)' : '1px solid rgba(0, 255, 157, 0.4)') : '1px solid rgba(255, 0, 0, 0.4)'}" 
-                    (keyup)="updateName($event)" [value]="leaveTypeName" placeholder="eg. CL" />
+                    <input
+                        class="modalInput"
+                        [ngStyle]="{
+                            borderBottom: isNameValid
+                                ? leaveTypeName === ''
+                                    ? '1px solid rgba(0, 0, 0, 0.25)'
+                                    : '1px solid rgba(0, 255, 157, 0.4)'
+                                : '1px solid rgba(255, 0, 0, 0.4)'
+                        }"
+                        (keyup)="updateName($event)"
+                        [value]="leaveTypeName"
+                        placeholder="eg. CL"
+                    />
                 </div>
             </div>
             <!-- Ends :- Input Field -->
-        
         </div>
+        <!-- Starts :- Message for duplicate entry. -->
+        <div class="modalRow" *ngIf="!isNameValid">
+            <div class="modalRowItem" style="width: 100%; justify-content: center">
+                <span style="color: red; font-size: small">* Duplicate Name</span>
+            </div>
+        </div>
+        <!-- Ends :- Message for duplicate entry. -->
+
         <!-- Ends :- Form Row to give Leave Name -->
 
         <div class="modalRow">
-
             <!-- Starts :- Custom Input Selector to accept color code for this leave type -->
             <div class="modalRowItem" style="width: 40%">
                 <div class="modalColItem">
@@ -72,12 +86,12 @@
             </div>
 
             <div class="modalRowItem" style="width: 60%">
-                
                 <div class="modalColItem">
-                    
                     <!-- Starts :- Button to activate drop-down -->
                     <span class="colorSelector" (click)="isColorListVisible = !isColorListVisible">
-                        <span id="colorIndicator" class="colorSelector modalInput"
+                        <span
+                            id="colorIndicator"
+                            class="colorSelector modalInput"
                             [ngStyle]="{ backgroundColor: color === '' ? '#ffffff' : color }"
                             style="cursor: pointer; width: 100%; display: flex; flex-direction: row; justify-content: space-between"
                         >
@@ -91,15 +105,15 @@
 
                     <!-- Starts :- Drop-down color selector -->
                     <div *ngIf="isColorListVisible" class="modalOptionsContainer">
-                        <div *ngFor="let colorCode of colorCodeList" (click)="updateColor($event, colorCode)"
+                        <div
+                            *ngFor="let colorCode of colorCodeList"
+                            (click)="updateColor($event, colorCode)"
                             [ngStyle]="{ background: colorCode, border: color === colorCode ? '1px solid black' : 'none' }"
                             style="width: 10%; height: 25px; margin-top: 2.5px; margin-bottom: 2.5px; border-radius: 2px; cursor: pointer"
                         ></div>
                     </div>
                     <!-- Ends :- Drop-down color selector -->
-
                 </div>
-                
             </div>
             <!-- Ends :- Custom Input Selector -->
 
@@ -141,7 +155,11 @@
                 <!-- Starts :- Input (Number of allowed leaves in a month) -->
                 <div class="modalRowItem" style="width: 100px; padding-left: 5px; padding-right: 5px">
                     <div class="modalColItem" style="text-align: left">
-                        <input class="modalInput" (keyup)="checkInput($event)" type="number" min="0"
+                        <input
+                            class="modalInput"
+                            (keyup)="checkInput($event)"
+                            type="number"
+                            min="0"
                             [(ngModel)]="SchoolLeaveTypeMonthMap[monthMap[month]].value"
                         />
                     </div>
@@ -170,8 +188,12 @@
             <div class="modalRow">
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
-                        <div (click)="isNoteVisible = !isNoteVisible" class="modalNote"
-                            [ngStyle]="{ cursor: 'pointer', display: !isNoteVisible ? 'inline-block' : 'block',
+                        <div
+                            (click)="isNoteVisible = !isNoteVisible"
+                            class="modalNote"
+                            [ngStyle]="{
+                                cursor: 'pointer',
+                                display: !isNoteVisible ? 'inline-block' : 'block',
                                 whiteSpace: !isNoteVisible ? 'nowrap' : 'normal'
                             }"
                         >

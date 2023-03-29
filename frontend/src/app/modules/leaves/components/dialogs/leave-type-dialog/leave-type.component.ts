@@ -105,7 +105,7 @@ export class LeaveTypeDialog {
         if (this.leaveTypeName.length === 0 || this.leaveType === "None" || this.color.length === 0) {
             alert("Please fill all the fields before saving the changes.");
         } else if (!this.isNameValid) {
-            alert("Please enter a valid name.");
+            alert("Name already exists.");
         } else {
             this.schoolLeaveTypeMonthList = [];
             Object.keys(this.SchoolLeaveTypeMonthMap).map((month) => {
