@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     'activity_record_app',
     'feature_flag_app',
     'library_app',
+    'leaves_app',
 
     'corsheaders',
 

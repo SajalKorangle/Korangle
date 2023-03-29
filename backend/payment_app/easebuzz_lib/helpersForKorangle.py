@@ -10,6 +10,7 @@ from collections import defaultdict
 import json
 
 KORANGLE_CHARGE = 5.9
+KORANGLE_EASEBUZZ_BANK_LABEL = "KORANGLE"
 GST = 0.18
 
 easebuzz = Easebuzz(EASEBUZZ_MERCHANT_KEY, EASEBUZZ_SALT, EASEBUZZ_ENV)
@@ -51,7 +52,10 @@ def createOrder(orderData, orderId):
         "email": orderData["customerEmail"],
         "surl": snfurl,
         "furl": snfurl,
-        "show_payment_mode": orderData["paymentMode"]["apiCode"]
+        "show_payment_mode": orderData["paymentMode"]["apiCode"],
+        "split_payments": json.dumps({
+            KORANGLE_EASEBUZZ_BANK_LABEL: calculateAmount(orderData)
+        })
     })
 
     if(order["amount"]==False):

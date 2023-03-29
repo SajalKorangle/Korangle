@@ -3,7 +3,10 @@ export class SchoolMerchantAccount {
     parentSchool: number;
     vendorId: string;
     isEnabled: boolean = true;
+    isAllowed: boolean = true;
+    platformFeeOnSchoolType: string = "percentage";
     percentageOfPlatformFeeOnSchool: number;
+    maxPlatformFeeOnSchool: number;
     vendorData: {
         id?: string,
         name: string,
