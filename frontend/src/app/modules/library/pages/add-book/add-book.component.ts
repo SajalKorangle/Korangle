@@ -29,9 +29,6 @@ export class AddBookComponent implements OnInit {
 
     isLoading = false;
 
-    // From service adapter
-    bookList = []
-
     constructor (
         public genericService: GenericService,
     ) { }
@@ -40,7 +37,7 @@ export class AddBookComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new AddBookServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData()
+        this.initializeVariable();
     }
 
     isMobile(): boolean {

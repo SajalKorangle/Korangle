@@ -10,24 +10,6 @@ export class AddBookServiceAdapter {
         this.vm = vm;
     }
 
-    //initialize data
-    initializeData(): void {
-        this.vm.isLoading = true;
-
-        Promise.all([
-            this.vm.genericService.getObjectList({library_app: "Book"}, {}), // 0
-        ]).then(
-            (value) => {
-                this.vm.bookList = value[0];
-                this.vm.initializeVariable();
-                this.vm.isLoading = false;
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
-    }
-
     dataURLtoFile(dataurl, filename) {
         try {
             const arr = dataurl.split(',');
