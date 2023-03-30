@@ -14,39 +14,13 @@ export class AddBookServiceAdapter {
     initializeData(): void {
         this.vm.isLoading = true;
 
-        let schoolId = this.vm.user.activeSchool.dbId;
-        let sessionId = this.vm.user.activeSchool.currentSessionDbId;
-
-        // We will use this to filter books params by the currently active school, because
-        // each school will be using different book parameters
-        let book_parameter_query_parameters = {
-            filter: {
-                parentSchool: this.vm.user.activeSchool.dbId
-            }
-        };
-
         Promise.all([
             this.vm.genericService.getObjectList({library_app: "Book"}, {}), // 0
-            this.vm.genericService.getObjectList({library_app: "BookParameter"}, book_parameter_query_parameters) // 1
         ]).then(
             (value) => {
                 this.vm.bookList = value[0];
-                this.vm.bookParameterList = value[1].map((x) => ({ ...x, filterValues: JSON.parse(x.filterValues) }));
-
                 this.vm.initializeVariable();
-
-                if (this.vm.bookParameterList) {
-                    for (let i = 0; i < this.vm.bookParameterList.length; i++) {
-                        if (this.vm.bookParameterList[i].parameterType == "DOCUMENT") {
-                            this.vm.showToolTip.push(false);
-                            this.vm.height.push(120);
-                        }
-                    }
-                }
                 this.vm.isLoading = false;
-                console.log({value});
-                console.log(this.vm.bookList);
-                console.log(this.vm.bookParameterList);
             },
             (error) => {
                 this.vm.isLoading = false;
@@ -77,34 +51,17 @@ export class AddBookServiceAdapter {
             alert("Name should be populated")
             return;
         }
-
         if (this.vm.newBook.bookNumber == null){
             alert("Book number should be populated");
             return;
         }
 
-        if (this.vm.newBook.dateOfPurchase == '') {
-            this.vm.newBook.dateOfPurchase = null;
-        }
-
-        if (this.vm.newBook.author == ''){
-            this.vm.newBook.author = null;
-        }
-        if (this.vm.newBook.publisher == ''){
-            this.vm.newBook.publisher = null;
-        }
-        if (this.vm.newBook.edition == ''){
-            this.vm.newBook.edition = null;
-        }
-        if (this.vm.newBook.coverType == ''){
-            this.vm.newBook.coverType = null;
-        }
-        if (this.vm.newBook.bookType == ''){
-            this.vm.newBook.bookType = null;
-        }
-        if (this.vm.newBook.location == ''){
-            this.vm.newBook.location = null;
-        }
+        // Nullify empty fields, because undefined fields do not get carried over to form data, and cause adding books to the database to fail
+        Object.keys(this.vm.newBook).forEach(key => {
+            if (this.vm.newBook[key] === undefined || this.vm.newBook[key] == ''){
+                this.vm.newBook[key] = null;
+            }
+        })
 
         this.vm.isLoading = true;
 
@@ -138,9 +95,7 @@ export class AddBookServiceAdapter {
 
         this.vm.isLoading = true;
         try{
-            console.log({book_form_data})
             const value = await this.vm.genericService.createObject({ library_app: "Book" }, book_form_data);
-            console.log({value});
             alert('Book added succesfully');
 
             this.vm.initializeVariable();
@@ -153,34 +108,6 @@ export class AddBookServiceAdapter {
             this.vm.isLoading = false;
         }
 
-
-
-        // this.vm.currentBookParameterValueList = this.vm.currentBookParameterValueList.filter((x) => {
-        //     return x.value !== this.vm.nullValue;
-        // });
-        // this.vm.currentBookParameterValueList.forEach((x) => {
-        //     x.parentBook = value.id;
-        // });
-
-        // let form_data_list = [];
-        // this.vm.bookParameterList.forEach((parameter) => {
-        //     let temp_obj = this.vm.currentBookParameterValueList.find((x) => x.parentBookParameter === parameter.id);
-        //     if (temp_obj) {
-        //         const data = { ...temp_obj };
-        //         const form_data = new FormData();
-        //         Object.keys(data).forEach((key) => {
-        //             if (data[key]) {
-        //                 if (key == 'document_name' || key == 'document_size') {
-        //                 } else if (key == 'document_value') {
-        //                     form_data.append(key, this.dataURLtoFile(data[key], data['document_name']));
-        //                     form_data.append('document_size', data['document_size']);
-        //                 } else {
-        //                     form_data.append(key, data[key]);
-        //                 }
-        //             }
-        //         });
-        //         form_data_list.push(form_data);
-        //     }
     }
 
 }

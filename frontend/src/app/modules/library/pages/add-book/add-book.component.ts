@@ -24,20 +24,13 @@ export class AddBookComponent implements OnInit {
 
     nullValue = null;
 
-    // newBook: Book = new Book();
     newBook: Book;
     serviceAdapter: AddBookServiceAdapter;
 
-
     isLoading = false;
-
-    height = [];
-    showToolTip = [];
 
     // From service adapter
     bookList = []
-    bookParameterList: any[] = [];
-    currentBookParameterValueList: any[] = [];
 
     constructor (
         public genericService: GenericService,
@@ -50,10 +43,6 @@ export class AddBookComponent implements OnInit {
         this.serviceAdapter.initializeData()
     }
 
-    informWIP() {
-        alert("Under construction");
-    }
-
     isMobile(): boolean {
         if (window.innerWidth > 991) {
             return false;
@@ -64,7 +53,6 @@ export class AddBookComponent implements OnInit {
         this.newBook = new Book();
         this.newBook.parentSchool = this.user.activeSchool.dbId;
 
-        this.currentBookParameterValueList = [];
         this.frontImage = this.nullValue;
         this.backImage = this.nullValue;
 

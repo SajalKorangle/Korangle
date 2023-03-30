@@ -18,12 +18,12 @@ class Book(models.Model):
     publisher = models.TextField(null=True, blank=True)
 
     dateOfPurchase = models.DateField(null=True)
-    bookNumber = models.TextField()
+    bookNumber = models.IntegerField()
     edition = models.TextField(null=True, blank=True)
 
     numberOfPages = models.IntegerField(default=1)
 
-    printedCost = models.TextField(null=True, blank=True)
+    printedCost = models.IntegerField(null=True, blank=True)
 
     coverType = models.TextField(null=True, blank=True)
 

@@ -3,13 +3,13 @@ export class Book {
     author: string;
     publisher: string;
     dateOfPurchase: any;
-    bookNumber: any;
+    bookNumber: number;
     edition: any;
     numberOfPages: number;
-    printedCost: any;
+    printedCost: number;
     coverType: any;
     location: any;
-    bookType: any;
+    typeOfBook: any;
     frontImage: string;
     backImage: string;
     parentSchool: number = null;
