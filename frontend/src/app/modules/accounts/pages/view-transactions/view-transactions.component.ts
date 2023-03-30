@@ -77,7 +77,6 @@ export class ViewTransactionsComponent implements OnInit {
                 displayName: 'Voucher Number',
                 value: true,
             },
-
             date: {
                 displayName: 'Date',
                 value: true,
@@ -318,6 +317,16 @@ export class ViewTransactionsComponent implements OnInit {
     canUserUpdate() {
         const module = this.user.activeSchool.moduleList.find(module => module.title === 'Accounts');
         return module.taskList.some(task => task.title === 'Update Transaction');
+    }
+
+    showUpdateColumn(list: any) {
+        let isTrue = false;
+        list.forEach(item => {
+            if (item['value']) {
+                isTrue = true;
+            }
+        });
+        return isTrue;
     }
 
     openUpdateTransactionDialog(transaction): void {

@@ -51,6 +51,7 @@ export class ViewMarksComponent implements OnInit {
     isLoading = false;
     subjectFilterDisplay = false;
     sortBy = 'rollNumber';
+    absentRep = 'A';
     sortingOrder = 1; //1: ascending, -1: descending
 
     constructor(
@@ -231,7 +232,7 @@ export class ViewMarksComponent implements OnInit {
             let marks = this.getStudentFilteredTotalMarks(studentSection);
             row.push(marks.toString() + ` (${((marks * 100) / maximumMarks).toFixed(2).toString()})%`);
             this.getFilteredTestList().forEach((test) => {
-                row.push(this.getStudentMarks(studentSection, test));
+                row.push(this.htmlRenderer.getStudentAbsentStatus(studentSection, test) ? this.absentRep : this.getStudentMarks(studentSection, test));
             });
             template.push(row);
         });
