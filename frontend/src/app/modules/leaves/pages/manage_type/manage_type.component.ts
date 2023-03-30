@@ -20,8 +20,11 @@ export class ManageTypeComponent implements OnInit {
     isLoading: boolean = true;
     invalidNameList: Array<string> = [];
     currentSchoolLeaveType: LeaveType = {
-        id: -1, leaveTypeName: "", color: "",
-        leaveType: "None", parentSchool: "",
+        id: -1,
+        leaveTypeName: "",
+        color: "",
+        leaveType: "None",
+        parentSchool: "",
     };
     isSaving: boolean = false;
     monthList: Array<string> = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -30,8 +33,11 @@ export class ManageTypeComponent implements OnInit {
         this.currentSchoolLeaveTypeMonthList = [];
         this.monthList.map((month) => {
             this.currentSchoolLeaveTypeMonthList.push({
-                id: -1, parentSchoolLeaveType: -1,
-                month: month, value: 0, remainingLeavesAction: "",
+                id: -1,
+                parentSchoolLeaveType: -1,
+                month: month,
+                value: 0,
+                remainingLeavesAction: "",
             });
         });
         this.serviceAdapter.initializeAdapter(this);
@@ -47,14 +53,20 @@ export class ManageTypeComponent implements OnInit {
         });
         if (isNew) {
             this.currentSchoolLeaveType = {
-                id: -1, leaveTypeName: "", color: "",
-                leaveType: "None", parentSchool: "",
+                id: -1,
+                leaveTypeName: "",
+                color: "",
+                leaveType: "None",
+                parentSchool: "",
             };
             this.currentSchoolLeaveTypeMonthList = [];
             this.monthList.map((month) => {
                 this.currentSchoolLeaveTypeMonthList.push({
-                    id: -1, parentSchoolLeaveType: -1, month: month,
-                    value: 0, remainingLeavesAction: "CarryForward",
+                    id: -1,
+                    parentSchoolLeaveType: -1,
+                    month: month,
+                    value: 0,
+                    remainingLeavesAction: "CarryForward",
                 });
             });
         } else {
@@ -88,7 +100,31 @@ export class ManageTypeComponent implements OnInit {
             this.isSaving = false;
         }
     }
-    async deleteType(event, data): Promise<any> {
-        alert("Under Construction");
+    async deleteType(event, schoolLeaveType): Promise<any> {
+        this.currentSchoolLeaveType = schoolLeaveType;
+        this.currentSchoolLeaveTypeMonthList = [];
+        this.leaveTypeMonthList.map((leaveTypeMonth) => {
+            if (this.currentSchoolLeaveType.id === leaveTypeMonth.parentSchoolLeaveType) {
+                this.currentSchoolLeaveTypeMonthList.push(leaveTypeMonth);
+            }
+        });
+        let response = await this.serviceAdapter.handleDataChange({
+            database: { leaves_app: "SchoolLeaveTypeMonth" },
+            operation: "deleteBatch",
+            check: (data1, data2) => {
+                return [];
+            },
+            data: this.currentSchoolLeaveTypeMonthList,
+        }, "leaveTypeMonthList");
+        if (response !== null && response !== undefined && JSON.stringify(response) !== "{}") {
+            response = await this.serviceAdapter.handleDataChange({
+                database: { leaves_app: "SchoolLeaveType" },
+                operation: "delete",
+                check: (data1, data2) => {
+                    return [];
+                },
+                data: [this.currentSchoolLeaveType],
+            }, "leaveTypeList");
+        }
     }
 }

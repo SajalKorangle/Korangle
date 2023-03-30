@@ -36,7 +36,7 @@
                         </div>
                         <div class="leaveTableRowItem">
                             <div class="leaveTableColItem">
-                                <span class="leaveTableColDataContainer">{{ item.leaveType === 0 ? "Paid" : "Unpaid" }}</span>
+                                <span class="leaveTableColDataContainer">{{ item.leaveType }}</span>
                             </div>
                         </div>
                         <div class="leaveTableRowItem">
@@ -51,7 +51,7 @@
                             </div>
                         </div>
                         <div class="leaveTableRowItem">
-                            <div class="leaveTableColItem" style="cursor: pointer" (click)="addNewType($event, item)">
+                            <div class="leaveTableColItem" style="cursor: pointer" (click)="addOrUpdateLeaveType(false, item)">
                                 <span class="leaveTableColDataContainer"
                                     ><span style="color: rgba(128, 128, 128, 0.5)" class="material-icons-outlined">edit</span></span
                                 >
