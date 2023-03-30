@@ -36,7 +36,7 @@
                         <mat-form-field>
                             <mat-label>Book name</mat-label>
                             <input
-                            [(ngModel)]="newBook.bookName"
+                            [(ngModel)]="newBook.name"
                             matInput name="name" type="text"
                             [formControl]="bookName" required>
                         </mat-form-field>
@@ -261,7 +261,7 @@
             type="submit"
             id="action-add-book"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-            (click)="informWIP()"
+            (click)="serviceAdapter.createNewBook()"
         >
         Add
         </button>
@@ -270,7 +270,7 @@
             *ngIf="isMobile()"
             mat-fab
             color="primary"
-            (click)="informWIP()"
+            (click)="serviceAdapter.createNewBook()"
         >
             <mat-icon>check</mat-icon>
         </button>

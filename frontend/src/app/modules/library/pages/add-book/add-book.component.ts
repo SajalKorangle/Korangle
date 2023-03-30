@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { GenericService } from '@services/generic/generic-service';
 import { Book } from '@modules/library/models/book';
 import { DataStorage } from "@classes/data-storage";
+import { AddBookServiceAdapter } from './add-book-service.adapter';
 import { FormControl, Validators } from '@angular/forms';
 
 @Component({
     selector: 'add-book',
     templateUrl: './add-book.component.html',
     styleUrls: ['./add-book.component.css'],
-    providers: [ ],
+    providers: [ GenericService ],
 })
 
 export class AddBookComponent implements OnInit {
@@ -20,15 +22,32 @@ export class AddBookComponent implements OnInit {
     frontImage: any;
     backImage: any;
 
-    newBook: Book = new Book();
+    nullValue = null;
+
+    // newBook: Book = new Book();
+    newBook: Book;
+    serviceAdapter: AddBookServiceAdapter;
 
 
     isLoading = false;
 
-    constructor () { }
+    height = [];
+    showToolTip = [];
+
+    // From service adapter
+    bookList = []
+    bookParameterList: any[] = [];
+    currentBookParameterValueList: any[] = [];
+
+    constructor (
+        public genericService: GenericService,
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+        this.serviceAdapter = new AddBookServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData()
     }
 
     informWIP() {
@@ -41,7 +60,15 @@ export class AddBookComponent implements OnInit {
         }
         return true;
     }
+    initializeVariable(): void {
+        this.newBook = new Book();
+        this.newBook.parentSchool = this.user.activeSchool.dbId;
 
+        this.currentBookParameterValueList = [];
+        this.frontImage = this.nullValue;
+        this.backImage = this.nullValue;
+
+    }
     async onImageSelect(evt: any, side: any) {
         let image = evt.target.files[0];
 

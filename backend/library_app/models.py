@@ -14,24 +14,24 @@ class Book(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0)
 
     name = models.TextField()
-    author = models.TextField()
-    publisher = models.TextField()
+    author = models.TextField(null=True, blank=True)
+    publisher = models.TextField(null=True, blank=True)
 
     dateOfPurchase = models.DateField(null=True)
-    bookNumber = models.TextField(null=True)
-    edition = models.TextField()
+    bookNumber = models.TextField()
+    edition = models.TextField(null=True, blank=True)
 
     numberOfPages = models.IntegerField(default=1)
 
-    printedCost = models.TextField()
+    printedCost = models.TextField(null=True, blank=True)
 
-    coverType = models.TextField()
+    coverType = models.TextField(null=True, blank=True)
 
-    frontImage = models.ImageField(upload_to=upload_to)
-    backImage = models.ImageField(upload_to=upload_to)
+    frontImage = models.ImageField(upload_to=upload_to, null=True, blank=True)
+    backImage = models.ImageField(upload_to=upload_to, null=True, blank=True)
 
-    typeOfBook = models.TextField()
-    location = models.TextField()
+    typeOfBook = models.TextField(null=True, blank=True)
+    location = models.TextField(null=True, blank=True)
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool__id']
