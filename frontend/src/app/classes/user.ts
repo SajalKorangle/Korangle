@@ -212,7 +212,7 @@ export class User {
         let maxSessionID = 0;
         this.session_list.forEach((session) => {
             maxSessionID = Math.max(maxSessionID, session.id);
-        })
+        });
         if (school != undefined && Number(urlParams.get('session')) > 0 && Number(urlParams.get('session')) <= maxSessionID) {
             this.activeSchool = school;
             if (this.activeSchool.currentSessionDbId != Number(urlParams.get('session')) && this.checkChangeSession()) {
