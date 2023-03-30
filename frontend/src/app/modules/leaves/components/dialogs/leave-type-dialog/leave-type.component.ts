@@ -97,7 +97,7 @@ export class LeaveTypeDialog {
     updateName(event): void {
         this.leaveTypeName = event.target.value;
         const similarName = this.InvalidNameList.find((name) => {
-            return name === this.leaveTypeName;
+            return name.toLowerCase() === this.leaveTypeName.toLowerCase();
         });
         this.isNameValid = similarName ? false : true;
     }
