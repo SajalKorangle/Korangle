@@ -12,7 +12,7 @@ class OrderAdminTabular(admin.ModelAdmin):
 class SchoolMerchantAccountAdminTabular(admin.ModelAdmin):
     model = SchoolMerchantAccount
     list_display = ('parentSchool', 'vendorId')
-    readonly_fields = [field.name for field in SchoolMerchantAccount._meta.concrete_fields]
+    readonly_fields = [field.name for field in SchoolMerchantAccount._meta.concrete_fields if field.name not in ['easebuzzBankLabel', 'isAllowed']]
 
 
 admin.site.register(Order, OrderAdminTabular)

@@ -1,7 +1,9 @@
 <!-- Starts :- Modal Wrapper (absolute wrapper to contain the from and display above everything) -->
 <div class="modalWrapper">
+
     <!-- Starts :- Modal Container (Responsive container to contain the form) -->
     <div class="modalContainer" (click)="closeColorList($event)">
+        
         <!-- Starts :- Form Title-bar -->
         <div class="modalRow titleBar">
             <div class="modalRowItem">
@@ -31,9 +33,9 @@
             <div class="modalRowItem" style="width: 60%">
                 <div class="modalColItem">
                     <select class="modalInput" [(ngModel)]="leaveType">
-                        <option value="-1">None</option>
-                        <option value="0">Paid Leaves</option>
-                        <option value="1">Unpaid Leaves</option>
+                        <option value="None">None</option>
+                        <option value="Paid">Paid Leaves</option>
+                        <option value="Unpaid">Unpaid Leaves</option>
                     </select>
                 </div>
             </div>
@@ -42,6 +44,7 @@
 
         <!-- Starts :- Form Row to give Leave Name -->
         <div class="modalRow">
+
             <!-- Starts :- Input Field to accept Leave Name -->
             <div class="modalRowItem" style="width: 40%">
                 <div class="modalColItem">
@@ -50,27 +53,39 @@
             </div>
             <div class="modalRowItem" style="width: 60%">
                 <div class="modalColItem">
-                    <input class="modalInput" [(ngModel)]="name" [value]="name" placeholder="eg. CL" />
+                    <input class="modalInput" [ngStyle]="{borderBottom: isNameValid ? (leaveTypeName === '' ?  '1px solid rgba(0, 0, 0, 0.25)' : '1px solid rgba(0, 255, 157, 0.4)') : '1px solid rgba(255, 0, 0, 0.4)'}" 
+                    (keyup)="updateName($event)" [value]="leaveTypeName" placeholder="eg. CL" />
                 </div>
             </div>
             <!-- Ends :- Input Field -->
+        
         </div>
+        <!-- Starts :- Message for duplicate entry. -->
+        <div class="modalRow" *ngIf="!isNameValid">
+            <div class="modalRowItem" style="width: 100%; justify-content: center">
+                <span style="color: red; font-size: small">* Duplicate Name</span>
+            </div>
+        </div>
+        <!-- Ends :- Message for duplicate entry. -->
+
         <!-- Ends :- Form Row to give Leave Name -->
 
         <div class="modalRow">
+
             <!-- Starts :- Custom Input Selector to accept color code for this leave type -->
             <div class="modalRowItem" style="width: 40%">
                 <div class="modalColItem">
                     <span class="modalLabel">Set Colour</span>
                 </div>
             </div>
+
             <div class="modalRowItem" style="width: 60%">
+                
                 <div class="modalColItem">
+                    
                     <!-- Starts :- Button to activate drop-down -->
                     <span class="colorSelector" (click)="isColorListVisible = !isColorListVisible">
-                        <span
-                            id="colorIndicator"
-                            class="colorSelector modalInput"
+                        <span id="colorIndicator" class="colorSelector modalInput"
                             [ngStyle]="{ backgroundColor: color === '' ? '#ffffff' : color }"
                             style="cursor: pointer; width: 100%; display: flex; flex-direction: row; justify-content: space-between"
                         >
@@ -84,19 +99,20 @@
 
                     <!-- Starts :- Drop-down color selector -->
                     <div *ngIf="isColorListVisible" class="modalOptionsContainer">
-                        <div
-                            *ngFor="let colorCode of colorCodeList"
-                            (click)="updateColor($event, colorCode)"
+                        <div *ngFor="let colorCode of colorCodeList" (click)="updateColor($event, colorCode)"
                             [ngStyle]="{ background: colorCode, border: color === colorCode ? '1px solid black' : 'none' }"
                             style="width: 10%; height: 25px; margin-top: 2.5px; margin-bottom: 2.5px; border-radius: 2px; cursor: pointer"
                         ></div>
                     </div>
                     <!-- Ends :- Drop-down color selector -->
+
                 </div>
+                
             </div>
             <!-- Ends :- Custom Input Selector -->
 
             <!-- Starts :- CarryForward and Encashments -->
+            <!-- Starts :- Title -->
             <div class="modalRow">
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
@@ -104,6 +120,9 @@
                     </div>
                 </div>
             </div>
+            <!-- Ends :- Title -->
+
+            <!-- Starts :- Headings for each row -->
             <div class="modalRow">
                 <div class="modalRowItem" style="width: 5ch; padding-left: 5px; padding-right: 5px">
                     <div class="modalColItem" style="text-align: center"></div>
@@ -115,36 +134,52 @@
                     <div class="modalColItem" style="text-align: left">Remaining Leaves</div>
                 </div>
             </div>
-            <div class="modalRow" *ngFor="let month of months">
+            <!-- Ends :- Headings -->
+
+            <!-- Starts :- Inputs for each month -->
+            <div class="modalRow" *ngFor="let month of monthList">
+                <!-- Starts :- Month Title -->
                 <div class="modalRowItem" style="width: 5ch; padding-left: 5px; padding-right: 5px">
                     <div class="modalColItem" style="text-align: center; text-transform: capitalize">
                         {{ month }}
                     </div>
                 </div>
+                <!-- Ends :- Month Title -->
+
+                <!-- Starts :- Input (Number of allowed leaves in a month) -->
                 <div class="modalRowItem" style="width: 100px; padding-left: 5px; padding-right: 5px">
                     <div class="modalColItem" style="text-align: left">
-                        <input class="modalInput" (keyup)="checkInput($event)" type="number" min="0" [(ngModel)]="leavesPerMonth[month][0]" />
+                        <input class="modalInput" (keyup)="checkInput($event)" type="number" min="0"
+                            [(ngModel)]="SchoolLeaveTypeMonthMap[monthMap[month]].value"
+                        />
                     </div>
                 </div>
+                <!-- Ends :- Input -->
+
+                <!-- Starts :- Select (Action to perform on remaining leaves) -->
                 <div class="modalRowItem" style="max-width: 250px; flex-grow: 1; padding-left: 5px; padding-right: 5px">
                     <div class="modalColItem" style="text-align: left">
                         <select (change)="updateLeaves($event, month)" class="modalInput">
-                            <option value="0" [selected]="leavesPerMonth[month][1] == 0">CFW (Carry-forward)</option>
-                            <option value="1" [selected]="leavesPerMonth[month][1] == 1">Lapse</option>
-                            <option value="2" [selected]="leavesPerMonth[month][1] == 2">ENC (Encashed)</option>
+                            <option value="CarryForward" [selected]="SchoolLeaveTypeMonthMap[monthMap[month]].remainingLeavesAction == 'CarryForward'">
+                                CFW (Carry-forward)
+                            </option>
+                            <option value="Encashment" [selected]="SchoolLeaveTypeMonthMap[monthMap[month]].remainingLeavesAction == 'Encashment'">
+                                ENC (Encashed)
+                            </option>
+                            <option value="Lapse" [selected]="SchoolLeaveTypeMonthMap[monthMap[month]].remainingLeavesAction == 'Lapse'">Lapse</option>
                         </select>
                     </div>
                 </div>
+                <!-- Ends :- Select -->
             </div>
+            <!-- Ends :- Inputs -->
+
+            <!-- Starts :- Note -->
             <div class="modalRow">
                 <div class="modalRowItem" style="width: 100%">
                     <div class="modalColItem">
-                        <div
-                            (click)="isNoteVisible = !isNoteVisible"
-                            class="modalNote"
-                            [ngStyle]="{
-                                cursor: 'pointer',
-                                display: !isNoteVisible ? 'inline-block' : 'block',
+                        <div (click)="isNoteVisible = !isNoteVisible" class="modalNote"
+                            [ngStyle]="{ cursor: 'pointer', display: !isNoteVisible ? 'inline-block' : 'block',
                                 whiteSpace: !isNoteVisible ? 'nowrap' : 'normal'
                             }"
                         >
@@ -154,6 +189,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Ends :- Note -->
             <!-- Ends :- CarryForward and Encashments -->
 
             <!-- Starts :- Horizontal Break -->
@@ -173,9 +209,7 @@
 
             <div class="modalRow" *ngIf="isEncFormulaVisible">
                 <div class="modalRowItem" style="flex-grow: 1">
-                    <div class="modalColItem">
-                        Under Construction.
-                    </div>
+                    <div class="modalColItem">Under Construction.</div>
                 </div>
             </div>
             <!-- Ends :- Set Encashments Formula -->
@@ -187,7 +221,7 @@
             <!-- Starts :- Buttons to Close / Save the form -->
             <div class="modalRow" style="padding: 5px 5px 5px 20px; margin-top: 12px; margin-bottom: 12px; justify-content: end">
                 <button (click)="saveData($event)" class="modalButton" style="color: white; background: #fe9800" [disabled]="isSaving">
-                    {{ isNew ? "Add" : "Update" }}
+                    {{ leaveTypeId === -1 ? "Add" : "Update" }}
                 </button>
                 <button class="modalButton" (click)="close.emit($event)" style="border: 1px solid #fe9800" [disabled]="isSaving">Cancel</button>
             </div>
