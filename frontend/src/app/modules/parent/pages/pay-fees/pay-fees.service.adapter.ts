@@ -331,6 +331,5 @@ export class PayFeesServiceAdapter {
             this.vm.isLoading = false;
             alert(newOrderResponse.failure || "Unable to generate payment link.");
         }
- 
    }
 }

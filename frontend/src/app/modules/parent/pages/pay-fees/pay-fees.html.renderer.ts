@@ -36,7 +36,7 @@ export class PayFeesHTMLRenderer {
 
     constructor(vm: PayFeesComponent) {
         this.vm = vm;
-        this.isEasebuzzEnabled = DataStorage.getInstance().isFeatureEnabled("Easebuzz in Pay Fees page feature flag")
+        this.isEasebuzzEnabled = DataStorage.getInstance().isFeatureEnabled("Easebuzz in Pay Fees page feature flag");
     }
 
     isOnlinePaymentEnabled() {
@@ -52,7 +52,7 @@ export class PayFeesHTMLRenderer {
         return (this.vm.schoolMerchantAccount.percentageOfPlatformFeeOnSchool * KORANGLE_ONLINE_PAYMENT_PLATFORM_FEE_PERCENTAGE) / 100;
     }
 
-    getNewMethodTotalPlatformCharge(){
+    getNewMethodTotalPlatformCharge() {
         let transaction_amount = 0,
             modeOfPayment = this.selectedModeOfPayment,
             amount = this.vm.getTotalPaymentAmount();
@@ -66,14 +66,14 @@ export class PayFeesHTMLRenderer {
                     parseFloat((
                         amount +
                         this.korangle_charge +
-                        Number(charge.charge)*(1+GST)
+                        Number(charge.charge) * (1 + GST)
                     ).toFixed(2));
             } else if (charge.chargeType == 'Percentage') {
                 transaction_amount =
                     parseFloat((
                         (amount + this.korangle_charge) * 100
                         /
-                        (100 - (charge.charge*(1+GST)))
+                        (100 - (charge.charge * (1 + GST)))
                     ).toFixed(2));
             }
             if (transaction_amount >= charge.minimumAmount
@@ -89,7 +89,7 @@ export class PayFeesHTMLRenderer {
         let totalPlatformCharges = this.getNewMethodTotalPlatformCharge();
         let platformChargeonSchool = totalPlatformCharges;
         if (this.vm.schoolMerchantAccount.platformFeeOnSchoolType === "Flat") {
-            platformChargeonSchool = Math.min(totalPlatformCharges, this.vm.schoolMerchantAccount.maxPlatformFeeOnSchool)
+            platformChargeonSchool = Math.min(totalPlatformCharges, this.vm.schoolMerchantAccount.maxPlatformFeeOnSchool);
         } else {
             platformChargeonSchool = parseFloat((totalPlatformCharges * (this.vm.schoolMerchantAccount.percentageOfPlatformFeeOnSchool / 100)).toFixed(2));
         }
