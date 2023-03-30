@@ -56,7 +56,6 @@ export default class ManageTypeServiceAdapter {
             })
         }
         if (Operation.operation === "insert") {
-            console.log(Operation);
             response = await this.vm.genericService.createObject(Operation.database, Operation.data[0]);
         } else if (Operation.operation === "update") {
             response = await this.vm.genericService.partiallyUpdateObject(Operation.database, Operation.data[0]);
