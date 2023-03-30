@@ -29,35 +29,35 @@ export class AddBookServiceAdapter {
     }
 
     async createNewBook() {
-        if (this.vm.newBook.name == null || this.vm.newBook.name == ''){
-            alert("Name should be populated")
+        if (this.vm.newBook.name == null || this.vm.newBook.name == '') {
+            alert("Name should be populated");
             return;
         }
-        if (this.vm.newBook.bookNumber == null){
+        if (this.vm.newBook.bookNumber == null) {
             alert("Book number should be populated");
             return;
         }
 
         // Nullify empty fields, because undefined fields do not get carried over to form data, and cause adding books to the database to fail
         Object.keys(this.vm.newBook).forEach(key => {
-            if (this.vm.newBook[key] === undefined || this.vm.newBook[key] == ''){
+            if (this.vm.newBook[key] === undefined || this.vm.newBook[key] == '') {
                 this.vm.newBook[key] = null;
             }
-        })
+        });
 
         this.vm.isLoading = true;
 
         const book_form_data = new FormData();
 
-        const data = {...this.vm.newBook}
+        const data = {...this.vm.newBook};
 
         Object.keys(data).forEach((key) => {
             if (key === 'frontImage') {
                 if (this.vm.frontImage) {
                     book_form_data.append(key, this.dataURLtoFile(this.vm.frontImage, 'frontImage.jpeg'));
                 }
-            } else if (key === 'backImage'){
-                if (this.vm.backImage){
+            } else if (key === 'backImage') {
+                if (this.vm.backImage) {
                     book_form_data.append(key, this.dataURLtoFile(this.vm.backImage, 'backImage.jpeg'));
                 }
             }
@@ -76,7 +76,7 @@ export class AddBookServiceAdapter {
         let actionString = " added " + this.vm.newBook.name;
 
         this.vm.isLoading = true;
-        try{
+        try {
             const value = await this.vm.genericService.createObject({ library_app: "Book" }, book_form_data);
             alert('Book added succesfully');
 
@@ -86,7 +86,7 @@ export class AddBookServiceAdapter {
 
             this.vm.isLoading = false;
         }
-        catch{
+        catch {
             this.vm.isLoading = false;
         }
 
