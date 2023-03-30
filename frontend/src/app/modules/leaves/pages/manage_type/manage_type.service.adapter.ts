@@ -50,10 +50,10 @@ export default class ManageTypeServiceAdapter {
             // ends :- alert for duplicate entry (returns null indicating error else moves ahead.)
         }
         let response = null;
-        if(!Operation.operation.endsWith("Batch")) {
+        if (!Operation.operation.endsWith("Batch")) {
             Operation.data.map((data) => {
                 data.parentSchool = this.vm.user.activeSchool.dbId;
-            })
+            });
         }
         if (Operation.operation === "insert") {
             response = await this.vm.genericService.createObject(Operation.database, Operation.data[0]);
