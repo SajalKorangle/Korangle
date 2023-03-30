@@ -11,6 +11,7 @@
     flex-direction: row;
     justify-content: center;
     font-family: "Roboto";
+    overflow-y: scroll;
 }
 .closeBtn {
     color: red;
@@ -23,7 +24,6 @@
     border: 2px solid red;
     padding: 0px;
 }
-
 .modalContainer {
     width: 600px;
     border-radius: 8px;
@@ -60,6 +60,27 @@
 .modalLabel {
     color: black;
     text-align: left !important;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 400;
+    font-size: small;
+}
+.modalTitle {
+    text-align: left !important;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 500;
+}
+.modalNote {
+    color: rgba(0, 0, 0, 0.5);
+    text-align: left !important;
+    overflow: hidden;
+    font-size: small;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: 250;
 }
 .modalInput {
     height: 100%;
@@ -79,7 +100,7 @@
     border: none;
     margin: 5px;
 }
-.modalColorContainer {
+.modalOptionsContainer {
     position: absolute;
     width: 360px;
     height: 200px;
@@ -100,15 +121,40 @@
     margin-top: 5px;
     margin-bottom: 5px;
 }
-
+input[type="radio"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    background-clip: content-box;
+    padding: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    background-color: #ffffff;
+    border-radius: 50%;
+    outline: none;
+}
+input[type="radio"]:checked {
+    background-color: #fc9701;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+}
 @media (max-width: 600px) {
     .modalContainer {
         width: 100%;
     }
-    .modalColorContainer {
+    .modalOptionsContainer {
         left: 0;
         right: 0;
         width: 100%;
         margin-left: 0px;
+    }
+    .modalLabel:active:after, .modalLabel:hover:after, .modalLabel:focus:after {
+        position: absolute;
+        content: attr(title);
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        margin-left: -21ch;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.8);
     }
 }
