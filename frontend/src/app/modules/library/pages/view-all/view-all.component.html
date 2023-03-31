@@ -1,3 +1,88 @@
 <div class="card-content">
-    Under Construction !!!
+        <!--Book Name Search -->
+        <mat-form-field style="margin-right: 15px" >
+            <mat-label>Book name</mat-label>
+
+            <input matInput name="name" type="text" placeholder="Search Book Name"
+            [(ngModel)]="searchBookName">
+        </mat-form-field>
+
+        <!-- Column Filter For Books Data -->
+        <mat-form-field style="margin-right: 15px" *ngIf="currentBookDocumentFilter === 'Book'">
+            <mat-select placeholder="Select Columns" id="select-book-column" style="width: 100%">
+                <mat-option>
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">Select All</button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showSerialNumber" (click)="$event.stopPropagation()">Serial No. </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation()">Name </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showAuthor" (click)="$event.stopPropagation()">Author </mat-checkbox>
+                </mat-option>
+
+      
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showPublisher" (click)="$event.stopPropagation()">Publisher </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showDateOfPurchase" (click)="$event.stopPropagation()">Date of Purchase </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showBookNumber" (click)="$event.stopPropagation()">Book No. </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showEdition" (click)="$event.stopPropagation()">Edition </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showNumberOfPages" (click)="$event.stopPropagation()">No. of Pages </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showPrintedCost" (click)="$event.stopPropagation()"
+                        >PrintedCost
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showCoverType" (click)="$event.stopPropagation()">Cover Type </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showLocation" (click)="$event.stopPropagation()">Location </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showBookType" (click)="$event.stopPropagation()">Book Type </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showFrontImage" (click)="$event.stopPropagation()">Front Image </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showBackImage" (click)="$event.stopPropagation()">Back Image </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllColumns(); $event.stopPropagation()">Select All</button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unSelectAllColumns(); $event.stopPropagation()">Clear All</button>
+                </mat-option>
+
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Column Filter For Document Data-->
+
+
 </div>
