@@ -82,7 +82,32 @@
             </mat-select>
         </mat-form-field>
 
-        <!-- Column Filter For Document Data-->
+        <!-- Print Button -->
+        <button
+        *ngIf="currentBookDocumentFilter === 'Book' && !htmlRenderer.isMobileApplication() && !htmlRenderer.isMobileBrowser()"
+        id="print-list"
+        type="button"
+        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
+        style="padding: 12px 15px; margin-right: 17px"
+        matTooltip="Print the following list"
+        tooltip-position="left"
+        (click)="printBookList()"
+        >
+            Print<i class="material-icons" style="margin-left: 15px">print</i>
+        </button>
 
+        <!-- Download button -->
+        <button
+        *ngIf="!htmlRenderer.isMobileApplication()"
+        type="button"
+        id="download"
+        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+        style="padding: 12px 15px; margin-right: 17px"
+        matTooltip="Download the following items"
+        tooltip-position="left"
+        (click)="downloadList()"
+        >
+            Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
+        </button>
 
 </div>

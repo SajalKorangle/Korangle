@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { ViewAllHtmlRenderer } from './view-all.html.renderer';
 import { DataStorage } from "@classes/data-storage";
 
 
@@ -39,6 +39,9 @@ export class ViewAllComponent implements OnInit {
     // Col Filter for documents
     documentFilter: ColumnFilter
 
+    htmlRenderer: ViewAllHtmlRenderer;
+
+
     bookDocumentSelectList = ['Book', 'Documents'];
     currentBookDocumentFilter;
 
@@ -49,9 +52,20 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter = new ColumnFilter();
         this.documentFilter = new ColumnFilter();
         this.currentBookDocumentFilter = this.bookDocumentSelectList[0];
+
+        this.htmlRenderer = new ViewAllHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
+
     }
 
     selectAllColumns(): void {}
     unSelectAllColumns(): void {}
+
+    printBookList(): void {
+        alert("Under construction");
+    }
+    downloadList(): void {
+        alert("Under construction");
+    }
 
 }
