@@ -11,8 +11,8 @@
         <mat-form-field style="margin-right: 15px" *ngIf="currentBookDocumentFilter === 'Book'">
             <mat-select placeholder="Select Columns" id="select-book-column" style="width: 100%">
                 <mat-option>
-                    <button class="btn" style="padding: 4px 7px" (click)="selectAllClasses(); $event.stopPropagation()">Select All</button>
-                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">Clear All</button>
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllColumns(); $event.stopPropagation()">Select All</button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unSelectAllColumns(); $event.stopPropagation()">Clear All</button>
                 </mat-option>
 
                 <mat-option>
@@ -109,5 +109,7 @@
         >
             Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
         </button>
+
+        <!-- TODO: Filters -->
 
 </div>

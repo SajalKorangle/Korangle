@@ -34,6 +34,8 @@ export class ViewAllComponent implements OnInit {
 
     isLoading = false;
 
+    showFilters = false;
+
     // Col Filter for books
     columnFilter: ColumnFilter;
     // Col Filter for documents
@@ -58,8 +60,16 @@ export class ViewAllComponent implements OnInit {
 
     }
 
-    selectAllColumns(): void {}
-    unSelectAllColumns(): void {}
+    selectAllColumns(): void {
+        Object.keys(this.columnFilter).forEach((key) => {
+            this.columnFilter[key] = true;
+        });
+    }
+    unSelectAllColumns(): void {
+        Object.keys(this.columnFilter).forEach((key) => {
+            this.columnFilter[key] = false;
+        });
+    }
 
     printBookList(): void {
         alert("Under construction");
