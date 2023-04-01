@@ -112,4 +112,16 @@
 
         <!-- TODO: Filters -->
 
+
+        <!-- Book Table Data List -->
+        <ng-container *ngIf="!isLoading && currentBookDocumentFilter === 'Book'">
+            <p>
+                Total Books: <b>{{ bookFullProfileList.length }}</b
+                >, Selected : <b>{{ displayBookNumber }}</b>
+            </p>
+
+            <hr>
+            UNDER CONSTRUCTION
+        </ng-container>
+
 </div>

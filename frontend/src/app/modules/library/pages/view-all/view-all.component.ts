@@ -47,6 +47,10 @@ export class ViewAllComponent implements OnInit {
     bookDocumentSelectList = ['Book', 'Documents'];
     currentBookDocumentFilter;
 
+    bookFullProfileList = [];
+    displayBookNumber = 0;
+
+
     constructor () { }
 
     ngOnInit(): void {
