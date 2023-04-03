@@ -20,6 +20,10 @@ export default class ManagePlanServiceAdapter {
             { leaves_app: "SchoolLeaveType" },
             { filter: { parentSchool: this.vm.user.activeSchool.dbId } },
         );
+        this.vm.employeeChoiceList = await this.vm.genericService.getObjectList(
+            { employee_app: "Employee" },
+            { filter: { parentSchool: this.vm.user.activeSchool.dbId } },
+        );
         this.vm.isLoading = false;
     }
     async handleDataChange(data, operation): Promise<any> {

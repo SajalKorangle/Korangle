@@ -25,6 +25,10 @@ export class ManagePlanComponent implements OnInit {
     leavePlanName: string = "";
     isAddNewOpen: boolean = false;
     currentLeavePlan: any = {};
+    // employee choices
+    employeeChoiceList: Array<any> = [];
+    currentEmployeeChoiceList: Array<any> = [];
+    appliedEmployeeChoiceList: Array<any> = [];
     // choices
     leaveTypeChoiceList: Array<LeaveType> = [];
     currentLeaveTypeChoiceList: Array<LeaveType> = [];
@@ -41,6 +45,8 @@ export class ManagePlanComponent implements OnInit {
         this.leaveTypeChoiceList = [];
         this.currentLeaveTypeChoiceList = [];
         this.appliedLeaveTypeChoiceList = [];
+        this.currentEmployeeChoiceList = [];
+        this.appliedEmployeeChoiceList = [];
         this.isSelectLeavePlanToLeaveTypeVisible = false;
     }
     async savePlan(data): Promise<any> {

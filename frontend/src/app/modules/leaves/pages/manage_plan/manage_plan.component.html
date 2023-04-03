@@ -134,7 +134,7 @@
                                         <span class="contentRowItem"> add </span>
                                     </div>
                                     <div class="contentColItem">
-                                        <span class="contentRowItem"> Add LeaveType </span>
+                                        <span class="contentRowItem"> Add Leave Type </span>
                                     </div>
                                 </button>
                             </div>
@@ -150,7 +150,7 @@
                                 <span
                                     class="material-icons-outlined"
                                     style="width: fit; padding: 8px; cursor: pointer; color: green"
-                                    (click)="leaveTypeChoiceList.length !== 0 ? savePlanToLeaveType(currentLeaveTypeChoiceList):1"
+                                    (click)="leaveTypeChoiceList.length !== 0 ? savePlanToLeaveType(currentLeaveTypeChoiceList) : 1"
                                 >
                                     check
                                 </span>
@@ -164,7 +164,21 @@
                             </div>
                         </div>
                     </div>
-                    <div class="contentRow" style="flex-grow: 1; overflow-y: scroll; max-height: 40%">Under construction!</div>
+                    <div class="contentRow">
+                        <div class="contentColItem" style="width: 100%">
+                            <div class="contentRowItem" style="width: 100%">
+                                <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 500px">
+                                    <mat-label>Select Employee/s</mat-label>
+                                    <mat-select [(ngModel)]="currentEmployeeChoiceList" multiple [disabled]="employeeChoiceList.length === 0">
+                                        <mat-option *ngFor="let employee of employeeChoiceList" [value]="leaveTypeChoice">
+                                            ({{ employee.id }}) - {{ employee.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contentRow" style="flex-grow: 1; overflow-y: scroll; max-height: 40%"></div>
                     <div class="contentRow">
                         <div class="contentColItem" style="flex-grow: 1">
                             <div class="contentRowItem" style="justify-content: flex-end">
