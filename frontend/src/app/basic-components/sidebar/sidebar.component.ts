@@ -95,7 +95,7 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
     ngAfterViewChecked(): void {
         if (!this.scrolled) {
             let activeElement = document.querySelector('.active');
-            if(activeElement) {
+            if (activeElement) {
                 this.scrolled = true;
                 activeElement.scrollIntoView();
             }
