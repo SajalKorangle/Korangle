@@ -52,7 +52,15 @@ export class AddBookComponent implements OnInit {
 
         this.frontImage = this.nullValue;
         this.backImage = this.nullValue;
+        this.markFormControlsUntouched();
 
+    }
+
+    markFormControlsUntouched(): void {
+        this.printedCost.markAsUntouched();
+        this.bookNumber.markAsUntouched();
+        this.numberOfPages.markAsUntouched();
+        this.bookName.markAsUntouched();
     }
     async onImageSelect(evt: any, side: any) {
         let image = evt.target.files[0];
