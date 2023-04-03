@@ -140,9 +140,11 @@ export class User {
                     module = undefined;
                     break;
                 case 'user-settings':
+                    this.activeSchool.role = urlParams.get('role') || 'Employee';
                     module = this.settings;
                     break;
                 case 'notification':
+                    this.activeSchool.role = urlParams.get('role') || 'Employee';
                     module = this.notification;
                     break;
             }
@@ -161,9 +163,11 @@ export class User {
                     module = undefined;
                     break;
                 case 'user-settings':
+                    this.activeSchool.role = urlParams.get('role') || 'Employee';
                     module = this.settings;
                     break;
                 case 'notification':
+                    this.activeSchool.role = urlParams.get('role') || 'Employee';
                     module = this.notification;
                     break;
 
@@ -175,8 +179,8 @@ export class User {
                         if (urlParams.get('student_id') != undefined) {
                             module = this.activeSchool.studentList.find((s) => s.id == Number(urlParams.get('student_id')));
                         } else {
-                            module = this.activeSchool.parentModuleList[0].taskList.some((t) => t.path == taskPath)
-                                ? this.activeSchool.parentModuleList[0]
+                            module = this.activeSchool.parentModuleList.some((parentModule)=> parentModule.taskList.some((t) => t.path == taskPath))
+                                ? this.activeSchool.parentModuleList.find((parentModule)=> parentModule.taskList.some((t) => t.path == taskPath))
                                 : undefined;
                         }
                     }
@@ -251,6 +255,7 @@ export class User {
                 title: module.title,
                 subTitle: task.title,
             };
+            queryParams['role'] = this.activeSchool.role;
         } else if (this.activeSchool.role === 'Parent') {
             this.section = {
                 route: 'parent',
@@ -259,7 +264,7 @@ export class User {
                 subTitle: task.title,
                 student: module,
             };
-            if (!this.activeSchool.parentModuleList[0].taskList.some((t) => t.path == task.path)) {
+            if (!this.activeSchool.parentModuleList.some((parentModule)=> parentModule.taskList.some((t) => t.path == task.path))) {
                 queryParams['student_id'] = module.id;
             }
         } else if (this.activeSchool.role === 'Employee') {

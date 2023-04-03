@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import { Component, OnInit, Input, HostListener, AfterViewChecked } from '@angular/core';
 
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, ActivationStart } from '@angular/router';
 
@@ -37,11 +37,12 @@ declare const $: any;
         ]),
     ],
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, AfterViewChecked {
     @Input() user: User;
 
     green = 'green';
     warning = 'warning';
+    scrolled: boolean = false;
 
     constructor(
         private router: Router,
@@ -89,6 +90,16 @@ export class SidebarComponent implements OnInit {
                 );
             });
         });
+    }
+
+    ngAfterViewChecked(): void {
+        if (!this.scrolled) {
+            let activeElement = document.querySelector('.active');
+            if(activeElement) {
+                this.scrolled = true;
+                activeElement.scrollIntoView();
+            }
+        }
     }
 
     isMobileMenu() {
