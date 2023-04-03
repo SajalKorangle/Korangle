@@ -34,7 +34,7 @@ export class AddBookServiceAdapter {
             return;
         }
         if (this.vm.newBook.bookNumber == null) {
-            alert("Book number should be populated");
+            alert("Book No. should be populated");
             return;
         }
 
