@@ -37,18 +37,7 @@ export class AddBookServiceAdapter {
             alert("Book No. should be populated");
             return;
         }
-        if (this.vm.newBook.bookNumber < 0){
-            alert("Book No. cannnot be negative");
-            return;
-        }
-        if (this.vm.newBook.printedCost < 0){
-            alert("Printed cost cannot be negative");
-            return;
-        }
-        if (this.vm.newBook.numberOfPages < 0){
-            alert("Number of pages cannot be negative");
-            return;
-        }
+
         // Nullify empty fields, because undefined fields do not get carried over to form data, and cause adding books to the database to fail
         Object.keys(this.vm.newBook).forEach(key => {
             if (this.vm.newBook[key] === undefined || this.vm.newBook[key] == '') {

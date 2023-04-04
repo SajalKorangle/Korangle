@@ -38,7 +38,7 @@
                             <input
                             [(ngModel)]="newBook.name"
                             matInput name="name" type="text"
-                            [formControl]="bookName" required>
+                            required>
                         </mat-form-field>
                     </div>
 
@@ -83,10 +83,8 @@
                             (keypress)="policeNumberInput($event)"
                             [(ngModel)]="newBook.bookNumber"
                             matInput name="bookNumber" type="number"
-                            [formControl]="bookNumber"
                             min="0"
                             required>
-                            <mat-error *ngIf="bookNumber.value < 0">Invalid input</mat-error>
                         </mat-form-field>
 
                     </div>
@@ -174,11 +172,10 @@
                             [(ngModel)]="newBook.numberOfPages"
                             matInput name="numberOfPages" type="number"
                             min="1"
-                            [formControl]="numberOfPages">
-                            <mat-error *ngIf="numberOfPages.value < 0">Invalid input</mat-error>
+                            >
                         </mat-form-field>
                     </div>
-    
+
                     <!-- Printed cost -->
                     <div class="col-md-4">
                         <mat-form-field>
@@ -187,13 +184,11 @@
                             (keypress)="policeNumberInput($event)"
                             [(ngModel)]="newBook.printedCost"
                             matInput name="printedCost" type="number"
-                            [formControl]="printedCost"
                             min="0"
                             >
-                            <mat-error *ngIf="printedCost.invalid">Invalid input</mat-error>
                         </mat-form-field>
                     </div>
-    
+
                     <!-- Cover type -->
                     <div class="col-md-4">
                         <mat-form-field>

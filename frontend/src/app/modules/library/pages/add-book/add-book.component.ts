@@ -13,11 +13,6 @@ import { FormControl, Validators } from '@angular/forms';
 })
 
 export class AddBookComponent implements OnInit {
-    printedCost = new FormControl('', [Validators.min(0)]);
-    bookNumber = new FormControl('', [Validators.min(0), Validators.required]);
-    numberOfPages = new FormControl('', [Validators.min(0)]);
-    bookName = new FormControl('', [Validators.required]);
-
     user: any;
     frontImage: any;
     backImage: any;
@@ -52,10 +47,9 @@ export class AddBookComponent implements OnInit {
 
         this.frontImage = this.nullValue;
         this.backImage = this.nullValue;
-        this.markFormControlsUntouched();
 
     }
-    
+
     policeNumberInput(event: any): boolean {
         let value = event.key;
         if (
@@ -75,12 +69,6 @@ export class AddBookComponent implements OnInit {
         return true;
     }
 
-    markFormControlsUntouched(): void {
-        this.printedCost.markAsUntouched();
-        this.bookNumber.markAsUntouched();
-        this.numberOfPages.markAsUntouched();
-        this.bookName.markAsUntouched();
-    }
     async onImageSelect(evt: any, side: any) {
         let image = evt.target.files[0];
 
