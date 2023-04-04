@@ -55,6 +55,25 @@ export class AddBookComponent implements OnInit {
         this.markFormControlsUntouched();
 
     }
+    
+    policeNumberInput(event: any): boolean {
+        let value = event.key;
+        if (
+            value !== '0' &&
+            value !== '1' &&
+            value !== '2' &&
+            value !== '3' &&
+            value !== '4' &&
+            value !== '5' &&
+            value !== '6' &&
+            value !== '7' &&
+            value !== '8' &&
+            value !== '9'
+        ) {
+            return false;
+        }
+        return true;
+    }
 
     markFormControlsUntouched(): void {
         this.printedCost.markAsUntouched();
