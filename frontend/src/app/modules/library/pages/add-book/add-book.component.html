@@ -173,7 +173,7 @@
                             (keypress)="policeNumberInput($event)"
                             [(ngModel)]="newBook.numberOfPages"
                             matInput name="numberOfPages" type="number"
-                            min="0"
+                            min="1"
                             [formControl]="numberOfPages">
                             <mat-error *ngIf="numberOfPages.value < 0">Invalid input</mat-error>
                         </mat-form-field>
