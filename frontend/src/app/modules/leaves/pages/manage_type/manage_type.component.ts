@@ -93,6 +93,9 @@ export class ManageTypeComponent implements OnInit {
                 });
             }
             if (data.close) {
+                if(data.operation.startsWith("update")) {
+                    alert("Leave Type updated successfully.")
+                }
                 this.isSaving = false;
                 this.closeAddNewType(data);
             }
@@ -125,6 +128,9 @@ export class ManageTypeComponent implements OnInit {
                 },
                 data: [this.currentSchoolLeaveType],
             }, "leaveTypeList");
+            if(response && JSON.stringify(response) !== '{}') {
+                alert("Leave Type deleted successfully");
+            }
         }
     }
 }

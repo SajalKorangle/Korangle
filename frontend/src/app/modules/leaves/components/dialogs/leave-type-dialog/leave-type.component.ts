@@ -96,7 +96,7 @@ export class LeaveTypeDialog {
     updateName(event): void {
         this.leaveTypeName = event.target.value;
         const similarName = this.InvalidNameList.find((name) => {
-            return name.toLowerCase() === this.leaveTypeName.toLowerCase();
+            return name.toLowerCase() === this.leaveTypeName.toLowerCase() && name.toLowerCase() !== this.schoolLeaveType.leaveTypeName.toLowerCase();
         });
         this.isNameValid = similarName ? false : true;
     }
@@ -144,7 +144,8 @@ export class LeaveTypeDialog {
         });
         this.isEncFormulaVisible = encCount == 0 ? false : true;
     }
-    checkInput(event): void {
+    checkInput(event, month): void {
         event.target.value = isNaN(parseInt(event.target.value)) ? "0" : parseInt(event.target.value) < 0 ? "0" : parseInt(event.target.value).toString();
+        this.SchoolLeaveTypeMonthMap[month].value = parseInt(event.target.value);
     }
 }

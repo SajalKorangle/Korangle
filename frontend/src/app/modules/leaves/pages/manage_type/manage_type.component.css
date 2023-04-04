@@ -49,10 +49,6 @@
 }
 .leaveTableColDataContainer {
     width: 100%;
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
 }
 .add-new-type-container {
     padding-top: 30px;
