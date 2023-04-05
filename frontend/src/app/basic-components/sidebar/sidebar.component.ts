@@ -79,18 +79,18 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
                 CommonFunctions.scrollToTop();
             }
         });
-        EmitterService.get('initialize-router').subscribe((value) => {
+        this.user.initializeRouterCallback = (value) => {
             console.log("Event captured and redirecting");
             // Navigating To '/' before any other route - because :
             // We have used routeReuseStrategy so if the url is same the page won't reload,
             // To overcome that case we are navigating to '/' first and then the corresponding route.
-            this.router.navigateByUrl('/', {skipLocationChange: false}).then(() => {
+            this.router.navigateByUrl('/', { skipLocationChange: false }).then(() => {
                 this.router.navigateByUrl(
                     this.router.createUrlTree([Constants.dashBoardRoute + '/' + this.user.section.route + '/' + this.user.section.subRoute],
-                        {queryParams: value.queryParams})
+                        { queryParams: value.queryParams })
                 );
             });
-        });
+        };
     }
 
     ngAfterViewChecked(): void {

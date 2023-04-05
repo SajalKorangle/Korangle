@@ -1,6 +1,6 @@
 import { School } from './school';
 
-import { EmitterService } from '../services/emitter.service';
+// import { EmitterService } from '../services/emitter.service';
 
 export class User {
     id: number;
@@ -41,6 +41,8 @@ export class User {
             },
         ],
     };
+
+    initializeRouterCallback: (value: any) => void | null = null;
 
     settings = {
         path: 'user-settings',
@@ -101,19 +103,15 @@ export class User {
     }
 
     initializeSchoolList(schoolList: any): void {
-        console.log("Initialize School List called");
         this.schoolList = [];
         schoolList.forEach((school) => {
             let schoolObject = new School();
             schoolObject.fromServerObject(school);
             this.schoolList.push(schoolObject);
         });
-        this.activeSchool = this.schoolList[0];
-        this.initializeTask();
     }
 
     initializeUserData(data: any): void {
-        console.log("Initialize User Data called");
         this.id = data.id;
         this.username = data.username;
         this.first_name = data.first_name;
@@ -121,6 +119,8 @@ export class User {
         this.email = data.email;
         this.session_list = data.session_list;
         this.initializeSchoolList(data.schoolList);
+        this.activeSchool = this.schoolList[0];
+        this.initializeTask();
     }
 
     // This function will be called after
@@ -130,13 +130,11 @@ export class User {
     // 4. when school has changed
     // 5. when role has changes
     initializeTask(): void {
-        console.log("Initialize Task called");
         let urlPath = window.location.pathname;
         const [, , modulePath, taskPath] = urlPath.split('/');
         let urlParams = new URLSearchParams(window.location.search);
         let module: any = null;
         let task: any = null;
-        console.log("Active School", this.activeSchool);
         if (!this.activeSchool) {
             switch (modulePath) {
                 case '/':
@@ -207,7 +205,6 @@ export class User {
         }
 
         if (module == null || task == null) {
-            console.log('module set to notification');
             module = this.notification;
             task = this.notification.taskList[0];
         }
@@ -249,9 +246,6 @@ export class User {
     }
 
     populateSectionAndRoute(task: any, module: any): void {
-        console.log("Populating module field with");
-        console.log("Module", module);
-        console.log("Task", task);
         let queryParams = {};
         if (this.activeSchool) {
             queryParams = { school_id: this.activeSchool.dbId, session: this.activeSchool.currentSessionDbId };
@@ -292,7 +286,10 @@ export class User {
                 return;
             queryParams[key] = value;
         });
-        EmitterService.get('initialize-router').emit({ queryParams: queryParams });
+        // EmitterService.get('initialize-router').emit({ queryParams: queryParams });
+        if (this.initializeRouterCallback != null) {
+            this.initializeRouterCallback({ queryParams });
+        }
     }
 
 }
