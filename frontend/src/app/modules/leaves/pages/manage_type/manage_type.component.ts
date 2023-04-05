@@ -104,32 +104,40 @@ export class ManageTypeComponent implements OnInit {
         }
     }
     async deleteType(event, schoolLeaveType): Promise<any> {
-        this.currentSchoolLeaveType = schoolLeaveType;
-        this.currentSchoolLeaveTypeMonthList = [];
-        this.leaveTypeMonthList.map((leaveTypeMonth) => {
-            if (this.currentSchoolLeaveType.id === leaveTypeMonth.parentSchoolLeaveType) {
-                this.currentSchoolLeaveTypeMonthList.push(leaveTypeMonth);
-            }
-        });
-        let response = await this.serviceAdapter.handleDataChange({
-            database: { leaves_app: "SchoolLeaveTypeMonth" },
-            operation: "deleteBatch",
-            check: (data1, data2) => {
-                return [];
-            },
-            data: this.currentSchoolLeaveTypeMonthList,
-        }, "leaveTypeMonthList");
-        if (response !== null && response !== undefined && JSON.stringify(response) !== "{}") {
-            response = await this.serviceAdapter.handleDataChange({
-                database: { leaves_app: "SchoolLeaveType" },
-                operation: "delete",
-                check: (data1, data2) => {
-                    return [];
+        if (confirm("Do you want to delete this leave type?")) {
+            this.currentSchoolLeaveType = schoolLeaveType;
+            this.currentSchoolLeaveTypeMonthList = [];
+            this.leaveTypeMonthList.map((leaveTypeMonth) => {
+                if (this.currentSchoolLeaveType.id === leaveTypeMonth.parentSchoolLeaveType) {
+                    this.currentSchoolLeaveTypeMonthList.push(leaveTypeMonth);
+                }
+            });
+            let response = await this.serviceAdapter.handleDataChange(
+                {
+                    database: { leaves_app: "SchoolLeaveTypeMonth" },
+                    operation: "deleteBatch",
+                    check: (data1, data2) => {
+                        return [];
+                    },
+                    data: this.currentSchoolLeaveTypeMonthList,
                 },
-                data: [this.currentSchoolLeaveType],
-            }, "leaveTypeList");
-            if (response && JSON.stringify(response) !== '{}') {
-                alert("Leave Type deleted successfully");
+                "leaveTypeMonthList",
+            );
+            if (response !== null && response !== undefined && JSON.stringify(response) !== "{}") {
+                response = await this.serviceAdapter.handleDataChange(
+                    {
+                        database: { leaves_app: "SchoolLeaveType" },
+                        operation: "delete",
+                        check: (data1, data2) => {
+                            return [];
+                        },
+                        data: [this.currentSchoolLeaveType],
+                    },
+                    "leaveTypeList",
+                );
+                if (response && JSON.stringify(response) !== "{}") {
+                    alert("Leave Type deleted successfully");
+                }
             }
         }
     }
