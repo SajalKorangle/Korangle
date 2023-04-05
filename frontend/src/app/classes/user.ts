@@ -129,7 +129,10 @@ export class User {
     // 3. when session has changed
     // 4. when school has changed
     // 5. when role has changes
-    initializeTask(): void {
+    initializeTask(callback?: (value: any) => void): void {
+        if (callback) {
+            this.initializeRouterCallback = callback;
+        }
         let urlPath = window.location.pathname;
         const [, , modulePath, taskPath] = urlPath.split('/');
         let urlParams = new URLSearchParams(window.location.search);
@@ -153,7 +156,6 @@ export class User {
                 task = module.taskList.find((t) => t.path == taskPath) || null;
             }
         } else if (this.checkUserSchoolSessionPermission(urlParams)) {
-            console.log('URL params found');
             // checking the school id  and session id in the url is valid for this user
             switch (
                 modulePath // from here we are populating module
@@ -287,6 +289,7 @@ export class User {
             queryParams[key] = value;
         });
         // EmitterService.get('initialize-router').emit({ queryParams: queryParams });
+        console.log("Calling callback");
         if (this.initializeRouterCallback != null) {
             this.initializeRouterCallback({ queryParams });
         }

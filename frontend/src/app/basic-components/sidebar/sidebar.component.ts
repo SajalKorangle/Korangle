@@ -79,6 +79,7 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
                 CommonFunctions.scrollToTop();
             }
         });
+        console.log("initialized sidebar")
         this.user.initializeRouterCallback = (value) => {
             console.log("Event captured and redirecting");
             // Navigating To '/' before any other route - because :
