@@ -23,7 +23,7 @@ class Book(models.Model):
 
     numberOfPages = models.IntegerField(default=1)
 
-    printedCost = models.IntegerField(null=True, blank=True)
+    printedCost = models.DecimalField(null=True, blank=True, max_digits=8, decimal_places=2)
 
     coverType = models.TextField(null=True, blank=True)
 
