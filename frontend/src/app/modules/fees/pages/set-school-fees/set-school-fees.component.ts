@@ -113,7 +113,7 @@ export class SetSchoolFeesComponent implements OnInit {
         this.newBusStopFilterFeeList = [];
     }
 
-    initializeNewCustomFilterFeeList(): void{
+    initializeNewCustomFilterFeeList(): void {
         this.newCustomFilterFeeList.forEach(customFilterFee => {
             customFilterFee.filterValues.forEach(filterValue => {
                 filterValue.selected = false;
@@ -249,7 +249,7 @@ export class SetSchoolFeesComponent implements OnInit {
             let filtered = true;
             let filteredStudentParameterValueList = this.studentParameterValueList.filter(studentParameterValue => {
                 return studentParameterValue.parentStudent == student.dbId;
-            })
+            });
             this.newCustomFilterFeeList.filter(newCustomFilterFee => {
                 return newCustomFilterFee.filterValues.filter(filterValue => {
                     return filterValue.selected;

@@ -201,7 +201,7 @@ export class SetSchoolFeesServiceAdapter {
             let selectedFilterValues = newCustomFilterFee.filterValues.filter(filterValue => {
                 return filterValue.selected;
             }).map(x => x.value);
-            if(selectedFilterValues.length > 0) {
+            if (selectedFilterValues.length > 0) {
                 custom_filter_fee_list.push({
                     parentStudentParameter: newCustomFilterFee.id,
                     selectedFilterValues: JSON.stringify(selectedFilterValues),
@@ -254,7 +254,7 @@ export class SetSchoolFeesServiceAdapter {
             custom_filter_fee_list.forEach(custom_filter_fee => {
                 custom_filter_fee['parentSchoolFeeRule'] = value.id;
             });
-            service_list.push(this.vm.genericService.createObjectList({fees_third_app:'CustomFilterFee'}, custom_filter_fee_list));
+            service_list.push(this.vm.genericService.createObjectList({fees_third_app: 'CustomFilterFee'}, custom_filter_fee_list));
 
             student_fee_list.forEach(student_fee => {
                 student_fee['parentSchoolFeeRule'] = value.id;
@@ -279,8 +279,8 @@ export class SetSchoolFeesServiceAdapter {
     addToSchoolFeeRuleList(schoolFeeRule: any, classfilterfee: any, busstopfilterfee: any, customfilterfee: any): void {
         this.vm.schoolFeeRuleList.push(schoolFeeRule);
         schoolFeeRule['classfilterfee'] = classfilterfee;
-        schoolFeeRule['busstopfilterfee'] = busstopfilterfee.sort((a,b) => { return a.parentBusStop-b.parentBusStop;});
-        schoolFeeRule['customfilterfee'] = customfilterfee.sort((a,b) => { return a.parentStudentParameter-b.parentStudentParameter;});
+        schoolFeeRule['busstopfilterfee'] = busstopfilterfee.sort((a, b) => { return a.parentBusStop - b.parentBusStop; });
+        schoolFeeRule['customfilterfee'] = customfilterfee.sort((a, b) => { return a.parentStudentParameter - b.parentStudentParameter; });
         this.vm.schoolFeeRuleList = this.vm.schoolFeeRuleList.sort((a, b) => {
             return a.ruleNumber - b.ruleNumber;
         });
