@@ -80,7 +80,7 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
             }
         });
         console.log("initialized sidebar")
-        this.user.initializeRouterCallback = (value) => {
+        EmitterService.get('initialize-router').subscribe((value) => {
             console.log("Event captured and redirecting");
             // Navigating To '/' before any other route - because :
             // We have used routeReuseStrategy so if the url is same the page won't reload,
@@ -91,7 +91,8 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
                         { queryParams: value.queryParams })
                 );
             });
-        };
+        });
+        this.user.initializeTask();
     }
 
     ngAfterViewChecked(): void {

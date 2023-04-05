@@ -1,6 +1,6 @@
 import { School } from './school';
 
-// import { EmitterService } from '../services/emitter.service';
+import { EmitterService } from '../services/emitter.service';
 
 export class User {
     id: number;
@@ -42,7 +42,7 @@ export class User {
         ],
     };
 
-    initializeRouterCallback: (value: any) => void | null = null;
+    // initializeRouterCallback: (value: any) => void | null = null;
 
     settings = {
         path: 'user-settings',
@@ -129,10 +129,7 @@ export class User {
     // 3. when session has changed
     // 4. when school has changed
     // 5. when role has changes
-    initializeTask(callback?: (value: any) => void): void {
-        if (callback) {
-            this.initializeRouterCallback = callback;
-        }
+    initializeTask(): void {
         let urlPath = window.location.pathname;
         const [, , modulePath, taskPath] = urlPath.split('/');
         let urlParams = new URLSearchParams(window.location.search);
@@ -288,11 +285,8 @@ export class User {
                 return;
             queryParams[key] = value;
         });
-        // EmitterService.get('initialize-router').emit({ queryParams: queryParams });
+        EmitterService.get('initialize-router').emit({ queryParams: queryParams });
         console.log("Calling callback");
-        if (this.initializeRouterCallback != null) {
-            this.initializeRouterCallback({ queryParams });
-        }
     }
 
 }
