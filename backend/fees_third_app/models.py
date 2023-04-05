@@ -7,7 +7,7 @@ from school_app.model.models import School, Session, BusStop
 
 from class_app.models import Class, Division
 
-from student_app.models import Student
+from student_app.models import Student, StudentParameter
 
 from employee_app.models import Employee
 
@@ -34,6 +34,9 @@ class FeeType(models.Model):
     name = models.TextField(verbose_name='name')
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
     orderNumber = models.BigIntegerField(verbose_name='orderNumber', default=0)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
 
     class Meta:
         db_table = 'fee_type_new'
@@ -126,6 +129,9 @@ class SchoolFeeRule(models.Model):
     marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
     marchMaximumLateFee = models.IntegerField(null=True, verbose_name='marchMaximumLateFee')
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentFeeType__parentSchool__id']
+
     class Meta:
         db_table = 'school_fee_rule'
         unique_together = [('ruleNumber', 'parentFeeType', 'parentSession'), ('name', 'parentFeeType', 'parentSession')]
@@ -136,6 +142,9 @@ class ClassFilterFee(models.Model):
     parentSchoolFeeRule = models.ForeignKey(SchoolFeeRule, on_delete=models.CASCADE, default=0, verbose_name='parentSchoolFeeRule')
     parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0, verbose_name='parentClass')
     parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT, default=0, verbose_name='parentDivision')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchoolFeeRule__parentFeeType__parentSchool__id']
 
     class Meta:
         db_table = 'class_filter_fee'
@@ -164,9 +173,24 @@ class BusStopFilterFee(models.Model):
     parentSchoolFeeRule = models.ForeignKey(SchoolFeeRule, on_delete=models.CASCADE, default=0, verbose_name='parentSchoolFeeRule')
     parentBusStop = models.ForeignKey(BusStop, on_delete=models.CASCADE, default=0, verbose_name='parentBusStop')
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchoolFeeRule__parentFeeType__parentSchool__id']
+
     class Meta:
         db_table = 'bus_stop_filter_fee'
 
+
+class CustomFilterFee(models.Model):
+    parentSchoolFeeRule = models.ForeignKey(SchoolFeeRule, on_delete=models.CASCADE, default=0, verbose_name='parentSchoolFeeRule')
+    parentStudentParameter = models.ForeignKey(StudentParameter, on_delete=models.CASCADE, default=0, verbose_name='parentStudentParameter')
+    selectedFilterValues = models.TextField(null=True, blank=True)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchoolFeeRule__parentFeeType__parentSchool__id']
+
+    class Meta:
+        db_table = 'custom_filter_fee'
+        
 
 class StudentFee(models.Model):
 

@@ -12,13 +12,14 @@ import { FeeType } from '../../../../services/modules/fees/models/fee-type';
 import { CommonFunctions } from '../../../../classes/common-functions';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-old.service';
+import { GenericService } from '@services/generic/generic-service';
 import { DataStorage } from '../../../../classes/data-storage';
 
 @Component({
     selector: 'update-student-fees',
     templateUrl: './update-student-fees.component.html',
     styleUrls: ['./update-student-fees.component.css'],
-    providers: [FeeService, ClassService, VehicleOldService],
+    providers: [FeeService, ClassService, VehicleOldService, GenericService ],
 })
 export class UpdateStudentFeesComponent implements OnInit {
     installmentList = [
@@ -45,6 +46,7 @@ export class UpdateStudentFeesComponent implements OnInit {
     classList: any;
     sectionList: any;
     busStopList: any;
+    studentParameterList: any;
 
     studentFeeList: StudentFee[];
     subFeeReceiptList: SubFeeReceipt[];
@@ -70,6 +72,7 @@ export class UpdateStudentFeesComponent implements OnInit {
         public feeService: FeeService,
         public classService: ClassService,
         public vehicleService: VehicleOldService,
+        public genericService: GenericService,
         private cdRef: ChangeDetectorRef
     ) {}
 
@@ -297,4 +300,11 @@ export class UpdateStudentFeesComponent implements OnInit {
         }
         return amount;
     }
+
+    getStudentParameterName(parameterId: number): string {
+        return this.studentParameterList.find((parameter) => {
+            return parameter.id == parameterId;
+        }).name;
+    }
+
 }
