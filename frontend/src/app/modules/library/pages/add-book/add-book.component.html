@@ -280,7 +280,7 @@
             type="submit"
             id="action-add-book"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-            (click)="serviceAdapter.createNewBook()"
+            (click)="createNewBook()"
         >
         Add
         </button>
@@ -289,7 +289,7 @@
             *ngIf="isMobile()"
             mat-fab
             color="primary"
-            (click)="serviceAdapter.createNewBook()"
+            (click)="createNewBook()"
         >
             <mat-icon>check</mat-icon>
         </button>

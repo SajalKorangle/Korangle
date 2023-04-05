@@ -3,7 +3,7 @@ import { GenericService } from '@services/generic/generic-service';
 import { Book } from '@modules/library/models/book';
 import { DataStorage } from "@classes/data-storage";
 import { AddBookServiceAdapter } from './add-book-service.adapter';
-import { FormControl, Validators } from '@angular/forms';
+import { ViewChild } from '@angular/core'
 
 @Component({
     selector: 'add-book',
@@ -23,6 +23,12 @@ export class AddBookComponent implements OnInit {
     serviceAdapter: AddBookServiceAdapter;
 
     isLoading = false;
+
+    @ViewChild('bookNumberField', {static: false}) bookNumberField;
+    @ViewChild('pagesField', {static: false}) pagesField;
+    @ViewChild('printedCostField', {static: false}) printedCostField;
+
+
 
     constructor (
         public genericService: GenericService,
@@ -166,8 +172,21 @@ export class AddBookComponent implements OnInit {
         });
     }
 
-    CLOG(x){
-        console.log(x);
+    createNewBook(): void {
+        if (this.newBook.name == null || this.newBook.name == '') {
+            alert("Name should be populated");
+            return;
+        }
+        if (this.newBook.bookNumber == null) {
+            alert("Book No. should be populated");
+            return;
+        }
+        if (this.bookNumberField.invalid || this.pagesField.invalid || this.printedCostField.invalid){
+            alert("Inputs are invalid");
+            return;
+        }
+
+        this.serviceAdapter.createNewBook();
     }
 
 }

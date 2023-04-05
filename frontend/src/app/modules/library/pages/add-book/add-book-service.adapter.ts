@@ -29,14 +29,6 @@ export class AddBookServiceAdapter {
     }
 
     async createNewBook() {
-        if (this.vm.newBook.name == null || this.vm.newBook.name == '') {
-            alert("Name should be populated");
-            return;
-        }
-        if (this.vm.newBook.bookNumber == null) {
-            alert("Book No. should be populated");
-            return;
-        }
 
         // Nullify empty fields, because undefined fields do not get carried over to form data, and cause adding books to the database to fail
         Object.keys(this.vm.newBook).forEach(key => {
