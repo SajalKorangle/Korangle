@@ -191,7 +191,7 @@
                                 No. of pages must be a whole number
                             </mat-error>
                             <mat-error *ngIf="pagesField.invalid && (pagesField.dirty || pagesField.touched) && pagesField.value >= 1 && pagesField.value >= 10000000000">
-                                No. of pages must have 10 or less digits
+                                No. of pages must have 10 digits or less
                             </mat-error>
                         </mat-form-field>
                     </div>
