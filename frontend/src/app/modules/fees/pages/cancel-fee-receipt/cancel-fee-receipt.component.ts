@@ -37,7 +37,7 @@ export class CancelFeeReceiptComponent implements OnInit {
     searchFilterList = [
         { displayName: 'Receipt No./Cheque No.', fiterName: 'receiptCheque' },
         { displayName: "Student's Name", filterName: 'Student' },
-        { displayName: "Parent's Mobile No", filterName: 'Parent' },
+        { displayName: "Parent's Mobile No", filterName: 'Mobile Number' },
     ];
 
     serviceAdapter: CancelFeeReceiptServiceAdapter;
