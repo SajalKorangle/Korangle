@@ -15,8 +15,8 @@ export class AddBookServiceAdapter {
             filter: {
                 bookNumber: newBookNumber
             }
-        }
-        const fetchedBook = await this.vm.genericService.getObject({library_app:"Book"}, bookQuery);
+        };
+        const fetchedBook = await this.vm.genericService.getObject({library_app: "Book"}, bookQuery);
 
         return fetchedBook;
     }
@@ -51,7 +51,7 @@ export class AddBookServiceAdapter {
         const fetchedBook = await this.getBook(this.vm.newBook.bookNumber);
 
         if (fetchedBook) {
-            alert("A book with the same Book No. already exists. Please choose a different Book No.")
+            alert("A book with the same Book No. already exists. Please choose a different Book No.");
             return;
         }
 
