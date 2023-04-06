@@ -79,9 +79,7 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
                 CommonFunctions.scrollToTop();
             }
         });
-        console.log("initialized sidebar")
         EmitterService.get('initialize-router').subscribe((value) => {
-            console.log("Event captured and redirecting");
             // Navigating To '/' before any other route - because :
             // We have used routeReuseStrategy so if the url is same the page won't reload,
             // To overcome that case we are navigating to '/' first and then the corresponding route.

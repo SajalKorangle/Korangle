@@ -285,7 +285,6 @@ export class User {
             queryParams[key] = value;
         });
         EmitterService.get('initialize-router').emit({ queryParams: queryParams });
-        console.log("Calling callback");
     }
 
 }
