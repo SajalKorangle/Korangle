@@ -172,6 +172,11 @@ export class AddBookComponent implements OnInit {
         });
     }
 
+    trimToTwoDecimalPlaces(value){
+        const withTwoDecimals = value.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0];
+        return parseFloat(withTwoDecimals);
+    }
+
     createNewBook(): void {
         if (this.newBook.name == null || this.newBook.name == '') {
             alert("Name should be populated");
@@ -185,6 +190,7 @@ export class AddBookComponent implements OnInit {
             alert("Inputs are invalid");
             return;
         }
+        this.newBook.printedCost = this.trimToTwoDecimalPlaces(this.newBook.printedCost);
 
         this.serviceAdapter.createNewBook();
     }
