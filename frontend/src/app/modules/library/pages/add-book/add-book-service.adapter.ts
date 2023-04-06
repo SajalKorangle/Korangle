@@ -10,6 +10,17 @@ export class AddBookServiceAdapter {
         this.vm = vm;
     }
 
+    async getBook(newBookNumber) {
+        const bookQuery = {
+            filter: {
+                bookNumber: newBookNumber
+            }
+        }
+        const fetchedBook = await this.vm.genericService.getObject({library_app:"Book"}, bookQuery);
+
+        return fetchedBook;
+    }
+
     dataURLtoFile(dataurl, filename) {
         try {
             const arr = dataurl.split(',');
@@ -36,6 +47,13 @@ export class AddBookServiceAdapter {
                 this.vm.newBook[key] = null;
             }
         });
+
+        const fetchedBook = await this.getBook(this.vm.newBook.bookNumber);
+
+        if (fetchedBook) {
+            alert("A book with the same Book No. already exists. Please choose a different Book No.")
+            return;
+        }
 
         this.vm.isLoading = true;
 
