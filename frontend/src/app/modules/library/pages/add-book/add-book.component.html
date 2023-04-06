@@ -84,13 +84,16 @@
                             [(ngModel)]="newBook.bookNumber"
                             matInput name="bookNumber" type="number"
                             min="0"
-                            pattern="\d*"
+                            pattern="^\d{0,10}$"
                             required>
                             <mat-error *ngIf="bookNumberField.invalid && (bookNumberField.dirty || bookNumberField.touched) && bookNumberField.value < 1">
                                 Book No. cannot be negative
                             </mat-error>
-                            <mat-error *ngIf="bookNumberField.invalid && (bookNumberField.dirty || bookNumberField.touched) && bookNumberField.value >= 1">
+                            <mat-error *ngIf="bookNumberField.invalid && (bookNumberField.dirty || bookNumberField.touched) && bookNumberField.value >= 1 && bookNumberField.value < 10000000000">
                                 Book No. must be a whole number
+                            </mat-error>
+                            <mat-error *ngIf="bookNumberField.invalid && (bookNumberField.dirty || bookNumberField.touched) && bookNumberField.value >= 1 && bookNumberField.value >= 10000000000">
+                                Book No. must have 10 digits or less
                             </mat-error>
                         </mat-form-field>
 
@@ -199,10 +202,14 @@
                             [(ngModel)]="newBook.printedCost"
                             matInput name="printedCost" type="number"
                             min="0"
-                            pattern="\d*\.?\d+"
+                            pattern="(?=.{0,10}$)\d*\.?\d+"
                             >
-                            <mat-error *ngIf="printedCostField.invalid && (printedCostField.dirty || printedCostField.touched)">
+                            <mat-error *ngIf="printedCostField.invalid && (printedCostField.dirty || printedCostField.touched) && printedCostField.value < 0">
                                 Printed cost cannot be negative
+                            </mat-error>
+
+                            <mat-error *ngIf="printedCostField.invalid && (printedCostField.dirty || printedCostField.touched) && printedCostField.value >= 0">
+                                Printed cost must have 10 digits or less
                             </mat-error>
                         </mat-form-field>
                     </div>
