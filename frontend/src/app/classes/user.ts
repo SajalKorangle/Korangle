@@ -141,11 +141,9 @@ export class User {
                     module = null;
                     break;
                 case 'user-settings':
-                    this.activeSchool.role = urlParams.get('role') || 'Employee';
                     module = this.settings;
                     break;
                 case 'notification':
-                    this.activeSchool.role = urlParams.get('role') || 'Employee';
                     module = this.notification;
                     break;
             }
@@ -256,7 +254,8 @@ export class User {
                 title: module.title,
                 subTitle: task.title,
             };
-            queryParams['role'] = this.activeSchool.role;
+            if (this.activeSchool)
+                queryParams['role'] = this.activeSchool.role;
         } else if (this.activeSchool.role === 'Parent') {
             this.section = {
                 route: 'parent',
