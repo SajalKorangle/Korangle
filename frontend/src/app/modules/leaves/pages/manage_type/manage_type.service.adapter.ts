@@ -51,7 +51,7 @@ export default class ManageTypeServiceAdapter {
         }
         let response = null;
         if (!Operation.operation.endsWith("Batch")) {
-            Operation.data.map((data) => {
+            Operation.data.forEach((data) => {
                 data.parentSchool = this.vm.user.activeSchool.dbId;
             });
         }

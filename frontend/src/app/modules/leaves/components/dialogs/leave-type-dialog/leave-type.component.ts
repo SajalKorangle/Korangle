@@ -145,7 +145,7 @@ export class LeaveTypeDialog {
         this.isEncFormulaVisible = encCount == 0 ? false : true;
     }
     checkInput(event, month): void {
-        event.target.value = isNaN(parseInt(event.target.value)) ? "0" : parseInt(event.target.value) < 0 ? "0" : parseInt(event.target.value).toString();
+        event.target.value = isNaN(parseInt(event.target.value)) ? "0" : parseInt(event.target.value) < 0 ? 0 : parseInt(event.target.value).toString();
         this.SchoolLeaveTypeMonthMap[month].value = parseInt(event.target.value);
     }
 }

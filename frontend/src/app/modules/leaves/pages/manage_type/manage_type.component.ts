@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { User } from "@classes/user";
 import { GenericService } from "@services/generic/generic-service";
 import ManageTypeServiceAdapter from "./manage_type.service.adapter";
