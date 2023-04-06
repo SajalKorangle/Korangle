@@ -190,7 +190,9 @@ export class AddBookComponent implements OnInit {
             alert("Inputs are invalid");
             return;
         }
-        this.newBook.printedCost = this.trimToTwoDecimalPlaces(this.newBook.printedCost);
+        if (this.newBook.printedCost != null){
+            this.newBook.printedCost = this.trimToTwoDecimalPlaces(this.newBook.printedCost);
+        }
 
         this.serviceAdapter.createNewBook();
     }
