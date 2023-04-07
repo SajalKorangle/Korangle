@@ -205,14 +205,15 @@
                             [(ngModel)]="newBook.printedCost"
                             matInput name="printedCost" type="number"
                             min="0"
-                            pattern="(?=.{0,10}$)\d*\.?\d+"
+                            max="1000000"
+                            pattern="^\d{0,6}(?:\.\d+)?$"
                             >
                             <mat-error *ngIf="printedCostField.invalid && (printedCostField.dirty || printedCostField.touched) && printedCostField.value < 0">
                                 Printed cost cannot be negative
                             </mat-error>
 
-                            <mat-error *ngIf="printedCostField.invalid && (printedCostField.dirty || printedCostField.touched) && printedCostField.value >= 0">
-                                Printed cost must have 10 digits or less
+                            <mat-error *ngIf="printedCostField.invalid && (printedCostField.dirty || printedCostField.touched) && printedCostField.value >= 0 && printedCostField.value >= 1000000">
+                                Printed cost must be less than 10,00,000
                             </mat-error>
                         </mat-form-field>
                     </div>
