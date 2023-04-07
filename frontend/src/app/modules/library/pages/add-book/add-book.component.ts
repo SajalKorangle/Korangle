@@ -27,6 +27,8 @@ export class AddBookComponent implements OnInit {
     @ViewChild('bookNumberField', {static: false}) bookNumberField;
     @ViewChild('pagesField', {static: false}) pagesField;
     @ViewChild('printedCostField', {static: false}) printedCostField;
+    @ViewChild('bookNameField', {static: false}) bookNameField;
+
 
 
 
@@ -186,7 +188,7 @@ export class AddBookComponent implements OnInit {
             alert("Book No. should be populated");
             return;
         }
-        if (this.bookNumberField.invalid || this.pagesField.invalid || this.printedCostField.invalid) {
+        if (this.bookNumberField.invalid || this.pagesField.invalid || this.printedCostField.invalid || this.bookNameField.invalid) {
             alert("Inputs are invalid");
             return;
         }
