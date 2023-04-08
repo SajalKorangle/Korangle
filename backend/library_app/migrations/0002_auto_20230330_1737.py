@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='book',
             name='bookNumber',
-            field=models.TextField(),
+            field=models.IntegerField(unique=True),
         ),
         migrations.AlterField(
             model_name='book',
@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='book',
             name='printedCost',
-            field=models.TextField(blank=True, null=True),
+            field=models.DecimalField(blank=True, decimal_places=2, max_digits=8, null=True),
         ),
         migrations.AlterField(
             model_name='book',
