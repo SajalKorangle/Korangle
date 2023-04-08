@@ -39,7 +39,7 @@ export class ViewAllComponent implements OnInit {
     // Col Filter for books
     columnFilter: ColumnFilter;
     // Col Filter for documents
-    documentFilter: ColumnFilter
+    documentFilter: ColumnFilter;
 
     htmlRenderer: ViewAllHtmlRenderer;
 
