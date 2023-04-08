@@ -41,7 +41,6 @@ export class LeaveTypeDialog {
     monthList = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
     // data variables
     leaveTypeId: number = -1;
-    leaveTypeMonthId: number = -1;
     leaveTypeName: string = "";
     leaveType: string = "";
     color: string = "";
@@ -55,7 +54,7 @@ export class LeaveTypeDialog {
             });
             this.save.emit({
                 database: { leaves_app: "SchoolLeaveTypeMonth" },
-                operation: this.leaveTypeMonthId === -1 ? "insertBatch" : "updateBatch",
+                operation: this.schoolLeaveTypeMonth[0].id === -1 ? "insertBatch" : "updateBatch",
                 check: (data1, data2) => {
                     return [];
                 },
@@ -97,14 +96,14 @@ export class LeaveTypeDialog {
     updateName(event): void {
         this.leaveTypeName = event.target.value;
         const similarName = this.InvalidNameList.find((name) => {
-            return name.toLowerCase() === this.leaveTypeName.toLowerCase();
+            return name.toLowerCase() === this.leaveTypeName.toLowerCase() && name.toLowerCase() !== this.schoolLeaveType.leaveTypeName.toLowerCase();
         });
         this.isNameValid = similarName ? false : true;
     }
     async saveData(event): Promise<void> {
         if (this.leaveTypeName.length === 0 || this.leaveType === "None" || this.color.length === 0) {
             alert("Please fill all the fields before saving the changes.");
-        } else if (!this.isNameValid) {
+        } else if (this.schoolLeaveType.id === -1 && !this.isNameValid) {
             alert("Name already exists.");
         } else {
             this.schoolLeaveTypeMonthList = [];
@@ -120,11 +119,14 @@ export class LeaveTypeDialog {
                     else if (data1.id != data2.id && data1.color.toLowerCase() === data2.color.toLowerCase()) sameVariables.push("Color");
                     return sameVariables;
                 },
-                data: {
-                    leaveTypeName: this.leaveTypeName,
-                    leaveType: this.leaveType,
-                    color: this.color,
-                },
+                data: [
+                    {
+                        id: this.leaveTypeId,
+                        leaveTypeName: this.leaveTypeName,
+                        leaveType: this.leaveType,
+                        color: this.color,
+                    },
+                ],
                 close: false,
                 setVariable: "leaveTypeList",
                 setVariableNameMap: {
@@ -142,7 +144,8 @@ export class LeaveTypeDialog {
         });
         this.isEncFormulaVisible = encCount == 0 ? false : true;
     }
-    checkInput(event): void {
-        event.target.value = isNaN(parseInt(event.target.value)) ? "0" : parseInt(event.target.value) < 0 ? "0" : parseInt(event.target.value).toString();
+    checkInput(event, month): void {
+        event.target.value = isNaN(parseInt(event.target.value)) ? "0" : parseInt(event.target.value) < 0 ? 0 : parseInt(event.target.value).toString();
+        this.SchoolLeaveTypeMonthMap[month].value = parseInt(event.target.value);
     }
 }

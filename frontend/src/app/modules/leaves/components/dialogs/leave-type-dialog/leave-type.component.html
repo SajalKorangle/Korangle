@@ -149,8 +149,8 @@
                 <!-- Starts :- Input (Number of allowed leaves in a month) -->
                 <div class="modalRowItem" style="width: 100px; padding-left: 5px; padding-right: 5px">
                     <div class="modalColItem" style="text-align: left">
-                        <input class="modalInput" (keyup)="checkInput($event)" type="number" min="0"
-                            [(ngModel)]="SchoolLeaveTypeMonthMap[monthMap[month]].value"
+                        <input class="modalInput" (keyup)="checkInput($event, monthMap[month])" (change)="checkInput($event, monthMap[month])" type="number" min="0"
+                            [value]="SchoolLeaveTypeMonthMap[monthMap[month]].value"
                         />
                     </div>
                 </div>
