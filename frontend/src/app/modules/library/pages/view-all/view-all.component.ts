@@ -49,6 +49,7 @@ export class ViewAllComponent implements OnInit {
 
     bookFullProfileList = [];
     displayBookNumber = 0;
+    searchBookName : string;
 
 
     constructor () { }
