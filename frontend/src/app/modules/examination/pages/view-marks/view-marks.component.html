@@ -85,7 +85,7 @@
                         </td>
                         <ng-container *ngFor="let test of getFilteredTestList()">
                             <td [class.yellow]="!htmlRenderer.getStudentAbsentStatus(studentSection, test) && getStudentMarks(studentSection, test) == 0" [class.red]="htmlRenderer.getStudentAbsentStatus(studentSection, test) || getStudentMarks(studentSection, test) > test.maximumMarks">
-                                {{ htmlRenderer.getStudentAbsentStatus(studentSection, test) ? 'A' : getStudentMarks(studentSection, test) }}
+                                {{ htmlRenderer.getStudentAbsentStatus(studentSection, test) ? absentRep : getStudentMarks(studentSection, test) }}
                             </td>
                         </ng-container>
                     </tr>
