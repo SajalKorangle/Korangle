@@ -142,7 +142,6 @@ export class GenericService extends RestApiGateway {
     }
 
 }
-
 export interface APP_MODEL_STRUCTURE_INTERFACE {
     leaves_app: 'SchoolLeaveType' | 'SchoolLeaveTypeMonth';
     fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder' | 'StudentFee' | 'FeeSchoolSettings' | 'ViewDefaulterPermissions';
@@ -151,6 +150,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
         | 'PaymentGateway' | 'ModeOfPayment' | 'ModeOfPaymentCharges';
     activity_record_app: 'ActivityRecord';
     student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue' | 'CountAllTable';
+    library_app: 'Book' | 'BookParameter';
     class_app: 'Class' | 'Division';
     school_app: 'Session' | 'BusStop' | 'School';
     tc_app: 'TransferCertificateNew';
@@ -165,6 +165,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     user_app: 'User';
     attendance_app: 'AttendancePermission';
 }
+
 
 export const APP_CONSTANTS = {
     class_app: {

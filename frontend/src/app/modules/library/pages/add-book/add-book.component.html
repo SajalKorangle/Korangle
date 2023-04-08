@@ -36,9 +36,12 @@
                         <mat-form-field>
                             <mat-label>Book name</mat-label>
                             <input
-                            [(ngModel)]="newBook.bookName"
+                            #bookNameField="ngModel"
+                            [(ngModel)]="newBook.name"
                             matInput name="name" type="text"
-                            [formControl]="bookName" required>
+                            required
+                            pattern=".*\S+.*"
+                            >
                         </mat-form-field>
                     </div>
 
@@ -80,11 +83,21 @@
                         <mat-form-field>
                             <mat-label>Book No.</mat-label>
                             <input
+                            #bookNumberField="ngModel"
                             [(ngModel)]="newBook.bookNumber"
                             matInput name="bookNumber" type="number"
-                            [formControl]="bookNumber"
+                            min="0"
+                            pattern="^\d{0,10}$"
                             required>
-                            <mat-error *ngIf="bookNumber.value < 0">Invalid input</mat-error>
+                            <mat-error *ngIf="bookNumberField.invalid && (bookNumberField.dirty || bookNumberField.touched) && bookNumberField.value < 1">
+                                Book No. cannot be negative
+                            </mat-error>
+                            <mat-error *ngIf="bookNumberField.invalid && (bookNumberField.dirty || bookNumberField.touched) && bookNumberField.value >= 1 && bookNumberField.value < 10000000000">
+                                Book No. must be a whole number
+                            </mat-error>
+                            <mat-error *ngIf="bookNumberField.invalid && (bookNumberField.dirty || bookNumberField.touched) && bookNumberField.value >= 10000000000">
+                                Book No. must have 10 digits or less
+                            </mat-error>
                         </mat-form-field>
 
                     </div>
@@ -168,26 +181,46 @@
                         <mat-form-field>
                             <mat-label>No. of pages</mat-label>
                             <input
+                            #pagesField="ngModel"
                             [(ngModel)]="newBook.numberOfPages"
                             matInput name="numberOfPages" type="number"
-                            [formControl]="numberOfPages">
-                            <mat-error *ngIf="numberOfPages.value < 0">Invalid input</mat-error>
+                            min="1"
+                            pattern="^\d{0,10}$"
+                            >
+                            <mat-error *ngIf="pagesField.invalid && (pagesField.dirty || pagesField.touched) && pagesField.value < 1">
+                                No. of pages cannot be less than 1
+                            </mat-error>
+                            <mat-error *ngIf="pagesField.invalid && (pagesField.dirty || pagesField.touched) && pagesField.value >= 1 && pagesField.value < 10000000000">
+                                No. of pages must be a whole number
+                            </mat-error>
+                            <mat-error *ngIf="pagesField.invalid && (pagesField.dirty || pagesField.touched) && pagesField.value >= 1 && pagesField.value >= 10000000000">
+                                No. of pages must have 10 digits or less
+                            </mat-error>
                         </mat-form-field>
                     </div>
-    
+
                     <!-- Printed cost -->
                     <div class="col-md-4">
                         <mat-form-field>
                             <mat-label>Printed cost</mat-label>
                             <input
+                            #printedCostField="ngModel"
                             [(ngModel)]="newBook.printedCost"
                             matInput name="printedCost" type="number"
-                            [formControl]="printedCost"
+                            min="0"
+                            max="1000000"
+                            pattern="^\d{0,6}(?:\.\d+)?$"
                             >
-                            <mat-error *ngIf="printedCost.invalid">Invalid input</mat-error>
+                            <mat-error *ngIf="printedCostField.invalid && (printedCostField.dirty || printedCostField.touched) && printedCostField.value < 0">
+                                Printed cost cannot be negative
+                            </mat-error>
+
+                            <mat-error *ngIf="printedCostField.invalid && (printedCostField.dirty || printedCostField.touched) && printedCostField.value >= 0 && printedCostField.value >= 1000000">
+                                Printed cost must be less than 10,00,000
+                            </mat-error>
                         </mat-form-field>
                     </div>
-    
+
                     <!-- Cover type -->
                     <div class="col-md-4">
                         <mat-form-field>
@@ -206,8 +239,8 @@
                         <mat-form-field>
                             <mat-label>Type of book</mat-label>
                             <input
-                            [(ngModel)]="newBook.bookType"
-                            matInput name="bookType" type="text">
+                            [(ngModel)]="newBook.typeOfBook"
+                            matInput name="typeOfBook" type="text">
                         </mat-form-field>
                     </div>
 
@@ -261,7 +294,7 @@
             type="submit"
             id="action-add-book"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-            (click)="informWIP()"
+            (click)="createNewBook()"
         >
         Add
         </button>
@@ -270,7 +303,7 @@
             *ngIf="isMobile()"
             mat-fab
             color="primary"
-            (click)="informWIP()"
+            (click)="createNewBook()"
         >
             <mat-icon>check</mat-icon>
         </button>
