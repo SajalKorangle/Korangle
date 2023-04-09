@@ -9,7 +9,6 @@ const routes: Routes = [
         component: ManagePlanComponent,
     },
 ];
-
 @NgModule({
     imports: [CommonModule, RouterModule.forChild(routes)],
     exports: [RouterModule],

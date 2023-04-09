@@ -43,13 +43,9 @@ export class ManagePlanComponent implements OnInit {
     leaveTypeList: Array<LeaveType> = [];
     resetComponent(): void {
         this.currentLeavePlan = {};
-        this.isLeavePlanOpen = false;
-        this.isAddNewOpen = false;
+        this.isLeavePlanOpen = this.isSelectLeavePlanToLeaveTypeVisible = this.isAddNewOpen = false;
         this.leavePlanName = "";
-        this.leaveTypeChoiceList = [];
-        this.currentLeaveTypeChoiceList = [];
-        this.appliedLeaveTypeChoiceList = [];
-        this.isSelectLeavePlanToLeaveTypeVisible = false;
+        this.leaveTypeChoiceList = this.currentLeaveTypeChoiceList = this.appliedLeaveTypeChoiceList = [];
     }
     async savePlan(data): Promise<any> {
         this.isLoading = true;
@@ -57,33 +53,26 @@ export class ManagePlanComponent implements OnInit {
         let addLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
         let oldLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
         this.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
-            if (leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id) {
-                oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem);
-            }
+            leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id ? oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem) : null;
         });
         oldLeaveTypeChoiceList.map((oldLeaveTypeChoice) => {
             let similarLeaveType = this.appliedLeaveTypeChoiceList.find((leaveType) => {
                 return leaveType.id === oldLeaveTypeChoice.parentSchoolLeaveType;
             });
-            if (!similarLeaveType) {
-                removeLeaveTypeChoiceList.push(oldLeaveTypeChoice);
-            }
+            !similarLeaveType ? removeLeaveTypeChoiceList.push(oldLeaveTypeChoice) : null;
         });
         this.appliedLeaveTypeChoiceList.map((leaveType) => {
             let similarLeaveType = oldLeaveTypeChoiceList.find((oldLeaveTypeChoice) => {
                 return leaveType.id === oldLeaveTypeChoice.parentSchoolLeaveType;
             });
-            if (!similarLeaveType) {
-                addLeaveTypeChoiceList.push({id: -1, parentSchoolLeavePlan: this.currentLeavePlan.id, parentSchoolLeaveType: leaveType.id, });
-            }
+            !similarLeaveType ? addLeaveTypeChoiceList.push({
+                id: -1, parentSchoolLeavePlan: this.currentLeavePlan.id, parentSchoolLeaveType: leaveType.id,
+            }) : null;
         });
         await this.serviceAdapterGeneric.handleDataChange(
             {
                 check: (data1, data2) => {
-                    if (data2.id != data1.id && data1.leavePlanName.toString().toLowerCase() === data2.leavePlanName.toString().toLowerCase()) {
-                        return ["Leave Plan Name"];
-                    }
-                    return [];
+                    return (data2.id != data1.id && data1.leavePlanName.toString().toLowerCase() === data2.leavePlanName.toString().toLowerCase()) ? ["Leave Plan Name"] : [];
                 },
                 data: [data], database: { leaves_app: "SchoolLeavePlan" }, operation: data.id ? "update" : "insert",
             },
@@ -92,9 +81,7 @@ export class ManagePlanComponent implements OnInit {
         if (removeLeaveTypeChoiceList.length) {
             await this.serviceAdapterGeneric.handleDataChange(
                 {
-                    check: (data1, data2) => {
-                        return [];
-                    },
+                    check: null,
                     data: removeLeaveTypeChoiceList, database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, operation: "deleteBatch",
                 },
                 "leavePlanToLeaveTypeList",
@@ -103,9 +90,7 @@ export class ManagePlanComponent implements OnInit {
         if (addLeaveTypeChoiceList.length) {
             await this.serviceAdapterGeneric.handleDataChange(
                 {
-                    check: (data1, data2) => {
-                        return [];
-                    },
+                    check: null,
                     data: addLeaveTypeChoiceList, database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, operation: "insertBatch",
                 },
                 "leavePlanToLeaveTypeList",
@@ -116,27 +101,19 @@ export class ManagePlanComponent implements OnInit {
     async handleDelete(): Promise<any> {
         let oldLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
         this.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
-            if (leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id) {
-                oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem);
-            }
+            leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id ? oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem) : null;
         });
         if (oldLeaveTypeChoiceList.length) {
             await this.serviceAdapterGeneric.handleDataChange(
                 {
-                    check: (data1, data2) => {
-                        return [];
-                    },
-                    data: oldLeaveTypeChoiceList, database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, operation: "deleteBatch",
+                    check: null, data: oldLeaveTypeChoiceList, database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, operation: "deleteBatch",
                 },
                 "leavePlanToLeaveTypeList",
             );
         }
         await this.serviceAdapterGeneric.handleDataChange(
             {
-                check: (data1, data2) => {
-                    return [];
-                },
-                data: [this.currentLeavePlan], database: { leaves_app: "SchoolLeavePlan" }, operation: "delete",
+                check: null, data: [this.currentLeavePlan], database: { leaves_app: "SchoolLeavePlan" }, operation: "delete",
             },
             "leavePlanList",
         );
@@ -147,13 +124,11 @@ export class ManagePlanComponent implements OnInit {
         this.currentLeavePlan = leavePlan;
         this.appliedLeaveTypeChoiceList = [];
         this.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
-            if (leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id) {
-                this.appliedLeaveTypeChoiceList.push(
-                    this.leaveTypeList.find((leaveType) => {
-                        return leaveType.id === leavePlanToLeaveTypeItem.parentSchoolLeaveType;
-                    }),
-                );
-            }
+            leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id ? this.appliedLeaveTypeChoiceList.push(
+                this.leaveTypeList.find((leaveType) => {
+                    return leaveType.id === leavePlanToLeaveTypeItem.parentSchoolLeaveType;
+                }),
+            ) : null;
         });
     }
     enableAddPlanToLeaveType(): void {
@@ -166,9 +141,7 @@ export class ManagePlanComponent implements OnInit {
             const similarChoices = this.appliedLeaveTypeChoiceList.filter((appliedLeaveType) => {
                 return leaveType.id === appliedLeaveType.id;
             });
-            if (!similarChoices.length) {
-                this.leaveTypeChoiceList.push(leaveType);
-            }
+            !similarChoices.length ? this.leaveTypeChoiceList.push(leaveType) : null;
         });
     }
     savePlanToLeaveType(LeavePlanToLeaveType): void {
