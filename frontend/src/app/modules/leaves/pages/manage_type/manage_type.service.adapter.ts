@@ -4,7 +4,7 @@ import { APP_MODEL_STRUCTURE_INTERFACE, QUERY_INTERFACE } from "@services/generi
 import { ManageTypeComponent } from "./manage_type.component";
 import { ManagePlanComponent } from "../manage_plan/manage_plan.component";
 
-export default class GenericServiceAdapter {
+export default class ManageTypeServiceAdapter {
     vm: ManageTypeComponent | ManagePlanComponent;
 
     // starts :- Initialize adapter (initialize adapter with instance of component)

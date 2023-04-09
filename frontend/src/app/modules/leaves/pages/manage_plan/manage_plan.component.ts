@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { User } from "@classes/user";
 import { GenericService } from "@services/generic/generic-service";
 import { LeavePlan, LeavePlanToLeaveType, LeaveType } from "@modules/leaves/classes/leaves";
-import GenericServiceAdapter from "../manage_type/manage_type.service.adapter";
+import ManageTypeServiceAdapter from "../manage_type/manage_type.service.adapter";
 
 @Component({
     selector: "manage-plan",
@@ -12,7 +12,7 @@ import GenericServiceAdapter from "../manage_type/manage_type.service.adapter";
 })
 export class ManagePlanComponent implements OnInit {
     user: User;
-    serviceAdapterGeneric: GenericServiceAdapter = new GenericServiceAdapter();
+    serviceAdapterGeneric: ManageTypeServiceAdapter = new ManageTypeServiceAdapter();
     constructor(public genericService: GenericService) {}
     ngOnInit(): void {
         this.serviceAdapterGeneric.initializeAdapter(this);
@@ -50,9 +50,6 @@ export class ManagePlanComponent implements OnInit {
         this.currentLeaveTypeChoiceList = [];
         this.appliedLeaveTypeChoiceList = [];
         this.isSelectLeavePlanToLeaveTypeVisible = false;
-        this.serviceAdapterGeneric.initializeData({ leaves_app: "SchoolLeaveType" }, "leaveTypeList", {
-            filter: { parentSchool: this.user.activeSchool.dbId },
-        });
     }
     async savePlan(data): Promise<any> {
         this.isLoading = true;
@@ -77,11 +74,7 @@ export class ManagePlanComponent implements OnInit {
                 return leaveType.id === oldLeaveTypeChoice.parentSchoolLeaveType;
             });
             if (!similarLeaveType) {
-                addLeaveTypeChoiceList.push({
-                    id: -1,
-                    parentSchoolLeavePlan: this.currentLeavePlan.id,
-                    parentSchoolLeaveType: leaveType.id,
-                });
+                addLeaveTypeChoiceList.push({id: -1, parentSchoolLeavePlan: this.currentLeavePlan.id, parentSchoolLeaveType: leaveType.id, });
             }
         });
         await this.serviceAdapterGeneric.handleDataChange(
@@ -92,9 +85,7 @@ export class ManagePlanComponent implements OnInit {
                     }
                     return [];
                 },
-                data: [data],
-                database: { leaves_app: "SchoolLeavePlan" },
-                operation: data.id ? "update" : "insert",
+                data: [data], database: { leaves_app: "SchoolLeavePlan" }, operation: data.id ? "update" : "insert",
             },
             "leavePlanList",
         );
@@ -104,9 +95,7 @@ export class ManagePlanComponent implements OnInit {
                     check: (data1, data2) => {
                         return [];
                     },
-                    data: removeLeaveTypeChoiceList,
-                    database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
-                    operation: "deleteBatch",
+                    data: removeLeaveTypeChoiceList, database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, operation: "deleteBatch",
                 },
                 "leavePlanToLeaveTypeList",
             );
@@ -117,9 +106,7 @@ export class ManagePlanComponent implements OnInit {
                     check: (data1, data2) => {
                         return [];
                     },
-                    data: addLeaveTypeChoiceList,
-                    database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
-                    operation: "insertBatch",
+                    data: addLeaveTypeChoiceList, database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, operation: "insertBatch",
                 },
                 "leavePlanToLeaveTypeList",
             );
@@ -139,9 +126,7 @@ export class ManagePlanComponent implements OnInit {
                     check: (data1, data2) => {
                         return [];
                     },
-                    data: oldLeaveTypeChoiceList,
-                    database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
-                    operation: "deleteBatch",
+                    data: oldLeaveTypeChoiceList, database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, operation: "deleteBatch",
                 },
                 "leavePlanToLeaveTypeList",
             );
@@ -151,9 +136,7 @@ export class ManagePlanComponent implements OnInit {
                 check: (data1, data2) => {
                     return [];
                 },
-                data: [this.currentLeavePlan],
-                database: { leaves_app: "SchoolLeavePlan" },
-                operation: "delete",
+                data: [this.currentLeavePlan], database: { leaves_app: "SchoolLeavePlan" }, operation: "delete",
             },
             "leavePlanList",
         );

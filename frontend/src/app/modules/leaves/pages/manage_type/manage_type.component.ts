@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { User } from "@classes/user";
 import { GenericService } from "@services/generic/generic-service";
-import GenericServiceAdapter from "./manage_type.service.adapter";
+import ManageTypeServiceAdapter from "./manage_type.service.adapter";
 import { LeaveType, LeaveTypeMonth } from "@modules/leaves/classes/leaves";
 @Component({
     selector: "manage-type",
@@ -12,7 +12,7 @@ import { LeaveType, LeaveTypeMonth } from "@modules/leaves/classes/leaves";
 export class ManageTypeComponent implements OnInit {
     user: User;
     // service Adapter
-    serviceAdapter: GenericServiceAdapter = new GenericServiceAdapter();
+    serviceAdapter: ManageTypeServiceAdapter = new ManageTypeServiceAdapter();
     // page variables
     leaveTypeList: Array<LeaveType> = [];
     leaveTypeMonthList: Array<LeaveTypeMonth> = [];
