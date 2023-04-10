@@ -130,9 +130,29 @@
                 Total Books: <b>{{ bookFullProfileList.length }}</b
                 >, Selected : <b>{{ displayBookNumber }}</b>
             </p>
+            <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+                <table class="table table-hover">
+                    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                        <tr>
+                            <th style="min-width: 60px" *ngIf="columnFilter.showSerialNumber">S No.</th>
+                            <th *ngIf="columnFilter.showFrontImage" style="min-width: 120px; text-align: center">Front Image</th>
+                            <th *ngIf="columnFilter.showBackImage" style="min-width: 120px; text-align: center">Back Image</th>
+                            <th style="min-width: 80px" *ngIf="columnFilter.showBookNumber">Book No.</th>
+                            <th style="min-width: 180px" *ngIf="columnFilter.showName">Name</th>
+                            <th style="min-width: 180px" *ngIf="columnFilter.showAuthor">Author</th>
+                            <th style="min-width: 100px" *ngIf="columnFilter.showLocation">Location</th>
+                            <th style="min-width: 100px" *ngIf="columnFilter.showDateOfPurchase">Date of Purchase</th>
+                            <th style="min-width: 180px" *ngIf="columnFilter.showPublisher">Publisher</th>
+                            <th style="min-width: 100px" *ngIf="columnFilter.showEdition">Edition</th>
+                            <th style="min-width: 80px" *ngIf="columnFilter.showNumberOfPages">No. of pages</th>
+                            <th style="min-width: 100px" *ngIf="columnFilter.showPrintedCost">Printed Cost</th>
+                            <th style="min-width: 100px" *ngIf="columnFilter.showCoverType">Cover Type</th>
+                            <th style="min-width: 100px" *ngIf="columnFilter.showBookType">Book Type</th>
 
-            <hr>
-            UNDER CONSTRUCTION
+                        </tr>
+                    </thead>
+                </table>
+            </cdk-virtual-scroll-viewport>
         </ng-container>
 
 </div>

@@ -1,0 +1,73 @@
+@media only screen and (min-width: 992px) {
+    .main-content {
+        padding: 0px;
+        margin: 0px;
+    }
+
+    .table-content {
+        margin-top: 40px;
+        margin-left: 40px;
+    }
+}
+
+.main-content {
+    height: 95%;
+}
+
+.container-fluid {
+    height: 100%;
+}
+
+.loader {
+    border: 8px solid #ffffff;
+    border-top: 8px solid Red;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.dataListDiv {
+    position: absolute;
+    z-index: 10000;
+    margin-top: 2mm;
+    background-color: white;
+    border: 1px solid black;
+    overflow: auto;
+    /*width: 200mm;*/
+    /*width: 100%;*/
+    height: 70mm;
+}
+
+i.material-icons.column {
+    font-size: 15px;
+    cursor: pointer;
+    /*float: left;*/
+    float: right;
+    /*margin-right: 15px;*/
+    line-height: 19px;
+    /*width: 30px;*/
+    /*text-align: center;*/
+    /*color: #a9afbb;*/
+}
+
+.customInput {
+    border: none;
+    /*border-bottom: 1px solid black;*/
+    width: 100%;
+}
+
+.example-viewport {
+    height: 70vh;
+    width: 100%;
+    border-top: 2px solid #909090;
+}
