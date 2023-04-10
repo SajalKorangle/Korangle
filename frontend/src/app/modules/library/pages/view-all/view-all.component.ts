@@ -83,7 +83,7 @@ export class ViewAllComponent implements OnInit {
         this.bookFullProfileList.forEach(book => {
             book.show = true;
             book.serialNumber = ++serialNumber;
-        })
+        });
     }
 
     selectAllColumns(): void {

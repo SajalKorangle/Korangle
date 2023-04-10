@@ -13,7 +13,7 @@ export class ViewAllServiceAdapter {
     async initializeData(): Promise<void> {
         this.vm.isLoading = true;
 
-        try{
+        try {
             const fetchedBookList = await this.vm.genericService.getObjectList({library_app: "Book"}, {});
             this.vm.initializeBookList(fetchedBookList);
             this.vm.isLoading = false;
