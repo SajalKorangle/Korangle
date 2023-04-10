@@ -160,14 +160,14 @@ export class SetSchoolFeesServiceAdapter {
         }
 
         if (!this.vm.newSchoolFeeRule.name || this.vm.newSchoolFeeRule.name == '') {
-            alert('Rule Name should be populated');
+            alert('Group Name should be populated');
             return;
         }
 
         if (this.vm.schoolFeeRuleList.filter(schoolFeeRule => {
             return schoolFeeRule.parentFeeType == this.vm.selectedFeeType.id;
         }).map(a => a.name).includes(this.vm.newSchoolFeeRule.name)) {
-            alert('Rule Name already exists');
+            alert('Group Name already exists');
             return;
         }
         // -------------------- Confirming the number of students affected starts -----------------------
