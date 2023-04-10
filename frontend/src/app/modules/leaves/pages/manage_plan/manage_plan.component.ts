@@ -79,7 +79,7 @@ export class ManagePlanComponent implements OnInit {
         // create original array of employees associated to this leave plan
         this.leavePlanToEmployeeList.map((leavePlanToEmployee) => {
             leavePlanToEmployee.parentSchoolLeavePlan === this.currentLeavePlan.id ? oldEmployeeChoiceList.push(leavePlanToEmployee) : null;
-        })
+        });
         // create array of leave types to be removed
         oldLeaveTypeChoiceList.map((oldLeaveTypeChoice) => {
             let similarLeaveType = this.appliedLeaveTypeChoiceList.find((leaveType) => {
