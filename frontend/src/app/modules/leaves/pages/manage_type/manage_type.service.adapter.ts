@@ -1,20 +1,22 @@
 import { DataStorage } from "@classes/data-storage";
 import { Operation } from "@modules/leaves/classes/operation";
+import { APP_MODEL_STRUCTURE_INTERFACE, QUERY_INTERFACE } from "@services/generic/generic-service";
 import { ManageTypeComponent } from "./manage_type.component";
+import { ManagePlanComponent } from "../manage_plan/manage_plan.component";
 
 export default class ManageTypeServiceAdapter {
-    vm: ManageTypeComponent;
+    vm: ManageTypeComponent | ManagePlanComponent;
 
     // starts :- Initialize adapter (initialize adapter with instance of component)
-    initializeAdapter(vm: ManageTypeComponent): void {
+    initializeAdapter(vm: any): void {
         this.vm = vm;
         this.vm.user = DataStorage.getInstance().getUser();
     }
     // ends :- Initialize adapter
 
     // starts :- Initialize Data (send GET request to backend to fetch data)
-    async initializeData(database: { [id: string]: string }, variableName: string): Promise<void> {
-        this.vm[variableName] = await this.vm.genericService.getObjectList(database, {});
+    async initializeData(database: Partial<APP_MODEL_STRUCTURE_INTERFACE>, variableName: string, query: QUERY_INTERFACE = {}): Promise<void> {
+        this.vm[variableName] = await this.vm.genericService.getObjectList(database, query);
         this.vm.isLoading = false;
     }
     // ends :- Initialize Data
@@ -27,7 +29,7 @@ export default class ManageTypeServiceAdapter {
             this.vm[variableName] = await this.vm.genericService.getObjectList(Operation.database, {});
             let sameVariableNameMap: { [id: string]: boolean } = {};
             const similarObjectList = this.vm[variableName].filter((object) => {
-                const variableList = Operation.check(object, Operation.data);
+                const variableList = Operation.check(object, Operation.data[0]);
                 variableList.map((variableName) => {
                     sameVariableNameMap[variableName] = true;
                 });
@@ -50,17 +52,23 @@ export default class ManageTypeServiceAdapter {
             // ends :- alert for duplicate entry (returns null indicating error else moves ahead.)
         }
         let response = null;
-        Operation.data.parentSchool = this.vm.user.activeSchool.dbId;
+        if (!Operation.operation.endsWith("Batch")) {
+            Operation.data.forEach((data) => {
+                data.parentSchool = this.vm.user.activeSchool.dbId;
+            });
+        }
         if (Operation.operation === "insert") {
-            response = await this.vm.genericService.createObject(Operation.database, Operation.data);
+            response = await this.vm.genericService.createObject(Operation.database, Operation.data[0]);
         } else if (Operation.operation === "update") {
-            response = await this.vm.genericService.partiallyUpdateObject(Operation.database, Operation.data);
+            response = await this.vm.genericService.partiallyUpdateObject(Operation.database, Operation.data[0]);
         } else if (Operation.operation === "delete") {
-            response = await this.vm.genericService.deleteObjectList(Operation.database, { filter: Operation.data });
+            response = await this.vm.genericService.deleteObjectList(Operation.database, { filter: Operation.data[0] });
         } else if (Operation.operation === "insertBatch") {
             response = await this.vm.genericService.createObjectList(Operation.database, Operation.data);
         } else if (Operation.operation === "updateBatch") {
             response = await this.vm.genericService.partiallyUpdateObjectList(Operation.database, Operation.data);
+        } else if (Operation.operation === "deleteBatch") {
+            response = await this.vm.genericService.deleteObjectList(Operation.database, { filter: { __or__: Operation.data } });
         }
         if (response !== null) {
             await this.initializeData(Operation.database, variableName);

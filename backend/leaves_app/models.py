@@ -104,7 +104,7 @@ class SchoolLeavePlanToSchoolLeaveType(models.Model):
     class Meta:
         db_table = 'school_leave_plan_leave_type'
         unique_together = ('parentSchoolLeavePlan', 'parentSchoolLeaveType')
-
+        
 # leave type and number of leaves per month
 class SchoolLeaveTypeMonth(models.Model):
 

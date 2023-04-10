@@ -23,17 +23,10 @@
         <mat-card *ngIf="isAddNewOpen" style="margin-top: 10px">
             <mat-card-content>
                 <span class="matCardContentAddNew">
-                    <span style="flex-grow: 1"
-                        ><input
-                            style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.25)"
-                            placeholder="Enter leave plan name"
-                            [(ngModel)]="leavePlanName"
-                    /></span>
-                    <span
-                        class="material-icons-outlined"
-                        style="width: fit; padding: 8px; cursor: pointer; color: green"
-                        (click)="savePlan({ leavePlanName: leavePlanName })"
-                    >
+                    <span style="flex-grow: 1">
+                        <input style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.25)" placeholder="Enter leave plan name" [(ngModel)]="leavePlanName"/>
+                    </span>
+                    <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: green" (click)="savePlan({ leavePlanName: leavePlanName })">
                         check
                     </span>
                     <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: red" (click)="resetComponent()">
@@ -87,9 +80,7 @@
                                 >
                                 <span class="contentColItem" style="width: 20%"></span>
                             </div>
-                            <div
-                                class="contentRowItem"
-                                *ngFor="let LeaveTypeChoice of appliedLeaveTypeChoiceList"
+                            <div class="contentRowItem" *ngFor="let LeaveTypeChoice of appliedLeaveTypeChoiceList"
                                 style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px"
                             >
                                 <span class="contentColItem" style="width: 30%"
@@ -103,23 +94,17 @@
                                     }}</span></span
                                 >
                                 <span class="contentColItem" style="width: 20%">
-                                    <span
-                                        [ngStyle]="{ backgroundColor: LeaveTypeChoice.color }"
+                                    <span [ngStyle]="{ backgroundColor: LeaveTypeChoice.color }"
                                         style="height: 25px; width: 25px; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.25)"
                                     ></span>
                                 </span>
-                                <span class="contentColItem material-icons" style="width: 20%"
-                                    ><span
+                                <span class="contentColItem material-icons" style="width: 20%">
+                                    <span class="material-icons-outlined" (click)="removeLeaveTypeChoice(LeaveTypeChoice)"
                                         style="color: rgba(255, 0, 0, 0.5); cursor: pointer"
-                                        class="material-icons-outlined"
-                                        (click)="removeLeaveTypeChoice(LeaveTypeChoice)"
-                                        >delete_forever</span
-                                    ></span
-                                >
+                                        >delete_forever</span>
+                                    </span>
                             </div>
-                            <div
-                                class="contentRowItem"
-                                *ngIf="appliedLeaveTypeChoiceList.length === 0"
+                            <div class="contentRowItem" *ngIf="appliedLeaveTypeChoiceList.length === 0"
                                 style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px"
                             >
                                 <span class="contentColItem" style="flex-grow: 1">No Leave Type Available Currently</span>
@@ -147,16 +132,12 @@
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                                <span
-                                    class="material-icons-outlined"
-                                    style="width: fit; padding: 8px; cursor: pointer; color: green"
-                                    (click)="leaveTypeChoiceList.length !== 0 ? savePlanToLeaveType(currentLeaveTypeChoiceList) : 1"
+                                <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: green"
+                                    (click)="leaveTypeChoiceList.length !== 0 ? savePlanToLeaveType(currentLeaveTypeChoiceList):1"
                                 >
                                     check
                                 </span>
-                                <span
-                                    class="material-icons-outlined"
-                                    style="width: fit; padding: 8px; cursor: pointer; color: red"
+                                <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: red"
                                     (click)="savePlanToLeaveType([])"
                                 >
                                     clear
