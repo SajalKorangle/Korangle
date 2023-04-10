@@ -3,7 +3,7 @@
         <mat-form-field style="margin-right: 15px" >
             <mat-label>Book name</mat-label>
 
-            <input matInput name="name" type="text" placeholder="Search Book Name"
+            <input matInput name="name" type="text" placeholder="(UNDER CONSTRUCTION)"
             [(ngModel)]="searchBookName">
         </mat-form-field>
 
@@ -27,7 +27,6 @@
                     <mat-checkbox [(ngModel)]="columnFilter.showAuthor" (click)="$event.stopPropagation()">Author </mat-checkbox>
                 </mat-option>
 
-      
                 <mat-option>
                     <mat-checkbox [(ngModel)]="columnFilter.showPublisher" (click)="$event.stopPropagation()">Publisher </mat-checkbox>
                 </mat-option>
@@ -151,6 +150,52 @@
 
                         </tr>
                     </thead>
+                    <tbody>
+                        <ng-container *cdkVirtualFor="let book of bookFullProfileList">
+                            <tr *ngIf="book.show">
+                                <ng-container>
+                                    <td *ngIf="columnFilter.showSerialNumber">{{ book.serialNumber }}.</td>
+                                    <td *ngIf="columnFilter.showFrontImage" align="center">
+                                        <img *ngIf="book.frontImage" src="{{ book.frontImage }}" style="width: 50px" />
+                                        <img
+                                            *ngIf="!book.frontImage"
+                                            src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                                            style="width: 50px"
+                                        />
+                                    </td>
+                                    <td *ngIf="columnFilter.showBackImage" align="center">
+                                        <img *ngIf="book.backImage" src="{{ book.backImage }}" style="width: 50px" />
+                                        <img
+                                            *ngIf="!book.backImage"
+                                            src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                                            style="width: 50px"
+                                        />
+                                    </td>
+                                    <td [attr.id]="'book-number-value-' + book.bookNumber"
+                                    *ngIf="columnFilter.showBookNumber">{{ book.bookNumber }}</td>
+                                    <td [attr.id]="'book-value-' + book.name.replace(' ', '')" *ngIf="columnFilter.showName">
+                                        {{ book.name }}
+                                    </td>
+                                    <td *ngIf="columnFilter.showAuthor">
+                                        {{ book.author }}
+                                    </td>
+                                    <td *ngIf="columnFilter.showLocation">
+                                        {{ book.location }}
+                                    </td>
+                                    <td *ngIf="columnFilter.showDateOfPurchase">
+                                        {{ book.dateOfPurchase | date: 'dd/MM/yyyy' }}
+                                    </td>
+                                    <td *ngIf="columnFilter.showPublisher">{{ book.publisher }}</td>
+                                    <td *ngIf="columnFilter.showEdition">{{ book.edition }}</td>
+                                    <td *ngIf="columnFilter.showNumberOfPages">{{ book.numberOfPages }}</td>
+                                    <td *ngIf="columnFilter.showPrintedCost">{{ book.printedCost }}</td>
+                                    <td *ngIf="columnFilter.showCoverType">{{ book.coverType }}</td>
+                                    <td *ngIf="columnFilter.showBookType">{{ book.typeOfBook }}</td>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+
                 </table>
             </cdk-virtual-scroll-viewport>
         </ng-container>

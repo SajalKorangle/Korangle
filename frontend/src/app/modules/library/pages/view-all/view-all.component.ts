@@ -75,7 +75,17 @@ export class ViewAllComponent implements OnInit {
     }
     initializeBookList(bookFullProfileList): void {
         this.bookFullProfileList = bookFullProfileList;
+        this.handleBookDisplay();
     }
+
+    handleBookDisplay(): void {
+        let serialNumber = 0;
+        this.bookFullProfileList.forEach(book => {
+            book.show = true;
+            book.serialNumber = ++serialNumber;
+        })
+    }
+
     selectAllColumns(): void {
         Object.keys(this.columnFilter).forEach((key) => {
             this.columnFilter[key] = true;
