@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewAllHtmlRenderer } from './view-all.html.renderer';
 import { DataStorage } from "@classes/data-storage";
+import { GenericService } from '@services/generic/generic-service';
+import { ViewAllServiceAdapter } from './view-all.service.adapter';
 
 
 class ColumnFilter {
@@ -25,7 +27,7 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [ ],
+    providers: [ GenericService ],
 })
 
 export class ViewAllComponent implements OnInit {
@@ -41,6 +43,7 @@ export class ViewAllComponent implements OnInit {
     // Col Filter for documents
     documentFilter: ColumnFilter;
 
+    serviceAdapter: ViewAllServiceAdapter;
     htmlRenderer: ViewAllHtmlRenderer;
 
 
@@ -52,7 +55,9 @@ export class ViewAllComponent implements OnInit {
     searchBookName : string;
 
 
-    constructor () { }
+    constructor (
+        public genericService: GenericService,
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -60,11 +65,17 @@ export class ViewAllComponent implements OnInit {
         this.documentFilter = new ColumnFilter();
         this.currentBookDocumentFilter = this.bookDocumentSelectList[0];
 
+        this.serviceAdapter = new ViewAllServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
+
         this.htmlRenderer = new ViewAllHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
 
     }
-
+    initializeBookList(bookFullProfileList): void {
+        this.bookFullProfileList = bookFullProfileList;
+    }
     selectAllColumns(): void {
         Object.keys(this.columnFilter).forEach((key) => {
             this.columnFilter[key] = true;
