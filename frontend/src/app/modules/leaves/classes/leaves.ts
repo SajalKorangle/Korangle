@@ -23,3 +23,7 @@ export interface LeavePlanToLeaveType {
 export interface LeavePlan {
     leavePlanName: string; parentSchool: string; id: number;
 }
+// prettier-ignore
+export interface LeavePlanToEmployee {
+    parentEmployee: number; parentSchoolLeavePlan: number; id: number;
+}

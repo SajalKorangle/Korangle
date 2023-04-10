@@ -24,7 +24,7 @@
             <mat-card-content>
                 <span class="matCardContentAddNew">
                     <span style="flex-grow: 1">
-                        <input style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.25)" placeholder="Enter leave plan name" [(ngModel)]="leavePlanName"/>
+                        <input style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.25)" placeholder="Enter leave plan name" [(ngModel)]="leavePlanName" autofocus />
                     </span>
                     <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: green" (click)="savePlan({ leavePlanName: leavePlanName })">
                         check
@@ -43,8 +43,8 @@
         </div>
     </div>
     <div class="Row" style="flex-grow: 1" *ngIf="isLeavePlanOpen">
-        <mat-card style="margin-top: 10px" style="height: 100%">
-            <mat-card-content style="height: 100%">
+        <mat-card style="margin-top: 10px" class="cardContainer">
+            <mat-card-content style="height: 100%;">
                 <div style="width: 100%; height: 100%; display: flex; flex-direction: column">
                     <div class="contentRow" style="justify-content: space-between">
                         <div class="contentColItem" style="flex-grow: 1">
@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="contentRow" style="flex-grow: 1; overflow-y: scroll; max-height: 40%">
+                    <div class="contentRow" style="flex-grow: 1; overflow-y: scroll; max-height: 30%">
                         <div class="contentColItem" style="flex-grow: 1; justify-content: flex-start">
                             <div class="contentRowItem" style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px">
                                 <span class="contentColItem" style="width: 30%"
@@ -150,16 +150,68 @@
                             <div class="contentRowItem" style="width: 100%">
                                 <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 500px">
                                     <mat-label>Select Employee/s</mat-label>
-                                    <mat-select [(ngModel)]="currentEmployeeChoiceList" multiple [disabled]="employeeChoiceList.length === 0">
-                                        <mat-option *ngFor="let employee of employeeChoiceList" [value]="leaveTypeChoice">
+                                    <mat-select (selectionChange)="updateEmployeeChoiceList()" [(ngModel)]="currentEmployeeChoiceList" multiple [disabled]="employeeChoiceList.length === 0">
+                                        <mat-form-field appearance="outline" style="width: 100%; padding: 5px">
+                                            <mat-label>Search Employee</mat-label>
+                                            <input [(ngModel)]="filter" (keyup)="updateEmployeeChoiceList()" matInput placeholder="Enter Employee Name" autofocus>
+                                        </mat-form-field>
+                                        <mat-option *ngFor="let employee of filteredEmployeeChoiceList" [value]="employee">
                                             ({{ employee.id }}) - {{ employee.name }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
+                                <span *ngIf="employeeChoiceList.length !== 0 && currentEmployeeChoiceList !== appliedEmployeeChoiceList" class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: green"
+                                    (click)="appliedEmployeeChoiceList = currentEmployeeChoiceList"
+                                >
+                                    check
+                                </span>
+                                <span *ngIf="employeeChoiceList.length !== 0 && currentEmployeeChoiceList !== appliedEmployeeChoiceList" class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: red"
+                                    (click)="currentEmployeeChoiceList = appliedEmployeeChoiceList"
+                                >
+                                    clear
+                                </span>
                             </div>
                         </div>
                     </div>
-                    <div class="contentRow" style="flex-grow: 1; overflow-y: scroll; max-height: 40%"></div>
+                    <div class="contentRow" style="flex-grow: 1; overflow-y: scroll; max-height: 40%">
+                        <div class="contentColItem" style="flex-grow: 1; justify-content: flex-start">
+                            <div class="contentRowItem" style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px">
+                                <span class="contentColItem" style="width: 40%"
+                                    ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: #fc9701">Employee Id</span></span
+                                >
+                                <span class="contentColItem" style="width: 40%"
+                                    ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: #fc9701"
+                                        >Name</span
+                                    ></span
+                                >
+                                <span class="contentColItem" style="width: 20%"></span>
+                            </div>
+                            <div class="contentRowItem" *ngFor="let employee of appliedEmployeeChoiceList"
+                                style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px"
+                            >
+                                <span class="contentColItem" style="width: 40%"
+                                    ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis">{{
+                                        employee.id
+                                    }}</span></span
+                                >
+                                <span class="contentColItem" style="width: 40%"
+                                    ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis">{{
+                                        employee.name
+                                    }}</span></span
+                                >
+                                <span class="contentColItem material-icons" style="width: 20%">
+                                    <span class="material-icons-outlined" (click)="removeEmployee(employee)"
+                                        style="color: rgba(255, 0, 0, 0.5); cursor: pointer"
+                                        >delete_forever</span>
+                                    </span>
+                            </div>
+                            <div class="contentRowItem" *ngIf="appliedEmployeeChoiceList.length === 0"
+                                style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px"
+                            >
+                                <span class="contentColItem" style="flex-grow: 1">No Employee/s associated to this leave plan</span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="contentRow">
                         <div class="contentColItem" style="flex-grow: 1">
                             <div class="contentRowItem" style="justify-content: flex-end">

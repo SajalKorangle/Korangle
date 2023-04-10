@@ -103,6 +103,9 @@
     flex-direction: column;
     padding: 10px;
 }
+.cardContainer {
+    height: 81vh;
+}
 .responsiveText {
     display: block;
 }
@@ -114,5 +117,8 @@
 @media (max-width: 991px) {
     .flexContainer {
         height: 100vh;
+    }
+    .cardContainer {
+        height: 91vh;
     }
 }
