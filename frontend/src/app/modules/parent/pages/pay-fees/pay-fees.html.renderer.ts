@@ -40,7 +40,11 @@ export class PayFeesHTMLRenderer {
     }
 
     isOnlinePaymentEnabled() {
-        return this.vm.schoolMerchantAccount && this.vm.schoolMerchantAccount.isEnabled;
+        let enabled = this.vm.schoolMerchantAccount && this.vm.schoolMerchantAccount.isEnabled;
+        if (this.isEasebuzzEnabled) {
+            enabled = enabled && this.vm.schoolMerchantAccount.easebuzzBankLabel != "";
+        }
+        return enabled;
     }
 
     getParentPlatformFeePercentage() {

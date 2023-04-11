@@ -170,6 +170,7 @@ export class PayFeesComponent implements OnInit {
     }
 
     handleOverallPaymentChange(student: Student): void {
+        this.amountMappedByStudentId[student.id] = Math.round(this.amountMappedByStudentId[student.id]);
         if (this.amountError(student)())
             return;
         let paymentLeft = this.amountMappedByStudentId[student.id];

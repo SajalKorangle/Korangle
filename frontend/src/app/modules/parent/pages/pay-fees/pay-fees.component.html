@@ -53,7 +53,8 @@
                                     [style.width]="isMobile()?'80px':'auto'">
                                     <mat-label *ngIf="isMobile()">Amount</mat-label>
                                     <mat-label *ngIf="!isMobile()">Payment Amount</mat-label>
-                                    <input matInput type="number" [(ngModel)]="amountMappedByStudentId[student.id]"
+                                    <input matInput type="number" 
+                                        [(ngModel)]="amountMappedByStudentId[student.id]"
                                         (ngModelChange)="handleOverallPaymentChange(student)"
                                         [errorStateMatcher]="{isErrorState: amountError(student)}">
                                     <mat-error>Invalid Amount</mat-error>

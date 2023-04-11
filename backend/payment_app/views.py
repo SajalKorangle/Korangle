@@ -69,30 +69,33 @@ After recieving the Bank Label from EaseBuzz please add the bank label, using Dj
 
     @user_permission_3
     def put(self, request, *args, **kwargs):
-        data = request.data
-        vendorData = data['vendorData']
-        updateVendor(vendorData)
-        del data['vendorData']
-        data.update({
-            'easebuzzBankLabel': ""
-        })
-        responseData = GenericSerializerInterface(
-            Model=self.Model, data=data, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeSchoolID']).update_object()
+        try:
+            data = request.data
+            vendorData = data['vendorData']
+            updateVendor(vendorData)
+            del data['vendorData']
+            data.update({
+                'easebuzzBankLabel': ""
+            })
+            responseData = GenericSerializerInterface(
+                Model=self.Model, data=data, activeSchoolId=kwargs['activeSchoolID'], activeStudentIdList=kwargs['activeSchoolID']).update_object()
 
-        responseData.update({
-            'vendorData': getVendor(data['vendorId']),
-        })
-        send_mail(
-            f"School with KID {kwargs['activeSchoolID']} just updated their Bank Account",
-            f"""
+            responseData.update({
+                'vendorData': getVendor(data['vendorId']),
+            })
+            send_mail(
+                f"School with KID {kwargs['activeSchoolID']} just updated their Bank Account",
+                f"""
 School with KID {kwargs['activeSchoolID']} just updated their new Bank Account, please send these new Bank Details to EaseBuzz for creating a new bank label or updating the existing bank label:
 Account Number: {responseData["vendorData"]["bank"]["accountNumber"]}
 Account Holder: {responseData["vendorData"]["bank"]["accountHolder"]}
 IFSC Code: {responseData["vendorData"]["bank"]["ifsc"]}
 After recieving response from EaseBuzz, if a new bank label was created please change the bank label, using Django Admin, in School Merchant Account Table (present in Payment App) for the respective school.
-            """,
-            None, [settings.TECHSUPPORT_EMAIL])
-        return responseData
+                """,
+                None, [settings.TECHSUPPORT_EMAIL])
+            return responseData
+        except Exception as e:
+            return e            
 
 
 class OrderSchoolView(CommonView, APIView):

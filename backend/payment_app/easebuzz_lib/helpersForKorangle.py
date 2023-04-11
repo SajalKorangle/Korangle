@@ -95,7 +95,7 @@ def calculatePlatformCharges(amount, modeOfPayment, schoolMerchantAccount):
             totalPlatformCharge * (schoolMerchantAccount.percentageOfPlatformFeeOnSchool/100), 2)
     return {
         "school": schoolPlatformCharge,
-        "parent": totalPlatformCharge - schoolPlatformCharge,
+        "parent": round(totalPlatformCharge - schoolPlatformCharge, 2),
         "total": totalPlatformCharge
     }
 
@@ -104,12 +104,9 @@ def createSchoolOrder(orderData, orderId, schoolMerchantAccount):
     snfurl = orderData["returnData"]["origin"] + \
         reverse("easebuzz_order_completion") + '?' + \
         orderData['returnData']['searchParams']
-    print(orderData)
     platformCharges = calculatePlatformCharges(
         orderData["orderAmount"], orderData["paymentMode"], schoolMerchantAccount)
-    finalAmountForParent = orderData["orderAmount"] + platformCharges["parent"]
-    print(platformCharges, orderData["orderAmount"])
-    print(finalAmountForParent, orderData["orderTotalAmount"])
+    finalAmountForParent = round(orderData["orderAmount"] + platformCharges["parent"], 2)
     if(finalAmountForParent != orderData["orderTotalAmount"]):
         return {"failure": "Could not generate url"}
 
