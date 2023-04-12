@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { User } from "@classes/user";
 import { GenericService } from "@services/generic/generic-service";
 import { LeavePlan, LeavePlanToEmployee, LeavePlanToLeaveType, LeaveType } from "@modules/leaves/classes/leaves";
-import ManageTypeServiceAdapter from "../manage_type/manage_type.service.adapter";
+import GenericServiceAdapter from "../../leaves.service.adapter";
 
 @Component({
     selector: "manage-plan",
@@ -12,7 +12,7 @@ import ManageTypeServiceAdapter from "../manage_type/manage_type.service.adapter
 })
 export class ManagePlanComponent implements OnInit {
     user: User;
-    serviceAdapterGeneric: ManageTypeServiceAdapter = new ManageTypeServiceAdapter();
+    serviceAdapterGeneric: GenericServiceAdapter = new GenericServiceAdapter();
     constructor(public genericService: GenericService) {}
     ngOnInit(): void {
         this.serviceAdapterGeneric.initializeAdapter(this);
@@ -95,40 +95,77 @@ export class ManagePlanComponent implements OnInit {
         // create array of leave types to be added
         this.appliedLeaveTypeChoiceList.map((leaveType) => {
             let similarLeaveType = oldLeaveTypeChoiceList.find((oldLeaveTypeChoice) => leaveType.id === oldLeaveTypeChoice.parentSchoolLeaveType);
-            !similarLeaveType ? addLeaveTypeChoiceList.push({ id: -1,
-                parentSchoolLeavePlan: this.currentLeavePlan.id, parentSchoolLeaveType: leaveType.id, }) : null;
+            !similarLeaveType
+                ? addLeaveTypeChoiceList.push({ id: -1, parentSchoolLeavePlan: this.currentLeavePlan.id, parentSchoolLeaveType: leaveType.id })
+                : null;
         });
         // create array of employees to be added
         this.appliedEmployeeChoiceList.map((employee) => {
             let similarEmployee = oldEmployeeChoiceList.find((oldEmployeeChoice) => oldEmployeeChoice.parentEmployee === employee.id);
-            !similarEmployee ? addEmployeeChoiceList.push({id: -1,
-                parentSchoolLeavePlan: this.currentLeavePlan.id, parentEmployee: employee.id, }) : null;
+            !similarEmployee ? addEmployeeChoiceList.push({ id: -1, parentSchoolLeavePlan: this.currentLeavePlan.id, parentEmployee: employee.id }) : null;
         });
         // update the leave plan
-        await this.serviceAdapterGeneric.handleDataChange({
+        await this.serviceAdapterGeneric.handleDataChange(
+            {
                 check: (data1, data2) => {
-                    return (data2.id != data1.id && data1.leavePlanName.toString().toLowerCase() === data2.leavePlanName.toString().toLowerCase()) ? ["Leave Plan Name"] : [];
+                    return data2.id != data1.id && data1.leavePlanName.toString().toLowerCase() === data2.leavePlanName.toString().toLowerCase()
+                        ? ["Leave Plan Name"]
+                        : [];
                 },
-                data: [data], database: { leaves_app: "SchoolLeavePlan" }, operation: data.id ? "update" : "insert",
-            }, "leavePlanList");
+                data: [data],
+                database: { leaves_app: "SchoolLeavePlan" },
+                operation: data.id ? "update" : "insert",
+            },
+            "leavePlanList",
+        );
         // remove deleted leave types
-        removeLeaveTypeChoiceList.length ? await this.serviceAdapterGeneric.handleDataChange({
-                check: null,
-                data: removeLeaveTypeChoiceList, database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, operation: "deleteBatch",
-            }, "leavePlanToLeaveTypeList") : null;
+        removeLeaveTypeChoiceList.length
+            ? await this.serviceAdapterGeneric.handleDataChange(
+                  {
+                      check: null,
+                      data: removeLeaveTypeChoiceList,
+                      database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
+                      operation: "deleteBatch",
+                  },
+                  "leavePlanToLeaveTypeList",
+              )
+            : null;
         // remove un-associated with this leave plan
-        removeEmployeeChoiceList.length ? await this.serviceAdapterGeneric.handleDataChange({
-            check: null, data: removeEmployeeChoiceList, database: {leaves_app: "SchoolLeavePlanToEmployee"}, operation: "deleteBatch"
-        }, "leavePlanToEmployeeList") : null;
+        removeEmployeeChoiceList.length
+            ? await this.serviceAdapterGeneric.handleDataChange(
+                  {
+                      check: null,
+                      data: removeEmployeeChoiceList,
+                      database: { leaves_app: "SchoolLeavePlanToEmployee" },
+                      operation: "deleteBatch",
+                  },
+                  "leavePlanToEmployeeList",
+              )
+            : null;
         // add new leave types
-        addLeaveTypeChoiceList.length ? await this.serviceAdapterGeneric.handleDataChange({
-            check: null,
-            data: addLeaveTypeChoiceList, database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, operation: "insertBatch",
-        }, "leavePlanToLeaveTypeList") : null;
+        addLeaveTypeChoiceList.length
+            ? await this.serviceAdapterGeneric.handleDataChange(
+                  {
+                      check: null,
+                      data: addLeaveTypeChoiceList,
+                      database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
+                      operation: "insertBatch",
+                  },
+                  "leavePlanToLeaveTypeList",
+              )
+            : null;
         // associate new employees to this leave plan
-        addEmployeeChoiceList.length ? await this.serviceAdapterGeneric.handleDataChange({
-            check: null, data: addEmployeeChoiceList, database: { leaves_app: "SchoolLeavePlanToEmployee" }, operation: "insertBatch",
-        }, "leavePlanToEmployeeList") : null;
+        addEmployeeChoiceList.length
+            ? await this.serviceAdapterGeneric.handleDataChange(
+                  {
+                      check: null,
+                      data: addEmployeeChoiceList,
+                      database: { leaves_app: "SchoolLeavePlanToEmployee" },
+                      operation: "insertBatch",
+                  },
+                  "leavePlanToEmployeeList",
+              )
+            : null;
         // go back to list of leave plans
         this.resetComponent();
     }
@@ -142,18 +179,36 @@ export class ManagePlanComponent implements OnInit {
             leavePlanToEmployee.parentSchoolLeavePlan === this.currentLeavePlan.id ? oldEmployeeChoiceList.push(leavePlanToEmployee) : null;
         });
         if (oldLeaveTypeChoiceList.length) {
-            await this.serviceAdapterGeneric.handleDataChange({
-                    check: null, data: oldLeaveTypeChoiceList, database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, operation: "deleteBatch",
-                }, "leavePlanToLeaveTypeList");
+            await this.serviceAdapterGeneric.handleDataChange(
+                {
+                    check: null,
+                    data: oldLeaveTypeChoiceList,
+                    database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
+                    operation: "deleteBatch",
+                },
+                "leavePlanToLeaveTypeList",
+            );
         }
         if (oldEmployeeChoiceList.length) {
-            await this.serviceAdapterGeneric.handleDataChange({
-                check: null, data: oldEmployeeChoiceList, database: {leaves_app: "SchoolLeavePlanToEmployee"}, operation: "deleteBatch"
-            }, "leavePlanToEmployee");
+            await this.serviceAdapterGeneric.handleDataChange(
+                {
+                    check: null,
+                    data: oldEmployeeChoiceList,
+                    database: { leaves_app: "SchoolLeavePlanToEmployee" },
+                    operation: "deleteBatch",
+                },
+                "leavePlanToEmployee",
+            );
         }
-        await this.serviceAdapterGeneric.handleDataChange({
-                check: null, data: [this.currentLeavePlan], database: { leaves_app: "SchoolLeavePlan" }, operation: "delete",
-            }, "leavePlanList");
+        await this.serviceAdapterGeneric.handleDataChange(
+            {
+                check: null,
+                data: [this.currentLeavePlan],
+                database: { leaves_app: "SchoolLeavePlan" },
+                operation: "delete",
+            },
+            "leavePlanList",
+        );
         this.resetComponent();
     }
     setPlan(leavePlan): void {
@@ -161,16 +216,16 @@ export class ManagePlanComponent implements OnInit {
         this.currentLeavePlan = leavePlan;
         this.appliedLeaveTypeChoiceList = [];
         this.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
-            leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id ? this.appliedLeaveTypeChoiceList.push(
-                this.leaveTypeList.find((leaveType) => leaveType.id === leavePlanToLeaveTypeItem.parentSchoolLeaveType),
-            ) : null;
+            leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id
+                ? this.appliedLeaveTypeChoiceList.push(this.leaveTypeList.find((leaveType) => leaveType.id === leavePlanToLeaveTypeItem.parentSchoolLeaveType))
+                : null;
         });
         this.filteredEmployeeChoiceList = this.employeeChoiceList;
         this.appliedEmployeeChoiceList = [];
         this.leavePlanToEmployeeList.forEach((leavePlanToEmployee) => {
-            leavePlanToEmployee.parentSchoolLeavePlan == this.currentLeavePlan.id ? this.appliedEmployeeChoiceList.push(
-                this.employeeChoiceList.find((employee) => employee.id === leavePlanToEmployee.parentEmployee)
-            ) : null;
+            leavePlanToEmployee.parentSchoolLeavePlan == this.currentLeavePlan.id
+                ? this.appliedEmployeeChoiceList.push(this.employeeChoiceList.find((employee) => employee.id === leavePlanToEmployee.parentEmployee))
+                : null;
         });
         this.currentEmployeeChoiceList = this.appliedEmployeeChoiceList;
         this.filter = "";

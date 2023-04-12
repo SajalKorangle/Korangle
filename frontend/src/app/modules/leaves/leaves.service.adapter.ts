@@ -1,14 +1,17 @@
 import { DataStorage } from "@classes/data-storage";
 import { Operation } from "@modules/leaves/classes/operation";
 import { APP_MODEL_STRUCTURE_INTERFACE, QUERY_INTERFACE } from "@services/generic/generic-service";
-import { ManageTypeComponent } from "./manage_type.component";
-import { ManagePlanComponent } from "../manage_plan/manage_plan.component";
+import { ManageTypeComponent } from "./pages/manage_type/manage_type.component";
+import { ManagePlanComponent } from "./pages/manage_plan/manage_plan.component";
+import { ManageLeavePlanComponent } from "./pages/manage_leave_plan/manage_leave_plan.component";
 
-export default class ManageTypeServiceAdapter {
-    vm: ManageTypeComponent | ManagePlanComponent;
+let Components: ManageTypeComponent | ManagePlanComponent | ManageLeavePlanComponent;
+
+export default class GenericServiceAdapter {
+    vm: typeof Components;
 
     // starts :- Initialize adapter (initialize adapter with instance of component)
-    initializeAdapter(vm: any): void {
+    initializeAdapter(vm: typeof Components): void {
         this.vm = vm;
         this.vm.user = DataStorage.getInstance().getUser();
     }

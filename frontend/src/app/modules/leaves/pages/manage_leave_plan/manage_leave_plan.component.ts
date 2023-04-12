@@ -1,8 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { User } from "@classes/user";
 import { GenericService } from "@services/generic/generic-service";
-import { LeavePlan, LeavePlanToEmployee, LeavePlanToLeaveType, LeaveType } from "@modules/leaves/classes/leaves";
-import ManageTypeServiceAdapter from "../manage_type/manage_type.service.adapter";
+import GenericServiceAdapter from "../../leaves.service.adapter";
 
 @Component({
     selector: "manage-leave-plan",
@@ -12,9 +11,11 @@ import ManageTypeServiceAdapter from "../manage_type/manage_type.service.adapter
 })
 export class ManageLeavePlanComponent implements OnInit {
     user: User;
-    serviceAdapterGeneric: ManageTypeServiceAdapter = new ManageTypeServiceAdapter();
+    serviceAdapterGeneric: GenericServiceAdapter = new GenericServiceAdapter();
     constructor(public genericService: GenericService) {}
     ngOnInit(): void {
-        // ignore
+        this.serviceAdapterGeneric.initializeAdapter(this);
     }
+    // employee Choice List
+    employeeChoiceList: Array<any> = [];
 }
