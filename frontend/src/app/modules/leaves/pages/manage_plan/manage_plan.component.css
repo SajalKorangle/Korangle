@@ -92,9 +92,6 @@
     font-weight: 400;
     color: rgba(0, 0, 0, 0.5);
     width: fit-content;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
 }
 .flexContainer {
     height: 90vh;
@@ -106,6 +103,9 @@
 .responsiveText {
     display: block;
 }
+.cardContainer {
+    height: 81vh;
+}
 @media (max-width: 650px) {
     .responsiveText {
         display: none;
@@ -114,5 +114,8 @@
 @media (max-width: 991px) {
     .flexContainer {
         height: 100vh;
+    }
+    .cardContainer {
+        height: 91vh;
     }
 }

@@ -14,21 +14,21 @@ export class ManagePlanComponent implements OnInit {
     user: User;
     serviceAdapterGeneric: ManageTypeServiceAdapter = new ManageTypeServiceAdapter();
     constructor(public genericService: GenericService) {}
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         this.serviceAdapterGeneric.initializeAdapter(this);
-        this.serviceAdapterGeneric.initializeData({ leaves_app: "SchoolLeavePlan" }, "leavePlanList", {
+        await this.serviceAdapterGeneric.initializeData({ leaves_app: "SchoolLeavePlan" }, "leavePlanList", {
             filter: { parentSchool: this.user.activeSchool.dbId },
-        });
-        this.serviceAdapterGeneric.initializeData({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, "leavePlanToLeaveTypeList", {
+        }, true);
+        await this.serviceAdapterGeneric.initializeData({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, "leavePlanToLeaveTypeList", {
             filter: { parentSchoolLeavePlan__parentSchool__id: this.user.activeSchool.dbId },
-        });
-        this.serviceAdapterGeneric.initializeData({ leaves_app: "SchoolLeaveType" }, "leaveTypeList", {
+        }, true);
+        await this.serviceAdapterGeneric.initializeData({ leaves_app: "SchoolLeaveType" }, "leaveTypeList", {
             filter: { parentSchool: this.user.activeSchool.dbId },
         });
     }
     // page manage variables
     isSelectLeavePlanToLeaveTypeVisible: boolean = false;
-    isLoading: boolean = false;
+    isLoading: boolean = true;
     isLeavePlanOpen: boolean = false;
     leavePlanName: string = "";
     isAddNewOpen: boolean = false;
@@ -49,6 +49,10 @@ export class ManagePlanComponent implements OnInit {
     }
     async savePlan(data): Promise<any> {
         this.isLoading = true;
+        if (!data.leavePlanName.match(/[A-Za-z][A-Za-z0-9- ]*/g) || data.leavePlanName.match(/[A-Za-z][A-Za-z0-9- ]*/g).length !== 1) {
+            this.isLoading = false;
+            return alert("Please Enter a valid Leave Plan Name. (start with lowercase / uppercase english alphabets and contains only alphabets, numbers, spaces and hyphens.)");
+        }
         let removeLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
         let addLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
         let oldLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
@@ -99,7 +103,7 @@ export class ManagePlanComponent implements OnInit {
     }
     setPlan(leavePlan): void {
         this.isLeavePlanOpen = true;
-        this.currentLeavePlan = leavePlan;
+        this.currentLeavePlan = JSON.parse(JSON.stringify(leavePlan));
         this.appliedLeaveTypeChoiceList = [];
         this.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
             leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id ? this.appliedLeaveTypeChoiceList.push(

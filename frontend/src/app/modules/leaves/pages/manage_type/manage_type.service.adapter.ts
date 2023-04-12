@@ -15,9 +15,11 @@ export default class ManageTypeServiceAdapter {
     // ends :- Initialize adapter
 
     // starts :- Initialize Data (send GET request to backend to fetch data)
-    async initializeData(database: Partial<APP_MODEL_STRUCTURE_INTERFACE>, variableName: string, query: QUERY_INTERFACE = {}): Promise<void> {
+    async initializeData(
+        database: Partial<APP_MODEL_STRUCTURE_INTERFACE>, variableName: string, query: QUERY_INTERFACE = {}, open: boolean = false,
+    ): Promise<void> {
         this.vm[variableName] = await this.vm.genericService.getObjectList(database, query);
-        this.vm.isLoading = false;
+        this.vm.isLoading = open;
     }
     // ends :- Initialize Data
 
