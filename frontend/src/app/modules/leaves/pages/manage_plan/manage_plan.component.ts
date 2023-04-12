@@ -136,7 +136,7 @@ export class ManagePlanComponent implements OnInit {
         this.appliedLeaveTypeChoiceList.map((leaveTypeChoiceItem) => {
             leaveTypeChoiceItem !== LeaveTypeChoice ? temporaryLeaveTypeChoiceList.push(leaveTypeChoiceItem) : null;
         });
-        this.currentLeaveTypeChoiceList = temporaryLeaveTypeChoiceList;
+        this.currentLeaveTypeChoiceList = [];
         this.appliedLeaveTypeChoiceList = temporaryLeaveTypeChoiceList;
         this.updateChoiceList();
     }

@@ -103,9 +103,6 @@
 .responsiveText {
     display: block;
 }
-.cardContainer {
-    height: 81vh;
-}
 @media (max-width: 650px) {
     .responsiveText {
         display: none;
@@ -114,8 +111,5 @@
 @media (max-width: 991px) {
     .flexContainer {
         height: 100vh;
-    }
-    .cardContainer {
-        height: 91vh;
     }
 }
