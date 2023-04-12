@@ -129,6 +129,7 @@ export class ManagePlanComponent implements OnInit {
             this.currentLeaveTypeChoiceList = this.appliedLeaveTypeChoiceList;
         }
         this.isSelectLeavePlanToLeaveTypeVisible = false;
+        this.currentLeaveTypeChoiceList = [];
     }
     removeLeaveTypeChoice(LeaveTypeChoice): void {
         let temporaryLeaveTypeChoiceList: Array<LeaveType> = [];
