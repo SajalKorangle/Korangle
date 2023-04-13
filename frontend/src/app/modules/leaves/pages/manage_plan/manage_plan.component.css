@@ -94,7 +94,8 @@
     width: fit-content;
 }
 .flexContainer {
-    height: 90vh;
+    height: 100vh;
+    overflow-y: auto;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -106,10 +107,5 @@
 @media (max-width: 650px) {
     .responsiveText {
         display: none;
-    }
-}
-@media (max-width: 991px) {
-    .flexContainer {
-        height: 100vh;
     }
 }
