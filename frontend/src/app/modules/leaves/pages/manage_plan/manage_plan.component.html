@@ -42,10 +42,10 @@
             </button>
         </div>
     </div>
-    <div class="Row" style="flex-grow: 1; overflow-y: scroll;" *ngIf="isLeavePlanOpen">
+    <div class="Row" style="flex-grow: 1" *ngIf="isLeavePlanOpen">
         <mat-card style="margin-top: 10px" style="height: 100%;">
             <mat-card-content style="height: 100%">
-                <div style="width: 100%; height: 100%; display: flex; flex-direction: column">
+                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-evenly;">
                     <div class="contentRow" style="justify-content: space-between">
                         <div class="contentColItem" style="flex-grow: 1">
                             <div class="contentRowItem" style="justify-content: flex-start">
@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="contentRow">
+                    <div class="contentRow" style="height: 30%; overflow-y: scroll;">
                         <div class="contentColItem" style="flex-grow: 1; justify-content: flex-start">
                             <div class="contentRowItem" style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px">
                                 <span class="contentColItem" style="width: 30%"><span style="width: 100%; color: #fc9701">Name</span></span>
@@ -127,7 +127,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="contentRow">Under construction!</div>
+                    <div class="contentRow" style="height: 30%; overflow-y: scroll;">Under construction!</div>
                     <div class="contentRow">
                         <div class="contentColItem" style="flex-grow: 1">
                             <div class="contentRowItem" style="justify-content: flex-end">
