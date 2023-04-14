@@ -29,6 +29,9 @@
                                 <!-- Class Filter -->
                                 <div class="col-md-6" *ngIf="schoolFeeRule.isClassFilter">
                                     Classes :-<br />
+                                    <ng-container *ngIf="schoolFeeRule.classFilterFee.length == 0">
+                                        This is a dummy group as no class is selected so no student will be automatically attached.
+                                    </ng-container>
                                     <ng-container
                                         *ngFor="let classFilterFee of schoolFeeRule.classFilterFee; let i = index"
                                     >
@@ -41,6 +44,9 @@
                                 <!-- Bus Stop Filter -->
                                 <div class="col-md-6" *ngIf="schoolFeeRule.isBusStopFilter">
                                     Bus Stops :-<br />
+                                    <ng-container *ngIf="schoolFeeRule.classFilterFee.length == 0">
+                                        This is a dummy group as no bus stop is selected so no student will be automatically attached.
+                                    </ng-container>
                                     <ng-container
                                         *ngFor="
                                             let busStopFilterFee of schoolFeeRule.busStopFilterFee;
