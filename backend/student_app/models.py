@@ -209,13 +209,13 @@ def create_subjects_tests_fees(sender, instance, created, **kwargs):
         # Starts :- Iterating over fee types of the school
         for fee_type_object in FeeType.objects.filter(parentSchool=parentSchool):
             # Starts :- Iterating over school fee rules of a particular fee type
-            for school_fee_rule in SchoolFeeRule.objects.filter(parentFeeType = fee_type_object).order_by('ruleNumber'):
+            for school_fee_rule in SchoolFeeRule.objects.filter(parentFeeType = fee_type_object, parentSession = parentSession).order_by('ruleNumber'):
 
                 # Starts :- Checking whether School Fee Rule should be applied to student
 
                 # Starts :- Checking Class Filter
                 if (school_fee_rule.isClassFilter):
-                    class_filter_fee = ClassFilterFee.filter(
+                    class_filter_fee = ClassFilterFee.objects.filter(
                                             parentSchoolFeeRule = school_fee_rule,
                                             parentClass = parentClass,
                                             parentDivision = parentDivision
@@ -226,7 +226,7 @@ def create_subjects_tests_fees(sender, instance, created, **kwargs):
 
                 # Starts :- Checking Bus Stop Filter
                 if (school_fee_rule.isBusStopFilter):
-                    bus_stop_filter_fee = BusStopFilterFee.filter(
+                    bus_stop_filter_fee = BusStopFilterFee.objects.filter(
                                             parentSchoolFeeRule = school_fee_rule,
                                             parentBusStop = parentStudent.currentBusStop
                                         )
