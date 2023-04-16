@@ -133,12 +133,12 @@ export class User {
         let urlPath = window.location.pathname;
         const [, , modulePath, taskPath] = urlPath.split('/');
         let urlParams = new URLSearchParams(window.location.search);
-        let module: any = null;
-        let task: any = null;
+        let module: any;
+        let task: any;
         if (!this.activeSchool) {
             switch (modulePath) {
                 case '/':
-                    module = null;
+                    module = undefined;
                     break;
                 case 'user-settings':
                     module = this.settings;
@@ -148,7 +148,7 @@ export class User {
                     break;
             }
             if (module) {
-                task = module.taskList.find((t) => t.path == taskPath) || null;
+                task = module.taskList.find((t) => t.path == taskPath);
             }
         } else if (this.checkUserSchoolSessionPermission(urlParams)) {
             // checking the school id  and session id in the url is valid for this user
@@ -159,7 +159,7 @@ export class User {
                 // (i.e) we dont have these two in our user's active school module list
 
                 case '/':
-                    module = null;
+                    module = undefined;
                     break;
                 case 'user-settings':
                     this.activeSchool.role = urlParams.get('role') || 'Employee';
@@ -193,15 +193,15 @@ export class User {
 
                 // for employee
                 default:
-                    module = this.activeSchool.moduleList.find((m) => m.path == modulePath) || null;
+                    module = this.activeSchool.moduleList.find((m) => m.path == modulePath);
             }
             if (module) {
                 // if module doesn't exist redirect to default school notification page
-                task = module.taskList.find((t) => t.path == taskPath) || null;
+                task = module.taskList.find((t) => t.path == taskPath);
             }
         }
 
-        if (module == null || task == null) {
+        if (!module || !task) {
             module = this.notification;
             task = this.notification.taskList[0];
         }

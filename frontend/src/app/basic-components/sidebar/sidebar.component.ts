@@ -90,7 +90,6 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
                 );
             });
         });
-        this.user.initializeTask();
     }
 
     ngAfterViewChecked(): void {
