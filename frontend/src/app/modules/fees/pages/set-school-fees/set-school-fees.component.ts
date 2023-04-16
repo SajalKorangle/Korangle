@@ -9,6 +9,8 @@ import { BusStopFilterFee } from '../../../../services/modules/fees/models/bus-s
 import { FormControl } from '@angular/forms';
 import { INSTALLMENT_LIST } from '../../classes/constants';
 import { DataStorage } from '../../../../classes/data-storage';
+import { MatDialog } from '@angular/material';
+import { ShowStudentListModalComponent } from './show-student-list-modal/show-student-list-modal.component';
 
 @Component({
     selector: 'set-school-fees',
@@ -64,6 +66,7 @@ export class SetSchoolFeesComponent implements OnInit {
         public feeService: FeeService,
         public studentService: StudentOldService,
         public genericService: GenericService,
+        public dialog: MatDialog,
         private cdRef: ChangeDetectorRef
     ) { }
 
@@ -314,9 +317,12 @@ export class SetSchoolFeesComponent implements OnInit {
         }
     }
 
-    getStudentFeeListBySchoolFeeRule(schoolFeeRule: any): any {
-        return this.studentFeeList.filter((studentFee) => {
+    getStudentListBySchoolFeeRule(schoolFeeRule: any): any {
+        let filteredStudentIdList = this.studentFeeList.filter((studentFee) => {
             return studentFee.parentSchoolFeeRule == schoolFeeRule.id;
+        }).map(studentFee => studentFee.parentStudent);
+        return this.studentList.filter(student => {
+            return filteredStudentIdList.includes(student.dbId);
         });
     }
 
@@ -360,4 +366,16 @@ export class SetSchoolFeesComponent implements OnInit {
         }
         return true;
     }
+
+    /* Open Table Format Name Dialog */
+    openShowStudentListDialog(studentList: any): void {
+        const dialogRef = this.dialog.open(ShowStudentListModalComponent, {
+            data: {
+                classList: this.classList,
+                sectionList: this.sectionList,
+                studentList: studentList,
+            }
+        });
+    }  // Ends: openShowStudentListDialog()
+
 }

@@ -29,11 +29,11 @@
                                 <!-- Class Filter -->
                                 <div class="col-md-6" *ngIf="schoolFeeRule.isClassFilter">
                                     Classes :-<br />
-                                    <ng-container *ngIf="schoolFeeRule.classFilterFee.length == 0">
+                                    <ng-container *ngIf="schoolFeeRule.classfilterfee.length == 0">
                                         This is a dummy group as no class is selected so no student will be automatically attached.
                                     </ng-container>
                                     <ng-container
-                                        *ngFor="let classFilterFee of schoolFeeRule.classFilterFee; let i = index"
+                                        *ngFor="let classFilterFee of schoolFeeRule.classfilterfee; let i = index"
                                     >
                                         {{ i + 1 }}. {{ getClassName(classFilterFee.parentClass) }},
                                         {{ getSectionName(classFilterFee.parentDivision) }}<br />
@@ -44,12 +44,12 @@
                                 <!-- Bus Stop Filter -->
                                 <div class="col-md-6" *ngIf="schoolFeeRule.isBusStopFilter">
                                     Bus Stops :-<br />
-                                    <ng-container *ngIf="schoolFeeRule.classFilterFee.length == 0">
+                                    <ng-container *ngIf="schoolFeeRule.busstopfilterfee.length == 0">
                                         This is a dummy group as no bus stop is selected so no student will be automatically attached.
                                     </ng-container>
                                     <ng-container
                                         *ngFor="
-                                            let busStopFilterFee of schoolFeeRule.busStopFilterFee;
+                                            let busStopFilterFee of schoolFeeRule.busstopfilterfee;
                                             let i = index
                                         "
                                     >
@@ -81,7 +81,7 @@
                                     </ng-container>
                                     <br />
                                 </div>
-                            </div>                            
+                            </div>
 
                             <!-- New Admission -->
                             <ng-container *ngIf="schoolFeeRule.onlyNewAdmission"> Applies only to new admission<br /><br /> </ng-container>
@@ -97,7 +97,9 @@
                             </ng-container>
 
                             <!-- No. of students -->
-                            {{ getStudentFeeListBySchoolFeeRule(schoolFeeRule).length }} students attached with this rule.<br /><br />
+                            <span style="cursor: pointer" (click)="openShowStudentListDialog(getStudentListBySchoolFeeRule(schoolFeeRule))">
+                                {{ getStudentListBySchoolFeeRule(schoolFeeRule).length }} students attached with this rule.<br /><br />
+                            </span>
 
                             <!-- Installment Payment -->
                             <ng-container *ngIf="!schoolFeeRule.isAnnually && getSchoolFeeRuleTotalAmount(schoolFeeRule) > 0">
@@ -364,7 +366,9 @@
 
                     <!-- Expected no. of students attached to this rule. -->
                     <div class="row">
-                        <div class="col-md-12">Expected no. of students attached to this rule: {{ getExpectedStudentList().length }}</div>
+                        <div class="col-md-12" style="cursor: pointer" (click)="openShowStudentListDialog(getExpectedStudentList())">
+                            Expected no. of students attached to this rule: {{ getExpectedStudentList().length }}
+                        </div>
                     </div>
 
                     <!-- Payment Type -->
