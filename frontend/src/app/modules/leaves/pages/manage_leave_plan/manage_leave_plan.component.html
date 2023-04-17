@@ -1,1 +1,79 @@
-Under Construction!
+<div class="card-content">
+    <!-- Starts :- Main Container -->
+    <div *ngIf="!isLoading" class="flexContainer">
+        <!-- Starts :- Select Employee -->
+        <div class="flexRow" style="width: 100%">
+            <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 600px">
+                <mat-label>Select Employee</mat-label>
+                <mat-select (selectionChange)="updateLeavePlanList()" [(ngModel)]="currentEmployee" [disabled]="employeeChoiceList.length === 0">
+                    <mat-form-field appearance="outline" style="width: 100%; padding: 5px">
+                        <mat-label>Search Employee</mat-label>
+                        <input [(ngModel)]="filter" (keyup)="updateEmployeeChoiceList()" matInput placeholder="Enter Employee Name" />
+                    </mat-form-field>
+                    <mat-option *ngFor="let employee of filteredEmployeeChoiceList" [value]="employee"> ({{ employee.id }}) - {{ employee.name }} </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <!-- Ends :- Select Employee -->
+
+        <!-- Starts :- Update leavePlan associated to this employee -->
+        <div class="flexRow" style="width: 100%" *ngIf="currentEmployee !== null" style="font-size: medium; width: 100%">
+            <!-- Starts :- Selected Employee Details -->
+            <div class="flexRow" style="padding: 5px; width: 100%">
+                <div class="flexRow" style="width: 15ch; font-weight: 500">Employee Name</div>
+                <div class="flexRow" style="width: fit-content; padding-left: 5px; padding-right: 5px">:</div>
+                <div class="flexRow" style="width: fit-content">{{ currentEmployee.name }}</div>
+            </div>
+            <div class="flexRow" style="padding: 5px; width: 100%">
+                <div class="flexRow" style="width: 15ch; font-weight: 500">Position</div>
+                <div class="flexRow" style="width: fit-content; padding-left: 5px; padding-right: 5px">:</div>
+                <div class="flexRow" style="width: fit-content">
+                    {{ currentEmployee.currentPost ? currentEmployee.currentPost : "No position assigned yet." }}
+                </div>
+            </div>
+            <!-- Ends :- Selected Employee Details -->
+
+            <!-- Starts :- Activate a leave Plan for selected employee -->
+            <div class="flexRow" *ngIf="currentEmployee !== null" style="padding-top: 20px; justify-content: space-between; width: 100%">
+                <div class="flexRow">
+                    <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 400px">
+                        <mat-label>Select LeavePlan</mat-label>
+                        <mat-select [(ngModel)]="currentLeavePlan" [disabled]="currentLeavePlanList.length === 0">
+                            <mat-option *ngFor="let leavePlan of currentLeavePlanList" [value]="leavePlan"> {{ leavePlan.leavePlanName }} </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button
+                        (click)="applyLeavePlan()"
+                        style="margin-left: 10px; height: 59px; padding-left: 20px; padding-right: 20px; border-radius: 5px; font-weight: 500"
+                        [ngStyle]="{
+                            backgroundColor: activeLeavePlan === currentLeavePlan ? '#ffffff' : '#FD9700',
+                            border: activeLeavePlan === currentLeavePlan ? '1px solid #fd9700' : '1px solid #000000',
+                            color: activeLeavePlan === currentLeavePlan ? '#fd9700' : '#ffffff',
+                            cursor: activeLeavePlan === currentLeavePlan ? 'not-allowed' : 'pointer'
+                        }"
+                        [disabled]="activeLeavePlan === currentLeavePlan"
+                    >
+                        Apply
+                    </button>
+                </div>
+                <div class="material-icons-outlined" style="padding: 5px; cursor: pointer" (click)="refreshEmployeeData()">refresh</div>
+            </div>
+            <!-- Ends :- Activate a leave Plan for selected employee -->
+
+            <!-- Starts :- Update Allowed Leave Types for this employee -->
+            <div class="flexRow" *ngIf="currentEmployee !== null" style="padding-top: 20px; justify-content: space-between; width: 100%">
+                Under Construction!
+            </div>
+            <!-- Ends :- Update Allowed Leave Types for this employee -->
+        </div>
+        <div class="flexRow" *ngIf="currentEmployee === null">Please select an Employee.</div>
+        <!-- Ends :- Update leavePlan -->
+    </div>
+    <!-- Ends :- Main Container -->
+
+    <!-- Starts :- Loader to display spinner while data is being loaded -->
+    <div *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </div>
+    <!-- Ends :- Loader-->
+</div>

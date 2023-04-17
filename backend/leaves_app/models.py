@@ -135,3 +135,16 @@ class SchoolLeavePlanToEmployee(models.Model):
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchoolLeavePlan__parentSchool__id']
+
+class EmployeeLeavePlan(models.Model):
+    # Employee
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    # Leave Plan
+    activeLeavePlan = models.ForeignKey(SchoolLeavePlan, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'employee_leave_plan'
+        unique_together = ('activeLeavePlan', 'parentEmployee')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['activeLeavePlan__parentSchool__id']
