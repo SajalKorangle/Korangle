@@ -136,24 +136,26 @@
                     <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                         <tr>
                             <th style="min-width: 60px" *ngIf="columnFilter.showSerialNumber">S No.</th>
+
                             <th *ngIf="columnFilter.showFrontImage" style="min-width: 120px; text-align: center">Front Image</th>
                             <th *ngIf="columnFilter.showBackImage" style="min-width: 120px; text-align: center">Back Image</th>
-                            <th style="min-width: 80px" *ngIf="columnFilter.showBookNumber">Book No.</th>
-                            <th style="min-width: 180px" *ngIf="columnFilter.showName">Name</th>
-                            <th style="min-width: 180px" *ngIf="columnFilter.showAuthor">Author</th>
-                            <th style="min-width: 100px" *ngIf="columnFilter.showLocation">Location</th>
-                            <th style="min-width: 100px" *ngIf="columnFilter.showDateOfPurchase">Date of Purchase</th>
-                            <th style="min-width: 180px" *ngIf="columnFilter.showPublisher">Publisher</th>
-                            <th style="min-width: 100px" *ngIf="columnFilter.showEdition">Edition</th>
-                            <th style="min-width: 80px" *ngIf="columnFilter.showNumberOfPages">No. of pages</th>
-                            <th style="min-width: 100px" *ngIf="columnFilter.showPrintedCost">Printed Cost</th>
-                            <th style="min-width: 100px" *ngIf="columnFilter.showCoverType">Cover Type</th>
-                            <th style="min-width: 100px" *ngIf="columnFilter.showBookType">Book Type</th>
+
+                            <th (click)="updateSortingParameters('bookNumber')" style="min-width: 80px" *ngIf="columnFilter.showBookNumber">Book No.</th>
+                            <th (click)="updateSortingParameters('name')" style="min-width: 180px" *ngIf="columnFilter.showName">Name</th>
+                            <th (click)="updateSortingParameters('author')" style="min-width: 180px" *ngIf="columnFilter.showAuthor">Author</th>
+                            <th (click)="updateSortingParameters('location')" style="min-width: 100px" *ngIf="columnFilter.showLocation">Location</th>
+                            <th (click)="updateSortingParameters('dateOfPurchase')" style="min-width: 100px" *ngIf="columnFilter.showDateOfPurchase">Date of Purchase</th>
+                            <th (click)="updateSortingParameters('publisher')" style="min-width: 180px" *ngIf="columnFilter.showPublisher">Publisher</th>
+                            <th (click)="updateSortingParameters('edition')" style="min-width: 100px" *ngIf="columnFilter.showEdition">Edition</th>
+                            <th (click)="updateSortingParameters('numberOfPages')" style="min-width: 80px" *ngIf="columnFilter.showNumberOfPages">No. of pages</th>
+                            <th (click)="updateSortingParameters('printedCost')" style="min-width: 100px" *ngIf="columnFilter.showPrintedCost">Printed Cost</th>
+                            <th (click)="updateSortingParameters('coverType')" style="min-width: 100px" *ngIf="columnFilter.showCoverType">Cover Type</th>
+                            <th (click)="updateSortingParameters('bookType')" style="min-width: 100px" *ngIf="columnFilter.showBookType">Book Type</th>
 
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *cdkVirtualFor="let book of bookFullProfileList">
+                        <ng-container *cdkVirtualFor="let book of getSortedBookList()">
                             <tr *ngIf="book.show">
                                 <ng-container>
                                     <td *ngIf="columnFilter.showSerialNumber">{{ book.serialNumber }}.</td>

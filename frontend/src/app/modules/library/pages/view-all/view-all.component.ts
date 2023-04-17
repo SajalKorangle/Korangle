@@ -54,6 +54,9 @@ export class ViewAllComponent implements OnInit {
     displayBookNumber = 0;
     searchBookName : string;
 
+    sortBy = 'name';
+    sortOrder = 1; // 1 => ASC, -1 => DESC
+
 
     constructor (
         public genericService: GenericService,
@@ -86,6 +89,36 @@ export class ViewAllComponent implements OnInit {
         });
     }
 
+    SortComparator = (book1, book2) => {
+        let a = book1[this.sortBy];
+        let b = book2[this.sortBy];
+
+        if (a === b) { return 0; }
+        if (a === null) {
+            return -1 * this.sortOrder;
+        } else if (b === null) {
+            return 1 * this.sortOrder;
+        } else if (typeof a === 'string') {
+            return a.localeCompare(b) * this.sortOrder;
+        } else if (typeof a === 'number' || typeof a === 'boolean') {
+            if (a < b) return -1 * this.sortOrder;
+            if (a > b) return 1 * this.sortOrder;
+        }
+        return 0;
+    }
+
+    updateSortingParameters(sortparam) {
+        if (this.sortBy === sortparam) {
+            this.sortOrder = this.sortOrder * -1;
+        } else this.sortOrder = 1;
+        this.sortBy = sortparam;
+    }
+
+    getSortedBookList() : any {
+        let list = [...this.bookFullProfileList];
+        list.sort(this.SortComparator);
+        return list;
+    }
     selectAllColumns(): void {
         Object.keys(this.columnFilter).forEach((key) => {
             this.columnFilter[key] = true;
