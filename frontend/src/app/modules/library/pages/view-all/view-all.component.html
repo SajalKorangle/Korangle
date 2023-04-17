@@ -203,3 +203,7 @@
         </ng-container>
 
 </div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
