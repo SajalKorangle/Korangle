@@ -20,23 +20,35 @@
                 </mat-option>
 
                 <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showFrontImage" (click)="$event.stopPropagation()">Front Image </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showBackImage" (click)="$event.stopPropagation()">Back Image </mat-checkbox>
+                </mat-option>
+                
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showBookNumber" (click)="$event.stopPropagation()">Book No. </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
                     <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation()">Name </mat-checkbox>
                 </mat-option>
 
                 <mat-option>
                     <mat-checkbox [(ngModel)]="columnFilter.showAuthor" (click)="$event.stopPropagation()">Author </mat-checkbox>
                 </mat-option>
-
+                
                 <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showPublisher" (click)="$event.stopPropagation()">Publisher </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="columnFilter.showLocation" (click)="$event.stopPropagation()">Location </mat-checkbox>
                 </mat-option>
-
+                
                 <mat-option>
                     <mat-checkbox [(ngModel)]="columnFilter.showDateOfPurchase" (click)="$event.stopPropagation()">Date of Purchase </mat-checkbox>
                 </mat-option>
 
                 <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showBookNumber" (click)="$event.stopPropagation()">Book No. </mat-checkbox>
+                    <mat-checkbox [(ngModel)]="columnFilter.showPublisher" (click)="$event.stopPropagation()">Publisher </mat-checkbox>
                 </mat-option>
 
                 <mat-option>
@@ -57,21 +69,11 @@
                     <mat-checkbox [(ngModel)]="columnFilter.showCoverType" (click)="$event.stopPropagation()">Cover Type </mat-checkbox>
                 </mat-option>
 
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showLocation" (click)="$event.stopPropagation()">Location </mat-checkbox>
-                </mat-option>
 
                 <mat-option>
                     <mat-checkbox [(ngModel)]="columnFilter.showBookType" (click)="$event.stopPropagation()">Book Type </mat-checkbox>
                 </mat-option>
 
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showFrontImage" (click)="$event.stopPropagation()">Front Image </mat-checkbox>
-                </mat-option>
-
-                <mat-option>
-                    <mat-checkbox [(ngModel)]="columnFilter.showBackImage" (click)="$event.stopPropagation()">Back Image </mat-checkbox>
-                </mat-option>
 
                 <mat-option>
                     <button class="btn" style="padding: 4px 7px" (click)="selectAllColumns(); $event.stopPropagation()">Select All</button>
