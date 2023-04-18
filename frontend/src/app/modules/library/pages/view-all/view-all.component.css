@@ -36,6 +36,10 @@
     }
 }
 
+th:hover{
+    cursor: pointer;
+}
+
 .dataListDiv {
     position: absolute;
     z-index: 10000;
@@ -43,26 +47,18 @@
     background-color: white;
     border: 1px solid black;
     overflow: auto;
-    /*width: 200mm;*/
-    /*width: 100%;*/
     height: 70mm;
 }
 
 i.material-icons.column {
     font-size: 15px;
     cursor: pointer;
-    /*float: left;*/
     float: right;
-    /*margin-right: 15px;*/
     line-height: 19px;
-    /*width: 30px;*/
-    /*text-align: center;*/
-    /*color: #a9afbb;*/
 }
 
 .customInput {
     border: none;
-    /*border-bottom: 1px solid black;*/
     width: 100%;
 }
 
