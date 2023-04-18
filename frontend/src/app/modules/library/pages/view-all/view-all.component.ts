@@ -116,7 +116,10 @@ export class ViewAllComponent implements OnInit {
 
     getSortedBookList() : any {
         let list = [...this.bookFullProfileList];
-        return list.sort(this.SortComparator).map((book, i) => ({...book, serialNumber: i+1}));
+        return list.sort(this.SortComparator).map((book, i) => ({
+            ...book,
+            serialNumber: i + 1
+        }));
     }
     selectAllColumns(): void {
         Object.keys(this.columnFilter).forEach((key) => {
