@@ -109,6 +109,8 @@ def createSchoolOrder(orderData, orderId, schoolMerchantAccount):
     finalAmountForParent = round(orderData["orderAmount"] + platformCharges["parent"], 2)
     if(finalAmountForParent != orderData["orderTotalAmount"]):
         return {"failure": "Could not generate url"}
+    if(orderData["orderAmount"]<=platformCharges["school"]):
+        return {"failure": "Invalid payment amount. Please enter greater amount."}
 
     order = defaultdict(str, {
         "txnid": orderId,

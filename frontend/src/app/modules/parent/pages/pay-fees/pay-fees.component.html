@@ -274,7 +274,7 @@
 
                             <!-- Pay Button Starts  -->
                             <div style="display: block; padding-bottom: 1rem;">
-                                <button class="btn" [disabled]="getTotalPaymentAmount()==0"
+                                <button class="btn" [disabled]="(getTotalPaymentAmount()==0)||(getTotalPaymentAmount()<=htmlRenderer.getNewMethodTotalPlatformCharge())"
                                     style="background-color: blue; color: white;"
                                     (click)="serviceAdapter.initiatePaymentWithNewMethod()">
                                     Pay Now
