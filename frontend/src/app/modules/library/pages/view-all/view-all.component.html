@@ -121,16 +121,31 @@
 
         <br />
         <!-- TODO: Filter Menu Start-->
-        <ng-container>
-            <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters">
-                <ng-container *ngIf="!showFilters">Show Filters</ng-container>
-                <ng-container *ngIf="showFilters">Hide Filters</ng-container>
-            </button>
+        <!-- <ng-container> -->
+        <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters">
+            <ng-container *ngIf="!showFilters">Show Filters</ng-container>
+            <ng-container *ngIf="showFilters">Hide Filters</ng-container>
+        </button>
 
-            <ng-container *ngIf="showFilters">
-                UNDER CONSTRUCTION
-            </ng-container>
+        <br />
+
+        <ng-container *ngIf="showFilters">
+            <div class="author-filter">
+                <mat-form-field>
+                    <mat-label>Select Author</mat-label>
+                    <mat-select multiple [formControl]="selectAuthorsFormControl">
+                        <mat-option *ngFor="let author of authorsSelected | keyvalue" [value]="author.key">
+                            {{ author.key }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
         </ng-container>
+
+        <button (click)="show()">do stuff</button>
+
+        <!-- </ng-container> -->
         <!-- TODO: Filter Menu End-->
 
 
