@@ -13,13 +13,9 @@ export class ViewAllServiceAdapter {
     async initializeData(): Promise<void> {
         this.vm.isLoading = true;
 
-        try {
-            const fetchedBookList = await this.vm.genericService.getObjectList({library_app: "Book"}, {});
-            this.vm.initializeBookList(fetchedBookList);
-            this.vm.isLoading = false;
-        } catch {
-            this.vm.isLoading = false;
-        }
+        const fetchedBookList = await this.vm.genericService.getObjectList({library_app: "Book"}, {});
+        this.vm.initializeBookList(fetchedBookList);
+        this.vm.isLoading = false;
 
 
     }
