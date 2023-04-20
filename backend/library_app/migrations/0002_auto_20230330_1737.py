@@ -61,9 +61,4 @@ class Migration(migrations.Migration):
             name='typeOfBook',
             field=models.TextField(blank=True, null=True),
         ),
-        migrations.AlterField(
-            model_name='book',
-            name='numberOfPages',
-            field=models.IntegerField(blank=True, null=True),
-        )
     ]

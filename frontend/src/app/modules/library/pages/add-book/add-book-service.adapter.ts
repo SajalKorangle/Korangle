@@ -13,7 +13,8 @@ export class AddBookServiceAdapter {
     async getBook(newBookNumber) {
         const bookQuery = {
             filter: {
-                bookNumber: newBookNumber
+                bookNumber: newBookNumber,
+                parentSchool_id: this.vm.user.activeSchool.dbId
             }
         };
         const fetchedBook = await this.vm.genericService.getObject({library_app: "Book"}, bookQuery);
