@@ -59,7 +59,9 @@ export default class ManagePlanServiceAdapter {
             );
         }
         this.vm.isLoading = true;
-        let removeLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [], addLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [], oldLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
+        let removeLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
+        let addLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
+        let oldLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
         this.vm.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
             leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.vm.currentLeavePlan.id ? oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem) : null;
         });
@@ -74,15 +76,20 @@ export default class ManagePlanServiceAdapter {
             !similarLeaveType
                 ? addLeaveTypeChoiceList.push({ id: -1, parentSchoolLeavePlan: this.vm.currentLeavePlan.id, parentSchoolLeaveType: leaveType.id }) : null;
         });
-        if(await this.compareAndAlert("leavePlanList", { leaves_app: "SchoolLeavePlan" }, (data1, data2) => data2.id != data1.id && data1.leavePlanName.toLowerCase() === data2.leavePlanName.toLowerCase() ? ["Leave Plan Name"] : [], data)) {
+        if (await this.compareAndAlert("leavePlanList", { leaves_app: "SchoolLeavePlan" },
+        (data1, data2) => data2.id != data1.id && data1.leavePlanName.toLowerCase() === data2.leavePlanName.toLowerCase() ? ["Leave Plan Name"] : [], data)) {
             this.vm.isLoading = false;
             return false;
         }
         data.parentSchool = this.vm.user.activeSchool.dbId;
-        data.id ? this.vm.genericService.partiallyUpdateObject({ leaves_app: "SchoolLeavePlan" }, data) : await this.vm.genericService.createObject({ leaves_app: "SchoolLeavePlan" }, data);
-        removeLeaveTypeChoiceList.length
-            ? await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, { filter: { __or__: removeLeaveTypeChoiceList } }) : null;
-        addLeaveTypeChoiceList.length ? await this.vm.genericService.createObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, addLeaveTypeChoiceList) : null;
+        data.id
+        ? await this.vm.genericService.partiallyUpdateObject({ leaves_app: "SchoolLeavePlan" }, data)
+        : await this.vm.genericService.createObject({ leaves_app: "SchoolLeavePlan" }, data);
+        removeLeaveTypeChoiceList.length ?
+        await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, { filter: { __or__: removeLeaveTypeChoiceList } })
+        : null;
+        addLeaveTypeChoiceList.length ?
+        await this.vm.genericService.createObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, addLeaveTypeChoiceList) : null;
         this.vm.resetComponent();
         this.vm.ngOnInit();
     }
@@ -95,7 +102,9 @@ export default class ManagePlanServiceAdapter {
         this.vm.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
             leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.vm.currentLeavePlan.id ? oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem) : null;
         });
-        oldLeaveTypeChoiceList.length ? await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, { filter: { __or__: oldLeaveTypeChoiceList } }) : null;
+        oldLeaveTypeChoiceList.length
+        ? await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, { filter: { __or__: oldLeaveTypeChoiceList } })
+        : null;
         await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlan" }, { filter: this.vm.currentLeavePlan });
         this.vm.resetComponent();
         this.vm.ngOnInit();
