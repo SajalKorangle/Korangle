@@ -1,5 +1,4 @@
 import { DataStorage } from "@classes/data-storage";
-import { Operation } from "@modules/leaves/classes/operation";
 import { ManagePlanComponent } from "./manage_plan.component";
 import { LeavePlanToLeaveType } from "@modules/leaves/classes/leaves";
 

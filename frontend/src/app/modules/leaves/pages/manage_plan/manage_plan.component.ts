@@ -31,12 +31,10 @@ export class ManagePlanComponent implements OnInit {
     // filter Map to filter data
     filterMap: { [id: string]: string } = {
         leavePlanToLeaveTypeList: "parentSchoolLeavePlan__parentSchool__id",
-        leavePlanList: "parentSchool",
-        leaveTypeList: "parentSchool",
+        leavePlanList: "parentSchool", leaveTypeList: "parentSchool",
     };
 
     constructor(public genericService: GenericService) {}
-
     async ngOnInit(): Promise<void> {
         this.serviceAdapter.initializeAdapter(this);
         await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeavePlan" }, "leavePlanList", true);
@@ -45,19 +43,17 @@ export class ManagePlanComponent implements OnInit {
     }
     resetComponent(): void {
         this.currentLeavePlan = {};
-        this.isLeavePlanOpen = this.isSelectLeavePlanToLeaveTypeVisible = this.isAddNewOpen = false;
         this.leavePlanName = "";
+        this.isLeavePlanOpen = this.isSelectLeavePlanToLeaveTypeVisible = this.isAddNewOpen = false;
         this.leaveTypeChoiceList = this.currentLeaveTypeChoiceList = this.appliedLeaveTypeChoiceList = [];
     }
     setPlan(leavePlan): void {
         this.isLeavePlanOpen = true;
         this.currentLeavePlan = JSON.parse(JSON.stringify(leavePlan));
         this.appliedLeaveTypeChoiceList = [];
-        this.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
-            leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id
-                ? this.appliedLeaveTypeChoiceList.push(this.leaveTypeList.find((leaveType) => leaveType.id === leavePlanToLeaveTypeItem.parentSchoolLeaveType))
-                : null;
-        });
+        this.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id
+        ? this.appliedLeaveTypeChoiceList.push(this.leaveTypeList.find((leaveType) => leaveType.id === leavePlanToLeaveTypeItem.parentSchoolLeaveType))
+        : null);
     }
     enableAddPlanToLeaveType(): void {
         this.isSelectLeavePlanToLeaveTypeVisible = true;
@@ -66,16 +62,13 @@ export class ManagePlanComponent implements OnInit {
     updateChoiceList(): void {
         this.leaveTypeChoiceList = [];
         this.leaveTypeList.map((leaveType) => {
-            const similarChoices = this.appliedLeaveTypeChoiceList.filter((appliedLeaveType) => leaveType.id === appliedLeaveType.id);
-            !similarChoices.length ? this.leaveTypeChoiceList.push(leaveType) : null;
+            !this.appliedLeaveTypeChoiceList.filter((appliedLeaveType) => leaveType.id === appliedLeaveType.id).length ?
+            this.leaveTypeChoiceList.push(leaveType) : null;
         });
     }
     savePlanToLeaveType(LeavePlanToLeaveType): void {
-        if (LeavePlanToLeaveType.length) {
-            this.appliedLeaveTypeChoiceList.push(...LeavePlanToLeaveType);
-        } else {
-            this.currentLeaveTypeChoiceList = this.appliedLeaveTypeChoiceList;
-        }
+        LeavePlanToLeaveType.length ? this.appliedLeaveTypeChoiceList.push(...LeavePlanToLeaveType) : null;
+        this.currentLeaveTypeChoiceList = !LeavePlanToLeaveType.length ? this.appliedLeaveTypeChoiceList : this.currentLeaveTypeChoiceList;
         this.isSelectLeavePlanToLeaveTypeVisible = false;
         this.currentLeaveTypeChoiceList = [];
     }
