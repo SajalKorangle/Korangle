@@ -42,15 +42,9 @@ export class ManageTypeComponent implements OnInit {
             });
         });
         this.serviceAdapter.initializeAdapter(this);
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeaveType" }, "leaveTypeList", {
-            filter: {parentSchool__id: this.user.activeSchool.dbId}
-        }, true);
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeaveTypeMonth" }, "leaveTypeMonthList", {
-            filter: {parentSchoolLeaveType__parentSchool__id: this.user.activeSchool.dbId}
-        }, true);
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, "leavePlanToLeaveTypeList", {
-            filter: { parentSchoolLeavePlan__parentSchool__id: this.user.activeSchool.dbId },
-        });
+        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeaveType" }, "leaveTypeList");
+        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeaveTypeMonth" }, "leaveTypeMonthList");
+        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, "leavePlanToLeaveTypeList");
     }
     constructor(public genericService: GenericService) {}
     // handle Modal

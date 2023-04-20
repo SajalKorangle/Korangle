@@ -26,7 +26,7 @@
                     <span style="flex-grow: 1">
                         <input style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.25)" placeholder="Enter leave plan name" [(ngModel)]="leavePlanName"/>
                     </span>
-                    <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: green" (click)="savePlan({ leavePlanName: leavePlanName })">
+                    <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: green" (click)="serviceAdapter.savePlan({ leavePlanName: leavePlanName })">
                         check
                     </span>
                     <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: red" (click)="resetComponent()">
@@ -55,7 +55,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="width: fit-content; justify-content: center" class="contentColItem" (click)="handleDelete()" style="cursor: pointer">
+                        <div style="width: fit-content; justify-content: center" class="contentColItem" (click)="serviceAdapter.handleDelete()" style="cursor: pointer">
                             <div class="contentRowItem" style="color: red">
                                 <div class="material-icons-outlined">delete_forever</div>
                                 <div class="responsiveText" style="text-decoration: underline; padding: 2px">Delete Plan</div>
@@ -131,7 +131,7 @@
                     <div class="contentRow">
                         <div class="contentColItem" style="flex-grow: 1">
                             <div class="contentRowItem" style="justify-content: flex-end">
-                                <button class="contentButton" (click)="savePlan(currentLeavePlan)">Save</button>
+                                <button class="contentButton" (click)="serviceAdapter.savePlan(currentLeavePlan)">Save</button>
                                 <button class="contentButtonHollow" (click)="resetComponent()">Cancel</button>
                             </div>
                         </div>

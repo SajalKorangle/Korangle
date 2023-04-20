@@ -27,9 +27,9 @@ def add_manage_plans(apps, schema_editor):
     Task = apps.get_model('team_app', 'Task')
     EmployeePermission = apps.get_model('employee_app', 'EmployeePermission')
     # extract feature Flag
-    feature_flag_object = FeatureFlag.objects.filter(name='Leaves').first()
+    feature_flag_object = FeatureFlag.objects.get(name='Leaves')
     # filter module
-    module_object = Module.objects.filter(title='Leaves')[0]
+    module_object = Module.objects.get(title='Leaves')
     # add entry into Task for leaves
     # manage_plan
     manage_plan = Task(parentModule=module_object, path='manage_plan', title='Manage Plans',

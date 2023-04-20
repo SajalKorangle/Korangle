@@ -1,25 +1,21 @@
 import { DataStorage } from "@classes/data-storage";
 import { Operation } from "@modules/leaves/classes/operation";
-import { APP_MODEL_STRUCTURE_INTERFACE, QUERY_INTERFACE } from "@services/generic/generic-service";
 import { ManageTypeComponent } from "./manage_type.component";
-import { ManagePlanComponent } from "../manage_plan/manage_plan.component";
 
 export default class ManageTypeServiceAdapter {
-    vm: ManageTypeComponent | ManagePlanComponent;
+    vm: ManageTypeComponent;
 
     // starts :- Initialize adapter (initialize adapter with instance of component)
-    initializeAdapter(vm: any): void {
+    initializeAdapter(vm: ManageTypeComponent): void {
         this.vm = vm;
         this.vm.user = DataStorage.getInstance().getUser();
     }
     // ends :- Initialize adapter
 
     // starts :- Initialize Data (send GET request to backend to fetch data)
-    async initializeData(
-        database: Partial<APP_MODEL_STRUCTURE_INTERFACE>, variableName: string, query: QUERY_INTERFACE = {}, open: boolean = false,
-    ): Promise<void> {
-        this.vm[variableName] = await this.vm.genericService.getObjectList(database, query);
-        this.vm.isLoading = open;
+    async initializeData(database: { [id: string]: string }, variableName: string): Promise<void> {
+        this.vm[variableName] = await this.vm.genericService.getObjectList(database, {});
+        this.vm.isLoading = false;
     }
     // ends :- Initialize Data
 
