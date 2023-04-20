@@ -1,13 +1,15 @@
 <div class="card-content">
-        <!--Book Name Search -->
+        <!--Book Name Search Field Start-->
         <mat-form-field style="margin-right: 15px" >
             <mat-label>Book name</mat-label>
 
             <input matInput name="name" type="text" placeholder="(UNDER CONSTRUCTION)"
             [(ngModel)]="searchBookName">
         </mat-form-field>
+        <!--Book Name Search Field End-->
 
-        <!-- Column Filter For Books Data -->
+
+        <!-- Column Filter For Books Data Start-->
         <mat-form-field style="margin-right: 15px" *ngIf="currentBookDocumentFilter === 'Book'">
             <mat-select placeholder="Select Columns" id="select-book-column" style="width: 100%">
                 <mat-option>
@@ -82,8 +84,10 @@
 
             </mat-select>
         </mat-form-field>
+        <!-- Column Filter For Books Data End -->
 
-        <!-- Print Button -->
+
+        <!-- Print Button Start-->
         <button
         *ngIf="currentBookDocumentFilter === 'Book' && !htmlRenderer.isMobileApplication() && !htmlRenderer.isMobileBrowser()"
         id="print-list"
@@ -96,8 +100,10 @@
         >
             Print<i class="material-icons" style="margin-left: 15px">print</i>
         </button>
+        <!-- Print Button End -->
 
-        <!-- Download button -->
+
+        <!-- Download Button Start -->
         <button
         *ngIf="!htmlRenderer.isMobileApplication()"
         type="button"
@@ -110,22 +116,26 @@
         >
             Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
         </button>
+        <!-- Download Button End -->
 
-        <!-- TODO: Filters -->
+
         <br />
+        <!-- TODO: Filter Menu Start-->
         <ng-container>
             <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters">
                 <ng-container *ngIf="!showFilters">Show Filters</ng-container>
                 <ng-container *ngIf="showFilters">Hide Filters</ng-container>
             </button>
 
-        <ng-container *ngIf="showFilters">
-            UNDER CONSTRUCTION
+            <ng-container *ngIf="showFilters">
+                UNDER CONSTRUCTION
+            </ng-container>
         </ng-container>
-        </ng-container>
+        <!-- TODO: Filter Menu End-->
 
 
-        <!-- Book Table Data List -->
+
+        <!-- Book Table Data Start -->
         <ng-container *ngIf="!isLoading && currentBookDocumentFilter === 'Book'">
             <p>
                 Total Books: <b>{{ bookFullProfileList.length }}</b
@@ -203,6 +213,8 @@
                 </table>
             </cdk-virtual-scroll-viewport>
         </ng-container>
+        <!-- Book Table Data End -->
+
 
 </div>
 
