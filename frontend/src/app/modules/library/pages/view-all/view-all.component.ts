@@ -177,7 +177,6 @@ export class ViewAllComponent implements OnInit {
         if (filter === 'authors') this.filterForm.get('authors').setValue(Array.from(this.authorsSelected.keys()))
         else if (filter === 'publishers') this.filterForm.get('publishers').setValue(Array.from(this.publishersSelected.keys()));
         else if (filter === 'bookTypes') this.filterForm.get('bookTypes').setValue(Array.from(this.bookTypesSelected.keys()));
-
     }
 
     unSelectAllOptions(filter): void {

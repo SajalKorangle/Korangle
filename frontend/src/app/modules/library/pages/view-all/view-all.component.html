@@ -137,8 +137,12 @@
                         </div>
                         <!-- Select All/Clear All End-->
 
+                        <mat-select-trigger>
+                            {{ filterForm.get('authors').value.length + ' options selected' }}
+                        </mat-select-trigger>
+
                         <!-- Options Start -->
-                        <mat-option *ngFor="let author of authorsSelected" [value]="author">
+                        <mat-option *ngFor="let author of authorsSelected" [value]="author" style="text-transform: capitalize">
                             {{ author || 'None' }}
                         </mat-option>
                         <!-- Options End -->
@@ -157,8 +161,12 @@
                         </div>
                         <!-- Select All/Clear All End-->
 
+                        <mat-select-trigger>
+                            {{ filterForm.get('publishers').value.length + ' options selected' }}
+                        </mat-select-trigger>
+
                         <!-- Options Start -->
-                        <mat-option *ngFor="let publisher of publishersSelected" [value]="publisher">
+                        <mat-option *ngFor="let publisher of publishersSelected" [value]="publisher" style="text-transform: capitalize">
                             {{ publisher || 'None' }}
                         </mat-option>
                         <!-- Options End -->
@@ -176,9 +184,13 @@
                             <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('bookTypes')">Clear All</button>
                         </div>
                         <!-- Select All/Clear All End-->
-
+                        
+                        <mat-select-trigger>
+                            {{ filterForm.get('bookTypes').value.length + ' options selected' }}
+                        </mat-select-trigger>
+                        
                         <!-- Options Start -->
-                        <mat-option *ngFor="let bookType of bookTypesSelected" [value]="bookType">
+                        <mat-option *ngFor="let bookType of bookTypesSelected" [value]="bookType" style="text-transform: capitalize">
                             {{ bookType || 'None' }}
                         </mat-option>
                         <!-- Options End -->
