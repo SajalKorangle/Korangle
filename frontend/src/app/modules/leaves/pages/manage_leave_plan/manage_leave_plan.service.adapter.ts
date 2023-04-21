@@ -89,7 +89,7 @@ export default class GenericServiceAdapter {
                         id:
                             this.vm.activeLeavePlan === null
                                 ? -1
-                                : this.vm.employeeLeavePlanList.find((employeeLeavePlan) => employeeLeavePlan.activeLeavePlan === this.activeLeavePlan.id).id,
+                                : this.vm.employeeLeavePlanList.find((employeeLeavePlan) => employeeLeavePlan.activeLeavePlan === this.vm.activeLeavePlan.id).id,
                         activeLeavePlan: this.vm.currentLeavePlan.id,
                         parentEmployee: this.vm.currentEmployee.id,
                     },
