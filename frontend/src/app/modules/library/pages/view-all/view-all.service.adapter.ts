@@ -30,7 +30,7 @@ export class ViewAllServiceAdapter {
             this.vm.authorsSelected.add(authorKey);
             this.vm.publishersSelected.add(publisherKey);
             this.vm.bookTypesSelected.add(typeKey);
-        })
+        });
 
         this.vm.initializeBookList(fetchedBookList);
         this.vm.setDefaultFilterSelections();

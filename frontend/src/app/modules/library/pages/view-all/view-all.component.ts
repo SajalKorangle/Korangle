@@ -67,7 +67,7 @@ export class ViewAllComponent implements OnInit {
         authors: new FormControl(''),
         publishers: new FormControl(''),
         bookTypes: new FormControl(''),
-    })
+    });
 
     constructor (
         public genericService: GenericService,
@@ -90,7 +90,7 @@ export class ViewAllComponent implements OnInit {
         const initialValue = this.filterForm.value;
         this.filterForm.valueChanges.subscribe(value => {
             this.filterBooks();
-        })
+        });
         this.filterForm.setValue(initialValue, { emitEvent: true });
     }
 
@@ -172,12 +172,12 @@ export class ViewAllComponent implements OnInit {
 
             book.show = (authorValid && publisherValid && bookTypeValid);
             if (book.show) booksDisplayed++;
-        })
+        });
         this.displayBookNumber = booksDisplayed;
     }
 
     selectAllOptions(filter): void {
-        if (filter === 'authors') this.filterForm.get('authors').setValue(Array.from(this.authorsSelected.keys()))
+        if (filter === 'authors') this.filterForm.get('authors').setValue(Array.from(this.authorsSelected.keys()));
         else if (filter === 'publishers') this.filterForm.get('publishers').setValue(Array.from(this.publishersSelected.keys()));
         else if (filter === 'bookTypes') this.filterForm.get('bookTypes').setValue(Array.from(this.bookTypesSelected.keys()));
     }
