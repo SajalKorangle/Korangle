@@ -13,20 +13,20 @@ import { EmployeeLeavePlan, LeavePlan, LeavePlanToEmployee } from "@modules/leav
 export class ManageLeavePlanComponent implements OnInit {
     user: User;
     isLoading: boolean = false;
-    serviceAdapterGeneric: GenericServiceAdapter = new GenericServiceAdapter();
+    serviceAdapter: GenericServiceAdapter = new GenericServiceAdapter();
     constructor(public genericService: GenericService) {}
     async ngOnInit(): Promise<void> {
-        this.serviceAdapterGeneric.initializeAdapter(this);
-        await this.serviceAdapterGeneric.initializeData({ employee_app: "Employee" }, "employeeChoiceList", {
+        this.serviceAdapter.initializeAdapter(this);
+        await this.serviceAdapter.initializeData({ employee_app: "Employee" }, "employeeChoiceList", {
             filter: { parentSchool: this.user.activeSchool.dbId },
         });
-        await this.serviceAdapterGeneric.initializeData({ leaves_app: "SchoolLeavePlanToEmployee" }, "leavePlanToEmployeeList", {
+        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeavePlanToEmployee" }, "leavePlanToEmployeeList", {
             filter: { parentSchoolLeavePlan__parentSchool: this.user.activeSchool.dbId },
         });
-        await this.serviceAdapterGeneric.initializeData({ leaves_app: "SchoolLeavePlan" }, "leavePlanList", {
+        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeavePlan" }, "leavePlanList", {
             filter: { parentSchool: this.user.activeSchool.dbId },
         });
-        await this.serviceAdapterGeneric.initializeData({ leaves_app: "EmployeeLeavePlan" }, "employeeLeavePlanList", {
+        await this.serviceAdapter.initializeData({ leaves_app: "EmployeeLeavePlan" }, "employeeLeavePlanList", {
             filter: { activeLeavePlan__parentSchool: this.user.activeSchool.dbId },
         });
         this.filteredEmployeeChoiceList = this.employeeChoiceList;
@@ -77,31 +77,5 @@ export class ManageLeavePlanComponent implements OnInit {
     }
     refreshEmployeeData(): void {
         alert("Under Construction!");
-    }
-    async applyLeavePlan(): Promise<void> {
-        let response = await this.serviceAdapterGeneric.handleDataChange(
-            {
-                check: (data1, data2) => {
-                    return [];
-                },
-                data: [
-                    {
-                        id:
-                            this.activeLeavePlan === null
-                                ? -1
-                                : this.employeeLeavePlanList.find((employeeLeavePlan) => employeeLeavePlan.activeLeavePlan === this.activeLeavePlan.id).id,
-                        activeLeavePlan: this.currentLeavePlan.id,
-                        parentEmployee: this.currentEmployee.id,
-                    },
-                ],
-                database: { leaves_app: "EmployeeLeavePlan" },
-                operation: this.activeLeavePlan === null ? "insert" : "update",
-            },
-            "employeeLeavePlanList",
-        );
-        if (response) {
-            this.activeLeavePlan = this.currentLeavePlan;
-            alert("Leave-Plan updated successfully");
-        }
     }
 }
