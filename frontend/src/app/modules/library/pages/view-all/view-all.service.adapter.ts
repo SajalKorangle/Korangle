@@ -24,12 +24,15 @@ export class ViewAllServiceAdapter {
             const authorKey = book.author ? book.author.toLowerCase() : this.vm.NONE_FILTER_SELECTION;
 
             const publisherKey = book.publisher ?  book.publisher.toLowerCase() : this.vm.NONE_FILTER_SELECTION;
-            
+
             const typeKey = book.typeOfBook ? book.typeOfBook.toLowerCase() : this.vm.NONE_FILTER_SELECTION;
 
-            this.vm.authorsSelected.set(authorKey, false);
-            this.vm.publishersSelected.set(publisherKey, false);
-            this.vm.bookTypesSelected.set(typeKey, false);
+            // this.vm.authorsSelected.set(authorKey, false);
+            // this.vm.publishersSelected.set(publisherKey, false);
+            // this.vm.bookTypesSelected.set(typeKey, false);
+            this.vm.authorsSelected.add(authorKey);
+            this.vm.publishersSelected.add(publisherKey);
+            this.vm.bookTypesSelected.add(typeKey);
 
             console.log(book);
             // book.author && this.vm.authorsSelected.set(book.author.toLowerCase(), false);

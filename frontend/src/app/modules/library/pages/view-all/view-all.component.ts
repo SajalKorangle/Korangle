@@ -66,10 +66,14 @@ export class ViewAllComponent implements OnInit {
 
     // showAllBooks = true;
 
-    // Filters
-    authorsSelected = new Map();
-    publishersSelected = new Map();
-    bookTypesSelected = new Map();
+    // Maps: column values -> selected in the filter menu or not
+    // ... NOT REALLY USING THE MAP CAPABILITY ARE WE? COULD JUST DO WITH A SET, RIGHT?
+    // authorsSelected = new Map();
+    // publishersSelected = new Map();
+    // bookTypesSelected = new Map();
+    authorsSelected = new Set();
+    publishersSelected = new Set();
+    bookTypesSelected = new Set();
 
     // Filter logic: any book can only be displayed if its author is in the authorsformctrllist
     //, pub is in the publishers fc list, typeofbook is .....
@@ -152,13 +156,13 @@ export class ViewAllComponent implements OnInit {
     }
  
     // todo: filter filteredBookList, not BookList
-    filterBookList(column, option, isSelected): void {
-        this.bookFullProfileList.forEach(book => {
-            if ((book[column] || '').toLowerCase() === option){
-                book.show = isSelected;
-            }
-        })
-    }
+    // filterBookList(column, option, isSelected): void {
+    //     this.bookFullProfileList.forEach(book => {
+    //         if ((book[column] || '').toLowerCase() === option){
+    //             book.show = isSelected;
+    //         }
+    //     })
+    // }
     initializeBookList(bookFullProfileList): void {
         this.bookFullProfileList = bookFullProfileList;
         this.handleBookDisplay();
@@ -217,11 +221,11 @@ export class ViewAllComponent implements OnInit {
         });
     }
 
-    selectAuthorFilter(event, author): void {
-        // console.log(event, author);
-        this.authorsSelected.set(author.key, event.checked);
-        this.filterBookList('author', author.key, event.checked);
-    }
+    // selectAuthorFilter(event, author): void {
+    //     // console.log(event, author);
+    //     this.authorsSelected.set(author.key, event.checked);
+    //     this.filterBookList('author', author.key, event.checked);
+    // }
 
     printBookList(): void {
         alert("Under construction");
