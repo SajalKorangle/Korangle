@@ -67,3 +67,9 @@ i.material-icons.column {
     width: 100%;
     border-top: 2px solid #909090;
 }
+form{
+    display: flex; 
+    flex-direction: column;
+    width: max-content;
+    margin: 10px 0;
+}

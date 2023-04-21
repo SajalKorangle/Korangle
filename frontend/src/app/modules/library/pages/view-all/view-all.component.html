@@ -127,7 +127,7 @@
         <ng-container *ngIf="showFilters">
             <form [formGroup]="filterForm">
                 <!-- Authors Filter Start -->
-                <mat-form-field>
+                <mat-form-field style="margin: 5px 0;">
                     <mat-label>Select Authors</mat-label>
                     <mat-select multiple formControlName="authors">
                         <!-- Select All/Clear All Start -->
@@ -147,7 +147,7 @@
                 <!-- Authors Filter End -->
 
                 <!-- Publishers Filter Start -->
-                <mat-form-field>
+                <mat-form-field style="margin: 5px 0;">
                     <mat-label>Select Publishers</mat-label>
                     <mat-select multiple formControlName="publishers">
                         <!-- Select All/Clear All Start -->
@@ -167,7 +167,7 @@
                 <!-- Publishers Filter End -->
 
                 <!--  Type Of Book Filter Start -->
-                <mat-form-field>
+                <mat-form-field style="margin: 5px 0;">
                     <mat-label>Select Type Of Book</mat-label>
                     <mat-select multiple formControlName="bookTypes">
                         <!-- Select All/Clear All Start -->
@@ -185,9 +185,7 @@
                     </mat-select>
                 </mat-form-field>
                 <!-- Type Of Book Filter End -->
-
             </form>
-
         </ng-container>
         <!-- Filter Menu End-->
 
