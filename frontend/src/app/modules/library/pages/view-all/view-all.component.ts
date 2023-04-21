@@ -59,6 +59,8 @@ export class ViewAllComponent implements OnInit {
     displayBookNumber = 0;
     searchBookName : string;
 
+    NONE_FILTER_SELECTION = '';
+
     sortBy = 'name';
     sortOrder = 1; // 1 => ASC, -1 => DESC
 
@@ -92,9 +94,22 @@ export class ViewAllComponent implements OnInit {
 
     filterBooks(): void {
         this.bookFullProfileList.forEach(book => {
-            const authorValid = book.author ? this.filterForm.get('authors').value.includes(book.author.toLowerCase()) : false;
-            const publisherValid = book.publisher ? this.filterForm.get('publishers').value.includes(book.publisher.toLowerCase()) : false;
-            const bookTypeValid = book.typeOfBook ? this.filterForm.get('bookTypes').value.includes(book.typeOfBook.toLowerCase()) : false;
+            // const authorValid = book.author ? this.filterForm.get('authors').value.includes(book.author.toLowerCase()) : this.filterForm.get('authors').value.includes(null);
+
+            // const publisherValid = book.publisher ? this.filterForm.get('publishers').value.includes(book.publisher.toLowerCase()) : this.filterForm.get('publishers').value.includes(null);
+
+            // const bookTypeValid = book.typeOfBook ? this.filterForm.get('bookTypes').value.includes(book.typeOfBook.toLowerCase()) : this.filterForm.get('bookTypes').value.includes(null);
+            const author = book.author || '';
+            const publisher = book.publisher || '';
+            const type = book.typeOfBook || '';
+
+            const authorValid = this.filterForm.get('authors').value.includes(author.toLowerCase());
+
+            const publisherValid =  this.filterForm.get('publishers').value.includes(publisher.toLowerCase());
+
+            const bookTypeValid = this.filterForm.get('bookTypes').value.includes(type.toLowerCase());
+
+            
 
             book.show = (authorValid && publisherValid && bookTypeValid);
 

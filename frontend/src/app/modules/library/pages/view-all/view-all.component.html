@@ -136,7 +136,7 @@
                     <mat-label>Select Authors</mat-label>
                     <mat-select multiple formControlName="authors">
                         <mat-option *ngFor="let author of authorsSelected | keyvalue" [value]="author.key">
-                            {{ author.key }}
+                            {{ author.key || 'None' }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -147,7 +147,7 @@
                     <mat-label>Select Publishers</mat-label>
                     <mat-select multiple formControlName="publishers">
                         <mat-option *ngFor="let publisher of publishersSelected | keyvalue" [value]="publisher.key">
-                            {{ publisher.key }}
+                            {{ publisher.key || 'None' }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -158,7 +158,7 @@
                     <mat-label>Select Type Of Book</mat-label>
                     <mat-select multiple formControlName="bookTypes">
                         <mat-option *ngFor="let bookType of bookTypesSelected | keyvalue" [value]="bookType.key">
-                            {{ bookType.key }}
+                            {{ bookType.key || 'None' }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
