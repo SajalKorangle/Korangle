@@ -3,7 +3,7 @@ import { Operation } from "@modules/leaves/classes/operation";
 import { APP_MODEL_STRUCTURE_INTERFACE, QUERY_INTERFACE } from "@services/generic/generic-service";
 import { ManageLeavePlanComponent } from "./manage_leave_plan.component";
 
-export default class GenericServiceAdapter {
+export default class ManageLeavePlanServiceAdapter {
     vm: ManageLeavePlanComponent;
 
     // starts :- Initialize adapter (initialize adapter with instance of component)

@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { User } from "@classes/user";
 import { GenericService } from "@services/generic/generic-service";
-import GenericServiceAdapter from "../../leaves.service.adapter";
+import ManageLeavePlanServiceAdapter from "./manage_leave_plan.service.adapter";
 import { EmployeeLeavePlan, LeavePlan, LeavePlanToEmployee } from "@modules/leaves/classes/leaves";
 
 @Component({
@@ -13,7 +13,7 @@ import { EmployeeLeavePlan, LeavePlan, LeavePlanToEmployee } from "@modules/leav
 export class ManageLeavePlanComponent implements OnInit {
     user: User;
     isLoading: boolean = false;
-    serviceAdapter: GenericServiceAdapter = new GenericServiceAdapter();
+    serviceAdapter: ManageLeavePlanServiceAdapter = new ManageLeavePlanServiceAdapter();
     constructor(public genericService: GenericService) {}
     async ngOnInit(): Promise<void> {
         this.serviceAdapter.initializeAdapter(this);
