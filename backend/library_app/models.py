@@ -18,10 +18,10 @@ class Book(models.Model):
     publisher = models.TextField(null=True, blank=True)
 
     dateOfPurchase = models.DateField(null=True)
-    bookNumber = models.IntegerField(unique=True)
+    bookNumber = models.IntegerField()
     edition = models.TextField(null=True, blank=True)
 
-    numberOfPages = models.IntegerField(default=1)
+    numberOfPages = models.IntegerField(null=True, blank=True)
 
     printedCost = models.DecimalField(null=True, blank=True, max_digits=8, decimal_places=2)
 
@@ -39,6 +39,7 @@ class Book(models.Model):
 
     class Meta:
         db_table = 'book'
+        unique_together = ('bookNumber', 'parentSchool')
 
 
 class BookParameter(models.Model):
