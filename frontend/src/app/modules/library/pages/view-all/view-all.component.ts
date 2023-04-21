@@ -160,6 +160,7 @@ export class ViewAllComponent implements OnInit {
     }
 
     filterBooks(): void {
+        let booksDisplayed = 0;
         this.bookFullProfileList.forEach(book => {
             const author = book.author || '';
             const publisher = book.publisher || '';
@@ -170,7 +171,9 @@ export class ViewAllComponent implements OnInit {
             const bookTypeValid = this.filterForm.get('bookTypes').value.includes(type.toLowerCase());
 
             book.show = (authorValid && publisherValid && bookTypeValid);
+            if (book.show) booksDisplayed++;
         })
+        this.displayBookNumber = booksDisplayed;
     }
 
     selectAllOptions(filter): void {
