@@ -45,14 +45,14 @@ class ActiveListFilter(admin.SimpleListFilter):
 class SchoolAdmin(admin.ModelAdmin):
     search_fields = ('printName', 'id')
     list_display = ('Name', 'Stud', 'Empl', 'Fee_Receipts', 'Stud_Marks',
-                    'Active', 'S_2021_22', 'S_2020_21')
+                    'Active', 'S_2022_23', 'S_2021_22')
     list_filter = (ActiveListFilter,)
 
     def Name(self, obj):
         return str(obj.pk) + ' - ' + obj.printName
 
     def Stud(self, obj):
-        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2022-23').count())
+        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2023-24').count())
 
     def Empl(self, obj):
         return str(Employee.objects.filter(parentSchool_id=obj.pk).count())
@@ -73,8 +73,8 @@ class SchoolAdmin(admin.ModelAdmin):
         else:
             return 'Yes'
 
+    def S_2022_23(self, obj):
+        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2022-23').count())
+
     def S_2021_22(self, obj):
         return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2021-22').count())
-
-    def S_2020_21(self, obj):
-        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2020-21').count())
