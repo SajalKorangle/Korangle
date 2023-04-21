@@ -131,13 +131,24 @@
 
         <ng-container *ngIf="showFilters">
             <form [formGroup]="filterForm">
+              
+
                 <!-- Authors Filter Start -->
                 <mat-form-field>
                     <mat-label>Select Authors</mat-label>
                     <mat-select multiple formControlName="authors">
+                        <!-- Select All/Clear All Start -->
+                        <div style="display: flex; justify-content: space-evenly;">
+                            <button class="btn" style="padding: 4px 7px" (click)="selectAllOptions('authors')">Select All</button>
+                            <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('authors')">Clear All</button>
+                        </div>
+                        <!-- Select All/Clear All End-->
+
+                        <!-- Options Start -->
                         <mat-option *ngFor="let author of authorsSelected" [value]="author">
                             {{ author || 'None' }}
                         </mat-option>
+                        <!-- Options End -->
                     </mat-select>
                 </mat-form-field>
                 <!-- Authors Filter End -->
@@ -146,9 +157,18 @@
                 <mat-form-field>
                     <mat-label>Select Publishers</mat-label>
                     <mat-select multiple formControlName="publishers">
+                        <!-- Select All/Clear All Start -->
+                           <div style="display: flex; justify-content: space-evenly;">
+                            <button class="btn" style="padding: 4px 7px" (click)="selectAllOptions('publishers')">Select All</button>
+                            <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('publishers')">Clear All</button>
+                        </div>
+                        <!-- Select All/Clear All End-->
+
+                        <!-- Options Start -->
                         <mat-option *ngFor="let publisher of publishersSelected" [value]="publisher">
                             {{ publisher || 'None' }}
                         </mat-option>
+                        <!-- Options End -->
                     </mat-select>
                 </mat-form-field>
                 <!-- Publishers Filter End -->
@@ -157,9 +177,18 @@
                 <mat-form-field>
                     <mat-label>Select Type Of Book</mat-label>
                     <mat-select multiple formControlName="bookTypes">
+                        <!-- Select All/Clear All Start -->
+                           <div style="display: flex; justify-content: space-evenly;">
+                            <button class="btn" style="padding: 4px 7px" (click)="selectAllOptions('bookTypes')">Select All</button>
+                            <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('bookTypes')">Clear All</button>
+                        </div>
+                        <!-- Select All/Clear All End-->
+
+                        <!-- Options Start -->
                         <mat-option *ngFor="let bookType of bookTypesSelected" [value]="bookType">
                             {{ bookType || 'None' }}
                         </mat-option>
+                        <!-- Options End -->
                     </mat-select>
                 </mat-form-field>
                 <!-- Type Of Book Filter End -->

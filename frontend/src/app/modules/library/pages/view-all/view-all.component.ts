@@ -71,6 +71,8 @@ export class ViewAllComponent implements OnInit {
     // authorsSelected = new Map();
     // publishersSelected = new Map();
     // bookTypesSelected = new Map();
+
+    // Lists of all unique authors, publishers and bookTypes
     authorsSelected = new Set();
     publishersSelected = new Set();
     bookTypesSelected = new Set();
@@ -94,6 +96,17 @@ export class ViewAllComponent implements OnInit {
 
         console.log("default: ");
         console.log(this.filterForm.value);
+    }
+
+    selectAllOptions(filter): void {
+        if (filter === 'authors') this.filterForm.get('authors').setValue(Array.from(this.authorsSelected.keys()))
+        else if (filter === 'publishers') this.filterForm.get('publishers').setValue(Array.from(this.publishersSelected.keys()));
+        else if (filter === 'bookTypes') this.filterForm.get('bookTypes').setValue(Array.from(this.bookTypesSelected.keys()));
+
+    }
+
+    unSelectAllOptions(filter): void {
+        this.filterForm.get(filter).setValue([]);
     }
 
     filterBooks(): void {
