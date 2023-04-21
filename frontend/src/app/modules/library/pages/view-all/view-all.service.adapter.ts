@@ -27,6 +27,7 @@ export class ViewAllServiceAdapter {
 
 
         this.vm.initializeBookList(fetchedBookList);
+        this.vm.setDefaultFilterSelections();
         this.vm.isLoading = false;
 
 

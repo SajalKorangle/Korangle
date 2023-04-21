@@ -36,16 +36,6 @@ class ColumnFilter {
 
 export class ViewAllComponent implements OnInit {
 
-    show(): void {
-        // console.log(this.selectAuthorsFormControl)
-    }
-
-    filterForm = new FormGroup({
-        authors: new FormControl(''),
-        publishers: new FormControl(''),
-        bookTypes: new FormControl(''),
-    })
-
     user: any;
 
     isLoading = false;
@@ -60,19 +50,11 @@ export class ViewAllComponent implements OnInit {
     serviceAdapter: ViewAllServiceAdapter;
     htmlRenderer: ViewAllHtmlRenderer;
 
-    selectAuthorsFormControl = new FormControl('');
-
-
-
     bookDocumentSelectList = ['Book', 'Documents'];
     currentBookDocumentFilter;
 
     bookFullProfileList = [];
 
-    // Filters
-    authorsSelected = new Map();
-    publishersSelected = new Map();
-    bookTypesSelected = new Map();
 
     displayBookNumber = 0;
     searchBookName : string;
@@ -82,7 +64,44 @@ export class ViewAllComponent implements OnInit {
 
     // showAllBooks = true;
 
-    CONSOLE_LOG(x) { console.log(x); }
+    // Filters
+    authorsSelected = new Map();
+    publishersSelected = new Map();
+    bookTypesSelected = new Map();
+
+    // Filter logic: any book can only be displayed if its author is in the authorsformctrllist
+    //, pub is in the publishers fc list, typeofbook is .....
+    // If forma  filter, no value is selected, consider it to be not in consideration (?)
+    // NAH, works fine this way. 
+    // just do it so that everything is ticked at the start
+    filterForm = new FormGroup({
+        authors: new FormControl(''),
+        publishers: new FormControl(''),
+        bookTypes: new FormControl(''),
+    })
+
+    setDefaultFilterSelections(): void {
+        console.log(Array.from(this.authorsSelected.keys()));
+        this.filterForm.get('authors').setValue(Array.from(this.authorsSelected.keys()));
+        this.filterForm.get('publishers').setValue(Array.from(this.publishersSelected.keys()));
+        this.filterForm.get('bookTypes').setValue(Array.from(this.bookTypesSelected.keys()));
+
+        console.log("default: ");
+        console.log(this.filterForm.value);
+    }
+
+    filterBooks(): void {
+        this.bookFullProfileList.forEach(book => {
+            const authorValid = book.author ? this.filterForm.get('authors').value.includes(book.author.toLowerCase()) : false;
+            const publisherValid = book.publisher ? this.filterForm.get('publishers').value.includes(book.publisher.toLowerCase()) : false;
+            const bookTypeValid = book.typeOfBook ? this.filterForm.get('bookTypes').value.includes(book.typeOfBook.toLowerCase()) : false;
+
+            book.show = (authorValid && publisherValid && bookTypeValid);
+
+            console.log({bookname: book.name, authorValid, publisherValid, bookTypeValid});
+        })
+    }
+
     constructor (
         public genericService: GenericService,
     ) { }
@@ -90,16 +109,6 @@ export class ViewAllComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        // get the initial value of the form control
-        const initialValue = this.filterForm.value;
-
-        this.filterForm.valueChanges
-        .subscribe(value => {
-            console.log(value);
-        })
-
-        // set the value of the form control and emit the initial value
-        this.filterForm.setValue(initialValue, { emitEvent: true });
 
         this.columnFilter = new ColumnFilter();
         this.documentFilter = new ColumnFilter();
@@ -112,7 +121,21 @@ export class ViewAllComponent implements OnInit {
         this.htmlRenderer = new ViewAllHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
 
+
+        // get the initial value of the form control
+        const initialValue = this.filterForm.value;
+
+        this.filterForm.valueChanges
+        .subscribe(value => {
+            console.log(value);
+            this.filterBooks();
+        })
+
+        // set the value of the form control and emit the initial value
+        this.filterForm.setValue(initialValue, { emitEvent: true });
+
     }
+ 
     // todo: filter filteredBookList, not BookList
     filterBookList(column, option, isSelected): void {
         this.bookFullProfileList.forEach(book => {
