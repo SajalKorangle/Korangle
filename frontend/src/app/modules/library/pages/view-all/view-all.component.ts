@@ -4,7 +4,7 @@ import { DataStorage } from "@classes/data-storage";
 import { GenericService } from '@services/generic/generic-service';
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
 
-import {FormControl} from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { pairwise } from 'rxjs/operators';
 
 
@@ -39,6 +39,12 @@ export class ViewAllComponent implements OnInit {
     show(): void {
         // console.log(this.selectAuthorsFormControl)
     }
+
+    filterForm = new FormGroup({
+        authors: new FormControl(''),
+        publishers: new FormControl(''),
+        bookTypes: new FormControl(''),
+    })
 
     user: any;
 
@@ -85,29 +91,15 @@ export class ViewAllComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
 
         // get the initial value of the form control
-        const initialValue = this.selectAuthorsFormControl.value;
+        const initialValue = this.filterForm.value;
+
+        this.filterForm.valueChanges
+        .subscribe(value => {
+            console.log(value);
+        })
 
         // set the value of the form control and emit the initial value
-
-        this.selectAuthorsFormControl.valueChanges
-        .pipe(pairwise())
-        .subscribe(([prev, next]) => {
-            // this.showAllBooks = false; 
-            console.log(this.selectAuthorsFormControl.value);
-            // const lastSelected = val[val.length - 1];
-            const checked = (next.length > prev.length);
-            
-            const lastSelected = checked ? next.filter(value => !prev.includes(value)).pop()
-            : prev.filter(value => !next.includes(value)).pop();
-
-            this.filterBookList('author', lastSelected, checked);
-            // console.log(prev);
-            // console.log(next);
-            console.log({prev, next});
-            console.log({checked, lastSelected});
-
-        })
-        this.selectAuthorsFormControl.setValue(initialValue, { emitEvent: true });
+        this.filterForm.setValue(initialValue, { emitEvent: true });
 
         this.columnFilter = new ColumnFilter();
         this.documentFilter = new ColumnFilter();
@@ -121,6 +113,7 @@ export class ViewAllComponent implements OnInit {
         this.htmlRenderer.initializeRenderer(this);
 
     }
+    // todo: filter filteredBookList, not BookList
     filterBookList(column, option, isSelected): void {
         this.bookFullProfileList.forEach(book => {
             if ((book[column] || '').toLowerCase() === option){
