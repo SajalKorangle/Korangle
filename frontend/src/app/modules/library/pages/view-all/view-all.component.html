@@ -8,7 +8,6 @@
         </mat-form-field>
         <!--Book Name Search Field End-->
 
-
         <!-- Column Filter For Books Data Start-->
         <mat-form-field style="margin-right: 15px" *ngIf="currentBookDocumentFilter === 'Book'">
             <mat-select placeholder="Select Columns" id="select-book-column" style="width: 100%">
@@ -86,7 +85,6 @@
         </mat-form-field>
         <!-- Column Filter For Books Data End -->
 
-
         <!-- Print Button Start-->
         <button
         *ngIf="currentBookDocumentFilter === 'Book' && !htmlRenderer.isMobileApplication() && !htmlRenderer.isMobileBrowser()"
@@ -102,7 +100,6 @@
         </button>
         <!-- Print Button End -->
 
-
         <!-- Download Button Start -->
         <button
         *ngIf="!htmlRenderer.isMobileApplication()"
@@ -117,22 +114,18 @@
             Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
         </button>
         <!-- Download Button End -->
-
-
         <br />
-        <!-- TODO: Filter Menu Start-->
-        <!-- <ng-container> -->
+
+        <!-- Show/Hide Filter Button Start -->
         <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters">
             <ng-container *ngIf="!showFilters">Show Filters</ng-container>
             <ng-container *ngIf="showFilters">Hide Filters</ng-container>
         </button>
-
+        <!-- Show/Hide Filter Button End -->
         <br />
-
+        <!-- Filter Menu Start-->
         <ng-container *ngIf="showFilters">
             <form [formGroup]="filterForm">
-              
-
                 <!-- Authors Filter Start -->
                 <mat-form-field>
                     <mat-label>Select Authors</mat-label>
@@ -196,13 +189,7 @@
             </form>
 
         </ng-container>
-
-        <button (click)="show()">do stuff</button>
-
-        <!-- </ng-container> -->
-        <!-- TODO: Filter Menu End-->
-
-
+        <!-- Filter Menu End-->
 
         <!-- Book Table Data Start -->
         <ng-container *ngIf="!isLoading && currentBookDocumentFilter === 'Book'">
@@ -283,7 +270,6 @@
             </cdk-virtual-scroll-viewport>
         </ng-container>
         <!-- Book Table Data End -->
-
 
 </div>
 

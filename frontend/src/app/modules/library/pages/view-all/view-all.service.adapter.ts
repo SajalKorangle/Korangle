@@ -27,25 +27,13 @@ export class ViewAllServiceAdapter {
 
             const typeKey = book.typeOfBook ? book.typeOfBook.toLowerCase() : this.vm.NONE_FILTER_SELECTION;
 
-            // this.vm.authorsSelected.set(authorKey, false);
-            // this.vm.publishersSelected.set(publisherKey, false);
-            // this.vm.bookTypesSelected.set(typeKey, false);
             this.vm.authorsSelected.add(authorKey);
             this.vm.publishersSelected.add(publisherKey);
             this.vm.bookTypesSelected.add(typeKey);
-
-            console.log(book);
-            // book.author && this.vm.authorsSelected.set(book.author.toLowerCase(), false);
-            // book.publisher && this.vm.publishersSelected.set(book.publisher.toLowerCase(), false);
-            // book.typeOfBook && this.vm.bookTypesSelected.set(book.typeOfBook.toLowerCase(), false);
         })
-        // this.vm.authorsSelected.set(this.vm.NONE_FILTER_SELECTION, )
-
 
         this.vm.initializeBookList(fetchedBookList);
         this.vm.setDefaultFilterSelections();
         this.vm.isLoading = false;
-
-
     }
 }
