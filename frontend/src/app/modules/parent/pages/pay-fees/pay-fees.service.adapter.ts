@@ -329,7 +329,7 @@ export class PayFeesServiceAdapter {
             this.vm.isLoading = false;
             if (isMobile()) {
                 openUrlInBrowser(newOrderResponse.success);
-            } else {   
+            } else {
                 window.location.href = newOrderResponse.success;
             }
         } else {
