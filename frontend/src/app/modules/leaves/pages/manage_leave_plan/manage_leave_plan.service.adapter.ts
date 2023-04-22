@@ -143,6 +143,7 @@ export default class ManageLeavePlanServiceAdapter {
         );
         if (response) {
             this.vm.activeLeavePlan = this.vm.currentLeavePlan;
+            this.vm.updateLeavePlanList();
             alert("Leave-Plan updated successfully");
         }
     }
