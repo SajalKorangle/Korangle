@@ -1,6 +1,7 @@
 import { PayFeesComponent } from './pay-fees.component';
 import { environment } from 'environments/environment';
 import { Query } from "@services/generic/query";
+import { openUrlInBrowser, isMobile } from '@classes/common.js';
 
 export class PayFeesServiceAdapter {
     vm: PayFeesComponent;
@@ -326,7 +327,11 @@ export class PayFeesServiceAdapter {
         const newOrderResponse = await this.vm.paymentService.createObject(this.vm.paymentService.easebuzz_order_school, newOrder);
         if (newOrderResponse.success) {
             this.vm.isLoading = false;
-            window.location.href = newOrderResponse.success;
+            if (isMobile()) {
+                openUrlInBrowser(newOrderResponse.success);
+            } else {   
+                window.location.href = newOrderResponse.success;
+            }
         } else {
             this.vm.isLoading = false;
             alert(newOrderResponse.failure || "Unable to generate payment link.");
