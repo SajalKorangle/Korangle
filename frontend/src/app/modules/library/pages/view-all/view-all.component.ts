@@ -149,6 +149,7 @@ export class ViewAllComponent implements OnInit {
 
     getSortedBookList() : any {
         let list = [...this.bookFullProfileList];
+        list = list.filter(book => book.show);
         return list.sort(this.SortComparator).map((book, i) => ({
             ...book,
             serialNumber: i + 1
