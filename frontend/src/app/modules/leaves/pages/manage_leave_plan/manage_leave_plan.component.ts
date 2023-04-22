@@ -92,7 +92,9 @@ export class ManageLeavePlanComponent implements OnInit {
             this.currentEmployeeLeaveTypeList = this.selectedEmployeeLeaveTypeList;
         }
     }
-    refreshEmployeeData(): void {
-        alert("Under Construction!");
+    async refreshEmployeeData(): Promise<void> {
+        this.isLoading = true;
+        await this.serviceAdapter.initializeData();
+        this.updateLeavePlanList();
     }
 }
