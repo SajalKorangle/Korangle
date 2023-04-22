@@ -130,12 +130,11 @@
                 <mat-form-field style="margin: 5px 0;">
                     <mat-label>Select Authors</mat-label>
                     <mat-select multiple formControlName="authors">
-                        <!-- Select All/Clear All Start -->
+                        <!-- Clear All Button Start -->
                         <div style="display: flex; justify-content: space-evenly;">
-                            <button class="btn" style="padding: 4px 7px" (click)="selectAllOptions('authors')">Select All</button>
                             <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('authors')">Clear All</button>
                         </div>
-                        <!-- Select All/Clear All End-->
+                        <!-- Clear All Button End-->
 
                         <mat-select-trigger>
                             {{ filterForm.get('authors').value.length + ' options selected' }}
@@ -154,12 +153,11 @@
                 <mat-form-field style="margin: 5px 0;">
                     <mat-label>Select Publishers</mat-label>
                     <mat-select multiple formControlName="publishers">
-                        <!-- Select All/Clear All Start -->
-                           <div style="display: flex; justify-content: space-evenly;">
-                            <button class="btn" style="padding: 4px 7px" (click)="selectAllOptions('publishers')">Select All</button>
+                        <!-- Clear All Button Start -->
+                        <div style="display: flex; justify-content: space-evenly;">
                             <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('publishers')">Clear All</button>
                         </div>
-                        <!-- Select All/Clear All End-->
+                        <!-- Clear All Button End-->
 
                         <mat-select-trigger>
                             {{ filterForm.get('publishers').value.length + ' options selected' }}
@@ -178,12 +176,11 @@
                 <mat-form-field style="margin: 5px 0;">
                     <mat-label>Select Type Of Book</mat-label>
                     <mat-select multiple formControlName="bookTypes">
-                        <!-- Select All/Clear All Start -->
+                        <!-- Clear All Button Start -->
                            <div style="display: flex; justify-content: space-evenly;">
-                            <button class="btn" style="padding: 4px 7px" (click)="selectAllOptions('bookTypes')">Select All</button>
                             <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('bookTypes')">Clear All</button>
                         </div>
-                        <!-- Select All/Clear All End-->
+                        <!-- Clear All Button End -->
                         
                         <mat-select-trigger>
                             {{ filterForm.get('bookTypes').value.length + ' options selected' }}
