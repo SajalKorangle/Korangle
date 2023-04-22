@@ -57,16 +57,16 @@ export class ViewAllComponent implements OnInit {
     sortBy = 'name';
     sortOrder = 1; // 1 => ASC, -1 => DESC
 
-    // Lists of all unique authors, publishers and bookTypes
+    // Lists of all unique authors, publishers and bookTypes that can be selected when filtering
     authorsSelected = new Set();
     publishersSelected = new Set();
     bookTypesSelected = new Set();
 
     // Filter menu form controls
     filterForm = new FormGroup({
-        authors: new FormControl(''),
-        publishers: new FormControl(''),
-        bookTypes: new FormControl(''),
+        authors: new FormControl([]),
+        publishers: new FormControl([]),
+        bookTypes: new FormControl([]),
     });
 
     constructor (
@@ -92,6 +92,7 @@ export class ViewAllComponent implements OnInit {
             this.filterBooks();
         });
         this.filterForm.setValue(initialValue, { emitEvent: true });
+        console.log(this.filterForm.value);
     }
 
     initializeBookList(bookFullProfileList): void {
@@ -157,11 +158,6 @@ export class ViewAllComponent implements OnInit {
     }
     /* --------------------------- Sorting logic ends --------------------------- */
     /* ------------------------- Filtering logic starts ------------------------- */
-    setDefaultFilterSelections(): void {
-        this.filterForm.get('authors').setValue(Array.from(this.authorsSelected.keys()));
-        this.filterForm.get('publishers').setValue(Array.from(this.publishersSelected.keys()));
-        this.filterForm.get('bookTypes').setValue(Array.from(this.bookTypesSelected.keys()));
-    }
 
     // If a filter is completely empty, consider it disabled and do not filter by it
     filterBooks(): void {
