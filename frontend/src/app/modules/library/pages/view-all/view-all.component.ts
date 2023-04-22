@@ -163,6 +163,7 @@ export class ViewAllComponent implements OnInit {
         this.filterForm.get('bookTypes').setValue(Array.from(this.bookTypesSelected.keys()));
     }
 
+    // If a filter is completely empty, consider it disabled and do not filter by it
     filterBooks(): void {
         let booksDisplayed = 0;
         this.bookFullProfileList.forEach(book => {
@@ -170,9 +171,14 @@ export class ViewAllComponent implements OnInit {
             const publisher = book.publisher || '';
             const type = book.typeOfBook || '';
 
-            const authorValid = this.filterForm.get('authors').value.includes(author.toLowerCase());
-            const publisherValid =  this.filterForm.get('publishers').value.includes(publisher.toLowerCase());
-            const bookTypeValid = this.filterForm.get('bookTypes').value.includes(type.toLowerCase());
+            const disableAuthorsFilter = this.filterForm.get('authors').value.length === 0;
+            const disablePublishersFilter = this.filterForm.get('publishers').value.length === 0;
+            const disableBookTypesFilter = this.filterForm.get('bookTypes').value.length === 0;
+
+
+            const authorValid = disableAuthorsFilter ? true : this.filterForm.get('authors').value.includes(author.toLowerCase());
+            const publisherValid =  disablePublishersFilter ? true : this.filterForm.get('publishers').value.includes(publisher.toLowerCase());
+            const bookTypeValid = disableBookTypesFilter ? true : this.filterForm.get('bookTypes').value.includes(type.toLowerCase());
 
             book.show = (authorValid && publisherValid && bookTypeValid);
             if (book.show) booksDisplayed++;
