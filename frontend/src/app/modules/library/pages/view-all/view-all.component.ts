@@ -96,7 +96,7 @@ export class ViewAllComponent implements OnInit {
 
     initializeBookList(bookFullProfileList): void {
         this.bookFullProfileList = bookFullProfileList.map(book => ({
-            ...book, 
+            ...book,
             printedCost: book.printedCost !== null ? parseFloat(book.printedCost) : null
         }));
         this.handleBookDisplay();
