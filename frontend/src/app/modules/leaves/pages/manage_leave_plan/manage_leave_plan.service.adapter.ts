@@ -1,7 +1,7 @@
 import { DataStorage } from "@classes/data-storage";
 import { Operation } from "@modules/leaves/classes/operation";
 import { ManageLeavePlanComponent } from "./manage_leave_plan.component";
-import { EmployeeLeaveType } from "@modules/leaves/classes/leaves";
+import { EmployeeLeaveType, LeaveType } from "@modules/leaves/classes/leaves";
 
 export default class ManageLeavePlanServiceAdapter {
     vm: ManageLeavePlanComponent;
@@ -175,28 +175,32 @@ export default class ManageLeavePlanServiceAdapter {
                       })
                     : null;
             });
-            let response = removeEmployeeLeaveType.length ? await this.handleDataChange(
-                {
-                    check: null,
-                    data: removeEmployeeLeaveType,
-                    database: { leaves_app: "EmployeeLeaveType" },
-                    operation: "deleteBatch",
-                },
-                "employeeLeaveTypeList",
-            ) : true;
+            let response = removeEmployeeLeaveType.length
+                ? await this.handleDataChange(
+                      {
+                          check: null,
+                          data: removeEmployeeLeaveType,
+                          database: { leaves_app: "EmployeeLeaveType" },
+                          operation: "deleteBatch",
+                      },
+                      "employeeLeaveTypeList",
+                  )
+                : true;
             if (!response) {
                 this.vm.isLoading = false;
                 alert("Unable to delete new leave types.");
             } else {
-                let response = addEmployeeLeaveType.length ? await this.handleDataChange(
-                    {
-                        check: null,
-                        data: addEmployeeLeaveType,
-                        database: { leaves_app: "EmployeeLeaveType" },
-                        operation: "insertBatch",
-                    },
-                    "employeeLeaveTypeList",
-                ) : true;
+                let response = addEmployeeLeaveType.length
+                    ? await this.handleDataChange(
+                          {
+                              check: null,
+                              data: addEmployeeLeaveType,
+                              database: { leaves_app: "EmployeeLeaveType" },
+                              operation: "insertBatch",
+                          },
+                          "employeeLeaveTypeList",
+                      )
+                    : true;
                 if (!response) {
                     this.vm.isLoading = false;
                     alert("Unable to insert new leave types.");
@@ -211,4 +215,33 @@ export default class ManageLeavePlanServiceAdapter {
         }
     }
     // ends :- function to save leave type associated to this leave plan and employee
+
+    // starts :- function to delete a specific employee leave type
+    async deleteLeaveType(employeeLeaveType: LeaveType): Promise<void> {
+        this.vm.isLoading = true;
+        let response = await this.handleDataChange(
+            {
+                check: null,
+                data: [
+                    {
+                        id: this.vm.employeeLeaveTypeList.find((EmployeeLeaveType) => EmployeeLeaveType.parentLeaveType === employeeLeaveType.id).id,
+                        parentEmployee: this.vm.currentEmployee.id,
+                        parentLeavePlan: this.vm.currentLeavePlan.id,
+                        parentLeaveType: employeeLeaveType.id,
+                    },
+                ],
+                database: { leaves_app: "EmployeeLeaveType" },
+                operation: "deleteBatch",
+            },
+            "employeeLeaveTypeList",
+        );
+        if (response) {
+            this.vm.updateLeavePlanList();
+            alert("Leave Type removed successfully.");
+        } else {
+            alert("Unable to delete Leave Type.");
+            this.vm.isLoading = false;
+        }
+    }
+    // ends :- function to delete a specific employee leave type
 }

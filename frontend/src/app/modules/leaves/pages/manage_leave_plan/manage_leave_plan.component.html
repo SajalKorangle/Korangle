@@ -38,7 +38,7 @@
                 <div class="flexRow">
                     <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 400px">
                         <mat-label>Select LeavePlan</mat-label>
-                        <mat-select [(ngModel)]="currentLeavePlan" [disabled]="currentLeavePlanList.length === 0">
+                        <mat-select [(ngModel)]="currentLeavePlan" (selectionChange)="updateLeavePlanList()" [disabled]="currentLeavePlanList.length === 0">
                             <mat-option *ngFor="let leavePlan of currentLeavePlanList" [value]="leavePlan"> {{ leavePlan.leavePlanName }} </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -64,10 +64,10 @@
             <div class="flexRow" *ngIf="currentEmployee !== null" style="padding-top: 20px; width: 100%">
                 <div class="flexRow" style="flex-grow: 1; border-bottom: 1px solid rgba(0, 0, 0, 0.5); color: #fc9701">
                     <div class="flexRow" style="width: 100%; max-width: 600px; padding: 10px">
-                        <div class="flexRow" style="width: 25%;">Name</div>
-                        <div class="flexRow" style="width: 25%;">Component Type</div>
-                        <div class="flexRow" style="width: 25%;">Color</div>
-                        <div class="flexRow" style="width: 25%;"></div>
+                        <div class="flexRow" style="width: 30%; padding: 2px">Name</div>
+                        <div class="flexRow" style="width: 30%; padding: 2px">Component Type</div>
+                        <div class="flexRow" style="width: 30%; padding: 2px">Color</div>
+                        <div class="flexRow" style="width: 10%; padding: 2px"></div>
                     </div>
                 </div>
             </div>
@@ -76,12 +76,12 @@
                 <div class="flexRow" *ngFor="let EmployeeLeaveType of selectedEmployeeLeaveTypeList"
                     style="width:100%; border-bottom: 1px solid rgba(0, 0, 0, 0.25); color: rgba(0, 0, 0, 0.5); max-height: 45px; padding-top: 5px">
                     <div class="flexRow" style="width: 100%; max-width: 600px; padding: 10px">
-                        <div class="flexRow" style="width: 25%;">{{EmployeeLeaveType.leaveTypeName}}</div>
-                        <div class="flexRow" style="width: 25%;">{{EmployeeLeaveType.leaveType}}</div>
-                        <div class="flexRow" style="width: 25%;; justify-content: center;">
+                        <div class="flexRow" style="width: 30%; padding: 2px">{{EmployeeLeaveType.leaveTypeName}}</div>
+                        <div class="flexRow" style="width: 30%; padding: 2px">{{EmployeeLeaveType.leaveType}}</div>
+                        <div class="flexRow" style="width: 30%; padding: 2px">
                             <div style="height: 25px; width: 25px; border: 1px solid black; border-radius: 5px;" [ngStyle]="{backgroundColor: EmployeeLeaveType.color}"></div>
                         </div>
-                        <div class="flexRow" style="width: 25%;"></div>
+                        <div class="flexRow material-icons-outlined" style="width: 10%; padding: 2px; color: red; cursor: pointer" (click)="serviceAdapter.deleteLeaveType(EmployeeLeaveType)">delete_forever</div>
                     </div>
                 </div>
             </div>
@@ -108,7 +108,7 @@
                             <span class="material-icons" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">add</span>
                             <span style="height: 100%; display: flex; flex-direction: column; justify-content: center;">Add Leave Type</span>
                         </button>
-                        <mat-form-field appearance="fill" *ngIf="isLeaveTypeChoiceVisible" style="width: 400px">
+                        <mat-form-field appearance="fill" *ngIf="isLeaveTypeChoiceVisible" style="max-width: 400px; flex-grow: 1">
                             <mat-label>Select Leave Type</mat-label>
                             <mat-select [(ngModel)]="currentEmployeeLeaveTypeList" multiple [disabled]="!employeeLeaveTypeChoiceList.length">
                               <mat-option *ngFor="let leaveType of employeeLeaveTypeChoiceList" [value]="leaveType">

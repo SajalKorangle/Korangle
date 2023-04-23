@@ -76,7 +76,7 @@ export class ManageLeavePlanComponent implements OnInit {
                       })
                     : this.activeLeavePlan;
         });
-        this.currentLeavePlan = this.activeLeavePlan;
+        this.currentLeavePlan = this.currentLeavePlan === null ? this.activeLeavePlan : this.currentLeavePlan;
         // update list of leave type under this leave plan
         if (this.currentLeavePlan !== null) {
             this.leavePlanToLeaveTypeList.forEach((leavePlanToLeaveType) => {
