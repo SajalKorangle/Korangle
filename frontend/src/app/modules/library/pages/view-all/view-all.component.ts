@@ -92,7 +92,6 @@ export class ViewAllComponent implements OnInit {
             this.filterBooks();
         });
         this.filterForm.setValue(initialValue, { emitEvent: true });
-        console.log(this.filterForm.value);
     }
 
     initializeBookList(bookFullProfileList): void {
@@ -106,7 +105,7 @@ export class ViewAllComponent implements OnInit {
     handleBookDisplay(): void {
         let serialNumber = 0;
         this.bookFullProfileList.forEach(book => {
-            book.show = false;
+            book.show = true;
             book.serialNumber = ++serialNumber;
         });
     }
