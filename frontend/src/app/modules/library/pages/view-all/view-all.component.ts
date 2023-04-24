@@ -49,7 +49,7 @@ export class ViewAllComponent implements OnInit {
 
     bookFullProfileList = [];
 
-    displayBookNumber = 0;
+    displayBookNumber;
     searchBookName : string;
 
     NONE_FILTER_SELECTION = '';
@@ -99,6 +99,7 @@ export class ViewAllComponent implements OnInit {
             ...book,
             printedCost: book.printedCost !== null ? parseFloat(book.printedCost) : null
         }));
+        this.displayBookNumber = this.bookFullProfileList.length;
         this.handleBookDisplay();
     }
 
