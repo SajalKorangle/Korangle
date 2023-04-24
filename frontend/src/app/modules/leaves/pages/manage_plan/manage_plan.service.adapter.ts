@@ -13,11 +13,17 @@ export default class ManagePlanServiceAdapter {
     // ends :- Initialize adapter
 
     // starts :- Initialize Data (send GET request to backend to fetch data)
-    async initializeData(database: { [id: string]: string }, variableName: string, stayOpen: boolean = false): Promise<void> {
-        let Filter: { [id: string]: string } = {};
-        Filter[this.vm.filterMap[variableName]] = this.vm.user.activeSchool.dbId;
-        this.vm[variableName] = await this.vm.genericService.getObjectList(database, { filter: Filter });
-        this.vm.isLoading = stayOpen;
+    async initializeData(): Promise<void> {
+        this.vm.leavePlanList = await this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlan" }, { filter: {
+            parentSchool: this.vm.user.activeSchool.dbId
+        } });
+        this.vm.leavePlanToLeaveTypeList = await this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, { filter: {
+            parentSchoolLeavePlan__parentSchool__id: this.vm.user.activeSchool.dbId
+        } });
+        this.vm.leaveTypeList = await this.vm.genericService.getObjectList({ leaves_app: "SchoolLeaveType" }, { filter: {
+            parentSchool: this.vm.user.activeSchool.dbId
+        } });
+        this.vm.isLoading = false;
     }
     // ends :- Initialize Data
 

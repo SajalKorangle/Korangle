@@ -28,18 +28,11 @@ export class ManagePlanComponent implements OnInit {
     leavePlanList: Array<LeavePlan> = [];
     leavePlanToLeaveTypeList: Array<LeavePlanToLeaveType> = [];
     leaveTypeList: Array<LeaveType> = [];
-    // filter Map to filter data
-    filterMap: { [id: string]: string } = {
-        leavePlanToLeaveTypeList: "parentSchoolLeavePlan__parentSchool__id",
-        leavePlanList: "parentSchool", leaveTypeList: "parentSchool",
-    };
 
     constructor(public genericService: GenericService) {}
     async ngOnInit(): Promise<void> {
         this.serviceAdapter.initializeAdapter(this);
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeavePlan" }, "leavePlanList", true);
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, "leavePlanToLeaveTypeList", true);
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeaveType" }, "leaveTypeList");
+        this.serviceAdapter.initializeData();
     }
     resetComponent(): void {
         this.currentLeavePlan = {};
