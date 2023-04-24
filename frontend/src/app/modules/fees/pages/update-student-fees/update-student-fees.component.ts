@@ -40,7 +40,7 @@ export class UpdateStudentFeesComponent implements OnInit {
     user;
 
     feeTypeList: any;
-    schoolFeeRuleList: SchoolFeeRule[];
+    schoolFeeRuleList: any;
     classFilterFeeList: ClassFilterFee[];
     busStopFilterFeeList: BusStopFilterFee[];
     classList: any;

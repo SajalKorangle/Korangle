@@ -281,6 +281,9 @@ export class SetSchoolFeesServiceAdapter {
         schoolFeeRule['classfilterfee'] = classfilterfee;
         schoolFeeRule['busstopfilterfee'] = busstopfilterfee.sort((a, b) => { return a.parentBusStop - b.parentBusStop; });
         schoolFeeRule['customfilterfee'] = customfilterfee.sort((a, b) => { return a.parentStudentParameter - b.parentStudentParameter; });
+        schoolFeeRule.customfilterfee.forEach(item => {
+            item.selectedFilterValues = JSON.parse(item.selectedFilterValues);
+        });
         this.vm.schoolFeeRuleList = this.vm.schoolFeeRuleList.sort((a, b) => {
             return a.ruleNumber - b.ruleNumber;
         });

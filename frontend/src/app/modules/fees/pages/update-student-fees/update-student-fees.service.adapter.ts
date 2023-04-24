@@ -76,6 +76,11 @@ export class UpdateStudentFeesServiceAdapter {
 
             this.vm.feeTypeList = value[0];
             this.vm.schoolFeeRuleList = value[1];
+            this.vm.schoolFeeRuleList.forEach(schoolFeeRule => {
+                schoolFeeRule.customfilterfee.forEach(item => {
+                    item.selectedFilterValues = JSON.parse(item.selectedFilterValues);
+                });
+            });
             this.vm.classFilterFeeList = value[2];
             this.vm.busStopFilterFeeList = value[3];
             this.vm.busStopList = value[4];

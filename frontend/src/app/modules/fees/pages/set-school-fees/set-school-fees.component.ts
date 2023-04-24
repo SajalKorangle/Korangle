@@ -211,7 +211,6 @@ export class SetSchoolFeesComponent implements OnInit {
     }
 
     getStudentParameterName(parameterId: number): string {
-        console.log(parameterId);
         return this.newCustomFilterFeeList.find((parameter) => {
             return parameter.id == parameterId;
         }).name;
