@@ -58,9 +58,9 @@ export class ViewAllComponent implements OnInit {
     sortOrder = 1; // 1 => ASC, -1 => DESC
 
     // Lists of all unique authors, publishers and bookTypes that can be selected when filtering
-    authorsSelected = new Set();
-    publishersSelected = new Set();
-    bookTypesSelected = new Set();
+    authorOptions = new Set();
+    publisherOptions = new Set();
+    bookTypeOptions = new Set();
 
     // Filter menu form controls
     filterForm = new FormGroup({
@@ -87,11 +87,9 @@ export class ViewAllComponent implements OnInit {
         this.htmlRenderer = new ViewAllHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
 
-        const initialValue = this.filterForm.value;
         this.filterForm.valueChanges.subscribe(value => {
             this.filterBooks();
         });
-        this.filterForm.setValue(initialValue, { emitEvent: true });
     }
 
     initializeBookList(bookFullProfileList): void {
@@ -148,7 +146,7 @@ export class ViewAllComponent implements OnInit {
         this.sortBy = sortparam;
     }
 
-    getSortedBookList() : any {
+    getFilteredSortedBookList() : any {
         let list = [...this.bookFullProfileList];
         list = list.filter(book => book.show);
         return list.sort(this.SortComparator).map((book, i) => ({

@@ -27,9 +27,9 @@ export class ViewAllServiceAdapter {
 
             const typeKey = book.typeOfBook ? book.typeOfBook.toLowerCase() : this.vm.NONE_FILTER_SELECTION;
 
-            this.vm.authorsSelected.add(authorKey);
-            this.vm.publishersSelected.add(publisherKey);
-            this.vm.bookTypesSelected.add(typeKey);
+            this.vm.authorOptions.add(authorKey);
+            this.vm.publisherOptions.add(publisherKey);
+            this.vm.bookTypeOptions.add(typeKey);
         });
 
         this.vm.initializeBookList(fetchedBookList);
