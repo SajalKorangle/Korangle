@@ -162,11 +162,11 @@ export class User {
                     module = undefined;
                     break;
                 case 'user-settings':
-                    this.activeSchool.role = urlParams.get('role') || 'Employee';
+                    this.activeSchool.role = urlParams.get('role') || this.activeSchool.role;
                     module = this.settings;
                     break;
                 case 'notification':
-                    this.activeSchool.role = urlParams.get('role') || 'Employee';
+                    this.activeSchool.role = urlParams.get('role') || this.activeSchool.role;
                     module = this.notification;
                     break;
 
