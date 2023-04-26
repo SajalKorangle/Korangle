@@ -68,9 +68,9 @@ CASHFREE_VERIFICATION_SUITE_ENDPOINT = 'https://payout-gamma.cashfree.com'
 # CASHFREE_CLIENT_SECRET = 'a125f1d589609adbed0f5b2890653c0fdc77cf35'
 
 ## EASEBUZZ TEST CREDENTIALS ##
-EASEBUZZ_MERCHANT_KEY = "2PBP7IABZ2"
-EASEBUZZ_SALT = "DAH88E3UWQ"
-EASEBUZZ_ENV = "test" # `test` for test enviornment and `prod` for production
+EASEBUZZ_MERCHANT_KEY = "T7J9670H8B"
+EASEBUZZ_SALT = "F8THDOZU1R"
+EASEBUZZ_ENV = "prod" # `test` for test enviornment and `prod` for production
 
 ######################################################
 

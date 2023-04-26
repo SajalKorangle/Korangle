@@ -264,6 +264,7 @@ class EaseBuzzOrderCompletionView(APIView):
             return HttpResponseForbidden()
 
         orderInstance = Order.objects.get(orderId=request.POST["txnid"])
+        print(request.POST["status"])
         if request.POST["status"] == "success":
             orderInstance.status = "Completed"
             orderInstance.referenceId = request.POST["easepayid"]
