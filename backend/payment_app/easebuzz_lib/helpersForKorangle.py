@@ -98,7 +98,7 @@ def calculatePlatformCharges(amount, modeOfPayment, schoolMerchantAccount):
         "school": schoolPlatformCharge,
         "total": totalPlatformCharge
     }
-    shares["korangle_final"] = round(5.9 + (5.9*(totalPlatformCharge))/(final_amount - totalPlatformCharge), 2)
+    shares["korangle_final"] = round(KORANGLE_EASEBUZZ_BANK_LABEL + (KORANGLE_EASEBUZZ_BANK_LABEL*(totalPlatformCharge - KORANGLE_EASEBUZZ_BANK_LABEL))/(final_amount - totalPlatformCharge + KORANGLE_EASEBUZZ_BANK_LABEL), 2)
     shares["school_final"] = round(amount + shares["parent"] - shares["korangle_final"], 2)
     return shares
 
