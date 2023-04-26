@@ -98,7 +98,8 @@ def calculatePlatformCharges(amount, modeOfPayment, schoolMerchantAccount):
         "school": schoolPlatformCharge,
         "total": totalPlatformCharge
     }
-    shares["korangle"] = round((5.9*(final_amount-5.9))/(final_amount - shares["total"] + 5.9), 2)
+    shares["korangle_final"] = round(5.9 + (5.9*(totalPlatformCharge))/(final_amount - totalPlatformCharge), 2)
+    shares["school_final"] = round(amount + shares["parent"] - shares["korangle_final"], 2)
     return shares
 
 
@@ -125,8 +126,8 @@ def createSchoolOrder(orderData, orderId, schoolMerchantAccount):
         "furl": snfurl,
         "show_payment_mode": orderData["paymentMode"]["apiCode"],
         "split_payments": json.dumps({
-            schoolMerchantAccount.easebuzzBankLabel: orderData["orderTotalAmount"]-platformCharges["korangle"],
-            KORANGLE_EASEBUZZ_BANK_LABEL: platformCharges["korangle"]
+            schoolMerchantAccount.easebuzzBankLabel: platformCharges["school_final"],
+            KORANGLE_EASEBUZZ_BANK_LABEL: platformCharges["korangle_final"]
         })
     })
 
