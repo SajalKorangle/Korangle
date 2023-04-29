@@ -164,6 +164,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     notification_app: 'Notification';
     user_app: 'User';
     attendance_app: 'AttendancePermission';
+    enquiry_app: 'Enquiry' | 'ViewEnquiryInPagePermissions';
 }
 
 
