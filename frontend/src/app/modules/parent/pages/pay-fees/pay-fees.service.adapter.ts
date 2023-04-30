@@ -327,11 +327,11 @@ export class PayFeesServiceAdapter {
         const newOrderResponse = await this.vm.paymentService.createObject(this.vm.paymentService.easebuzz_order_school, newOrder);
         if (newOrderResponse.success) {
             this.vm.isLoading = false;
-            if (isMobile()) {
-                openUrlInBrowser(newOrderResponse.success);
-            } else {
+            // if (isMobile()) {
+                // openUrlInBrowser(newOrderResponse.success);
+            // } else {
                 window.location.href = newOrderResponse.success;
-            }
+            // }
         } else {
             this.vm.isLoading = false;
             alert(newOrderResponse.failure || "Unable to generate payment link.");
