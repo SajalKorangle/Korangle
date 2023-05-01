@@ -186,8 +186,8 @@ export class ViewAllComponent implements OnInit {
             const publisherValid =  disablePublishersFilter ? true : this.filterForm.get('publishers').value.includes(publisher.toLowerCase());
             const bookTypeValid = disableBookTypesFilter ? true : this.filterForm.get('bookTypes').value.includes(type.toLowerCase());
 
-            const searchedBookName = this.filterForm.get('bookNameSearch').value
-            const nameMatchesSearch = (book.name.toLowerCase().indexOf(searchedBookName.toLowerCase()) > -1)
+            const searchedBookName = this.filterForm.get('bookNameSearch').value;
+            const nameMatchesSearch = (book.name.toLowerCase().indexOf(searchedBookName.toLowerCase()) > -1);
 
             book.show = (authorValid && publisherValid && bookTypeValid && nameMatchesSearch);
 
