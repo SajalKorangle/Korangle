@@ -95,6 +95,12 @@ public class CustomWebViewClient extends WebViewClient {
             mainActivity.startActivity(intent);
             return true;
         }
+        if(url.startsWith(mainActivity.UPI_PREFIX)) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            mainActivity.startActivity(intent);
+            return true;
+        }
         if ( url.contains(".pdf")){
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(Uri.parse(url), "application/pdf");
