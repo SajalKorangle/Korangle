@@ -8,7 +8,6 @@
         </mat-form-field>
         <!--Book Name Search Field End-->
 
-
         <!-- Column Filter For Books Data Start-->
         <mat-form-field style="margin-right: 15px" *ngIf="currentBookDocumentFilter === 'Book'">
             <mat-select placeholder="Select Columns" id="select-book-column" style="width: 100%">
@@ -86,7 +85,6 @@
         </mat-form-field>
         <!-- Column Filter For Books Data End -->
 
-
         <!-- Print Button Start-->
         <button
         *ngIf="currentBookDocumentFilter === 'Book' && !htmlRenderer.isMobileApplication() && !htmlRenderer.isMobileBrowser()"
@@ -102,7 +100,6 @@
         </button>
         <!-- Print Button End -->
 
-
         <!-- Download Button Start -->
         <button
         *ngIf="!htmlRenderer.isMobileApplication()"
@@ -117,23 +114,89 @@
             Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
         </button>
         <!-- Download Button End -->
-
-
         <br />
-        <!-- TODO: Filter Menu Start-->
-        <ng-container>
-            <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters">
-                <ng-container *ngIf="!showFilters">Show Filters</ng-container>
-                <ng-container *ngIf="showFilters">Hide Filters</ng-container>
-            </button>
 
-            <ng-container *ngIf="showFilters">
-                UNDER CONSTRUCTION
-            </ng-container>
+        <!-- Show/Hide Filter Button Start -->
+        <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters">
+            <ng-container *ngIf="!showFilters">Show Filters</ng-container>
+            <ng-container *ngIf="showFilters">Hide Filters</ng-container>
+        </button>
+        <!-- Show/Hide Filter Button End -->
+        <br />
+        <!-- Filter Menu Start-->
+        <ng-container *ngIf="showFilters">
+            <form [formGroup]="filterForm">
+                <!-- Authors Filter Start -->
+                <mat-form-field style="margin: 5px 0;">
+                    <mat-label>Select Authors</mat-label>
+                    <mat-select multiple formControlName="authors">
+                        <!-- Clear All Button Start -->
+                        <div style="display: flex; justify-content: space-evenly;">
+                            <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('authors')">Clear All</button>
+                        </div>
+                        <!-- Clear All Button End-->
+
+                        <mat-select-trigger>
+                            {{ filterForm.get('authors').value.length + ' options selected' }}
+                        </mat-select-trigger>
+
+                        <!-- Options Start -->
+                        <mat-option *ngFor="let author of authorOptions" [value]="author" style="text-transform: capitalize">
+                            {{ author || 'None' }}
+                        </mat-option>
+                        <!-- Options End -->
+                    </mat-select>
+                </mat-form-field>
+                <!-- Authors Filter End -->
+
+                <!-- Publishers Filter Start -->
+                <mat-form-field style="margin: 5px 0;">
+                    <mat-label>Select Publishers</mat-label>
+                    <mat-select multiple formControlName="publishers">
+                        <!-- Clear All Button Start -->
+                        <div style="display: flex; justify-content: space-evenly;">
+                            <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('publishers')">Clear All</button>
+                        </div>
+                        <!-- Clear All Button End-->
+
+                        <mat-select-trigger>
+                            {{ filterForm.get('publishers').value.length + ' options selected' }}
+                        </mat-select-trigger>
+
+                        <!-- Options Start -->
+                        <mat-option *ngFor="let publisher of publisherOptions" [value]="publisher" style="text-transform: capitalize">
+                            {{ publisher || 'None' }}
+                        </mat-option>
+                        <!-- Options End -->
+                    </mat-select>
+                </mat-form-field>
+                <!-- Publishers Filter End -->
+
+                <!--  Type Of Book Filter Start -->
+                <mat-form-field style="margin: 5px 0;">
+                    <mat-label>Select Type Of Book</mat-label>
+                    <mat-select multiple formControlName="bookTypes">
+                        <!-- Clear All Button Start -->
+                           <div style="display: flex; justify-content: space-evenly;">
+                            <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('bookTypes')">Clear All</button>
+                        </div>
+                        <!-- Clear All Button End -->
+                        
+                        <mat-select-trigger>
+                            {{ filterForm.get('bookTypes').value.length + ' options selected' }}
+                        </mat-select-trigger>
+                        
+                        <!-- Options Start -->
+                        <mat-option *ngFor="let bookType of bookTypeOptions" [value]="bookType" style="text-transform: capitalize">
+                            {{ bookType || 'None' }}
+                        </mat-option>
+                        <!-- Options End -->
+                    </mat-select>
+                </mat-form-field>
+                <!-- Type Of Book Filter End -->
+            </form>
         </ng-container>
-        <!-- TODO: Filter Menu End-->
-
-
+        <!-- Filter Menu End-->
 
         <!-- Book Table Data Start -->
         <ng-container *ngIf="!isLoading && currentBookDocumentFilter === 'Book'">
@@ -165,7 +228,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *cdkVirtualFor="let book of getSortedBookList()">
+                        <ng-container *cdkVirtualFor="let book of getFilteredSortedBookList()">
                             <tr *ngIf="book.show">
                                 <ng-container>
                                     <td *ngIf="columnFilter.showSerialNumber">{{ book.serialNumber }}.</td>
@@ -214,7 +277,6 @@
             </cdk-virtual-scroll-viewport>
         </ng-container>
         <!-- Book Table Data End -->
-
 
 </div>
 

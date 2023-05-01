@@ -3,7 +3,7 @@ import { ViewAllHtmlRenderer } from './view-all.html.renderer';
 import { DataStorage } from "@classes/data-storage";
 import { GenericService } from '@services/generic/generic-service';
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
-
+import { FormControl, FormGroup } from '@angular/forms';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -22,14 +22,12 @@ class ColumnFilter {
     showBackImage = false;
 }
 
-
 @Component({
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
     providers: [ GenericService ],
 })
-
 export class ViewAllComponent implements OnInit {
 
     user: any;
@@ -46,17 +44,30 @@ export class ViewAllComponent implements OnInit {
     serviceAdapter: ViewAllServiceAdapter;
     htmlRenderer: ViewAllHtmlRenderer;
 
-
     bookDocumentSelectList = ['Book', 'Documents'];
     currentBookDocumentFilter;
 
     bookFullProfileList = [];
-    displayBookNumber = 0;
+
+    displayBookNumber;
     searchBookName : string;
+
+    NONE_FILTER_SELECTION = '';
 
     sortBy = 'name';
     sortOrder = 1; // 1 => ASC, -1 => DESC
 
+    // Lists of all unique authors, publishers and bookTypes that can be selected when filtering
+    authorOptions = new Set();
+    publisherOptions = new Set();
+    bookTypeOptions = new Set();
+
+    // Filter menu form controls
+    filterForm = new FormGroup({
+        authors: new FormControl([]),
+        publishers: new FormControl([]),
+        bookTypes: new FormControl([]),
+    });
 
     constructor (
         public genericService: GenericService,
@@ -64,6 +75,7 @@ export class ViewAllComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
+
         this.columnFilter = new ColumnFilter();
         this.documentFilter = new ColumnFilter();
         this.currentBookDocumentFilter = this.bookDocumentSelectList[0];
@@ -75,9 +87,17 @@ export class ViewAllComponent implements OnInit {
         this.htmlRenderer = new ViewAllHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
 
+        this.filterForm.valueChanges.subscribe(value => {
+            this.filterBooks();
+        });
     }
+
     initializeBookList(bookFullProfileList): void {
-        this.bookFullProfileList = bookFullProfileList;
+        this.bookFullProfileList = bookFullProfileList.map(book => ({
+            ...book,
+            printedCost: book.printedCost !== null ? parseFloat(book.printedCost) : null
+        }));
+        this.displayBookNumber = this.bookFullProfileList.length;
         this.handleBookDisplay();
     }
 
@@ -89,6 +109,18 @@ export class ViewAllComponent implements OnInit {
         });
     }
 
+    selectAllColumns(): void {
+        Object.keys(this.columnFilter).forEach((key) => {
+            this.columnFilter[key] = true;
+        });
+    }
+    unSelectAllColumns(): void {
+        Object.keys(this.columnFilter).forEach((key) => {
+            this.columnFilter[key] = false;
+        });
+    }
+
+    /* -------------------------- Sorting logic starts -------------------------- */
     SortComparator = (book1, book2) => {
         let a = book1[this.sortBy];
         let b = book2[this.sortBy];
@@ -114,24 +146,44 @@ export class ViewAllComponent implements OnInit {
         this.sortBy = sortparam;
     }
 
-    getSortedBookList() : any {
+    getFilteredSortedBookList() : any {
         let list = [...this.bookFullProfileList];
+        list = list.filter(book => book.show);
         return list.sort(this.SortComparator).map((book, i) => ({
             ...book,
             serialNumber: i + 1
         }));
     }
-    selectAllColumns(): void {
-        Object.keys(this.columnFilter).forEach((key) => {
-            this.columnFilter[key] = true;
+    /* --------------------------- Sorting logic ends --------------------------- */
+    /* ------------------------- Filtering logic starts ------------------------- */
+
+    // If a filter is completely empty, consider it disabled and do not filter by it
+    filterBooks(): void {
+        let booksDisplayed = 0;
+        this.bookFullProfileList.forEach(book => {
+            const author = book.author || '';
+            const publisher = book.publisher || '';
+            const type = book.typeOfBook || '';
+
+            const disableAuthorsFilter = this.filterForm.get('authors').value.length === 0;
+            const disablePublishersFilter = this.filterForm.get('publishers').value.length === 0;
+            const disableBookTypesFilter = this.filterForm.get('bookTypes').value.length === 0;
+
+
+            const authorValid = disableAuthorsFilter ? true : this.filterForm.get('authors').value.includes(author.toLowerCase());
+            const publisherValid =  disablePublishersFilter ? true : this.filterForm.get('publishers').value.includes(publisher.toLowerCase());
+            const bookTypeValid = disableBookTypesFilter ? true : this.filterForm.get('bookTypes').value.includes(type.toLowerCase());
+
+            book.show = (authorValid && publisherValid && bookTypeValid);
+            if (book.show) booksDisplayed++;
         });
-    }
-    unSelectAllColumns(): void {
-        Object.keys(this.columnFilter).forEach((key) => {
-            this.columnFilter[key] = false;
-        });
+        this.displayBookNumber = booksDisplayed;
     }
 
+    unSelectAllOptions(filter): void {
+        this.filterForm.get(filter).setValue([]);
+    }
+    /* -------------------------- Filtering logic ends -------------------------- */
     printBookList(): void {
         alert("Under construction");
     }
