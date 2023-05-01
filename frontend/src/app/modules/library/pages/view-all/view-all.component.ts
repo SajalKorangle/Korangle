@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ViewAllHtmlRenderer } from './view-all.html.renderer';
 import { DataStorage } from "@classes/data-storage";
 import { GenericService } from '@services/generic/generic-service';
+import { PrintService } from 'app/print/print-service';
+import { PRINT_BOOK_LIST } from 'app/print/print-routes.constants';
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import { FormControl, FormGroup } from '@angular/forms';
 
@@ -71,6 +73,7 @@ export class ViewAllComponent implements OnInit {
 
     constructor (
         public genericService: GenericService,
+        public printService: PrintService,
     ) { }
 
     ngOnInit(): void {
@@ -184,8 +187,13 @@ export class ViewAllComponent implements OnInit {
         this.filterForm.get(filter).setValue([]);
     }
     /* -------------------------- Filtering logic ends -------------------------- */
+
     printBookList(): void {
-        alert("Under construction");
+        const value = {
+            bookList: this.bookFullProfileList.filter(book => book.show),
+            columnFilter: this.columnFilter,
+        };
+        this.printService.navigateToPrintRoute(PRINT_BOOK_LIST, { user: this.user, value });
     }
     downloadList(): void {
         alert("Under construction");
