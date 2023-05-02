@@ -50,7 +50,10 @@ export class DesignTCServiceAdapter {
                     end: 1,
                 },
             }), // 1
-            this.vm.genericService.getObjectList({student_app: 'Student'}, {filter: request_student_parameter_data}), // 2
+            this.vm.studentService
+            .getObjectList(this.vm.studentService.student_parameter, {
+                parentSchool: this.vm.user.activeSchool.dbId,
+            }), // 2
             this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 3
             this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 4
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), // 5
