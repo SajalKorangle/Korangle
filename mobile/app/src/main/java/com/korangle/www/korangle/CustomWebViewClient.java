@@ -89,6 +89,7 @@ public class CustomWebViewClient extends WebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView wv, String url) {
+        System.out.print(url);
         if(url.startsWith(mainActivity.TEL_PREFIX)) {
             Intent intent = new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse(url));
@@ -96,9 +97,13 @@ public class CustomWebViewClient extends WebViewClient {
             return true;
         }
         if(url.startsWith(mainActivity.UPI_PREFIX)) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             intent.setData(Uri.parse(url));
-            mainActivity.startActivity(intent);
+            if(intent.resolveActivity(mainActivity.getPackageManager())!=null){
+                mainActivity.startActivity(intent);
+            }else{
+                Log.d("Debug", "Oooops");
+            }
             return true;
         }
         if ( url.contains(".pdf")){
