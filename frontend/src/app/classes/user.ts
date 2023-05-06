@@ -42,6 +42,7 @@ export class User {
         ],
     };
 
+    newRoute: any = null;
     // initializeRouterCallback: (value: any) => void | null = null;
 
     settings = {
@@ -284,6 +285,9 @@ export class User {
                 return;
             queryParams[key] = value;
         });
+        if (EmitterService.get('initialize-router').observers.length === 0) {
+            this.newRoute = {queryParams};
+        }
         EmitterService.get('initialize-router').emit({ queryParams: queryParams });
     }
 
