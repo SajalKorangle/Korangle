@@ -239,18 +239,14 @@ export class ViewAllComponent implements OnInit {
 
     printBookList(): void {
         const value = {
-            bookList: this.bookFullProfileList.filter(book => book.show),
+            bookList: this.getFilteredSortedBookList(),
             columnFilter: this.columnFilter,
         };
         this.printService.navigateToPrintRoute(PRINT_BOOK_LIST, { user: this.user, value });
     }
     downloadList(): void {
         let template = [this.getHeaderValues()];
-        this.bookFullProfileList.forEach((book) => {
-            if (book.show) {
-                template.push(this.getBookDisplayInfo(book));
-            }
-        });
+        this.getFilteredSortedBookList().forEach(book => template.push(this.getBookDisplayInfo(book)));
         this.excelService.downloadFile(template, 'korangle_books.csv');
     }
 
