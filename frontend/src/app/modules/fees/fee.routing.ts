@@ -91,6 +91,12 @@ const routes: Routes = [
     },
 
     {
+        path: 'add_receipt_book',
+        loadChildren: 'app/modules/fees/pages/add-receipt-book/add-receipt-book.module#AddReceiptBookModule',
+        data: { moduleName: 'fees' },
+    },
+
+    {
         path: 'lock_fees',
         loadChildren: 'app/modules/fees/pages/settings/settings.module#SettingsModule',
         data: { moduleName: 'fees' },

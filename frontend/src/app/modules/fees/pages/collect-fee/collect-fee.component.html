@@ -398,8 +398,20 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="row" *ngIf="selectedFeeReceiptBook">
+                <div class="col-sm-3">
+                    <mat-form-field style="margin-top: 22px;">
+                        <mat-select placeholder="Select Fee Receipt Book" [(ngModel)]="selectedFeeReceiptBook">
+                            <mat-option *ngFor='let feeReceiptBook of htmlRenderer.getActiveFeeReceiptBookList();' [value]="feeReceiptBook">
+                                {{feeReceiptBook.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
 
-            <div class="row">
+            <div class="row" *ngIf="selectedFeeReceiptBook">
                 <div class="col-sm-6">
                     <button class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                         [title]="isGenerateReceiptDisabled() ? 'Fill all the required Fields' : ''" [disabled]="isGenerateReceiptDisabled()"
@@ -408,6 +420,13 @@
                     </button>
                 </div>
             </div>
+
+            <div class="row" *ngIf="!selectedFeeReceiptBook">
+                <div class="col-sm-12">
+                    Please activate at least one receipt book from 'Add Receipt Book' page!!!
+                </div>
+            </div>
+
         </ng-container>
 
         <ng-container *ngIf="getOverallFeesDue(false) == 0">
@@ -435,7 +454,8 @@
                 <app-fee-receipt-list [user]="user" [receiptColumnFilter]="receiptColumnFilter" [feeTypeList]="feeTypeList" [feeReceiptList]="feeReceiptList"
                     [subFeeReceiptList]="subFeeReceiptList" [studentList]="selectedStudentList" [studentSectionList]="selectedStudentSectionList"
                     [employeeList]="employeeList" [classList]="classList" [number]="3" (receiptCancelled)="serviceAdapter.getStudentFeeProfile()"
-                    [sectionList]="sectionList" [sessionList]="sessionList" [boardList]="boardList" [printSingleReceipt]="printSingleReceipt">
+                    [sectionList]="sectionList" [sessionList]="sessionList" [boardList]="boardList" [printSingleReceipt]="printSingleReceipt"
+                    [feeReceiptBookList]="feeReceiptBookList">
                 </app-fee-receipt-list>
             </mat-expansion-panel>
 

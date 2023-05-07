@@ -28,12 +28,14 @@ export class MyCollectionServiceAdapter {
             this.vm.employeeService.getObject(this.vm.employeeService.employees, employee_data),
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: { parentSchoool: this.vm.user.activeSchool.dbId}}),
         ]).then(
             (value) => {
                 this.vm.feeTypeList = value[0];
                 this.vm.employeeList = [value[1]];
                 this.vm.classList = value[2];
                 this.vm.sectionList = value[3];
+                this.vm.feeReceiptBookList = value[4];
 
                 this.vm.isInitialLoading = false;
             },
@@ -67,7 +69,7 @@ export class MyCollectionServiceAdapter {
         ]).then(
             (value) => {
                 this.vm.feeReceiptList = value[0].sort((a, b) => {
-                    return b.receiptNumber - a.receiptNumber;
+                    return (new Date(b.generationDateTime).getTime()) - (new Date(a.generationDateTime).getTime());
                 });
                 this.vm.subFeeReceiptList = value[1];
 

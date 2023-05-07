@@ -296,7 +296,24 @@ class StudentFee(models.Model):
         unique_together = ('parentSchoolFeeRule', 'parentStudent')
 
 
+class FeeReceiptBook(models.Model):
+
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, related_name='feeReceiptBookList')
+    name = models.TextField()
+    receiptNumberPrefix = models.TextField(blank=True, default='')
+    active = models.BooleanField(default=True) # whether to use in collect fees while generating receipt
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
+
+    class Meta:
+        db_table = 'fee_receipt_book'
+        unique_together=('parentSchool', 'name')
+
 class FeeReceipt(models.Model):
+
+    parentFeeReceiptBook = models.ForeignKey(FeeReceiptBook, on_delete=models.CASCADE, null=True, related_name='feeReceiptList')
 
     # Blank=True is needed because now this field is not coming from frontend and is not present in the data during save.
     # Receipt number is calculated in the signal.
@@ -329,12 +346,12 @@ class FeeReceipt(models.Model):
     parentTransaction = models.ForeignKey(Transaction, null=True, on_delete=models.SET_NULL, related_name='feeReceiptList')
 
     class Permissions(BasePermission):
-        RelationsToSchool = ['parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
+        RelationsToSchool = ['parentSchool__id', 'parentFeeReceiptBook__parentSchool__id', 'parentStudent__parentSchool__id', 'parentEmployee__parentSchool__id']
         RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'fee_receipt_new'
-        unique_together = ('receiptNumber', 'parentSchool')
+        unique_together = ('receiptNumber', 'parentFeeReceiptBook')
 
     # Transaction atomic ensures that two parallel saves is not happening which can lead to same receipt number
     # which is calculated in the pre save signal.
@@ -350,7 +367,7 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
     if not instance.id:  # before Fee Receipt creation
 
         ## Getting Receipt Number Starts ##
-        last_receipt_number = FeeReceipt.objects.filter(parentSchool=instance.parentSchool)\
+        last_receipt_number = FeeReceipt.objects.filter(parentFeeReceiptBook=instance.parentFeeReceiptBook)\
             .aggregate(Max('receiptNumber'))['receiptNumber__max']
         instance.receiptNumber = (last_receipt_number or 0) + 1
         ## Getting Receipt Number Ends ##
