@@ -23,7 +23,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let feeReceipt of feeReceiptList | slice: 0:number">
-                <td *ngIf="receiptColumnFilter.receiptNumber">{{ feeReceipt.receiptNumber }}</td>
+                <td *ngIf="receiptColumnFilter.receiptNumber">{{ getFeeReceiptNo(feeReceipt) }}</td>
                 <td *ngIf="receiptColumnFilter.nameClass" align="center">
                     <ng-container *ngIf="!feeReceipt.parentStudent">Deleted Student</ng-container>
                     <ng-container *ngIf="feeReceipt.parentStudent">

@@ -62,6 +62,9 @@ export class PayFeesComponent implements OnInit {
     subDiscountList: SubDiscount[];
     busStopList = [];
     employeeList = [];
+    feeReceiptBookList = [];
+
+    selectedFeeReceiptBook: any;
 
     // Fee Payment
     email: string = '';

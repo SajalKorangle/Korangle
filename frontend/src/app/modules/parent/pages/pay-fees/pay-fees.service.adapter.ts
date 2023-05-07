@@ -71,6 +71,7 @@ export class PayFeesServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),   // 12
             this.vm.paymentService.getObject(this.vm.paymentService.school_merchant_account, {parentSchool: schoolId}), // 13
             this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptOrder'}, {filter: {parentSchool: schoolId}}), // 14
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: schoolId}}), // 15
         ]).then(
             (value) => {
 
@@ -92,6 +93,8 @@ export class PayFeesServiceAdapter {
                 this.vm.sessionList = value[11];
                 this.vm.boardList = value[12];
                 this.vm.paymentTransactionList = value[14];
+                this.vm.feeReceiptBookList = value[15];
+                this.vm.selectedFeeReceiptBook = this.vm.feeReceiptBookList.find(feeReceiptBook => feeReceiptBook.active);
                 this.vm.handleStudentFeeProfile();
             }
         );
@@ -113,7 +116,7 @@ export class PayFeesServiceAdapter {
 
     populateFeeReceiptList(feeReceiptList: any): void {
         this.vm.feeReceiptList = feeReceiptList.sort((a, b) => {
-            return b.receiptNumber - a.receiptNumber;
+            return (new Date(b.generationDateTime).getTime()) - (new Date(a.generationDateTime).getTime());
         });
     }
 

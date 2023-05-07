@@ -24,6 +24,7 @@ export class FeeReceiptListComponent implements OnInit {
     @Input() classList;
     @Input() sectionList;
     @Input() employeeList;
+    @Input() feeReceiptBookList;
     @Input() receiptColumnFilter;
     @Input() number;
     @Input() boardList;
@@ -193,4 +194,11 @@ export class FeeReceiptListComponent implements OnInit {
             }
         });
     }
+
+    getFeeReceiptNo(feeReceipt: any): any {
+        return this.feeReceiptBookList.find(feeReceiptBook => {
+            return feeReceiptBook.id == feeReceipt.parentFeeReceiptBook;
+        }).receiptNumberPrefix + feeReceipt.receiptNumber;
+    }
+
 }
