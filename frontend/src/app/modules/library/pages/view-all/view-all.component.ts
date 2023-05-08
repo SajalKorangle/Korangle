@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ViewAllHtmlRenderer } from './view-all.html.renderer';
 import { DataStorage } from "@classes/data-storage";
 import { GenericService } from '@services/generic/generic-service';
@@ -81,6 +81,7 @@ export class ViewAllComponent implements OnInit {
         public genericService: GenericService,
         public excelService: ExcelService,
         public printService: PrintService,
+        private cdRef: ChangeDetectorRef,
     ) { }
 
     ngOnInit(): void {
@@ -99,6 +100,7 @@ export class ViewAllComponent implements OnInit {
 
         this.filterForm.valueChanges.subscribe(value => {
             this.filterBooks();
+            this.cdRef.detectChanges()
         });
     }
 
