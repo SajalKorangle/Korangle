@@ -100,7 +100,7 @@ export class ViewAllComponent implements OnInit {
 
         this.filterForm.valueChanges.subscribe(value => {
             this.filterBooks();
-            this.cdRef.detectChanges()
+            this.cdRef.detectChanges();
         });
     }
 
