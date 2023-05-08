@@ -85,7 +85,7 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
                     this.router.createUrlTree([Constants.dashBoardRoute + '/' + this.user.section.route + '/' + this.user.section.subRoute],
                         { queryParams: this.user.newRoute.queryParams })
                 );
-            }).then(() => this.user.newRoute = null)
+            }).then(() => this.user.newRoute = null);
         }
         EmitterService.get('initialize-router').subscribe((value) => {
             // Navigating To '/' before any other route - because :
