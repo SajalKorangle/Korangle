@@ -106,7 +106,7 @@ export class AssignTaskComponent implements OnInit {
             });
         } else if (module.id === 8 && task.id === 26) {
             let parentEmployeePermission = this.currentPermissionList.find(currentPermission => {
-                return currentPermission.parentTask == 66;
+                return currentPermission.parentTask == 26;
             });
             this.dialog.open(ViewEnquiryPermissionModalComponent, {
                 data: {
