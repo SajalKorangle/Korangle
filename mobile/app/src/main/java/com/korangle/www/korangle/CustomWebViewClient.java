@@ -15,8 +15,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.shreyaspatil.EasyUpiPayment.EasyUpiPayment;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -101,24 +99,6 @@ public class CustomWebViewClient extends WebViewClient {
         }
         if(url.startsWith(mainActivity.UPI_PREFIX)) {
             Uri upi = Uri.parse(url);
-            Log.d("debug", url);
-//            final EasyUpiPayment easyUpiPayment = new EasyUpiPayment.Builder()
-//                    .with(mainActivity)
-//                    // on below line we are adding upi id.
-//                    .setPayeeVpa(upi.getQueryParameter("pa"))
-//                    // on below line we are setting name to which we are making payment.
-//                    .setPayeeName(upi.getQueryParameter("pn"))
-//                    // on below line we are passing transaction id.
-//                    .setTransactionRefId(upi.getQueryParameter("tr"))
-//                    .setTransactionId(upi.getQueryParameter("tr"))
-//                    // on below line we are passing transaction ref id.
-//                    .setPayeeMerchantCode(upi.getQueryParameter("mc"))
-//                    .setAmount(upi.getQueryParameter("am"))
-//                    .setDescription(upi.getQueryParameter("refUrl"))
-//                    .build();
-//            // on below line we are calling a start
-//            // payment method to start a payment.
-//            easyUpiPayment.startPayment();
             Intent upiPayIntent = new Intent(Intent.ACTION_VIEW);
             upiPayIntent.setData(upi);
 
