@@ -195,6 +195,7 @@ export class ViewAllComponent implements OnInit {
 
             if (book.show) booksDisplayed++;
         });
+        this.bookFullProfileList = Object.assign([], this.bookFullProfileList);
         this.displayBookNumber = booksDisplayed;
     }
 
