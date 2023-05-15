@@ -162,7 +162,7 @@ export class AddStudentServiceAdapter {
         let actionString = " admitted " + this.vm.newStudent.name;
 
         this.vm.studentService.createObject(this.vm.studentService.student, student_form_data).then(
-            (value) => {
+            async (value) => {
                 this.vm.newStudentSection.parentStudent = value.id;
                 this.vm.isLoading = true;
 
@@ -193,11 +193,13 @@ export class AddStudentServiceAdapter {
                         form_data_list.push(form_data);
                     }
                 });
-                Promise.all([
-                    this.vm.studentService.createObject(this.vm.studentService.student_section, this.vm.newStudentSection),
+                await Promise.all([
                     form_data_list.forEach((x) => {
                         this.vm.studentService.createObject(this.vm.studentService.student_parameter_value, x);
                     }),
+                ]);
+                Promise.all([
+                    this.vm.studentService.createObject(this.vm.studentService.student_section, this.vm.newStudentSection),
                 ]).then(
                     (valueTwo) => {
                         alert('Student admitted successfully');
