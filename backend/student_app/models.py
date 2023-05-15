@@ -249,7 +249,7 @@ def create_subjects_tests_fees(sender, instance, created, **kwargs):
                         student_filtered = False
                         break
                     # Student Value exist but is not in custom filter value list
-                    if student_parameter_value[0].value not in custom_filter_fee_object.selectedFilterValues.split(','):
+                    if student_parameter_value[0].value not in custom_filter_fee_object.selectedFilterValues:
                         student_filtered = False
                         break
                 if student_filtered == False:
