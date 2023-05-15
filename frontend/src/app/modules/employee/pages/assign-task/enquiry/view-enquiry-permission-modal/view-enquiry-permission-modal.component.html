@@ -1,0 +1,61 @@
+<!-- START: path display at top of modal -->
+<h2 *ngIf="!isMobile else MobileHeader" mat-dialog-title
+    style="display: flex; flex-direction: row; align-items: center;">
+    <span>In Page Permission:</span>
+    <mat-icon style="margin-left: 24px; margin-right: 8px;">{{data.module.icon}}</mat-icon>
+    <span>{{data.module.title}}</span>
+    <mat-icon>arrow_forward_ios</mat-icon> <span>{{data.task.title}}</span>
+</h2>
+<ng-template #MobileHeader>
+    <h4 mat-dialog-title>
+        <span>In Page Permission:</span><br />
+        <div style="display: flex; flex-direction: row; align-items: center;">
+            <mat-icon style="margin-right: 8px;">{{data.module.icon}}</mat-icon>
+            <span>{{data.module.title}}</span>
+            <mat-icon>arrow_forward_ios</mat-icon> <span>{{data.task.title}}</span>
+        </div>
+    </h4>
+</ng-template>
+<!-- END: path display at top of modal  -->
+
+<!-- Starts: Employee Name -->
+<ng-container>
+    <h4>Employee: {{employee.name}}</h4>
+</ng-container>
+<!-- Ends: Employee Name -->
+
+<hr style="background-color: black;" />
+
+<!-- START: Permissions Section -->
+<ng-container *ngIf="!isLoading">
+    
+    <!-- START: userType Selection  -->
+    <div>     
+        <mat-form-field style="margin: 1rem;">
+            <mat-label> {{ employeeInPagePermissions.userType }} </mat-label>
+            <mat-select [(ngModel)]="employeeInPagePermissions.userType" placeholder="Select a Role" >
+                <mat-option *ngFor="let option of userTypeOptionList" [value]="option.value">
+                    {{option.displayName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <!-- END: userType Selection  -->
+    
+</ng-container>
+<!-- END: Permissions Section -->
+
+<!-- START: Loader -->
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- END: Loader -->
+
+<!-- START: Apply button to save the changes -->
+<div mat-dialog-actions style="color: white">
+    <button mat-button (click)="serviceAdapter.apply()" class="btn" style="background-color: blue; margin-left: auto; margin-bottom: 1rem;"
+        cdkFocusInitial>Apply</button>
+</div>
+<!-- END: Apply button to save the changes  -->
+
+
