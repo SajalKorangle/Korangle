@@ -29,8 +29,11 @@
                                 <!-- Class Filter -->
                                 <div class="col-md-6" *ngIf="schoolFeeRule.isClassFilter">
                                     Classes :-<br />
+                                    <ng-container *ngIf="schoolFeeRule.classfilterfee.length == 0">
+                                        This is a dummy group as no class is selected so no student will be automatically attached.
+                                    </ng-container>
                                     <ng-container
-                                        *ngFor="let classFilterFee of getClassFilterFeeListBySchoolFeeRule(schoolFeeRule); let i = index"
+                                        *ngFor="let classFilterFee of schoolFeeRule.classfilterfee; let i = index"
                                     >
                                         {{ i + 1 }}. {{ getClassName(classFilterFee.parentClass) }},
                                         {{ getSectionName(classFilterFee.parentDivision) }}<br />
@@ -41,13 +44,40 @@
                                 <!-- Bus Stop Filter -->
                                 <div class="col-md-6" *ngIf="schoolFeeRule.isBusStopFilter">
                                     Bus Stops :-<br />
+                                    <ng-container *ngIf="schoolFeeRule.busstopfilterfee.length == 0">
+                                        This is a dummy group as no bus stop is selected so no student will be automatically attached.
+                                    </ng-container>
                                     <ng-container
                                         *ngFor="
-                                            let busStopFilterFee of getBusStopFilterFeeListBySchoolFeeRule(schoolFeeRule);
+                                            let busStopFilterFee of schoolFeeRule.busstopfilterfee;
                                             let i = index
                                         "
                                     >
                                         {{ i + 1 }}. {{ getBusStopName(busStopFilterFee.parentBusStop) }}<br />
+                                    </ng-container>
+                                    <br />
+                                </div>
+
+                                <!-- Custom Filter -->
+                                <div class="col-md-6" *ngIf="schoolFeeRule.customfilterfee.length > 0">
+                                    Custom Filters :-
+                                    <br/>
+                                    <ng-container
+                                        *ngFor="
+                                            let customFilterFee of schoolFeeRule.customfilterfee;
+                                            let i = index
+                                        "
+                                    >
+                                        {{ i + 1 }}. {{ getStudentParameterName(customFilterFee.parentStudentParameter) }}<br />
+                                        <ul class="custom-filter-values"
+                                            *ngFor="
+                                                let value of customFilterFee.selectedFilterValues;
+                                            "
+                                        >
+                                            <li>
+                                                {{ value }}
+                                            </li>
+                                        </ul>
                                     </ng-container>
                                     <br />
                                 </div>
@@ -67,7 +97,9 @@
                             </ng-container>
 
                             <!-- No. of students -->
-                            {{ getStudentFeeListBySchoolFeeRule(schoolFeeRule).length }} students attached with this rule.<br /><br />
+                            <span style="cursor: pointer" (click)="openShowStudentListDialog(getStudentListBySchoolFeeRule(schoolFeeRule))">
+                                {{ getStudentListBySchoolFeeRule(schoolFeeRule).length }} students attached with this rule.<br /><br />
+                            </span>
 
                             <!-- Installment Payment -->
                             <ng-container *ngIf="!schoolFeeRule.isAnnually && getSchoolFeeRuleTotalAmount(schoolFeeRule) > 0">
@@ -92,29 +124,12 @@
                                                 <td>{{ installment | titlecase }}</td>
                                                 <td>
                                                     {{ schoolFeeRule[installment + 'Amount'] }}
-                                                    <!-- input type="number"
-                                                       [ngModel]="schoolFeeRule[installment+'Amount']"
-                                                       (ngModelChange)="handleNewSchoolFeeRuleAmountChange(schoolFeeRule, installment, $event);"/ -->
                                                 </td>
                                                 <td>
                                                     {{ schoolFeeRule[installment + 'LastDate'] | date: 'dd - MMM - yyyy' }}
-                                                    <!-- day-date-old *ngIf="!disableSchoolFeeRuleMonthLastDate(schoolFeeRule, installment)"
-                                                          [initialValue]="schoolFeeRule[installment+'LastDate']"
-                                                          [acceptNull]="true"
-                                                          [formattedDateOutput]="true"
-                                                          (onDateSelected)="schoolFeeRule[installment+'LastDate']=$event">
-                                                </day-date-old>
-                                                <day-date-old *ngIf="disableSchoolFeeRuleMonthLastDate(schoolFeeRule, installment)"
-                                                          [acceptNull]="true"
-                                                          [initialValue]="null"
-                                                          [disableDatePicker]="true">
-                                                </day-date-old -->
                                                 </td>
                                                 <td>
                                                     {{ schoolFeeRule[installment + 'LateFee'] }}
-                                                    <!-- input type="number"
-                                                       [disabled]="disableSchoolFeeRuleMonthLateFee(schoolFeeRule, installment)"
-                                                       [(ngModel)]="schoolFeeRule[installment+'LateFee']"/ -->
                                                 </td>
                                                 <td>
                                                     {{ schoolFeeRule[installment + 'MaximumLateFee'] }}
@@ -140,29 +155,12 @@
                                         <tr>
                                             <td>
                                                 {{ schoolFeeRule['aprilAmount'] }}
-                                                <!-- input type="number"
-                                                   [ngModel]="schoolFeeRule['aprilAmount']"
-                                                   (ngModelChange)="handleNewSchoolFeeRuleAmountChange(schoolFeeRule, 'april', $event);"/ -->
                                             </td>
                                             <td>
                                                 {{ schoolFeeRule['aprilLastDate'] | date: 'dd - MMM - yyyy' }}
-                                                <!-- day-date-old *ngIf="!disableSchoolFeeRuleMonthLastDate(schoolFeeRule, 'april')"
-                                                      [initialValue]="schoolFeeRule['aprilLastDate']"
-                                                      [acceptNull]="true"
-                                                      [formattedDateOutput]="true"
-                                                      (onDateSelected)="schoolFeeRule['aprilLastDate']=$event">
-                                            </day-date-old>
-                                            <day-date-old *ngIf="disableSchoolFeeRuleMonthLastDate(schoolFeeRule, 'april')"
-                                                      [acceptNull]="true"
-                                                      [initialValue]="null"
-                                                      [disableDatePicker]="true">
-                                            </day-date-old -->
                                             </td>
                                             <td>
                                                 {{ schoolFeeRule['aprilLateFee'] }}
-                                                <!-- input type="number"
-                                                   [disabled]="disableSchoolFeeRuleMonthLateFee(schoolFeeRule, 'april')"
-                                                   [(ngModel)]="schoolFeeRule.aprilLateFee"/ -->
                                             </td>
                                             <td>
                                                 {{ schoolFeeRule['aprilMaximumLateFee'] }}
@@ -194,9 +192,6 @@
                                     getSubDiscountListBySchoolFeeRule(schoolFeeRule).length == 0
                                 "
                             >
-                                <!-- button type="submit"
-                                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
-                                        (click)="serviceAdapter.updateSchoolFeeRule(schoolFeeRule)">Update</button -->
                                 <button
                                     type="submit"
                                     *ngIf="!lockFees"
@@ -360,9 +355,20 @@
                         </div>
                     </div>
 
+                    <!-- Starts :- Custom Filter -->
+                    <ng-container *ngFor="let customParameter of newCustomFilterFeeList; let i = index">
+                        {{ i + 1 }}. {{ customParameter.name }}<br/>
+                        <ng-container *ngFor="let filterValue of customParameter.filterValues">
+                            <mat-checkbox [(ngModel)]="filterValue.selected" style="margin-right: 5px">{{filterValue.value}}</mat-checkbox>
+                        </ng-container><br/>
+                    </ng-container>
+                    <!-- Ends :- Custom Filter -->
+
                     <!-- Expected no. of students attached to this rule. -->
                     <div class="row">
-                        <div class="col-md-12">Expected no. of students attached to this rule: {{ getExpectedStudentList().length }}</div>
+                        <div class="col-md-12" style="cursor: pointer" (click)="openShowStudentListDialog(getExpectedStudentList())">
+                            Expected no. of students attached to this rule: {{ getExpectedStudentList().length }}
+                        </div>
                     </div>
 
                     <!-- Payment Type -->

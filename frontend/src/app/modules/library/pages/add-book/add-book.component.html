@@ -1,3 +1,315 @@
 <div class="card-content">
-    Under Construction !!!
+    <ng-container *ngIf="!isLoading">
+        <!-- Top half -->
+        <div class="row">
+            <!-- Front cover img - if mobile-->
+            <div class="col-md-3 visible-sm visible-xs" align="center">
+                <img *ngIf="this.frontImage" src="{{ this.frontImage }}" style="width: 50%" />
+
+                <img
+                    *ngIf="!this.frontImage"
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                    style="width: 50%"
+                />
+
+                <br />
+
+                <input type="file" (change)="onImageSelect($event, 'front')" multiple="false" style="display: none" accept="image/*" #imageInputFront />
+
+                <!-- Front image controls - mobile -->
+                <div class="d-flex align-items-stretch">
+                    <a (click)="imageInputFront.click()" style="cursor: pointer"
+                    matTooltip="Accepted image types are jpg, jpeg, and png">Upload front image</a>
+
+                    <a *ngIf="this.frontImage"
+                    style="cursor: pointer;" (click)="this.frontImage=''; imageInputFront.value='';"
+                    ><mat-icon >delete_forever</mat-icon></a>
+                </div>
+            </div>
+
+            <!-- Top half form fields -->
+            <div class="col-md-9">
+                <!-- Top half form fields - row 1 -->
+                <div class="row">
+                    <!-- Book name -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Book name</mat-label>
+                            <input
+                            #bookNameField="ngModel"
+                            [(ngModel)]="newBook.name"
+                            matInput name="name" type="text"
+                            required
+                            pattern=".*\S+.*"
+                            >
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Author -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Author</mat-label>
+                            <input
+                            [(ngModel)]="newBook.author"
+                            matInput name="author" type="text">
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Publisher -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Publisher</mat-label>
+                            <input
+                            [(ngModel)]="newBook.publisher"
+                            matInput name="publisher" type="text">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Top half form fields - row 2 -->
+                <div class="row">
+                    <!-- Date of purchase -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Date of purchase</mat-label>
+                            <input
+                            [(ngModel)]="newBook.dateOfPurchase"
+                            matInput name="dateOfPurchase" type="date">
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Book No. -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Book No.</mat-label>
+                            <input
+                            #bookNumberField="ngModel"
+                            [(ngModel)]="newBook.bookNumber"
+                            matInput name="bookNumber" type="number"
+                            min="0"
+                            pattern="^\d{0,10}$"
+                            required>
+                            <mat-error *ngIf="bookNumberField.invalid && (bookNumberField.dirty || bookNumberField.touched) && bookNumberField.value < 1">
+                                Book No. cannot be negative
+                            </mat-error>
+                            <mat-error *ngIf="bookNumberField.invalid && (bookNumberField.dirty || bookNumberField.touched) && bookNumberField.value >= 1 && bookNumberField.value < 10000000000">
+                                Book No. must be a whole number
+                            </mat-error>
+                            <mat-error *ngIf="bookNumberField.invalid && (bookNumberField.dirty || bookNumberField.touched) && bookNumberField.value >= 10000000000">
+                                Book No. must have 10 digits or less
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+
+                    <!-- Edition -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Edition</mat-label>
+                            <input
+                            [(ngModel)]="newBook.edition"
+                            matInput name="edition" type="text">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Front cover img - if desktop -->
+            <div class="col-md-3 visible-md visible-lg visible-xl" align="center">
+                <img *ngIf="this.frontImage" src="{{ this.frontImage }}" style="width: 50%" />
+
+                <img
+                    *ngIf="!this.frontImage"
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                    style="width: 50%"
+                />
+
+                <br />
+
+                <input
+                    type="file"
+                    (change)="onImageSelect($event, 'front')"
+                    multiple="false"
+                    style="display: none"
+                    accept="image/*"
+                    #imageInputFrontTwo
+                />
+
+                <!-- Front image controls -->
+                <div class="d-flex align-items-stretch">
+                    <a (click)="imageInputFrontTwo.click()" style="cursor: pointer" matTooltip="Accepted image types are jpg, jpeg, and png">Upload front image</a>
+
+                    <a *ngIf="this.frontImage"
+                    style="cursor: pointer;" (click)="this.frontImage=''; imageInputFrontTwo.value='';"
+                    ><mat-icon >delete_forever</mat-icon></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom half -->
+        <div class="row">
+            <!-- Back cover img - if mobile-->
+            <div class="col-md-3 visible-sm visible-xs" align="center">
+                <img *ngIf="this.backImage" src="{{ this.backImage }}" style="width: 50%" />
+
+                <img
+                    *ngIf="!this.backImage"
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                    style="width: 50%"
+                />
+
+                <br />
+
+                <input type="file" (change)="onImageSelect($event, 'back')" multiple="false" style="display: none" accept="image/*" #imageInputBack />
+
+                <!-- Back image controls - mobile -->
+                <div class="d-flex align-items-stretch">
+                    <a (click)="imageInputBack.click()" style="cursor: pointer" matTooltip="Accepted image types are jpg, jpeg, and png">Upload back image</a>
+
+                    <a *ngIf="this.backImage"
+                    style="cursor: pointer;" (click)="this.backImage=''; imageInputBack.value='';"
+                    ><mat-icon >delete_forever</mat-icon></a>
+                </div>
+            </div>
+
+            <!-- Bottom half form fields -->
+            <div class="col-md-9">
+                <!-- Bottom half form fields - row 1 -->
+                <div class="row">
+                    <!-- NO. of pages-->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>No. of pages</mat-label>
+                            <input
+                            #pagesField="ngModel"
+                            [(ngModel)]="newBook.numberOfPages"
+                            matInput name="numberOfPages" type="number"
+                            min="1"
+                            pattern="^\d{0,10}$"
+                            >
+                            <mat-error *ngIf="pagesField.invalid && (pagesField.dirty || pagesField.touched) && pagesField.value < 1">
+                                No. of pages cannot be less than 1
+                            </mat-error>
+                            <mat-error *ngIf="pagesField.invalid && (pagesField.dirty || pagesField.touched) && pagesField.value >= 1 && pagesField.value < 10000000000">
+                                No. of pages must be a whole number
+                            </mat-error>
+                            <mat-error *ngIf="pagesField.invalid && (pagesField.dirty || pagesField.touched) && pagesField.value >= 1 && pagesField.value >= 10000000000">
+                                No. of pages must have 10 digits or less
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Printed cost -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Printed cost</mat-label>
+                            <input
+                            #printedCostField="ngModel"
+                            [(ngModel)]="newBook.printedCost"
+                            matInput name="printedCost" type="number"
+                            min="0"
+                            max="1000000"
+                            pattern="^\d{0,6}(?:\.\d+)?$"
+                            >
+                            <mat-error *ngIf="printedCostField.invalid && (printedCostField.dirty || printedCostField.touched) && printedCostField.value < 0">
+                                Printed cost cannot be negative
+                            </mat-error>
+
+                            <mat-error *ngIf="printedCostField.invalid && (printedCostField.dirty || printedCostField.touched) && printedCostField.value >= 0 && printedCostField.value >= 1000000">
+                                Printed cost must be less than 10,00,000
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Cover type -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Cover type</mat-label>
+                            <input
+                            [(ngModel)]="newBook.coverType"
+                            matInput name="coverType" type="text">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Bottom half form fields - row 2 -->
+                <div class="row">
+                    <!-- Type of book-->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Type of book</mat-label>
+                            <input
+                            [(ngModel)]="newBook.typeOfBook"
+                            matInput name="typeOfBook" type="text">
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-label>Location</mat-label>
+                            <input
+                            [(ngModel)]="newBook.location"
+                            matInput name="location" type="text">
+                        </mat-form-field>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Back cover img - if desktop -->
+            <div class="col-md-3 visible-md visible-lg visible-xl" align="center">
+                <img *ngIf="this.backImage" src="{{ this.backImage }}" style="width: 50%" />
+
+                <img
+                    *ngIf="!this.backImage"
+                    src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                    style="width: 50%"
+                />
+
+                <br />
+
+                <input
+                    type="file"
+                    (change)="onImageSelect($event,  'back')"
+                    multiple="false"
+                    style="display: none"
+                    accept="image/*"
+                    #imageInputBackTwo
+                />
+
+                <!-- Back image controls -->
+                <div class="d-flex align-items-stretch">
+                    <a (click)="imageInputBackTwo.click()" style="cursor: pointer" matTooltip="Accepted image types are jpg, jpeg, and png">Upload back image</a>
+
+                    <a *ngIf="this.backImage"
+                    style="cursor: pointer;"
+                    (click)="this.backImage=''; imageInputBackTwo.value='';"
+                    ><mat-icon >delete_forever</mat-icon></a>
+                </div>
+            </div>
+        </div>
+        <button
+            *ngIf="!isMobile()"
+            type="submit"
+            id="action-add-book"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            (click)="createNewBook()"
+        >
+        Add
+        </button>
+        <button
+            [ngClass]="'sticky mobileButton-' + user.activeSchool.secondaryThemeColor"
+            *ngIf="isMobile()"
+            mat-fab
+            color="primary"
+            (click)="createNewBook()"
+        >
+            <mat-icon>check</mat-icon>
+        </button>
+    </ng-container>
 </div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

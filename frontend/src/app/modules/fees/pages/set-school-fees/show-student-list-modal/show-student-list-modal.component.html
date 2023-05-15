@@ -1,0 +1,43 @@
+<mat-dialog-content class="show-student-list-modal-container">
+    <!-- Starts: Header -->
+    <div class="header">
+        <div class="title">List of students expected to be added in this group</div>
+        <div><i class="material-icons close-btn" (click)="closeClicked()">highlight_off</i></div>
+    </div>
+    <br />
+    <!-- Ends: Header -->
+
+    <div>
+        <div class="column-detail text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-bottom: 2rem;">
+            <div class="serial-number">
+                S No.
+            </div>
+            <div class="student-name">
+                Student Name
+            </div>
+            <div class="student-class">
+                Class
+            </div>
+            <div class="student-section">
+                Section
+            </div>
+        </div>
+
+        <ng-container *ngFor="let student of studentList; let i=index;">
+            <div class="column-detail" style="font-size: 12px;">
+                <div class="serial-number">
+                    {{i+1}}
+                </div>
+                <div class="student-name">
+                    {{ student.name }}
+                </div>
+                <div class="student-class">
+                    {{ getClassName(student.classDbId) }}
+                </div>
+                <div class="student-section">
+                    {{ getSectionName(student.sectionDbId) }}
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</mat-dialog-content>

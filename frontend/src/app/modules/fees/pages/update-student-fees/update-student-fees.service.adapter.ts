@@ -50,23 +50,44 @@ export class UpdateStudentFeesServiceAdapter {
 
         Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, request_fee_type_data),
-            this.vm.feeService.getObjectList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),
+            this.vm.genericService.getObjectList(
+                {fees_third_app: 'SchoolFeeRule'},
+                {
+                    filter: request_school_fee_rule_data,
+                    order_by: ['ruleNumber'],
+                    child_query: {
+                        customfilterfee: {
+                            order_by: ['parentStudentParameter_id']
+                        }
+                    }
+                }
+            ),
             this.vm.feeService.getObjectList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),
             this.vm.feeService.getObjectList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),
             this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt),
             this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
+            this.vm.genericService.getObjectList(
+                {student_app: 'StudentParameter'},
+                {filter: {parentSchool: schoolId, parameterType: 'FILTER'}}
+            ),
         ]).then(value => {
 
             this.vm.feeTypeList = value[0];
             this.vm.schoolFeeRuleList = value[1];
+            this.vm.schoolFeeRuleList.forEach(schoolFeeRule => {
+                schoolFeeRule.customfilterfee.forEach(item => {
+                    item.selectedFilterValues = JSON.parse(item.selectedFilterValues);
+                });
+            });
             this.vm.classFilterFeeList = value[2];
             this.vm.busStopFilterFeeList = value[3];
             this.vm.busStopList = value[4];
             if (value[5].length == 1) { this.vm.lockFees = value[5].sessionLocked; }
             this.vm.classList = value[6];
             this.vm.sectionList = value[7];
+            this.vm.studentParameterList = value[8];
 
             this.vm.isLoading = false;
         }, error => {
