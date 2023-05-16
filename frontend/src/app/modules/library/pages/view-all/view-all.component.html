@@ -227,7 +227,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <ng-container *cdkVirtualFor="let book of getFilteredSortedBookList()">
+                    <ng-container *cdkVirtualFor="let book of displayedBooks">
                         <tr *ngIf="book.show">
                             <ng-container>
                                 <td *ngIf="columnFilter.showSerialNumber">{{ book.serialNumber }}.</td>

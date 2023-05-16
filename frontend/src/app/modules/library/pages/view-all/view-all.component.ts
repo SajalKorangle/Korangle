@@ -77,7 +77,7 @@ export class ViewAllComponent implements OnInit {
         bookNameSearch: new FormControl(''),
     });
 
-    filteredBooks = [];
+    displayedBooks = [];
 
     constructor (
         public genericService: GenericService,
@@ -101,8 +101,13 @@ export class ViewAllComponent implements OnInit {
         this.htmlRenderer.initializeRenderer(this);
 
         this.filterForm.valueChanges.subscribe(value => {
-            this.filteredBooks = this.filterBooks();
+            this.displayedBooks = this.filterBooks()
+                .sort(this.SortComparator)
+                .map((book, i) => ({...book, serialNumber: i + 1}))
+
             this.cdRef.detectChanges();
+
+            console.log({displayedBooks: this.displayedBooks});
         });
     }
 
@@ -112,7 +117,7 @@ export class ViewAllComponent implements OnInit {
             printedCost: book.printedCost !== null ? parseFloat(book.printedCost) : null,
             show: true
         }));
-        this.filteredBooks = [...this.bookFullProfileList];
+        this.displayedBooks = [...this.bookFullProfileList];
         this.displayBookNumber = this.bookFullProfileList.length;
     }
 
@@ -153,10 +158,10 @@ export class ViewAllComponent implements OnInit {
         this.sortBy = sortparam;
     }
 
-    getFilteredSortedBookList() : any {
-        let list = [...this.filteredBooks];
-        list = list.sort(this.SortComparator);
-        return list.map((book, i) => ({...book, serialNumber: i + 1}));
+    sortBooks(books) : any {
+        books = books.sort(this.SortComparator)
+        books = books.map((book, i) => ({...book, serialNumber: i + 1}));
+        return books;
     }
     /* --------------------------- Sorting logic ends --------------------------- */
     /* ------------------------- Filtering logic starts ------------------------- */
@@ -239,14 +244,14 @@ export class ViewAllComponent implements OnInit {
 
     printBookList(): void {
         const value = {
-            bookList: this.getFilteredSortedBookList(),
+            bookList: this.displayedBooks,
             columnFilter: this.columnFilter,
         };
         this.printService.navigateToPrintRoute(PRINT_BOOK_LIST, { user: this.user, value });
     }
     downloadList(): void {
         let template = [this.getHeaderValues()];
-        this.getFilteredSortedBookList().forEach(book => template.push(this.getBookDisplayInfo(book)));
+        this.displayedBooks.forEach(book => template.push(this.getBookDisplayInfo(book)));
         this.excelService.downloadFile(template, 'korangle_books.csv');
     }
 
