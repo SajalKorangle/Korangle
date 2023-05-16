@@ -101,14 +101,18 @@ export class ViewAllComponent implements OnInit {
         this.htmlRenderer.initializeRenderer(this);
 
         this.filterForm.valueChanges.subscribe(value => {
-            this.displayedBooks = this.filterBooks()
-                .sort(this.SortComparator)
-                .map((book, i) => ({...book, serialNumber: i + 1}))
-
-            this.cdRef.detectChanges();
+            this.updateDisplayBooks();
 
             console.log({displayedBooks: this.displayedBooks});
         });
+    }
+
+    updateDisplayBooks(): any{
+        this.displayedBooks = this.filterBooks()
+            .sort(this.SortComparator)
+            .map((book, i) => ({...book, serialNumber: i + 1}));
+
+        this.cdRef.detectChanges();
     }
 
     initializeBookList(bookFullProfileList): void {
@@ -156,6 +160,8 @@ export class ViewAllComponent implements OnInit {
             this.sortOrder = this.sortOrder * -1;
         } else this.sortOrder = 1;
         this.sortBy = sortparam;
+
+        this.updateDisplayBooks();
     }
 
     sortBooks(books) : any {
