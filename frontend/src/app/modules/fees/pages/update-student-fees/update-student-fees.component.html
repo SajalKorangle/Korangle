@@ -291,6 +291,30 @@
                                     </ng-container>
                                     <br />
                                 </div>
+
+                                <!-- Custom Filter -->
+                                <div class="col-md-6" *ngIf="schoolFeeRule.customfilterfee.length > 0">
+                                    Custom Filters :-
+                                    <br/>
+                                    <ng-container
+                                        *ngFor="
+                                            let customFilterFee of schoolFeeRule.customfilterfee;
+                                            let i = index
+                                        "
+                                    >
+                                        {{ i + 1 }}. {{ getStudentParameterName(customFilterFee.parentStudentParameter) }}<br />
+                                            <ul class="custom-filter-values"
+                                            *ngFor="
+                                                let value of customFilterFee.selectedFilterValues;
+                                            "
+                                        >
+                                            <li>
+                                                {{ value }}
+                                            </li>
+                                        </ul>
+                                    </ng-container>
+                                    <br />
+                                </div>
                             </div>
 
                             <!-- New Admission -->

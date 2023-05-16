@@ -1,38 +1,46 @@
 import { Component, OnInit } from '@angular/core';
+import { GenericService } from '@services/generic/generic-service';
 import { Book } from '@modules/library/models/book';
 import { DataStorage } from "@classes/data-storage";
-import { FormControl, Validators } from '@angular/forms';
+import { AddBookServiceAdapter } from './add-book-service.adapter';
+import { ViewChild } from '@angular/core';
 
 @Component({
     selector: 'add-book',
     templateUrl: './add-book.component.html',
     styleUrls: ['./add-book.component.css'],
-    providers: [ ],
+    providers: [ GenericService ],
 })
 
 export class AddBookComponent implements OnInit {
-    printedCost = new FormControl('', [Validators.min(0)]);
-    bookNumber = new FormControl('', [Validators.min(0), Validators.required]);
-    numberOfPages = new FormControl('', [Validators.min(0)]);
-    bookName = new FormControl('', [Validators.required]);
-
     user: any;
     frontImage: any;
     backImage: any;
 
-    newBook: Book = new Book();
+    nullValue = null;
 
+    newBook: Book;
+    serviceAdapter: AddBookServiceAdapter;
 
     isLoading = false;
 
-    constructor () { }
+    @ViewChild('bookNumberField', {static: false}) bookNumberField;
+    @ViewChild('pagesField', {static: false}) pagesField;
+    @ViewChild('printedCostField', {static: false}) printedCostField;
+    @ViewChild('bookNameField', {static: false}) bookNameField;
+
+
+
+
+    constructor (
+        public genericService: GenericService,
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-    }
-
-    informWIP() {
-        alert("Under construction");
+        this.serviceAdapter = new AddBookServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.initializeVariable();
     }
 
     isMobile(): boolean {
@@ -40,6 +48,14 @@ export class AddBookComponent implements OnInit {
             return false;
         }
         return true;
+    }
+    initializeVariable(): void {
+        this.newBook = new Book();
+        this.newBook.parentSchool = this.user.activeSchool.dbId;
+
+        this.frontImage = this.nullValue;
+        this.backImage = this.nullValue;
+
     }
 
     async onImageSelect(evt: any, side: any) {
@@ -156,6 +172,31 @@ export class AddBookComponent implements OnInit {
             };
             image.onerror = reject;
         });
+    }
+
+    trimToTwoDecimalPlaces(value) {
+        const withTwoDecimals = value.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0];
+        return parseFloat(withTwoDecimals);
+    }
+
+    createNewBook(): void {
+        if (this.newBook.name == null || this.newBook.name == '') {
+            alert("Name should be populated");
+            return;
+        }
+        if (this.newBook.bookNumber == null) {
+            alert("Book No. should be populated");
+            return;
+        }
+        if (this.bookNumberField.invalid || this.pagesField.invalid || this.printedCostField.invalid || this.bookNameField.invalid) {
+            alert("Inputs are invalid");
+            return;
+        }
+        if (this.newBook.printedCost != null) {
+            this.newBook.printedCost = this.trimToTwoDecimalPlaces(this.newBook.printedCost);
+        }
+
+        this.serviceAdapter.createNewBook();
     }
 
 }
