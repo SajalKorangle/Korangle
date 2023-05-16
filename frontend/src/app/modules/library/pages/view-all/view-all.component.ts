@@ -77,6 +77,8 @@ export class ViewAllComponent implements OnInit {
         bookNameSearch: new FormControl(''),
     });
 
+    filteredBooks = [];
+
     constructor (
         public genericService: GenericService,
         public excelService: ExcelService,
@@ -99,7 +101,7 @@ export class ViewAllComponent implements OnInit {
         this.htmlRenderer.initializeRenderer(this);
 
         this.filterForm.valueChanges.subscribe(value => {
-            this.filterBooks();
+            this.filteredBooks = this.filterBooks();
             this.cdRef.detectChanges();
         });
     }
@@ -107,18 +109,11 @@ export class ViewAllComponent implements OnInit {
     initializeBookList(bookFullProfileList): void {
         this.bookFullProfileList = bookFullProfileList.map(book => ({
             ...book,
-            printedCost: book.printedCost !== null ? parseFloat(book.printedCost) : null
+            printedCost: book.printedCost !== null ? parseFloat(book.printedCost) : null,
+            show: true
         }));
+        this.filteredBooks = [...this.bookFullProfileList];
         this.displayBookNumber = this.bookFullProfileList.length;
-        this.handleBookDisplay();
-    }
-
-    handleBookDisplay(): void {
-        let serialNumber = 0;
-        this.bookFullProfileList.forEach(book => {
-            book.show = true;
-            book.serialNumber = ++serialNumber;
-        });
     }
 
     selectAllColumns(): void {
@@ -159,22 +154,19 @@ export class ViewAllComponent implements OnInit {
     }
 
     getFilteredSortedBookList() : any {
-        let list = [...this.bookFullProfileList];
-        list = list.filter(book => book.show);
-        return list.sort(this.SortComparator).map((book, i) => ({
-            ...book,
-            serialNumber: i + 1
-        }));
+        let list = [...this.filteredBooks];
+        list = list.sort(this.SortComparator);
+        return list.map((book, i) => ({...book, serialNumber: i + 1}));
     }
     /* --------------------------- Sorting logic ends --------------------------- */
     /* ------------------------- Filtering logic starts ------------------------- */
 
     // If a filter is completely empty, consider it disabled and do not filter by it
-    filterBooks(): void {
+    filterBooks(): Book[] {
         let booksDisplayed = 0;
 
         // Filter by menu selections
-        this.bookFullProfileList.forEach(book => {
+        const filteredList = this.bookFullProfileList.filter(book => {
             const author = book.author || '';
             const publisher = book.publisher || '';
             const type = book.typeOfBook || '';
@@ -193,10 +185,15 @@ export class ViewAllComponent implements OnInit {
 
             book.show = (authorValid && publisherValid && bookTypeValid && nameMatchesSearch);
 
-            if (book.show) booksDisplayed++;
+            if (book.show) {
+                booksDisplayed++;
+                return true;
+            }
+            return false;
         });
         this.bookFullProfileList = Object.assign([], this.bookFullProfileList);
         this.displayBookNumber = booksDisplayed;
+        return filteredList;
     }
 
     unSelectAllOptions(filter): void {
