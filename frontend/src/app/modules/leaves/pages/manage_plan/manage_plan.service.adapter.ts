@@ -101,7 +101,6 @@ export default class ManagePlanServiceAdapter {
         addLeaveTypeChoiceList.length ?
         await this.vm.genericService.createObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, addLeaveTypeChoiceList) : null;
         // ends :- Request changes
-        // reset the component and update the data
         this.vm.resetComponent();
         this.vm.ngOnInit();
     }
