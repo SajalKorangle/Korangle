@@ -14,16 +14,16 @@ export default class ManagePlanServiceAdapter {
 
     // starts :- Initialize Data (send GET request to backend to fetch data)
     async initializeData(): Promise<void> {
-        this.vm.leavePlanList = await this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlan" }, { filter: {
+        Promise.all([this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlan" }, { filter: {
             parentSchool: this.vm.user.activeSchool.dbId
-        } });
-        this.vm.leavePlanToLeaveTypeList = await this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, { filter: {
+        } }), this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, { filter: {
             parentSchoolLeavePlan__parentSchool__id: this.vm.user.activeSchool.dbId
-        } });
-        this.vm.leaveTypeList = await this.vm.genericService.getObjectList({ leaves_app: "SchoolLeaveType" }, { filter: {
+        } }), this.vm.leaveTypeList = await this.vm.genericService.getObjectList({ leaves_app: "SchoolLeaveType" }, { filter: {
             parentSchool: this.vm.user.activeSchool.dbId
-        } });
-        this.vm.isLoading = false;
+        } })]).then((results) => {
+            [this.vm.leavePlanList, this.vm.leavePlanToLeaveTypeList, this.vm.leaveTypeList] = [results[0], results[1], results[2]];
+            this.vm.isLoading = false;
+        });
     }
     // ends :- Initialize Data
 
@@ -58,12 +58,15 @@ export default class ManagePlanServiceAdapter {
 
     // starts :- Function to save plan
     async savePlan(data): Promise<any> {
+        // starts :- Check if the current leave plan entered is valid or not.
         if (!data.leavePlanName.match(/[A-Za-z][A-Za-z0-9- ]*/g) || data.leavePlanName.match(/[A-Za-z][A-Za-z0-9- ]*/g).length !== 1) {
             return alert(
                 "Please Enter a valid Leave Plan Name. (start with lowercase / uppercase english alphabets and contains only alphabets, numbers, spaces and hyphens.)",
             );
         }
+        // ends :- End of check for leave plan name.
         this.vm.isLoading = true;
+        // starts :- Create List for each leave type inside currentLeavePlan (leave types to be deleted and leave types to be added)
         let removeLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
         let addLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
         let oldLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
@@ -86,6 +89,8 @@ export default class ManagePlanServiceAdapter {
             this.vm.isLoading = false;
             return false;
         }
+        // ends :- Create List of leave types.
+        // starts :- Make requests to update leave plan name, delete leave types and add leave types
         data.parentSchool = this.vm.user.activeSchool.dbId;
         data.id
         ? await this.vm.genericService.partiallyUpdateObject({ leaves_app: "SchoolLeavePlan" }, data)
@@ -95,6 +100,8 @@ export default class ManagePlanServiceAdapter {
         : null;
         addLeaveTypeChoiceList.length ?
         await this.vm.genericService.createObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, addLeaveTypeChoiceList) : null;
+        // ends :- Request changes
+        // reset the component and update the data
         this.vm.resetComponent();
         this.vm.ngOnInit();
     }
