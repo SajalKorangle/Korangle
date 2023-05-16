@@ -2,20 +2,21 @@ import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { SetSchoolFeesServiceAdapter } from './set-school-fees.service.adapter';
 import { FeeService } from '../../../../services/modules/fees/fee.service';
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
-import { ClassService } from '../../../../services/modules/class/class.service';
-import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-old.service';
+import { GenericService } from '@services/generic/generic-service';
 import { SchoolFeeRule } from '../../../../services/modules/fees/models/school-fee-rule';
 import { ClassFilterFee } from '../../../../services/modules/fees/models/class-filter-fee';
 import { BusStopFilterFee } from '../../../../services/modules/fees/models/bus-stop-filter-fee';
 import { FormControl } from '@angular/forms';
 import { INSTALLMENT_LIST } from '../../classes/constants';
 import { DataStorage } from '../../../../classes/data-storage';
+import { MatDialog } from '@angular/material';
+import { ShowStudentListModalComponent } from './show-student-list-modal/show-student-list-modal.component';
 
 @Component({
     selector: 'set-school-fees',
     templateUrl: './set-school-fees.component.html',
     styleUrls: ['./set-school-fees.component.css'],
-    providers: [FeeService, StudentOldService, ClassService, VehicleOldService],
+    providers: [FeeService, StudentOldService, GenericService],
 })
 export class SetSchoolFeesComponent implements OnInit {
     installmentList = INSTALLMENT_LIST;
@@ -29,8 +30,6 @@ export class SetSchoolFeesComponent implements OnInit {
     studentList: any;
 
     schoolFeeRuleList: any;
-    classFilterFeeList: any;
-    busStopFilterFeeList: any;
     studentFeeList: any;
     subFeeReceiptList: any;
     subDiscountList: any;
@@ -42,10 +41,22 @@ export class SetSchoolFeesComponent implements OnInit {
     newSchoolFeeRule: SchoolFeeRule;
     newClassFilterFeeList: ClassFilterFee[];
     newBusStopFilterFeeList: BusStopFilterFee[];
+    newCustomFilterFeeList: {
+        id: number;
+        parentSchool: number;
+        name: string;
+        parameterType: string;
+        filterValues: {
+            value: string;
+            selected: boolean;
+        }[];
+    }[] = [];
 
     selectedClass: any;
     selectedSection: any;
     selectedBusStop: any;
+
+    studentParameterValueList: any[] = [];
 
     serviceAdapter: SetSchoolFeesServiceAdapter;
 
@@ -53,9 +64,9 @@ export class SetSchoolFeesComponent implements OnInit {
 
     constructor(
         public feeService: FeeService,
-        public classService: ClassService,
         public studentService: StudentOldService,
-        public vehicleService: VehicleOldService,
+        public genericService: GenericService,
+        public dialog: MatDialog,
         private cdRef: ChangeDetectorRef
     ) { }
 
@@ -66,7 +77,6 @@ export class SetSchoolFeesComponent implements OnInit {
         this.serviceAdapter = new SetSchoolFeesServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-        console.log("set-school_fees: ", this);
     }
 
     getSchoolFeeRuleTotalAmount(schoolFeeRule: SchoolFeeRule): number {
@@ -95,6 +105,7 @@ export class SetSchoolFeesComponent implements OnInit {
         this.newSchoolFeeRule.isAnnually = false;
         this.initializeNewClassFilterFeeList();
         this.initializeNewBusStopFilterFeeList();
+        this.initializeNewCustomFilterFeeList();
     }
 
     initializeNewClassFilterFeeList(): void {
@@ -103,6 +114,14 @@ export class SetSchoolFeesComponent implements OnInit {
 
     initializeNewBusStopFilterFeeList(): void {
         this.newBusStopFilterFeeList = [];
+    }
+
+    initializeNewCustomFilterFeeList(): void {
+        this.newCustomFilterFeeList.forEach(customFilterFee => {
+            customFilterFee.filterValues.forEach(filterValue => {
+                filterValue.selected = false;
+            });
+        });
     }
 
     changedSelectedFeeType(): void {
@@ -191,6 +210,12 @@ export class SetSchoolFeesComponent implements OnInit {
         }).stopName;
     }
 
+    getStudentParameterName(parameterId: number): string {
+        return this.newCustomFilterFeeList.find((parameter) => {
+            return parameter.id == parameterId;
+        }).name;
+    }
+
     getExpectedStudentList(): any {
         let tempSchoolFeeRuleIdList = this.schoolFeeRuleList
             .filter((schoolFeeRule) => {
@@ -222,6 +247,34 @@ export class SetSchoolFeesComponent implements OnInit {
                     return false;
                 }
             }
+            // Starts :- Custom Filter
+            let filtered = true;
+            let filteredStudentParameterValueList = this.studentParameterValueList.filter(studentParameterValue => {
+                return studentParameterValue.parentStudent == student.dbId;
+            });
+            this.newCustomFilterFeeList.filter(newCustomFilterFee => {
+                return newCustomFilterFee.filterValues.filter(filterValue => {
+                    return filterValue.selected;
+                }).length > 0;
+            }).find(customFilterFee => {
+                let studentParameterValue = filteredStudentParameterValueList.find(item => {
+                    return item.parentStudentParameter == customFilterFee.id;
+                });
+                if (studentParameterValue == undefined ) {
+                    filtered = false;
+                    return true;
+                }
+                if (customFilterFee.filterValues.find(filterValue => {
+                    return filterValue.selected && filterValue.value == studentParameterValue.value;
+                }) == undefined) {
+                    filtered = false;
+                    return true;
+                }
+            });
+            if (!filtered) {
+                return false;
+            }
+            // Ends :- Custom Filter
             if (this.newSchoolFeeRule.onlyNewAdmission) {
                 if (student.admissionSessionDbId != this.user.activeSchool.currentSessionDbId) {
                     return false;
@@ -263,31 +316,12 @@ export class SetSchoolFeesComponent implements OnInit {
         }
     }
 
-    getClassFilterFeeListBySchoolFeeRule(schoolFeeRule: any): any {
-        return this.classFilterFeeList
-            .filter((classFilterFee) => {
-                return classFilterFee.parentSchoolFeeRule == schoolFeeRule.id;
-            })
-            .sort((a, b) => {
-                let result = 0;
-                a.parentClass != b.parentClass ? (result = a.parentClass - b.parentClass) : (result = a.parentDivision - b.parentDivision);
-                return result;
-            });
-    }
-
-    getBusStopFilterFeeListBySchoolFeeRule(schoolFeeRule: any): any {
-        return this.busStopFilterFeeList
-            .filter((busStopFilterFee) => {
-                return busStopFilterFee.parentSchoolFeeRule == schoolFeeRule.id;
-            })
-            .sort((a, b) => {
-                return this.getBusStopName(a.parentBusStop).localeCompare(this.getBusStopName(b.parentBusStop));
-            });
-    }
-
-    getStudentFeeListBySchoolFeeRule(schoolFeeRule: any): any {
-        return this.studentFeeList.filter((studentFee) => {
+    getStudentListBySchoolFeeRule(schoolFeeRule: any): any {
+        let filteredStudentIdList = this.studentFeeList.filter((studentFee) => {
             return studentFee.parentSchoolFeeRule == schoolFeeRule.id;
+        }).map(studentFee => studentFee.parentStudent);
+        return this.studentList.filter(student => {
+            return filteredStudentIdList.includes(student.dbId);
         });
     }
 
@@ -331,4 +365,16 @@ export class SetSchoolFeesComponent implements OnInit {
         }
         return true;
     }
+
+    /* Open Table Format Name Dialog */
+    openShowStudentListDialog(studentList: any): void {
+        const dialogRef = this.dialog.open(ShowStudentListModalComponent, {
+            data: {
+                classList: this.classList,
+                sectionList: this.sectionList,
+                studentList: studentList,
+            }
+        });
+    }  // Ends: openShowStudentListDialog()
+
 }
