@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ViewAllHtmlRenderer } from './view-all.html.renderer';
 import { DataStorage } from "@classes/data-storage";
 import { GenericService } from '@services/generic/generic-service';
@@ -76,7 +76,6 @@ export class ViewAllComponent implements OnInit {
         public genericService: GenericService,
         public excelService: ExcelService,
         public printService: PrintService,
-        private cdRef: ChangeDetectorRef,
     ) { }
 
     ngOnInit(): void {
@@ -99,8 +98,6 @@ export class ViewAllComponent implements OnInit {
         let filteredList = this.filterBooks();
         let sortedFilteredList = this.sortBooks(filteredList);
         this.displayedBooks = sortedFilteredList.map((book, i) => ({...book, serialNumber: i + 1}))
-
-        this.cdRef.detectChanges();
     }
 
     initializeBookList(bookFullProfileList): void {
