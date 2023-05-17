@@ -3,12 +3,9 @@ import { ViewAllHtmlRenderer } from './view-all.html.renderer';
 import { DataStorage } from "@classes/data-storage";
 import { GenericService } from '@services/generic/generic-service';
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
-import { FormControl, FormGroup } from '@angular/forms';
 import { ExcelService } from '../../../../excel/excel-service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_BOOK_LIST } from '../../../../print/print-routes.constants';
-import { Book } from '@modules/library/models/book';
-
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -56,9 +53,14 @@ export class ViewAllComponent implements OnInit {
     currentBookDocumentFilter;
 
     bookFullProfileList = [];
+    displayedBooks = [];
 
     displayBookNumber;
-    searchBookName : string;
+
+    selectedAuthors = [];
+    selectedPublishers = [];
+    selectedBookTypes = [];
+    searchBookName = '';
 
     NONE_FILTER_SELECTION = '';
 
@@ -69,18 +71,6 @@ export class ViewAllComponent implements OnInit {
     authorOptions = new Set();
     publisherOptions = new Set();
     bookTypeOptions = new Set();
-
-    // Filter menu form controls
-    filterForm = new FormGroup({
-        authors: new FormControl([]),
-        publishers: new FormControl([]),
-        bookTypes: new FormControl([]),
-        bookNameSearch: new FormControl(''),
-    });
-
-    filterFormValueChangesSub;
-
-    displayedBooks = [];
 
     constructor (
         public genericService: GenericService,
@@ -103,21 +93,12 @@ export class ViewAllComponent implements OnInit {
         this.htmlRenderer = new ViewAllHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
 
-        this.filterFormValueChangesSub = this.filterForm.valueChanges.subscribe(value => {
-            this.updateDisplayBooks();
-
-            console.log({displayedBooks: this.displayedBooks});
-        });
     }
 
-    ngOnDestroy(){
-        this.filterFormValueChangesSub.unsubscribe();
-    }
-
-    updateDisplayBooks(): any{
-        this.displayedBooks = this.filterBooks()
-            .sort(this.SortComparator)
-            .map((book, i) => ({...book, serialNumber: i + 1}));
+    handleBookDisplay(): void {
+        let filteredList = this.filterBooks();
+        let sortedFilteredList = this.sortBooks(filteredList);
+        this.displayedBooks = sortedFilteredList.map((book, i) => ({...book, serialNumber: i + 1}))
 
         this.cdRef.detectChanges();
     }
@@ -128,8 +109,8 @@ export class ViewAllComponent implements OnInit {
             printedCost: book.printedCost !== null ? parseFloat(book.printedCost) : null,
             show: true
         }));
-        this.displayedBooks = [...this.bookFullProfileList];
-        this.displayBookNumber = this.bookFullProfileList.length;
+
+        this.handleBookDisplay();
     }
 
     selectAllColumns(): void {
@@ -168,38 +149,35 @@ export class ViewAllComponent implements OnInit {
         } else this.sortOrder = 1;
         this.sortBy = sortparam;
 
-        this.updateDisplayBooks();
+        this.handleBookDisplay();
     }
 
     sortBooks(books) : any {
-        books = books.sort(this.SortComparator)
-        books = books.map((book, i) => ({...book, serialNumber: i + 1}));
-        return books;
+        let sortedList = books.sort(this.SortComparator)
+        return sortedList;
     }
     /* --------------------------- Sorting logic ends --------------------------- */
     /* ------------------------- Filtering logic starts ------------------------- */
 
     // If a filter is completely empty, consider it disabled and do not filter by it
-    filterBooks(): Book[] {
+    filterBooks(): any{
         let booksDisplayed = 0;
 
         // Filter by menu selections
-        const filteredList = this.bookFullProfileList.filter(book => {
+        let filteredList = this.bookFullProfileList.filter(book => {
             const author = book.author || '';
             const publisher = book.publisher || '';
             const type = book.typeOfBook || '';
 
-            const disableAuthorsFilter = this.filterForm.get('authors').value.length === 0;
-            const disablePublishersFilter = this.filterForm.get('publishers').value.length === 0;
-            const disableBookTypesFilter = this.filterForm.get('bookTypes').value.length === 0;
+            const disableAuthorsFilter = this.selectedAuthors.length === 0;
+            const disablePublishersFilter = this.selectedPublishers.length === 0;
+            const disableBookTypesFilter = this.selectedBookTypes.length === 0;
 
+            const authorValid = disableAuthorsFilter || this.selectedAuthors.includes(author.toLowerCase());
+            const publisherValid =  disablePublishersFilter || this.selectedPublishers.includes(publisher.toLowerCase());
+            const bookTypeValid = disableBookTypesFilter || this.selectedBookTypes.includes(type.toLowerCase());
 
-            const authorValid = disableAuthorsFilter ? true : this.filterForm.get('authors').value.includes(author.toLowerCase());
-            const publisherValid =  disablePublishersFilter ? true : this.filterForm.get('publishers').value.includes(publisher.toLowerCase());
-            const bookTypeValid = disableBookTypesFilter ? true : this.filterForm.get('bookTypes').value.includes(type.toLowerCase());
-
-            const searchedBookName = this.filterForm.get('bookNameSearch').value;
-            const nameMatchesSearch = (book.name.toLowerCase().indexOf(searchedBookName.toLowerCase()) > -1);
+            const nameMatchesSearch = (book.name.toLowerCase().indexOf(this.searchBookName.toLowerCase()) > -1);
 
             book.show = (authorValid && publisherValid && bookTypeValid && nameMatchesSearch);
 
@@ -209,13 +187,15 @@ export class ViewAllComponent implements OnInit {
             }
             return false;
         });
-        this.bookFullProfileList = Object.assign([], this.bookFullProfileList);
+
         this.displayBookNumber = booksDisplayed;
+
         return filteredList;
     }
 
     unSelectAllOptions(filter): void {
-        this.filterForm.get(filter).setValue([]);
+        this[filter] = [];
+        this.handleBookDisplay();
     }
     /* -------------------------- Filtering logic ends -------------------------- */
 

@@ -3,7 +3,7 @@
     <mat-form-field style="margin-right: 15px" >
         <mat-label>Book name</mat-label>
 
-        <input matInput name="name" type="text" placeholder="Search Book Name" [formControl]="this.filterForm.get('bookNameSearch')">
+        <input matInput name="name" type="text" placeholder="Search Book Name" name="SearchBookName" [(ngModel)]="searchBookName" (ngModelChange)="handleBookDisplay()">
     </mat-form-field>
     <!--Book Name Search Field End-->
 
@@ -124,19 +124,19 @@
     <br />
     <!-- Filter Menu Start-->
     <ng-container *ngIf="showFilters">
-        <form [formGroup]="filterForm">
+        <div class="filter-form" style="display: flex; flex-direction: column; width: max-content; margin: 10px 0;">
             <!-- Authors Filter Start -->
             <mat-form-field style="margin: 5px 0;">
                 <mat-label>Select Authors</mat-label>
-                <mat-select multiple formControlName="authors">
+                <mat-select multiple [(ngModel)]="selectedAuthors" (ngModelChange)="handleBookDisplay()">
                     <!-- Clear All Button Start -->
                     <div style="display: flex; justify-content: space-evenly;">
-                        <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('authors')">Clear All</button>
+                        <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('selectedAuthors')">Clear All</button>
                     </div>
                     <!-- Clear All Button End-->
 
                     <mat-select-trigger>
-                        {{ filterForm.get('authors').value.length + ' options selected' }}
+                        {{ selectedAuthors.length + ' options selected' }}
                     </mat-select-trigger>
 
                     <!-- Options Start -->
@@ -151,15 +151,15 @@
             <!-- Publishers Filter Start -->
             <mat-form-field style="margin: 5px 0;">
                 <mat-label>Select Publishers</mat-label>
-                <mat-select multiple formControlName="publishers">
+                <mat-select multiple [(ngModel)]="selectedPublishers" (ngModelChange)="handleBookDisplay()">
                     <!-- Clear All Button Start -->
                     <div style="display: flex; justify-content: space-evenly;">
-                        <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('publishers')">Clear All</button>
+                        <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('selectedPublishers')">Clear All</button>
                     </div>
                     <!-- Clear All Button End-->
 
                     <mat-select-trigger>
-                        {{ filterForm.get('publishers').value.length + ' options selected' }}
+                        {{ selectedPublishers.length + ' options selected' }}
                     </mat-select-trigger>
 
                     <!-- Options Start -->
@@ -174,15 +174,15 @@
             <!--  Type Of Book Filter Start -->
             <mat-form-field style="margin: 5px 0;">
                 <mat-label>Select Type Of Book</mat-label>
-                <mat-select multiple formControlName="bookTypes">
+                <mat-select multiple [(ngModel)]="selectedBookTypes" (ngModelChange)="handleBookDisplay()">
                     <!-- Clear All Button Start -->
                        <div style="display: flex; justify-content: space-evenly;">
-                        <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('bookTypes')">Clear All</button>
+                        <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('selectedBookTypes')">Clear All</button>
                     </div>
                     <!-- Clear All Button End -->
 
                     <mat-select-trigger>
-                        {{ filterForm.get('bookTypes').value.length + ' options selected' }}
+                        {{ selectedBookTypes.length + ' options selected' }}
                     </mat-select-trigger>
 
                     <!-- Options Start -->
@@ -193,7 +193,7 @@
                 </mat-select>
             </mat-form-field>
             <!-- Type Of Book Filter End -->
-        </form>
+        </div>
     </ng-container>
     <!-- Filter Menu End-->
 
