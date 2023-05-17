@@ -9,6 +9,7 @@ import { PrintService } from '../../../../print/print-service';
 import { PRINT_BOOK_LIST } from '../../../../print/print-routes.constants';
 import { Book } from '@modules/library/models/book';
 
+
 class ColumnFilter {
     showSerialNumber = true;
     showName = true;
@@ -77,6 +78,8 @@ export class ViewAllComponent implements OnInit {
         bookNameSearch: new FormControl(''),
     });
 
+    filterFormValueChangesSub;
+
     displayedBooks = [];
 
     constructor (
@@ -100,11 +103,15 @@ export class ViewAllComponent implements OnInit {
         this.htmlRenderer = new ViewAllHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
 
-        this.filterForm.valueChanges.subscribe(value => {
+        this.filterFormValueChangesSub = this.filterForm.valueChanges.subscribe(value => {
             this.updateDisplayBooks();
 
             console.log({displayedBooks: this.displayedBooks});
         });
+    }
+
+    ngOnDestroy(){
+        this.filterFormValueChangesSub.unsubscribe();
     }
 
     updateDisplayBooks(): any{
