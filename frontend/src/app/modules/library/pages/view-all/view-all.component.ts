@@ -64,7 +64,7 @@ export class ViewAllComponent implements OnInit {
 
     NONE_FILTER_SELECTION = '';
 
-    sortBy = 'name';
+    sortBy = '';
     sortOrder = 1; // 1 => ASC, -1 => DESC
 
     // Lists of all unique authors, publishers and bookTypes that can be selected when filtering
@@ -94,12 +94,6 @@ export class ViewAllComponent implements OnInit {
 
     }
 
-    handleBookDisplay(): void {
-        let filteredList = this.filterBooks();
-        let sortedFilteredList = this.sortBooks(filteredList);
-        this.displayedBooks = sortedFilteredList.map((book, i) => ({...book, serialNumber: i + 1}))
-    }
-
     initializeBookList(bookFullProfileList): void {
         this.bookFullProfileList = bookFullProfileList.map(book => ({
             ...book,
@@ -107,7 +101,7 @@ export class ViewAllComponent implements OnInit {
             show: true
         }));
 
-        this.handleBookDisplay();
+        this.sortBooks();
     }
 
     selectAllColumns(): void {
@@ -146,22 +140,29 @@ export class ViewAllComponent implements OnInit {
         } else this.sortOrder = 1;
         this.sortBy = sortparam;
 
-        this.handleBookDisplay();
+        this.sortBooks();
     }
 
-    sortBooks(books) : any {
-        let sortedList = books.sort(this.SortComparator)
-        return sortedList;
+    sortBooks() : any {
+        let serialNumber = 0;
+        this.bookFullProfileList = [...this.bookFullProfileList].sort(this.SortComparator)
+        this.bookFullProfileList.forEach(book => {
+            if (book.show){
+                book.serialNumber = ++serialNumber;
+            }
+        });
     }
     /* --------------------------- Sorting logic ends --------------------------- */
     /* ------------------------- Filtering logic starts ------------------------- */
 
     // If a filter is completely empty, consider it disabled and do not filter by it
-    filterBooks(): any{
-        let booksDisplayed = 0;
+    // If filter menu interacted with
+    filterBooks(): void {
+        let serialNumber = 0;
+        this.displayBookNumber = 0;
 
         // Filter by menu selections
-        let filteredList = this.bookFullProfileList.filter(book => {
+        this.bookFullProfileList.forEach(book => {
             const author = book.author || '';
             const publisher = book.publisher || '';
             const type = book.typeOfBook || '';
@@ -179,20 +180,17 @@ export class ViewAllComponent implements OnInit {
             book.show = (authorValid && publisherValid && bookTypeValid && nameMatchesSearch);
 
             if (book.show) {
-                booksDisplayed++;
-                return true;
+                this.displayBookNumber++;
+                book.serialNumber = ++serialNumber;
             }
-            return false;
         });
 
-        this.displayBookNumber = booksDisplayed;
-
-        return filteredList;
+        this.updateSortingParameters('name');
     }
 
     unSelectAllOptions(filter): void {
         this[filter] = [];
-        this.handleBookDisplay();
+        this.filterBooks();
     }
     /* -------------------------- Filtering logic ends -------------------------- */
 
@@ -234,14 +232,14 @@ export class ViewAllComponent implements OnInit {
 
     printBookList(): void {
         const value = {
-            bookList: this.displayedBooks,
+            bookList: this.bookFullProfileList.filter(book => book.show),
             columnFilter: this.columnFilter,
         };
         this.printService.navigateToPrintRoute(PRINT_BOOK_LIST, { user: this.user, value });
     }
     downloadList(): void {
         let template = [this.getHeaderValues()];
-        this.displayedBooks.forEach(book => template.push(this.getBookDisplayInfo(book)));
+        this.bookFullProfileList.filter(book => book.show).forEach(book => template.push(this.getBookDisplayInfo(book)));
         this.excelService.downloadFile(template, 'korangle_books.csv');
     }
 

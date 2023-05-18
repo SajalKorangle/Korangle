@@ -3,7 +3,7 @@
     <mat-form-field style="margin-right: 15px" >
         <mat-label>Book name</mat-label>
 
-        <input matInput name="name" type="text" placeholder="Search Book Name" name="SearchBookName" [(ngModel)]="searchBookName" (ngModelChange)="handleBookDisplay()">
+        <input matInput name="name" type="text" placeholder="Search Book Name" name="SearchBookName" [(ngModel)]="searchBookName" (ngModelChange)="filterBooks()" (click)="$event.stopPropagation()">
     </mat-form-field>
     <!--Book Name Search Field End-->
 
@@ -128,7 +128,7 @@
             <!-- Authors Filter Start -->
             <mat-form-field style="margin: 5px 0;">
                 <mat-label>Select Authors</mat-label>
-                <mat-select multiple [(ngModel)]="selectedAuthors" (ngModelChange)="handleBookDisplay()">
+                <mat-select multiple [(ngModel)]="selectedAuthors" (ngModelChange)="filterBooks()" (click)="$event.stopPropagation()">
                     <!-- Clear All Button Start -->
                     <div style="display: flex; justify-content: space-evenly;">
                         <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('selectedAuthors')">Clear All</button>
@@ -151,7 +151,7 @@
             <!-- Publishers Filter Start -->
             <mat-form-field style="margin: 5px 0;">
                 <mat-label>Select Publishers</mat-label>
-                <mat-select multiple [(ngModel)]="selectedPublishers" (ngModelChange)="handleBookDisplay()">
+                <mat-select multiple [(ngModel)]="selectedPublishers" (ngModelChange)="filterBooks()" (click)="$event.stopPropagation()">
                     <!-- Clear All Button Start -->
                     <div style="display: flex; justify-content: space-evenly;">
                         <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('selectedPublishers')">Clear All</button>
@@ -174,7 +174,7 @@
             <!--  Type Of Book Filter Start -->
             <mat-form-field style="margin: 5px 0;">
                 <mat-label>Select Type Of Book</mat-label>
-                <mat-select multiple [(ngModel)]="selectedBookTypes" (ngModelChange)="handleBookDisplay()">
+                <mat-select multiple [(ngModel)]="selectedBookTypes" (ngModelChange)="filterBooks()" (click)="$event.stopPropagation()">
                     <!-- Clear All Button Start -->
                        <div style="display: flex; justify-content: space-evenly;">
                         <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('selectedBookTypes')">Clear All</button>
@@ -227,7 +227,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <ng-container *cdkVirtualFor="let book of displayedBooks">
+                    <ng-container *cdkVirtualFor="let book of bookFullProfileList">
                         <tr *ngIf="book.show">
                             <ng-container>
                                 <td *ngIf="columnFilter.showSerialNumber">{{ book.serialNumber }}.</td>
