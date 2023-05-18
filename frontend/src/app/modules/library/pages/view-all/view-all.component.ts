@@ -145,9 +145,9 @@ export class ViewAllComponent implements OnInit {
 
     sortBooks() : any {
         let serialNumber = 0;
-        this.bookFullProfileList = [...this.bookFullProfileList].sort(this.SortComparator)
+        this.bookFullProfileList = [...this.bookFullProfileList].sort(this.SortComparator);
         this.bookFullProfileList.forEach(book => {
-            if (book.show){
+            if (book.show) {
                 book.serialNumber = ++serialNumber;
             }
         });
