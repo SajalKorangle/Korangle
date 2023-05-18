@@ -53,7 +53,6 @@ export class ViewAllComponent implements OnInit {
     currentBookDocumentFilter;
 
     bookFullProfileList = [];
-    displayedBooks = [];
 
     displayBookNumber;
 
@@ -100,7 +99,7 @@ export class ViewAllComponent implements OnInit {
             printedCost: book.printedCost !== null ? parseFloat(book.printedCost) : null,
             show: true
         }));
-
+        this.displayBookNumber = this.bookFullProfileList.length;
         this.sortBooks();
     }
 
@@ -185,7 +184,7 @@ export class ViewAllComponent implements OnInit {
             }
         });
 
-        this.updateSortingParameters('name');
+        this.updateSortingParameters('');
     }
 
     unSelectAllOptions(filter): void {
