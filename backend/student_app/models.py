@@ -300,7 +300,7 @@ def create_subjects_tests_fees(sender, instance, created, **kwargs):
 
 @receiver(pre_delete, sender = StudentSection)
 def delete_subjects_tests_fees(sender, instance, using, **kwargs):
-    
+    from fees_third_app.models import StudentFee
     # Delete Student Fees
     StudentFee.objects.filter(parentStudent=instance.parentStudent,
                                                     parentSession=instance.parentSession).delete()
