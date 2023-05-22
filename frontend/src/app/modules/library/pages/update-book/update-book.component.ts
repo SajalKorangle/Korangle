@@ -38,7 +38,7 @@ export class UpdateBookComponent implements OnInit {
         .pipe(
             startWith(''),
             map((value) => (typeof value === 'string' ? value : (value as any).name)),
-            map(searchedBookName => this.getFilteredBookList(searchedBookName))
+            map(searchedBookName => this.getFilteredBookList(searchedBookName)),
         );
     }
 
@@ -54,10 +54,43 @@ export class UpdateBookComponent implements OnInit {
     }
 
     namesMatch(bookName: string, searchedBookName: string): boolean {
+        if (searchedBookName === '') return false;
         bookName = bookName.toLowerCase();
         searchedBookName = searchedBookName.toLowerCase();
-        return bookName.indexOf(searchedBookName) === 0;
+        return bookName.indexOf(searchedBookName) >= 0;
     }
+
+    /* --------------- Matched book name highlighting logic starts -------------- */
+    leftText(name: string): string {
+        let text = this.searchBookFormControl.value;
+        let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        if (ind == -1)
+            return name;
+        if (ind > 0)
+            return name.substring(0, ind);
+        return '';
+    }
+
+    rightText(name: string): string {
+        let text = this.searchBookFormControl.value;
+        let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        if (ind == -1)
+            return '';
+        let right = ind + text.length;
+        if (right < name.length)
+            return name.substring(right, name.length);
+        return '';
+    }
+
+    highlightText(name: string): string {
+        let text = this.searchBookFormControl.value;
+        let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        if (ind != -1)
+            return name.substring(ind, ind + text.length);
+        return '';
+    }
+    /* ---------------- Matched book name highlighting logic ends --------------- */
+
 
     handleBookSelection(event: any) {
         const selectedBook: Book = event.option.value;

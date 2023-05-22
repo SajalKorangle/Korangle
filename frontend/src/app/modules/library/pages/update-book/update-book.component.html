@@ -1,7 +1,7 @@
 <div class="card-content">
     <!-- Search bar starts -->
     <div>
-        <form class="example-form" [attr.disabled]="true">
+        <form class="example-form">
           <mat-form-field class="example-full-width">
             <input
               type="text"
@@ -20,7 +20,11 @@
                 [value]="book"
               >
                 <div>
-                  <p class="paraUp">{{ (book.name || '' ) | titlecase }}</p>
+                  <p class="paraUp">
+                    <span class="left">{{ leftText(book.name | titlecase) }}</span>
+                    <span class="highlighted" style="color:#00bfff">{{ highlightText(book.name | titlecase) }}</span>
+                    <span class="right">{{ rightText(book.name | titlecase) }}</span>
+                  </p>
                   <p class="paraDown">{{ (book.author || '') | titlecase }}</p>
                 </div>
               </mat-option>
