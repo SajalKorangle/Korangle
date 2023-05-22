@@ -1,3 +1,37 @@
 <div class="card-content">
-    Under Construction !!!
+    <!-- Search bar starts -->
+    <div>
+        <form class="example-form" [attr.disabled]="true">
+          <mat-form-field class="example-full-width">
+            <input
+              type="text"
+              placeholder="Search Book"
+              matInput
+              [formControl]="searchBookFormControl"
+              [matAutocomplete]="auto"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              [displayWith]="displayFn"
+              (optionSelected)="handleBookSelection($event)"
+            >
+              <mat-option
+                *ngFor="let book of filteredBookList | async"
+                [value]="book"
+              >
+                <div>
+                  <p class="paraUp">{{ (book.name || '' ) | titlecase }}</p>
+                  <p class="paraDown">{{ (book.author || '') | titlecase }}</p>
+                </div>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+    </div>
+    <!-- Search bar ends -->
+
+    <div>
+        UNDER CONSTRUCTION
+    </div>
 </div>
+
