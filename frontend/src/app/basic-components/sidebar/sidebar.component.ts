@@ -79,6 +79,8 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
                 CommonFunctions.scrollToTop();
             }
         });
+
+        // Change route if any unobserved event exist
         if (this.user.newRoute !== null) {
             this.router.navigateByUrl('/', { skipLocationChange: false }).then(() => {
                 this.router.navigateByUrl(
@@ -91,7 +93,6 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
             // Navigating To '/' before any other route - because :
             // We have used routeReuseStrategy so if the url is same the page won't reload,
             // To overcome that case we are navigating to '/' first and then the corresponding route.
-            console.log('initialize-router');
             this.router.navigateByUrl('/', { skipLocationChange: false }).then(() => {
                 this.router.navigateByUrl(
                     this.router.createUrlTree([Constants.dashBoardRoute + '/' + this.user.section.route + '/' + this.user.section.subRoute],
@@ -102,6 +103,7 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
     }
 
     ngAfterViewChecked(): void {
+        // Scroll to the active button on page reload
         if (!this.scrolled) {
             let activeElement = document.querySelector('.active');
             if (activeElement) {

@@ -42,8 +42,8 @@ export class User {
         ],
     };
 
+    // unobserved route change events are stored here
     newRoute: any = null;
-    // initializeRouterCallback: (value: any) => void | null = null;
 
     settings = {
         path: 'user-settings',
@@ -163,10 +163,12 @@ export class User {
                     module = undefined;
                     break;
                 case 'user-settings':
+                    // Open the page with the role user opened last time
                     this.activeSchool.role = urlParams.get('role') || this.activeSchool.role;
                     module = this.settings;
                     break;
                 case 'notification':
+                    // Open the page with the role user opened last time
                     this.activeSchool.role = urlParams.get('role') || this.activeSchool.role;
                     module = this.notification;
                     break;
@@ -179,6 +181,7 @@ export class User {
                         if (urlParams.get('student_id') != undefined) {
                             module = this.activeSchool.studentList.find((s) => s.id == Number(urlParams.get('student_id')));
                         } else {
+                            // now searches for path in every parent module
                             module = this.activeSchool.parentModuleList.some((parentModule) => parentModule.taskList.some((t) => t.path == taskPath))
                                 ? this.activeSchool.parentModuleList.find((parentModule) => parentModule.taskList.some((t) => t.path == taskPath))
                                 : undefined;
@@ -213,6 +216,8 @@ export class User {
 
     checkUserSchoolSessionPermission(urlParams: any): boolean {
         const school = this.schoolList.find((s) => s.dbId == Number(urlParams.get('school_id')));
+
+        // The current session ID should be less than the max session ID, so calculating max Session ID among all sessions
         let maxSessionID = 0;
         this.session_list.forEach((session) => {
             maxSessionID = Math.max(maxSessionID, session.id);
@@ -285,6 +290,13 @@ export class User {
                 return;
             queryParams[key] = value;
         });
+        
+        /* Sometimes the sidebar initializes after the route initialize-router event is emitted
+           so the route is not changed and user sees a loading screen forever. To prevent this, we are using
+           this hack that if there are no observers for the event than we are storing the event in a variable
+           so whenever the sidebar is initialized it will check if there is any old event pending to be observed
+           and if present, it will act accordingly.
+        */
         if (EmitterService.get('initialize-router').observers.length === 0) {
             this.newRoute = {queryParams};
         }
