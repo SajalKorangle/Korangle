@@ -1,11 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { EnquiryOldService } from '../../../../services/modules/enquiry/enquiry-old.service';
-import { ClassService } from '@services/modules/class/class.service';
-
 import { FormControl } from '@angular/forms';
-import { map } from 'rxjs/operators';
 import { DataStorage } from '../../../../classes/data-storage';
+import { DeleteEnquiryServiceAdapter } from './delete-enquiry.service.adapter';
 
 @Component({
     selector: 'delete-enquiry',
@@ -24,29 +21,21 @@ export class DeleteEnquiryComponent implements OnInit {
 
     myControl = new FormControl();
 
+    inPagePermissions: any;
+
+    serviceAdapter: DeleteEnquiryServiceAdapter;
+
     isLoading = false;
 
-    constructor(private enquiryService: EnquiryOldService, private classService: ClassService) {}
+    constructor() {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
 
-        const data = {
-            parentSchool: this.user.activeSchool.dbId,
-        };
+        this.serviceAdapter = new DeleteEnquiryServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
 
-        Promise.all([
-            this.classService.getObjectList(this.classService.classs, {}),
-            this.enquiryService.getMiniEnquiryList(data, this.user.jwt),
-        ]).then((value) => {
-            this.classList = value[0];
-            this.enquiryList = value[1];
-
-            this.filteredEnquiryList = this.myControl.valueChanges.pipe(
-                map((value) => (typeof value === 'string' ? value : value == null ? value : value.enquirerName)),
-                map((value) => this.filter(value))
-            );
-        });
     }
 
     filter(value: any): any {
@@ -64,40 +53,6 @@ export class DeleteEnquiryComponent implements OnInit {
         }
     }
 
-    getEnquiry(enquiry: any): void {
-        const data = {
-            id: enquiry.id,
-        };
-
-        this.isLoading = true;
-        this.enquiryService.getEnquiry(data, this.user.jwt).then(
-            (enquiry) => {
-                this.isLoading = false;
-                this.selectedEnquiry = enquiry;
-            },
-            (error) => {
-                this.isLoading = false;
-            }
-        );
-    }
-
-    deleteEnquiry(): void {
-        this.isLoading = true;
-        this.enquiryService.deleteEnquiry(this.selectedEnquiry, this.user.jwt).then(
-            (message) => {
-                this.enquiryList = this.enquiryList.filter((enquiry) => {
-                    return enquiry.id != this.selectedEnquiry.id;
-                });
-                this.selectedEnquiry = null;
-                this.isLoading = false;
-                alert(message);
-            },
-            (error) => {
-                this.isLoading = false;
-            }
-        );
-    }
-
     getClass(id: number): any {
         let result = null;
         this.classList.every((classs) => {
@@ -109,4 +64,9 @@ export class DeleteEnquiryComponent implements OnInit {
         });
         return result;
     }
+
+    isAdmin(): boolean {
+        return !this.inPagePermissions || this.inPagePermissions.userType == 'Admin';
+    }
+
 }
