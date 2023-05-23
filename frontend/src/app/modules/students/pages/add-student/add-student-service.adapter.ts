@@ -194,12 +194,10 @@ export class AddStudentServiceAdapter {
                     }
                 });
                 Promise.all([
+                    this.vm.studentService.createObject(this.vm.studentService.student_section, this.vm.newStudentSection),
                     form_data_list.forEach((x) => {
                         this.vm.studentService.createObject(this.vm.studentService.student_parameter_value, x);
                     }),
-                ]);
-                Promise.all([
-                    this.vm.studentService.createObject(this.vm.studentService.student_section, this.vm.newStudentSection),
                 ]).then(
                     (valueTwo) => {
                         alert('Student admitted successfully');
