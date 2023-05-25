@@ -290,7 +290,7 @@ export class User {
                 return;
             queryParams[key] = value;
         });
-        
+
         /* Sometimes the sidebar initializes after the route initialize-router event is emitted
            so the route is not changed and user sees a loading screen forever. To prevent this, we are using
            this hack that if there are no observers for the event than we are storing the event in a variable
