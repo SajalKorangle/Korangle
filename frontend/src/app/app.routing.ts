@@ -171,6 +171,7 @@ const routes: Routes = [
         outlet: 'print',
         children: [
             { path: 'students', loadChildren: 'app/modules/students/student.module#StudentModule' },
+            { path: 'library', loadChildren: 'app/modules/library/library.module#LibraryModule'},
             { path: 'fees', loadChildren: 'app/modules/fees/fee.module#FeeModule' },
             { path: 'attendance', loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule' },
             { path: 'employees', loadChildren: 'app/modules/employee/employee.module#EmployeeModule' },
