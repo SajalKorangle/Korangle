@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { LibraryComponent } from './library.component';
+import { PRINT_BOOK_LIST } from '../../print/print-routes.constants';
+import { PrintBookListComponent } from './print/print-book-list/print-book-list.component';
 
 const routes: Routes = [
     {
@@ -33,6 +35,10 @@ const routes: Routes = [
         path: '',
         component: LibraryComponent,
     },
+    {
+        path: PRINT_BOOK_LIST,
+        component: PrintBookListComponent
+    }
 ];
 
 @NgModule({
