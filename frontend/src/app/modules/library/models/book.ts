@@ -1,4 +1,5 @@
 export class Book {
+    id: number = null;
     name: string = null;
     author: string = null;
     publisher: string = null;
