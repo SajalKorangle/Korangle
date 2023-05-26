@@ -20,6 +20,8 @@ from team_app.models import Module
 from student_app.models import StudentSection
 from employee_app.models import Employee, EmployeePermission
 from online_classes_app.models import RestrictedStudent
+from school_app.model.models import Session
+
 
 
 def get_data_from_school_list(schoolList, schoolDbId):
@@ -244,6 +246,7 @@ def get_user_details(user_object):
         'email': user_object.email,
         'id': user_object.id,
         'schoolList': get_school_list(user_object),
+        'session_list': Session.objects.values()
     }
 
     return response
