@@ -194,16 +194,16 @@ export class AddStudentServiceAdapter {
                     }
                 });
                 Promise.all(
-                    form_data_list.map((x) => 
+                    form_data_list.map((x) =>
                         this.vm.studentService.createObject(this.vm.studentService.student_parameter_value, x)
                     )
                 ).then(
                     async (valueTwo) => {
                         await this.vm.studentService.createObject(this.vm.studentService.student_section, this.vm.newStudentSection);
                         alert('Student admitted successfully');
-                        
+
                         this.vm.initializeVariable();
-                        
+
                         CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
                         this.vm.isLoading = false;
                     },
