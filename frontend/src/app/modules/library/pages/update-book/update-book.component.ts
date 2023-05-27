@@ -147,6 +147,6 @@ export class UpdateBookComponent implements OnInit {
     }
 
     async updateBook() {
-        console.log("update");
+        alert("Under Construction");
     }
 }
