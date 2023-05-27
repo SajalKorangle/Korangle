@@ -234,14 +234,6 @@ export class UpdateBookComponent implements OnInit {
     }
 
     async updateBook() {
-        if (this.updatedBook) {
-            this.updatedBook.frontImage = this.frontImage;
-            this.updatedBook.backImage = this.backImage;
-            await this.serviceAdapter.updateBook();
-            this.updatedBook = null;
-            this.frontImage = null;
-            this.backImage = null;
-            this.searchBookFormControl.setValue('');
-        }
+        console.log("update");
     }
 }
