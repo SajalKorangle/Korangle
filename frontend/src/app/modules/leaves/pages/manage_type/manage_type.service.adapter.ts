@@ -83,7 +83,7 @@ export default class ManageTypeServiceAdapter {
             response = await this.vm.genericService.deleteObjectList(Operation.database, { filter: { __or__: Operation.data } });
         }
         if (response !== null) {
-            await this.initializeData(Operation.database, variableName);
+            await this.initializeData();
         }
         this.vm.isLoading = false;
         return response;
