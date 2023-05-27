@@ -18,7 +18,7 @@ export class ManageTypeComponent implements OnInit {
     leaveTypeMonthList: Array<LeaveTypeMonth> = [];
     leavePlanToLeaveTypeList: Array<LeavePlanToLeaveType> = [];
     isFormVisible: boolean = false;
-    isLoading: boolean = true;
+    isLoading: boolean = false;
     invalidNameList: Array<string> = [];
     currentSchoolLeaveType: LeaveType = {
         id: -1,
@@ -42,9 +42,7 @@ export class ManageTypeComponent implements OnInit {
             });
         });
         this.serviceAdapter.initializeAdapter(this);
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeaveType" }, "leaveTypeList");
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeaveTypeMonth" }, "leaveTypeMonthList");
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, "leavePlanToLeaveTypeList");
+        this.serviceAdapter.initializeData();
     }
     constructor(public genericService: GenericService) {}
     // handle Modal

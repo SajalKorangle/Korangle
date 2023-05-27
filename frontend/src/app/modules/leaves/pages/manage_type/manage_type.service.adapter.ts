@@ -13,9 +13,23 @@ export default class ManageTypeServiceAdapter {
     // ends :- Initialize adapter
 
     // starts :- Initialize Data (send GET request to backend to fetch data)
-    async initializeData(database: { [id: string]: string }, variableName: string): Promise<void> {
-        this.vm[variableName] = await this.vm.genericService.getObjectList(database, {});
-        this.vm.isLoading = false;
+    async initializeData(): Promise<void> {
+        this.vm.isLoading = true;
+        Promise.all([
+            this.vm.genericService.getObjectList({ leaves_app: "SchoolLeaveType" }, { filter: { parentSchool: this.vm.user.activeSchool.dbId } }),
+            this.vm.genericService.getObjectList(
+                { leaves_app: "SchoolLeaveTypeMonth" },
+                { filter: { parentSchoolLeaveType__parentSchool: this.vm.user.activeSchool.dbId } },
+            ),
+            this.vm.genericService.getObjectList(
+                { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
+                { filter: { parentSchoolLeavePlan__parentSchool: this.vm.user.activeSchool.dbId } },
+            ),
+        ]).then((results) => {
+            [this.vm.leaveTypeList, this.vm.leaveTypeMonthList, this.vm.leavePlanToLeaveTypeList] = [results[0], results[1], results[2]];
+            this.vm.leaveTypeList.sort((a, b) => a.leaveTypeName.localeCompare(b.leaveTypeName));
+            this.vm.isLoading = false;
+        });
     }
     // ends :- Initialize Data
 
