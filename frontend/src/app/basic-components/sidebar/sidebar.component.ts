@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import { Component, OnInit, Input, HostListener, AfterViewChecked } from '@angular/core';
 
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, ActivationStart } from '@angular/router';
 
@@ -6,7 +6,6 @@ import { EmitterService } from '../../services/emitter.service';
 
 import { User } from '../../classes/user';
 import { style, state, trigger, animate, transition } from '@angular/animations';
-import { GenericService } from '@services/generic/generic-service';
 import { environment } from '../../../environments/environment';
 import { Constants } from '../../classes/constants';
 import { CommonFunctions } from './../../classes/common-functions';
@@ -22,7 +21,6 @@ declare const $: any;
     styleUrls: ['./sidebar.component.css'],
     providers: [
         NotificationService,
-        GenericService,
     ],
     animations: [
         trigger('rotate', [
@@ -39,17 +37,16 @@ declare const $: any;
         ]),
     ],
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, AfterViewChecked {
     @Input() user: User;
 
     green = 'green';
     warning = 'warning';
-    session_list = [];
+    scrolled: boolean = false;
 
     constructor(
         private router: Router,
         private notificationService: NotificationService,
-        private genericService: GenericService
     ) {
         // We are using this routeReuseStrategy because the DashBoard Component should not re-render when changing pages.
         this.router.routeReuseStrategy.shouldReuseRoute = function (future: any, curr: any) {
@@ -82,20 +79,38 @@ export class SidebarComponent implements OnInit {
                 CommonFunctions.scrollToTop();
             }
         });
-        this.genericService.getObjectList({school_app: 'Session'}, {}).then((value) => {
-            this.session_list = value;
-        });
+
+        // Change route if any unobserved event exist
+        if (this.user.newRoute !== null) {
+            this.router.navigateByUrl('/', { skipLocationChange: false }).then(() => {
+                this.router.navigateByUrl(
+                    this.router.createUrlTree([Constants.dashBoardRoute + '/' + this.user.section.route + '/' + this.user.section.subRoute],
+                        { queryParams: this.user.newRoute.queryParams })
+                );
+            }).then(() => this.user.newRoute = null);
+        }
         EmitterService.get('initialize-router').subscribe((value) => {
             // Navigating To '/' before any other route - because :
             // We have used routeReuseStrategy so if the url is same the page won't reload,
             // To overcome that case we are navigating to '/' first and then the corresponding route.
-            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+            this.router.navigateByUrl('/', { skipLocationChange: false }).then(() => {
                 this.router.navigateByUrl(
                     this.router.createUrlTree([Constants.dashBoardRoute + '/' + this.user.section.route + '/' + this.user.section.subRoute],
-                        {queryParams: value.queryParams})
+                        { queryParams: value.queryParams })
                 );
             });
         });
+    }
+
+    ngAfterViewChecked(): void {
+        // Scroll to the active button on page reload
+        if (!this.scrolled) {
+            let activeElement = document.querySelector('.active');
+            if (activeElement) {
+                this.scrolled = true;
+                activeElement.scrollIntoView();
+            }
+        }
     }
 
     isMobileMenu() {
@@ -162,7 +177,7 @@ export class SidebarComponent implements OnInit {
     }
 
     getCurrentSession(): any {
-        return this.session_list.find(session => {
+        return this.user.session_list.find(session => {
             return session.id == this.user.activeSchool.currentSessionDbId;
         });
     }
