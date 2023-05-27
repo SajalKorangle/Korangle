@@ -14,14 +14,17 @@ export default class ManagePlanServiceAdapter {
 
     // starts :- Initialize Data (send GET request to backend to fetch data)
     async initializeData(): Promise<void> {
+        this.vm.isLoading = true;
         Promise.all([this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlan" }, { filter: {
             parentSchool: this.vm.user.activeSchool.dbId
         } }), this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, { filter: {
             parentSchoolLeavePlan__parentSchool__id: this.vm.user.activeSchool.dbId
-        } }), this.vm.leaveTypeList = await this.vm.genericService.getObjectList({ leaves_app: "SchoolLeaveType" }, { filter: {
+        } }), this.vm.genericService.getObjectList({ leaves_app: "SchoolLeaveType" }, { filter: {
             parentSchool: this.vm.user.activeSchool.dbId
         } })]).then((results) => {
             [this.vm.leavePlanList, this.vm.leavePlanToLeaveTypeList, this.vm.leaveTypeList] = [results[0], results[1], results[2]];
+            this.vm.leavePlanList.sort((leavePlanA, leavePlanB) => leavePlanA.leavePlanName < leavePlanB.leavePlanName ? -1 : 1);
+            this.vm.resetComponent();
             this.vm.isLoading = false;
         });
     }
@@ -101,8 +104,7 @@ export default class ManagePlanServiceAdapter {
         addLeaveTypeChoiceList.length ?
         await this.vm.genericService.createObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, addLeaveTypeChoiceList) : null;
         // ends :- Request changes
-        this.vm.resetComponent();
-        this.vm.ngOnInit();
+        this.initializeData();
     }
     // ends :- function to save plan
 
@@ -117,8 +119,7 @@ export default class ManagePlanServiceAdapter {
         ? await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, { filter: { __or__: oldLeaveTypeChoiceList } })
         : null;
         await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlan" }, { filter: this.vm.currentLeavePlan });
-        this.vm.resetComponent();
-        this.vm.ngOnInit();
+        this.initializeData();
     }
     // ends :- Function to delete currently selected plan
 }

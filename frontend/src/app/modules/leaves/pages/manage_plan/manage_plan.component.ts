@@ -31,7 +31,6 @@ export class ManagePlanComponent implements OnInit {
 
     constructor(public genericService: GenericService) {}
     async ngOnInit(): Promise<void> {
-        this.isLoading = true;
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
     }
