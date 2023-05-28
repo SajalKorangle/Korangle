@@ -100,7 +100,7 @@ export class UpdateBookComponent implements OnInit {
     /* --------------- Matched book name highlighting logic starts -------------- */
     leftText(name: string): string {
         let text = this.searchBookFormControl.value;
-        if (typeof text === typeof "abc") {   
+        if (typeof text === typeof "abc") {
             let ind = name.toLowerCase().indexOf(text.toLowerCase());
             if (ind == -1)
                 return name;
