@@ -134,7 +134,7 @@ export class UpdateBookComponent implements OnInit {
 
     handleBookSelection(event: any) {
         this.selectedBook = event.option.value;
-        this.updatedBook = event.option.value;
+        this.updatedBook = { ...event.option.value };
         this.frontImage = this.updatedBook.frontImage;
         this.backImage = this.updatedBook.backImage;
     }
