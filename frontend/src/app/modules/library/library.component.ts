@@ -5,9 +5,10 @@ import { DataStorage } from '../../classes/data-storage';
     template: '<router-outlet></router-outlet>',
 })
 export class LibraryComponent implements OnInit {
-
+    user: any;
     constructor() {}
 
     ngOnInit(): void {
+        this.user = DataStorage.getInstance().getUser();
     }
 }
