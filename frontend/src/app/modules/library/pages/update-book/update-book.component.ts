@@ -100,36 +100,33 @@ export class UpdateBookComponent implements OnInit {
     /* --------------- Matched book name highlighting logic starts -------------- */
     leftText(name: string): string {
         let text = this.searchBookFormControl.value;
-        if (typeof text === typeof "abc") {
-            let ind = name.toLowerCase().indexOf(text.toLowerCase());
-            if (ind == -1)
-                return name;
-            if (ind > 0)
-                return name.substring(0, ind);
-        }
+        if (typeof text !== typeof "abc") text = text.name;
+        let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        if (ind == -1)
+            return name;
+        if (ind > 0)
+            return name.substring(0, ind);
         return '';
     }
 
     rightText(name: string): string {
         let text = this.searchBookFormControl.value;
-        if (typeof text === typeof "abc") {
-            let ind = name.toLowerCase().indexOf(text.toLowerCase());
-            if (ind == -1)
-                return '';
-            let right = ind + text.length;
-            if (right < name.length)
-                return name.substring(right, name.length);
-        }
+        if (typeof text !== typeof "abc") text = text.name;
+        let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        if (ind == -1)
+            return '';
+        let right = ind + text.length;
+        if (right < name.length)
+            return name.substring(right, name.length);
         return '';
     }
 
     highlightText(name: string): string {
         let text = this.searchBookFormControl.value;
-        if (typeof text === typeof "abc") {
-            let ind = name.toLowerCase().indexOf(text.toLowerCase());
-            if (ind != -1)
-                return name.substring(ind, ind + text.length);
-        }
+        if (typeof text !== typeof "abc") text = text.name;
+        let ind = name.toLowerCase().indexOf(text.toLowerCase());
+        if (ind != -1)
+            return name.substring(ind, ind + text.length);
         return '';
     }
     /* ---------------- Matched book name highlighting logic ends --------------- */
