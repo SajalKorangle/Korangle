@@ -8,6 +8,12 @@ import { Book } from '@modules/library/models/book';
 import { UpdateBookServiceAdapter } from "./update-book.service.adapter";
 import { GenericService } from '@services/generic/generic-service';
 
+interface SearchBookElement {
+    name: string;
+    id: number;
+    author: string;
+}
+
 @Component({
     selector: 'update-book',
     templateUrl: './update-book.component.html',
@@ -19,10 +25,12 @@ export class UpdateBookComponent implements OnInit {
     user: any;
 
     bookList = [];
-    filteredBookList: Observable<Book[]>;
+    filteredBookList: Observable<SearchBookElement[]>;
 
     searchBookFormControl: FormControl = new FormControl('');
     isLoading = false;
+
+    isBookLoading: boolean = false;
 
     serviceAdapter: UpdateBookServiceAdapter;
 
@@ -41,7 +49,7 @@ export class UpdateBookComponent implements OnInit {
         this.serviceAdapter.initializeData();
 
         this.filteredBookList = this.searchBookFormControl.valueChanges
-        .pipe(
+            .pipe(
             startWith(''),
             map((value) => (typeof value === 'string' ? value : (value as any).name)),
             map(searchedBookName => this.getFilteredBookList(searchedBookName)),
@@ -68,6 +76,18 @@ export class UpdateBookComponent implements OnInit {
             return;
         }
 
+
+        image = await this.cropImage(image, [1, 1]);
+
+        while (image.size > 512000) {
+            image = await this.resizeImage(image);
+        }
+
+        if (image.size > 512000) {
+            alert('Image size should be less than 512kb');
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = (e) => {
             if (side === 'back') {
@@ -79,11 +99,88 @@ export class UpdateBookComponent implements OnInit {
         reader.readAsDataURL(image);
     }
 
-    getFilteredBookList(searchedBookName: string): Book[] {
+    cropImage(file: File, aspectRatio: any): Promise<Blob> {
+        return new Promise((resolve, reject) => {
+            let image = new Image();
+            image.src = URL.createObjectURL(file);
+            image.onload = () => {
+                let dx = 0;
+                let dy = 0;
+                let dw = image.width;
+                let dh = image.height;
+
+                let sx = 0;
+                let sy = 0;
+                let sw = dw;
+                let sh = dh;
+
+                if (sw > (aspectRatio[1] * sh) / aspectRatio[0]) {
+                    sx = (sw - (aspectRatio[1] * sh) / aspectRatio[0]) / 2;
+                    sw = (aspectRatio[1] * sh) / aspectRatio[0];
+                    dw = sw;
+                } else if (sh > (aspectRatio[0] * sw) / aspectRatio[1]) {
+                    sy = (sh - (aspectRatio[0] * sw) / aspectRatio[1]) / 2;
+                    sh = (aspectRatio[0] * sw) / aspectRatio[1];
+                    dh = sh;
+                }
+
+                let canvas = document.createElement('canvas');
+                canvas.width = dw;
+                canvas.height = dh;
+
+                let context = canvas.getContext('2d');
+
+                context.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+
+                canvas.toBlob(resolve, file.type);
+            };
+            image.onerror = reject;
+        });
+    }
+
+    resizeImage(file: File): Promise<Blob> {
+        return new Promise((resolve, reject) => {
+            let image = new Image();
+            image.src = URL.createObjectURL(file);
+            image.onload = () => {
+                let width = image.width;
+                let height = image.height;
+
+                let maxWidth = image.width / 2;
+                let maxHeight = image.height / 2;
+
+                let newWidth: any;
+                let newHeight: any;
+
+                if (width > height) {
+                    newHeight = height * (maxWidth / width);
+                    newWidth = maxWidth;
+                } else {
+                    newWidth = width * (maxHeight / height);
+                    newHeight = maxHeight;
+                }
+
+                let canvas = document.createElement('canvas');
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+
+                let context = canvas.getContext('2d');
+
+                context.drawImage(image, 0, 0, newWidth, newHeight);
+
+                canvas.toBlob(resolve, file.type);
+            };
+            image.onerror = reject;
+        });
+    }
+
+    getFilteredBookList(searchedBookName: string) {
+        if (searchedBookName === '') return [];
         const list = this.bookList.filter(book => {
             return this.namesMatch(book.name, searchedBookName);
         });
-        return list;
+
+        return list.slice(0, 20);
     }
 
     setBookListLoading(value: boolean): void {
@@ -132,11 +229,18 @@ export class UpdateBookComponent implements OnInit {
     /* ---------------- Matched book name highlighting logic ends --------------- */
 
 
-    handleBookSelection(event: any) {
-        this.selectedBook = event.option.value;
-        this.updatedBook = { ...event.option.value };
-        this.frontImage = this.updatedBook.frontImage;
-        this.backImage = this.updatedBook.backImage;
+    async handleBookSelection(event: any) {
+        if (event.option.value !== 'none') {
+            this.isBookLoading = true;
+            let book = await this.serviceAdapter.getBook(event.option.value.id);
+            if (book) {
+                this.selectedBook = {...book};
+                this.updatedBook = {...book};
+                this.frontImage = book.frontImage;
+                this.backImage = book.backImage;
+            }
+            this.isBookLoading = false;
+        }
     }
 
     displayFn(book) {
@@ -144,6 +248,14 @@ export class UpdateBookComponent implements OnInit {
     }
 
     async updateBook() {
-        alert("Under Construction");
+        if (this.updatedBook) {
+            this.updatedBook.frontImage = this.frontImage;
+            this.updatedBook.backImage = this.backImage;
+            await this.serviceAdapter.updateBook();
+            this.updatedBook = null;
+            this.frontImage = null;
+            this.backImage = null;
+            this.searchBookFormControl.setValue('');
+        }
     }
 }
