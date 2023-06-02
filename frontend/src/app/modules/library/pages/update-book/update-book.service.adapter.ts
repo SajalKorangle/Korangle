@@ -43,7 +43,7 @@ export class UpdateBookServiceAdapter {
         }
     }
 
-    async getBook(id:number) {
+    async getBook(id: number) {
         const query = {
             filter: {
                 id: id
