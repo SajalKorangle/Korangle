@@ -78,25 +78,28 @@ export class UpdateBookServiceAdapter {
         const book_form_data = new FormData();
         const data = {...this.vm.updatedBook};
 
+        let tasks = []
 
         Object.keys(data).forEach((key) => {
             if (key === 'frontImage') {
                 if (this.vm.frontImage) {
                     const image = this.dataURLtoFile(this.vm.frontImage, 'frontImage.jpg');
-                    console.log({frontimg: image});
                     if (image) book_form_data.append(key, image);
+                } else {
+                    tasks.push(this.vm.libraryService.createObject(this.vm.libraryService.bookRemoveImage, {id: this.vm.selectedBook.id, imageType: 'frontImage'}))
                 }
             } else if (key === 'backImage') {
-                if (this.vm.backImage) {
+                if (this.vm.backImage || this.vm.backImage === '') {
                     const image = this.dataURLtoFile(this.vm.backImage, 'backImage.jpg');
-                    console.log({backimg: image});
                     if (image) book_form_data.append(key, image);
+                } else {
+                    tasks.push(this.vm.libraryService.createObject(this.vm.libraryService.bookRemoveImage, {id: this.vm.selectedBook.id, imageType: 'backImage'}))
                 }
             }
             else {
                 if (data[key] !== null) {
                     book_form_data.append(key, data[key]);
-                }
+                } 
             }
         });
 
@@ -106,16 +109,18 @@ export class UpdateBookServiceAdapter {
         let moduleList = this.vm.user.activeSchool.moduleList;
         let actionString = " updated book details of" + this.vm.selectedBook.name;
 
+        tasks.push(this.vm.genericService.updateObject({ library_app: "Book" }, book_form_data));
+        tasks.push(CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString));
+
         try {
-            console.log({book_form_data});
-            await this.vm.genericService.updateObject({library_app: "Book"}, book_form_data);
-            alert('Book updated succesfully');
-
-            await CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
-
-            await CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
-
+            await Promise.all(tasks);
             this.vm.isLoading = false;
+            await this.initializeData();
+            this.vm.updatedBook = null;
+            this.vm.frontImage = null;
+            this.vm.backImage = null;
+            this.vm.searchBookFormControl.setValue('');
+            alert('Book updated succesfully');
         }
         catch {
             this.vm.isLoading = false;

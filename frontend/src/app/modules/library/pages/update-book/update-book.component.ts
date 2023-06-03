@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators/map';
 import { Book } from '@modules/library/models/book';
 import { UpdateBookServiceAdapter } from "./update-book.service.adapter";
 import { GenericService } from '@services/generic/generic-service';
+import { LibraryService } from "@services/modules/library/library.service";
 
 interface SearchBookElement {
     name: string;
@@ -18,7 +19,7 @@ interface SearchBookElement {
     selector: 'update-book',
     templateUrl: './update-book.component.html',
     styleUrls: ['./update-book.component.css'],
-    providers: [GenericService]
+    providers: [GenericService, LibraryService]
 })
 export class UpdateBookComponent implements OnInit {
 
@@ -40,7 +41,7 @@ export class UpdateBookComponent implements OnInit {
     backImage: any;
     frontImage: any;
 
-    constructor(public genericService: GenericService) { }
+    constructor(public genericService: GenericService, public libraryService: LibraryService) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
@@ -249,13 +250,7 @@ export class UpdateBookComponent implements OnInit {
 
     async updateBook() {
         if (this.updatedBook) {
-            this.updatedBook.frontImage = this.frontImage;
-            this.updatedBook.backImage = this.backImage;
             await this.serviceAdapter.updateBook();
-            this.updatedBook = null;
-            this.frontImage = null;
-            this.backImage = null;
-            this.searchBookFormControl.setValue('');
         }
     }
 }
