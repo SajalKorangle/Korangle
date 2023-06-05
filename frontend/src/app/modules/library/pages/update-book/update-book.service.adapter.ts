@@ -78,7 +78,7 @@ export class UpdateBookServiceAdapter {
         const book_form_data = new FormData();
         const data = {...this.vm.updatedBook};
 
-        let tasks = []
+        let tasks = [];
 
         Object.keys(data).forEach((key) => {
             if (key === 'frontImage') {
@@ -86,20 +86,26 @@ export class UpdateBookServiceAdapter {
                     const image = this.dataURLtoFile(this.vm.frontImage, 'frontImage.jpg');
                     if (image) book_form_data.append(key, image);
                 } else {
-                    tasks.push(this.vm.libraryService.createObject(this.vm.libraryService.bookRemoveImage, {id: this.vm.selectedBook.id, imageType: 'frontImage'}))
+                    tasks.push(this.vm.libraryService.createObject(
+                        this.vm.libraryService.bookRemoveImage,
+                        { id: this.vm.selectedBook.id, imageType: 'frontImage' }
+                    ));
                 }
             } else if (key === 'backImage') {
                 if (this.vm.backImage || this.vm.backImage === '') {
                     const image = this.dataURLtoFile(this.vm.backImage, 'backImage.jpg');
                     if (image) book_form_data.append(key, image);
                 } else {
-                    tasks.push(this.vm.libraryService.createObject(this.vm.libraryService.bookRemoveImage, {id: this.vm.selectedBook.id, imageType: 'backImage'}))
+                    tasks.push(this.vm.libraryService.createObject(
+                        this.vm.libraryService.bookRemoveImage,
+                        { id: this.vm.selectedBook.id, imageType: 'backImage' }
+                    ));
                 }
             }
             else {
                 if (data[key] !== null) {
                     book_form_data.append(key, data[key]);
-                } 
+                }
             }
         });
 
