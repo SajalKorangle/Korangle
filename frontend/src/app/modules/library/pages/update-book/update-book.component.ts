@@ -26,6 +26,12 @@ export class UpdateBookComponent implements OnInit {
 
     serviceAdapter: UpdateBookServiceAdapter;
 
+    selectedBook: Book | null = null;
+    updatedBook: Book | null = null;
+
+    backImage: any;
+    frontImage: any;
+
     constructor(public genericService: GenericService) { }
 
     ngOnInit() {
@@ -42,9 +48,40 @@ export class UpdateBookComponent implements OnInit {
         );
     }
 
+    isMobile(): boolean {
+        if (window.innerWidth > 991) {
+            return false;
+        }
+        return true;
+    }
+
+    async onImageSelect(evt: any, side: any) {
+        let image = evt.target.files[0];
+
+        if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
+            alert('Image type should be either jpg, jpeg, or png');
+            return;
+        }
+
+        if (image.size === 0) {
+            alert('Image is blank. Please upload/select another image');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            if (side === 'back') {
+                this.backImage = reader.result;
+            } else if (side === 'front') {
+                this.frontImage = reader.result;
+            }
+        };
+        reader.readAsDataURL(image);
+    }
+
     getFilteredBookList(searchedBookName: string): Book[] {
         const list = this.bookList.filter(book => {
-        return this.namesMatch(book.name, searchedBookName);
+            return this.namesMatch(book.name, searchedBookName);
         });
         return list;
     }
@@ -63,6 +100,7 @@ export class UpdateBookComponent implements OnInit {
     /* --------------- Matched book name highlighting logic starts -------------- */
     leftText(name: string): string {
         let text = this.searchBookFormControl.value;
+        if (typeof text !== typeof "abc") text = text.name;
         let ind = name.toLowerCase().indexOf(text.toLowerCase());
         if (ind == -1)
             return name;
@@ -73,6 +111,7 @@ export class UpdateBookComponent implements OnInit {
 
     rightText(name: string): string {
         let text = this.searchBookFormControl.value;
+        if (typeof text !== typeof "abc") text = text.name;
         let ind = name.toLowerCase().indexOf(text.toLowerCase());
         if (ind == -1)
             return '';
@@ -84,6 +123,7 @@ export class UpdateBookComponent implements OnInit {
 
     highlightText(name: string): string {
         let text = this.searchBookFormControl.value;
+        if (typeof text !== typeof "abc") text = text.name;
         let ind = name.toLowerCase().indexOf(text.toLowerCase());
         if (ind != -1)
             return name.substring(ind, ind + text.length);
@@ -93,12 +133,17 @@ export class UpdateBookComponent implements OnInit {
 
 
     handleBookSelection(event: any) {
-        const selectedBook: Book = event.option.value;
+        this.selectedBook = event.option.value;
+        this.updatedBook = { ...event.option.value };
+        this.frontImage = this.updatedBook.frontImage;
+        this.backImage = this.updatedBook.backImage;
     }
 
     displayFn(book) {
         return book ? book.name : undefined;
     }
+
+    async updateBook() {
+        alert("Under Construction");
+    }
 }
-
-
