@@ -250,6 +250,14 @@ export class UpdateBookComponent implements OnInit {
 
     async updateBook() {
         if (this.updatedBook) {
+            if (!this.updatedBook.name) {
+                alert('Please enter book name');
+                return;
+            }
+            if (!this.updatedBook.bookNumber && this.updatedBook.bookNumber !== 0) {
+                alert('Please enter book number');
+                return;
+            }
             await this.serviceAdapter.updateBook();
         }
     }
