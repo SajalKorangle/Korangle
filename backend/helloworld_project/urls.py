@@ -44,7 +44,8 @@ urlpatterns = [
     url(r'^' + api_version + 'online-class/', include('online_classes_app.urls')),
     url(r'^' + api_version + 'payment/', include('payment_app.urls')),
     url(r'^'+api_version+'feature-flag/', include('feature_flag_app.urls')),
-    url(r'^'+api_version+'contact/', include('contact_app.urls'))
+    url(r'^'+api_version+'contact/', include('contact_app.urls')),
+    url(r'^'+api_version+'library/', include('library_app.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
