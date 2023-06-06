@@ -32,7 +32,7 @@ export class DeleteBookComponent implements OnInit {
 
     completeBookList: DeleteBookObject[] = [];
 
-    sortBy: string = "name";
+    sortBy: string = "bookNumber";
     sortDirection: number = 1; // 1 for ascending, -1 for descending
 
     selectedAuthors = [];
@@ -122,6 +122,12 @@ export class DeleteBookComponent implements OnInit {
     }
 
     deleteSelectedBooks(): void {
-        alert('Under Construction');
+        if(this.getSelectedBooks().length === 0) {
+            alert("Please select at least one book to delete");
+            return;
+        }
+        if(confirm("Are you sure you want to delete the selected books?")) {
+            this.serviceAdapter.deleteBooks();
+        }
     }
 }
