@@ -1,3 +1,177 @@
-<div class="card-content">
-    Under Construction !!!
+<div class="card-content" *ngIf="!isLoading">
+    <div class="form">
+        <mat-form-field class="form-field">
+            <mat-label>Book name</mat-label>
+            <input
+                matInput
+                name="name"
+                type="text"
+                [(ngModel)]="searchBookName"
+                placeholder="Search Book Name"
+                name="SearchBookName"
+            />
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+            <mat-label>Select Authors</mat-label>
+            <mat-select
+                multiple
+                [(ngModel)]="selectedAuthors"
+                (ngModelChange)="filterBooks()"
+                (click)="$event.stopPropagation()"
+            >
+                <!-- Clear All Button Start -->
+                <div style="display: flex; justify-content: space-evenly">
+                    <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('selectedAuthors')"
+                        >Clear All</button
+                    >
+                </div>
+                <!-- Clear All Button End-->
+
+                <mat-select-trigger>
+                    {{ selectedAuthors.length + " options selected" }}
+                </mat-select-trigger>
+
+                <!-- Options Start -->
+                <mat-option *ngFor="let author of authorOptions" [value]="author" style="text-transform: capitalize">
+                    {{ author || "None" }}
+                </mat-option>
+                <!-- Options End -->
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+            <mat-label>Select Publishers</mat-label>
+            <mat-select
+                multiple
+                [(ngModel)]="selectedPublishers"
+                (ngModelChange)="filterBooks()"
+                (click)="$event.stopPropagation()"
+            >
+                <!-- Clear All Button Start -->
+                <div style="display: flex; justify-content: space-evenly">
+                    <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('selectedPublishers')"
+                        >Clear All</button
+                    >
+                </div>
+                <!-- Clear All Button End-->
+
+                <mat-select-trigger>
+                    {{ selectedPublishers.length + " options selected" }}
+                </mat-select-trigger>
+
+                <!-- Options Start -->
+                <mat-option
+                    *ngFor="let publisher of publisherOptions"
+                    [value]="publisher"
+                    style="text-transform: capitalize"
+                >
+                    {{ publisher || "None" }}
+                </mat-option>
+                <!-- Options End -->
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+            <mat-label>Select Book Type</mat-label>
+            <mat-select
+                multiple
+                [(ngModel)]="selectedBookTypes"
+                (ngModelChange)="filterBooks()"
+                (click)="$event.stopPropagation()"
+            >
+                <!-- Clear All Button Start -->
+                <div style="display: flex; justify-content: space-evenly">
+                    <button class="btn" style="padding: 4px 7px" (click)="unSelectAllOptions('selectedBookTypes')"
+                        >Clear All</button
+                    >
+                </div>
+                <!-- Clear All Button End-->
+
+                <mat-select-trigger>
+                    {{ selectedBookTypes.length + " options selected" }}
+                </mat-select-trigger>
+
+                <!-- Options Start -->
+                <mat-option
+                    *ngFor="let bookType of bookTypeOptions"
+                    [value]="bookType"
+                    style="text-transform: capitalize"
+                >
+                    {{ bookType || "None" }}
+                </mat-option>
+                <!-- Options End -->
+            </mat-select>
+        </mat-form-field>
+
+        <button
+            type="button"
+            id="delete"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 12px 15px; margin-top: 0"
+            matTooltip="Delete the selected books"
+            tooltip-position="left"
+            (click)="deleteSelectedBooks()"
+            [disabled]="getSelectedBooks().length === 0"
+        >
+            Delete<i class="material-icons" style="margin-left: 15px">delete</i>
+        </button>
+    </div>
+
+    <!-- Book Table Data Start -->
+    <ng-container *ngIf="!isLoading">
+        <p>
+            Total Books: <b>{{ completeBookList.length }}</b
+            >, Selected : <b>{{ getSelectedBooks().length }}</b>
+        </p>
+        <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+            <table class="table table-hover">
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th></th>
+                        <th (click)="updateSortingParameters('bookNumber')" style="min-width: 80px; cursor: pointer"
+                            >Book No.</th
+                        >
+                        <th (click)="updateSortingParameters('name')" style="min-width: 180px; cursor: pointer"
+                            >Name</th
+                        >
+                        <th (click)="updateSortingParameters('author')" style="min-width: 180px; cursor: pointer"
+                            >Author</th
+                        >
+                        <th (click)="updateSortingParameters('publisher')" style="min-width: 180px; cursor: pointer"
+                            >Publisher</th
+                        >
+                        <th (click)="updateSortingParameters('typeOfBook')" style="min-width: 100px; cursor: pointer"
+                            >Book Type</th
+                        >
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *cdkVirtualFor="let book of filterBooks()">
+                        <tr>
+                            <ng-container>
+                                <td>
+                                    <mat-checkbox [(ngModel)]="book.selected"> </mat-checkbox>
+                                </td>
+                                <td [attr.id]="'book-number-value-' + book.bookNumber">{{ book.bookNumber }}</td>
+                                <td [attr.id]="'book-value-' + book.name.replace(' ', '')">
+                                    {{ book.name }}
+                                </td>
+                                <td>
+                                    {{ book.author }}
+                                </td>
+                                <td>{{ book.publisher }}</td>
+                                <td>{{ book.typeOfBook }}</td>
+                            </ng-container>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </cdk-virtual-scroll-viewport>
+    </ng-container>
+    <!-- Book Table Data End -->
 </div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
