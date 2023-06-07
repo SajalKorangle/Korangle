@@ -98,8 +98,8 @@ export class DeleteBookComponent implements OnInit {
         // this.updateSortingParameters('');
     }
 
-    selectAllBooks() { 
-        if(this.completeBookList.every(book => book.selected)) {
+    selectAllBooks() {
+        if (this.completeBookList.every(book => book.selected)) {
             this.completeBookList.forEach(book => book.selected = false);
         }
         else {
@@ -122,11 +122,11 @@ export class DeleteBookComponent implements OnInit {
     }
 
     deleteSelectedBooks(): void {
-        if(this.getSelectedBooks().length === 0) {
+        if (this.getSelectedBooks().length === 0) {
             alert("Please select at least one book to delete");
             return;
         }
-        if(confirm("Are you sure you want to delete the selected books?")) {
+        if (confirm("Are you sure you want to delete the selected books?")) {
             this.serviceAdapter.deleteBooks();
         }
     }

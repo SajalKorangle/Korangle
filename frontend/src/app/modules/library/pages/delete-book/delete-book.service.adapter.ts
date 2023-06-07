@@ -55,7 +55,7 @@ export class DeleteBookServiceAdapter {
             return;
         }
         alert("Books deleted successfully");
-        
+
         this.vm.authorOptions = new Set();
         this.vm.publisherOptions = new Set();
         this.vm.bookTypeOptions = new Set();
