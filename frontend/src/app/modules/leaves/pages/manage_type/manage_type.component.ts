@@ -84,7 +84,7 @@ export class ManageTypeComponent implements OnInit {
         this.isFormVisible = false;
     }
     async saveLeaveType(data): Promise<any> {
-        this.isSaving = true;
+        this.isSaving = false;
         let response = await this.serviceAdapter.handleDataChange(data, data.setVariable);
         if (response !== null && response !== undefined && JSON.stringify(response) !== "{}") {
             if (data.setVariableNameMap) {
@@ -93,14 +93,12 @@ export class ManageTypeComponent implements OnInit {
                 });
             }
             if (data.close) {
-                if (data.operation.startsWith("update")) {
-                    alert("Leave Type updated successfully.");
-                }
+                alert(`Leave Type ${data.operation.startsWith("update") ? 'updated' : 'inserted'} successfully.`);
                 this.isSaving = false;
                 this.closeAddNewType(data);
+            } else {
+                this.isSaving = true;
             }
-        } else {
-            this.isSaving = false;
         }
     }
     async deleteType(event, schoolLeaveType): Promise<any> {
