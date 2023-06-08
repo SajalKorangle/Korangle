@@ -34,7 +34,10 @@
     <!-- Search bar ends -->
     <!-- Form fields start -->
     <div>
-        <ng-container *ngIf="updatedBook">
+        <ng-container *ngIf="isBookLoading">
+            <mat-spinner style="margin-inline: auto"></mat-spinner>
+        </ng-container>
+        <ng-container *ngIf="updatedBook && !isBookLoading">
             <!-- Top half -->
             <div class="row">
                 <!-- Front cover img - if mobile start-->
