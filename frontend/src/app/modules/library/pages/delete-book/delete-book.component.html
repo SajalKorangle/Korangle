@@ -104,6 +104,120 @@
             </mat-select>
         </mat-form-field>
 
+        <!-- Column Filter For Books Data Start-->
+        <mat-form-field style="margin-right: 15px">
+            <mat-select placeholder="Select Columns" id="select-book-column" style="width: 100%">
+                <mat-option>
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllColumns(); $event.stopPropagation()"
+                        >Select All</button
+                    >
+                    <button
+                        class="btn"
+                        style="padding: 4px 7px"
+                        (click)="unSelectAllColumns(); $event.stopPropagation()"
+                        >Clear All</button
+                    >
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showSerialNumber" (click)="$event.stopPropagation()"
+                        >Serial No.
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showFrontImage" (click)="$event.stopPropagation()"
+                        >Front Image
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showBackImage" (click)="$event.stopPropagation()"
+                        >Back Image
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showBookNumber" (click)="$event.stopPropagation()"
+                        >Book No.
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showName" (click)="$event.stopPropagation()"
+                        >Name
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showAuthor" (click)="$event.stopPropagation()"
+                        >Author
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showLocation" (click)="$event.stopPropagation()"
+                        >Location
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showDateOfPurchase" (click)="$event.stopPropagation()"
+                        >Date of Purchase
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showPublisher" (click)="$event.stopPropagation()"
+                        >Publisher
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showEdition" (click)="$event.stopPropagation()"
+                        >Edition
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showNumberOfPages" (click)="$event.stopPropagation()"
+                        >No. of Pages
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showPrintedCost" (click)="$event.stopPropagation()"
+                        >PrintedCost
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showCoverType" (click)="$event.stopPropagation()"
+                        >Cover Type
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="columnFilter.showBookType" (click)="$event.stopPropagation()"
+                        >Book Type
+                    </mat-checkbox>
+                </mat-option>
+
+                <mat-option>
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllColumns(); $event.stopPropagation()"
+                        >Select All</button
+                    >
+                    <button
+                        class="btn"
+                        style="padding: 4px 7px"
+                        (click)="unSelectAllColumns(); $event.stopPropagation()"
+                        >Clear All</button
+                    >
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- Column Filter For Books Data End -->
+
         <button
             type="button"
             id="delete"
@@ -129,19 +243,79 @@
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                     <tr>
                         <th></th>
-                        <th (click)="updateSortingParameters('bookNumber')" style="min-width: 80px; cursor: pointer"
+                        <th style="min-width: 60px" *ngIf="columnFilter.showSerialNumber">S No.</th>
+
+                        <th *ngIf="columnFilter.showFrontImage" style="min-width: 120px; text-align: center"
+                            >Front Image</th
+                        >
+                        <th *ngIf="columnFilter.showBackImage" style="min-width: 120px; text-align: center"
+                            >Back Image</th
+                        >
+
+                        <th
+                            (click)="updateSortingParameters('bookNumber')"
+                            style="min-width: 80px"
+                            *ngIf="columnFilter.showBookNumber"
                             >Book No.</th
                         >
-                        <th (click)="updateSortingParameters('name')" style="min-width: 180px; cursor: pointer"
+                        <th
+                            (click)="updateSortingParameters('name')"
+                            style="min-width: 180px"
+                            *ngIf="columnFilter.showName"
                             >Name</th
                         >
-                        <th (click)="updateSortingParameters('author')" style="min-width: 180px; cursor: pointer"
+                        <th
+                            (click)="updateSortingParameters('author')"
+                            style="min-width: 180px"
+                            *ngIf="columnFilter.showAuthor"
                             >Author</th
                         >
-                        <th (click)="updateSortingParameters('publisher')" style="min-width: 180px; cursor: pointer"
+                        <th
+                            (click)="updateSortingParameters('location')"
+                            style="min-width: 100px"
+                            *ngIf="columnFilter.showLocation"
+                            >Location</th
+                        >
+                        <th
+                            (click)="updateSortingParameters('dateOfPurchase')"
+                            style="min-width: 100px"
+                            *ngIf="columnFilter.showDateOfPurchase"
+                            >Date of Purchase</th
+                        >
+                        <th
+                            (click)="updateSortingParameters('publisher')"
+                            style="min-width: 180px"
+                            *ngIf="columnFilter.showPublisher"
                             >Publisher</th
                         >
-                        <th (click)="updateSortingParameters('typeOfBook')" style="min-width: 100px; cursor: pointer"
+                        <th
+                            (click)="updateSortingParameters('edition')"
+                            style="min-width: 100px"
+                            *ngIf="columnFilter.showEdition"
+                            >Edition</th
+                        >
+                        <th
+                            (click)="updateSortingParameters('numberOfPages')"
+                            style="min-width: 80px"
+                            *ngIf="columnFilter.showNumberOfPages"
+                            >No. of pages</th
+                        >
+                        <th
+                            (click)="updateSortingParameters('printedCost')"
+                            style="min-width: 100px"
+                            *ngIf="columnFilter.showPrintedCost"
+                            >Printed Cost</th
+                        >
+                        <th
+                            (click)="updateSortingParameters('coverType')"
+                            style="min-width: 100px"
+                            *ngIf="columnFilter.showCoverType"
+                            >Cover Type</th
+                        >
+                        <th
+                            (click)="updateSortingParameters('typeOfBook')"
+                            style="min-width: 100px"
+                            *ngIf="columnFilter.showBookType"
                             >Book Type</th
                         >
                     </tr>
@@ -153,15 +327,51 @@
                                 <td>
                                     <mat-checkbox [(ngModel)]="book.selected"> </mat-checkbox>
                                 </td>
-                                <td [attr.id]="'book-number-value-' + book.bookNumber">{{ book.bookNumber }}</td>
-                                <td [attr.id]="'book-value-' + book.name.replace(' ', '')">
+                                <td *ngIf="columnFilter.showSerialNumber">
+                                    {{ book.index }}
+                                </td>
+                                <td *ngIf="columnFilter.showFrontImage" align="center">
+                                    <img *ngIf="book.frontImage" src="{{ book.frontImage }}" style="width: 50px" />
+                                    <img
+                                        *ngIf="!book.frontImage"
+                                        src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                                        style="width: 50px"
+                                    />
+                                </td>
+                                <td *ngIf="columnFilter.showBackImage" align="center">
+                                    <img *ngIf="book.backImage" src="{{ book.backImage }}" style="width: 50px" />
+                                    <img
+                                        *ngIf="!book.backImage"
+                                        src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                                        style="width: 50px"
+                                    />
+                                </td>
+                                <td
+                                    [attr.id]="'book-number-value-' + book.bookNumber"
+                                    *ngIf="columnFilter.showBookNumber"
+                                    >{{ book.bookNumber }}</td
+                                >
+                                <td
+                                    [attr.id]="'book-value-' + book.name.replace(' ', '')"
+                                    *ngIf="columnFilter.showName"
+                                >
                                     {{ book.name }}
                                 </td>
-                                <td>
+                                <td *ngIf="columnFilter.showAuthor">
                                     {{ book.author }}
                                 </td>
-                                <td>{{ book.publisher }}</td>
-                                <td>{{ book.typeOfBook }}</td>
+                                <td *ngIf="columnFilter.showLocation">
+                                    {{ book.location }}
+                                </td>
+                                <td *ngIf="columnFilter.showDateOfPurchase">
+                                    {{ book.dateOfPurchase | date : "dd/MM/yyyy" }}
+                                </td>
+                                <td *ngIf="columnFilter.showPublisher">{{ book.publisher }}</td>
+                                <td *ngIf="columnFilter.showEdition">{{ book.edition }}</td>
+                                <td *ngIf="columnFilter.showNumberOfPages">{{ book.numberOfPages }}</td>
+                                <td *ngIf="columnFilter.showPrintedCost">{{ book.printedCost }}</td>
+                                <td *ngIf="columnFilter.showCoverType">{{ book.coverType }}</td>
+                                <td *ngIf="columnFilter.showBookType">{{ book.typeOfBook }}</td>
                             </ng-container>
                         </tr>
                     </ng-container>
