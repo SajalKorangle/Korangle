@@ -60,7 +60,7 @@
                 (ngModelChange)="handleSessionChange()"
                 style="padding: 0px; border: none; background-color: transparent"
             >
-                <option *ngFor="let session of session_list" [ngValue]="session.id">
+                <option *ngFor="let session of user.session_list" [ngValue]="session.id">
                     {{ session.name.slice(8) }}
                 </option>
             </select>

@@ -3,7 +3,9 @@ import { ViewAllHtmlRenderer } from './view-all.html.renderer';
 import { DataStorage } from "@classes/data-storage";
 import { GenericService } from '@services/generic/generic-service';
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
-import { FormControl, FormGroup } from '@angular/forms';
+import { ExcelService } from '../../../../excel/excel-service';
+import { PrintService } from '../../../../print/print-service';
+import { PRINT_BOOK_LIST } from '../../../../print/print-routes.constants';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -26,7 +28,10 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [ GenericService ],
+    providers: [
+        GenericService,
+        ExcelService
+    ],
 })
 export class ViewAllComponent implements OnInit {
 
@@ -50,11 +55,15 @@ export class ViewAllComponent implements OnInit {
     bookFullProfileList = [];
 
     displayBookNumber;
-    searchBookName : string;
+
+    selectedAuthors = [];
+    selectedPublishers = [];
+    selectedBookTypes = [];
+    searchBookName = '';
 
     NONE_FILTER_SELECTION = '';
 
-    sortBy = 'name';
+    sortBy = '';
     sortOrder = 1; // 1 => ASC, -1 => DESC
 
     // Lists of all unique authors, publishers and bookTypes that can be selected when filtering
@@ -62,15 +71,10 @@ export class ViewAllComponent implements OnInit {
     publisherOptions = new Set();
     bookTypeOptions = new Set();
 
-    // Filter menu form controls
-    filterForm = new FormGroup({
-        authors: new FormControl([]),
-        publishers: new FormControl([]),
-        bookTypes: new FormControl([]),
-    });
-
     constructor (
         public genericService: GenericService,
+        public excelService: ExcelService,
+        public printService: PrintService,
     ) { }
 
     ngOnInit(): void {
@@ -87,26 +91,16 @@ export class ViewAllComponent implements OnInit {
         this.htmlRenderer = new ViewAllHtmlRenderer();
         this.htmlRenderer.initializeRenderer(this);
 
-        this.filterForm.valueChanges.subscribe(value => {
-            this.filterBooks();
-        });
     }
 
     initializeBookList(bookFullProfileList): void {
         this.bookFullProfileList = bookFullProfileList.map(book => ({
             ...book,
-            printedCost: book.printedCost !== null ? parseFloat(book.printedCost) : null
+            printedCost: book.printedCost !== null ? parseFloat(book.printedCost) : null,
+            show: true
         }));
         this.displayBookNumber = this.bookFullProfileList.length;
-        this.handleBookDisplay();
-    }
-
-    handleBookDisplay(): void {
-        let serialNumber = 0;
-        this.bookFullProfileList.forEach(book => {
-            book.show = true;
-            book.serialNumber = ++serialNumber;
-        });
+        this.sortBooks();
     }
 
     selectAllColumns(): void {
@@ -144,51 +138,108 @@ export class ViewAllComponent implements OnInit {
             this.sortOrder = this.sortOrder * -1;
         } else this.sortOrder = 1;
         this.sortBy = sortparam;
+
+        this.sortBooks();
     }
 
-    getFilteredSortedBookList() : any {
-        let list = [...this.bookFullProfileList];
-        list = list.filter(book => book.show);
-        return list.sort(this.SortComparator).map((book, i) => ({
-            ...book,
-            serialNumber: i + 1
-        }));
+    sortBooks() : any {
+        let serialNumber = 0;
+        this.bookFullProfileList = [...this.bookFullProfileList].sort(this.SortComparator);
+        this.bookFullProfileList.forEach(book => {
+            if (book.show) {
+                book.serialNumber = ++serialNumber;
+            }
+        });
     }
     /* --------------------------- Sorting logic ends --------------------------- */
     /* ------------------------- Filtering logic starts ------------------------- */
 
     // If a filter is completely empty, consider it disabled and do not filter by it
+    // If filter menu interacted with
     filterBooks(): void {
-        let booksDisplayed = 0;
+        let serialNumber = 0;
+        this.displayBookNumber = 0;
+
+        // Filter by menu selections
         this.bookFullProfileList.forEach(book => {
             const author = book.author || '';
             const publisher = book.publisher || '';
             const type = book.typeOfBook || '';
 
-            const disableAuthorsFilter = this.filterForm.get('authors').value.length === 0;
-            const disablePublishersFilter = this.filterForm.get('publishers').value.length === 0;
-            const disableBookTypesFilter = this.filterForm.get('bookTypes').value.length === 0;
+            const disableAuthorsFilter = this.selectedAuthors.length === 0;
+            const disablePublishersFilter = this.selectedPublishers.length === 0;
+            const disableBookTypesFilter = this.selectedBookTypes.length === 0;
 
+            const authorValid = disableAuthorsFilter || this.selectedAuthors.includes(author.toLowerCase());
+            const publisherValid =  disablePublishersFilter || this.selectedPublishers.includes(publisher.toLowerCase());
+            const bookTypeValid = disableBookTypesFilter || this.selectedBookTypes.includes(type.toLowerCase());
 
-            const authorValid = disableAuthorsFilter ? true : this.filterForm.get('authors').value.includes(author.toLowerCase());
-            const publisherValid =  disablePublishersFilter ? true : this.filterForm.get('publishers').value.includes(publisher.toLowerCase());
-            const bookTypeValid = disableBookTypesFilter ? true : this.filterForm.get('bookTypes').value.includes(type.toLowerCase());
+            const nameMatchesSearch = (book.name.toLowerCase().indexOf(this.searchBookName.toLowerCase()) > -1);
 
-            book.show = (authorValid && publisherValid && bookTypeValid);
-            if (book.show) booksDisplayed++;
+            book.show = (authorValid && publisherValid && bookTypeValid && nameMatchesSearch);
+
+            if (book.show) {
+                this.displayBookNumber++;
+                book.serialNumber = ++serialNumber;
+            }
         });
-        this.displayBookNumber = booksDisplayed;
+
+        this.updateSortingParameters('');
     }
 
     unSelectAllOptions(filter): void {
-        this.filterForm.get(filter).setValue([]);
+        this[filter] = [];
+        this.filterBooks();
     }
     /* -------------------------- Filtering logic ends -------------------------- */
+
+    getHeaderValues(): any {
+        const headerValues = [];
+        this.columnFilter.showSerialNumber ? headerValues.push('Serial No.') : '';
+        this.columnFilter.showBookNumber ? headerValues.push('Book No.') : '';
+        this.columnFilter.showName ? headerValues.push('Name') : '';
+        this.columnFilter.showAuthor ? headerValues.push('Author') : '';
+        this.columnFilter.showLocation ? headerValues.push('Location') : '';
+        this.columnFilter.showDateOfPurchase ? headerValues.push('Date of Purchase') : '';
+        this.columnFilter.showPublisher ? headerValues.push('Publisher') : '';
+        this.columnFilter.showEdition ? headerValues.push('Edition') : '';
+        this.columnFilter.showNumberOfPages ? headerValues.push('No. of pages') : '';
+        this.columnFilter.showPrintedCost ? headerValues.push('Printed Cost') : '';
+        this.columnFilter.showCoverType ? headerValues.push('Cover Type') : '';
+        this.columnFilter.showBookType ? headerValues.push('Book Type') : '';
+
+        return headerValues;
+    }
+
+    getBookDisplayInfo(book) : any {
+        let bookDisplay = [];
+        this.columnFilter.showSerialNumber ? bookDisplay.push(book.serialNumber) : '';
+        this.columnFilter.showBookNumber ? bookDisplay.push(book.bookNumber) : '';
+        this.columnFilter.showName ? bookDisplay.push(book.name) : '';
+        this.columnFilter.showAuthor ? bookDisplay.push(book.author) : '';
+        this.columnFilter.showLocation ? bookDisplay.push(book.location) : '';
+        this.columnFilter.showDateOfPurchase ? bookDisplay.push(book.dateOfPurchase) : '';
+        this.columnFilter.showPublisher ? bookDisplay.push(book.publisher) : '';
+        this.columnFilter.showEdition ? bookDisplay.push(book.edition) : '';
+        this.columnFilter.showNumberOfPages ? bookDisplay.push(book.numberOfPages) : '';
+        this.columnFilter.showPrintedCost ? bookDisplay.push(book.printedCost) : '';
+        this.columnFilter.showCoverType ? bookDisplay.push(book.coverType) : '';
+        this.columnFilter.showBookType ? bookDisplay.push(book.typeOfBook) : '';
+
+        return bookDisplay;
+    }
+
     printBookList(): void {
-        alert("Under construction");
+        const value = {
+            bookList: this.bookFullProfileList.filter(book => book.show),
+            columnFilter: this.columnFilter,
+        };
+        this.printService.navigateToPrintRoute(PRINT_BOOK_LIST, { user: this.user, value });
     }
     downloadList(): void {
-        alert("Under construction");
+        let template = [this.getHeaderValues()];
+        this.bookFullProfileList.filter(book => book.show).forEach(book => template.push(this.getBookDisplayInfo(book)));
+        this.excelService.downloadFile(template, 'korangle_books.csv');
     }
 
 }
