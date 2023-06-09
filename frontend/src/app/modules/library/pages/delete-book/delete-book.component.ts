@@ -119,7 +119,7 @@ export class DeleteBookComponent implements OnInit {
 
             return (authorValid && publisherValid && bookTypeValid && nameMatchesSearch);
 
-        }).sort(this.sortComparator).map((book, index) => { 
+        }).sort(this.sortComparator).map((book, index) => {
             book.index = index + 1;
             return book;
         });
