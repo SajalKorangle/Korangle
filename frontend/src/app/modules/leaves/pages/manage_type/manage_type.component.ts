@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { User } from "@classes/user";
 import { GenericService } from "@services/generic/generic-service";
 import ManageTypeServiceAdapter from "./manage_type.service.adapter";
-import { LeaveType, LeaveTypeMonth } from "@modules/leaves/classes/leaves";
+import { LeavePlanToLeaveType, LeaveType, LeaveTypeMonth } from "@modules/leaves/classes/leaves";
 @Component({
     selector: "manage-type",
     templateUrl: "./manage_type.component.html",
@@ -16,6 +16,7 @@ export class ManageTypeComponent implements OnInit {
     // page variables
     leaveTypeList: Array<LeaveType> = [];
     leaveTypeMonthList: Array<LeaveTypeMonth> = [];
+    leavePlanToLeaveTypeList: Array<LeavePlanToLeaveType> = [];
     isFormVisible: boolean = false;
     isLoading: boolean = true;
     invalidNameList: Array<string> = [];
@@ -29,7 +30,7 @@ export class ManageTypeComponent implements OnInit {
     isSaving: boolean = false;
     monthList: Array<string> = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     currentSchoolLeaveTypeMonthList: Array<LeaveTypeMonth> = [];
-    ngOnInit() {
+    async ngOnInit() : Promise<void> {
         this.currentSchoolLeaveTypeMonthList = [];
         this.monthList.map((month) => {
             this.currentSchoolLeaveTypeMonthList.push({
@@ -41,8 +42,9 @@ export class ManageTypeComponent implements OnInit {
             });
         });
         this.serviceAdapter.initializeAdapter(this);
-        this.serviceAdapter.initializeData({ leaves_app: "SchoolLeaveType" }, "leaveTypeList");
-        this.serviceAdapter.initializeData({ leaves_app: "SchoolLeaveTypeMonth" }, "leaveTypeMonthList");
+        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeaveType" }, "leaveTypeList");
+        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeaveTypeMonth" }, "leaveTypeMonthList");
+        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, "leavePlanToLeaveTypeList");
     }
     constructor(public genericService: GenericService) {}
     // handle Modal
@@ -104,6 +106,10 @@ export class ManageTypeComponent implements OnInit {
         }
     }
     async deleteType(event, schoolLeaveType): Promise<any> {
+        if (this.leavePlanToLeaveTypeList.find(
+            (leavePlanToLeaveType) => leavePlanToLeaveType.parentSchoolLeaveType === schoolLeaveType.id)) {
+            return alert("This Leave type cannot be deleted since it's used in Leave Plan");
+        }
         if (confirm("Do you want to delete this leave type?")) {
             this.currentSchoolLeaveType = schoolLeaveType;
             this.currentSchoolLeaveTypeMonthList = [];
