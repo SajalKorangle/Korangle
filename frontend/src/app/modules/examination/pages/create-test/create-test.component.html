@@ -65,6 +65,7 @@
                             [ngModel]="selectedSubject"
                             id="selectSubject"
                             (ngModelChange)="selectedSubject = $event"
+                            [disabled]="isLocked"
                         >
                             <mat-option *ngFor="let subject of subjectList" [value]="subject.id">
                                 {{ subject.name }}
@@ -77,6 +78,7 @@
                             [ngModel]="selectedTestType"
                             id="selectTestType"
                             (ngModelChange)="selectedTestType = $event"
+                            [disabled]="isLocked"
                         >
                             <mat-option [value]="0">None</mat-option>
                             <mat-option *ngFor="let testType of testTypeList" [value]="testType">
@@ -84,8 +86,8 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <input type="number" placeholder="Max. Marks" [(ngModel)]="selectedMaximumMarks" />
-                    <button type="submit" class="btn" (click)="createSpecificTest()">ADD</button>
+                    <input type="number" placeholder="Max. Marks" [(ngModel)]="selectedMaximumMarks" [disabled]="isLocked"/>
+                    <button type="submit" class="btn" (click)="createSpecificTest()" [disabled]="isLocked">ADD</button>
             </div>
 
             <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px">
@@ -186,6 +188,7 @@
                     [disabled]="!isUpdated"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                     (click)="serviceAdapter.UpdateHelper()"
+                    [disabled]="isLocked"
                 >
                     <span *ngIf="fetchedList === 0; else Update">Create</span>
                     <ng-template #Update>Update</ng-template>
@@ -196,6 +199,7 @@
                     [disabled]="!isUpdated"
                     class="btn"
                     (click)="resetList()"
+                    [disabled]="isLocked"
                 >
                     Reset
                 </button>
