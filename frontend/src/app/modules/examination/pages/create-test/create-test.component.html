@@ -129,6 +129,7 @@
                                     (selectionChange)="handleTestTypeSelection($event.value, ngModelControl, test)"
                                     #ngModelControl="ngModel"
                                     (ngModelChange)="handleUpdate($event, test)"
+                                    [disabled]="isLocked"
                                 >
                                     <mat-option *ngFor="let testType of testTypeList" [value]="testType">
                                         {{ testType }}
@@ -160,6 +161,7 @@
                                     type="number"
                                     [(ngModel)]="test.newMaximumMarks"
                                     (ngModelChange)="handleUpdate($event, test)"
+                                    [disabled]="isLocked"
                                 />
                             </td>
                             <td>
@@ -168,6 +170,7 @@
                                     style="padding: 3px 8px"
                                     class="btn"
                                     (click)="test.deleted = !test.deleted; handleUpdate(test, test); $event.stopPropagation()"
+                                    [disabled]="isLocked"
                                 >
                                     <span *ngIf="test.deleted; else Delete">UND</span>
                                     <ng-template #Delete>DEL</ng-template>
