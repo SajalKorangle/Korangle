@@ -338,6 +338,8 @@ export class CreateTestComponent implements OnInit {
           if (examination['id'] === this.selectedExamination) {
             if (examination['marksUpdationStatus'] === 'Locked') {
               this.isLocked = true;
+            }else{
+                this.isLocked = false;
             }
           }
         });
