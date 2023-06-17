@@ -188,7 +188,6 @@
                     [disabled]="!isUpdated"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                     (click)="serviceAdapter.UpdateHelper()"
-                    [disabled]="isLocked"
                 >
                     <span *ngIf="fetchedList === 0; else Update">Create</span>
                     <ng-template #Update>Update</ng-template>
@@ -199,7 +198,6 @@
                     [disabled]="!isUpdated"
                     class="btn"
                     (click)="resetList()"
-                    [disabled]="isLocked"
                 >
                     Reset
                 </button>

@@ -334,12 +334,12 @@ export class CreateTestComponent implements OnInit {
     //It handles the update button
     handleUpdate(value: any, test: any): void {
         var update = false;
-
         this.newTestList.forEach((test) => {
             if (test.classList[0].sectionList[0].testId === null) {
                 if (!test.deleted) update = true;
             } else {
                 if (test.deleted) update = true;
+                if (test.newMaximumMarks != test.maximumMarks || test.newTestType != test.testType) update = true;
             }
         });
         if (update) this.isUpdated = true;
