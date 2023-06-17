@@ -145,6 +145,16 @@ export class CreateTestServiceAdapter {
             parentDivision__in: this.sectionListForTest.join(','),
         };
 
+        this.vm.examinationList.forEach((examination) => {
+          if (examination['id'] === this.vm.selectedExamination) {
+            if (examination['marksUpdationStatus'] === 'Locked') {
+              this.vm.isLocked = true;
+            } else {
+                this.vm.isLocked = false;
+            }
+          }
+        });
+
         Promise.all([this.vm.subjectNewService.getObjectList(this.vm.subjectNewService.class_subject, request_subject_data)]).then(
             (value) => {
                 let commonSubjectList = [];

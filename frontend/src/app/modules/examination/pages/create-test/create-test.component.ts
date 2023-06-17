@@ -334,15 +334,7 @@ export class CreateTestComponent implements OnInit {
     //It handles the update button
     handleUpdate(value: any, test: any): void {
         var update = false;
-        this.examinationList.forEach((examination) => {
-          if (examination['id'] === this.selectedExamination) {
-            if (examination['marksUpdationStatus'] === 'Locked') {
-              this.isLocked = true;
-            } else {
-                this.isLocked = false;
-            }
-          }
-        });
+        
 
         this.newTestList.forEach((test) => {
             if (test.classList[0].sectionList[0].testId === null) {

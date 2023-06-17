@@ -76,7 +76,7 @@ export class CreateExaminationServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
-        console.log(data);
+        // console.log(data);
 
         this.vm.examinationService.createObject(this.vm.examinationService.examination, data).then(
             (value) => {
