@@ -233,7 +233,7 @@
     </div>
 
     <!-- Book Table Data Start -->
-    <ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="!isLoading && hasAnyColumnSelected()">
         <p>
             Total Books: <b>{{ completeBookList.length }}</b
             >, Selected : <b>{{ getSelectedBooks().length }}</b>

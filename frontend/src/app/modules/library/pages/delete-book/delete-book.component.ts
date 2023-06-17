@@ -157,4 +157,8 @@ export class DeleteBookComponent implements OnInit {
             this.serviceAdapter.deleteBooks();
         }
     }
+
+    hasAnyColumnSelected(): boolean {
+        return Object.values(this.columnFilter).some(value => value);
+    }
 }
