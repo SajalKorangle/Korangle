@@ -380,6 +380,9 @@
         </cdk-virtual-scroll-viewport>
     </ng-container>
     <!-- Book Table Data End -->
+    <ng-container *ngIf="!hasAnyColumnSelected()">
+        No column is selected. Please select at least one column to view the data.
+    </ng-container>
 </div>
 
 <ng-container *ngIf="isLoading">
