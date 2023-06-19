@@ -90,7 +90,6 @@ public class CustomWebViewClient extends WebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView wv, String url) {
-        System.out.print(url);
         if(url.startsWith(mainActivity.TEL_PREFIX)) {
             Intent intent = new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse(url));
