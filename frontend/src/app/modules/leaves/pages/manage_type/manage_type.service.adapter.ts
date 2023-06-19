@@ -64,11 +64,6 @@ export default class ManageTypeServiceAdapter {
             // ends :- alert for duplicate entry (returns null indicating error else moves ahead.)
         }
         let response = null;
-        if (!Operation.operation.endsWith("Batch")) {
-            Operation.data.forEach((data) => {
-                data.parentSchool = this.vm.user.activeSchool.dbId;
-            });
-        }
         if (Operation.operation === "insert") {
             response = await this.vm.genericService.createObject(Operation.database, Operation.data[0]);
         } else if (Operation.operation === "update") {
@@ -89,4 +84,77 @@ export default class ManageTypeServiceAdapter {
         return response;
     }
     // ends :- Data Change Handler
+
+    async saveLeaveType(data): Promise<any> {
+        if (confirm("Do you want to continue?")) {
+            data[0].parentSchool = this.vm.user.activeSchool.dbId;
+            let response = await this.handleDataChange(
+                {
+                    check: (data1, data2) => {
+                        let sameVariables = [];
+                        if (data1.id !== data2.id && data1.leaveTypeName.toLowerCase() === data2.leaveTypeName.toLowerCase()) sameVariables.push("Name");
+                        else if (data1.id != data2.id && data1.color.toLowerCase() === data2.color.toLowerCase()) sameVariables.push("Color");
+                        return sameVariables;
+                    },
+                    data: [data[0]],
+                    database: { leaves_app: "SchoolLeaveType" },
+                    operation: data[0].id == -1 ? "insert" : "update",
+                },
+                "leaveTypeList",
+            );
+            if (response && JSON.stringify(response) != "{}") {
+                data[0] = response;
+                data[1].forEach((leaveTypeMonth) => {
+                    leaveTypeMonth.parentSchoolLeaveType = response.id;
+                });
+                response = await this.handleDataChange(
+                    {
+                        check: null,
+                        data: data[1],
+                        database: { leaves_app: "SchoolLeaveTypeMonth" },
+                        operation: data[1][0].id == -1 ? "insertBatch" : "updateBatch",
+                    },
+                    null,
+                );
+                if (response && JSON.stringify(response) != "{}") {
+                    alert("Leave Type saved successfully");
+                } else {
+                    alert("Unable to save Leave Type. Rolling back...");
+                    await this.handleDataChange(
+                        {
+                            check: null,
+                            data: [data[0]],
+                            database: { leaves_app: "SchoolLeaveType" },
+                            operation: "delete",
+                        },
+                        null,
+                    );
+                    alert("Please try again later");
+                }
+            }
+        }
+    }
+
+    async deleteType(event, schoolLeaveType): Promise<any> {
+        if (this.vm.leavePlanToLeaveTypeList.find((leavePlanToLeaveType) => leavePlanToLeaveType.parentSchoolLeaveType === schoolLeaveType.id)) {
+            return alert("This Leave type cannot be deleted since it's used in Leave Plan");
+        }
+        if (confirm("Do you want to delete this leave type?")) {
+            this.vm.currentSchoolLeaveType = schoolLeaveType;
+            let response = await this.handleDataChange(
+                {
+                    database: { leaves_app: "SchoolLeaveType" },
+                    operation: "delete",
+                    check: null,
+                    data: [this.vm.currentSchoolLeaveType],
+                },
+                null,
+            );
+            if (response && JSON.stringify(response) !== "{}") {
+                alert("Leave Type deleted successfully");
+            } else {
+                alert("Unable to delete Leave Type.");
+            }
+        }
+    }
 }
