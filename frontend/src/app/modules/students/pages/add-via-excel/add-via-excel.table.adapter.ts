@@ -53,7 +53,7 @@ export class AddViaExcelTableAdapter {
         this.excelDataFromUser[0].forEach(columnHeader => {
             this.tableData[0].push({
                 excelHeaderName: columnHeader,
-                softwareColumnHeader: this.getBestMatchiingSoftwareColumnHeader(columnHeader),
+                softwareColumnHeader: undefined,
             });
         });
         // Ends :- Populating Headers
@@ -82,16 +82,6 @@ export class AddViaExcelTableAdapter {
                     columnHeader.softwareColumnHeader &&
                     columnHeader.softwareColumnHeader.name == softwareColumnHeader.name;
             }) == undefined;
-        });
-    }
-
-    getBestMatchiingSoftwareColumnHeader(tableColumnHeader: any): any {
-        return this.vm.softwareColumnHeaderList.find((softwareColumnHeader) => {
-            return (this.tableData[0].find(columnHeader => {
-                return tableColumnHeader != columnHeader &&
-                    columnHeader.softwareColumnHeader &&
-                    columnHeader.softwareColumnHeader.name == softwareColumnHeader.name;
-            }) == undefined) && (tableColumnHeader.toLowerCase().indexOf(softwareColumnHeader.name.toLowerCase()) != -1);
         });
     }
 
