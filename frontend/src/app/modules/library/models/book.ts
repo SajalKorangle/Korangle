@@ -1,16 +1,17 @@
 export class Book {
-    name: string;
-    author: string;
-    publisher: string;
-    dateOfPurchase: any;
-    bookNumber: any;
-    edition: any;
-    numberOfPages: number;
-    printedCost: any;
-    coverType: any;
-    location: any;
-    bookType: any;
-    frontImage: string;
-    backImage: string;
+    id: number = null;
+    name: string = null;
+    author: string = null;
+    publisher: string = null;
+    dateOfPurchase: any = null;
+    bookNumber: number = null;
+    edition: any = null;
+    numberOfPages: number = null;
+    printedCost: number = null;
+    coverType: any = null;
+    location: any = null;
+    typeOfBook: any = null;
+    frontImage: string = null;
+    backImage: string = null;
     parentSchool: number = null;
 }

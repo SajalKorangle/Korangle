@@ -20,6 +20,10 @@ mat-form-field {
     margin-bottom: 30px;
     width: 100%;
 }
+input[type="date"]::after{
+    content: none
+}
+
 .sticky {
     position: sticky;
     position: -webkit-sticky;
