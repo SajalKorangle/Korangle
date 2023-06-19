@@ -236,6 +236,7 @@
     <ng-container *ngIf="!isLoading && hasAnyColumnSelected()">
         <p>
             Total Books: <b>{{ completeBookList.length }}</b
+            >, Displaying : <b>{{ filterBooks().length }}</b
             >, Selected : <b>{{ getSelectedBooks().length }}</b>
         </p>
         <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
