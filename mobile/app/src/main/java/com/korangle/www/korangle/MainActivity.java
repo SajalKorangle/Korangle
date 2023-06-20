@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
     String slowOrNoInternetConnection = "Slow or No Internet Connection!!\n Swipe down to retry";
     public static final String TEL_PREFIX = "tel:";
 
+    public static final String UPI_PREFIX = "upi:";
+
     // Request Code
     public static final int INPUT_FILE_REQUEST_CODE = 1;
     public static final int IMMEDIATE_UPDATE_REQUEST_CODE = 3;
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if(BuildConfig.DEBUG) {
-            webapp_url="https://app.korangle.com";
+            webapp_url="https://test.korangle.com";
         }
 
         // Check App updates
