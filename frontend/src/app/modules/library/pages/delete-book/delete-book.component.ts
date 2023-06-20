@@ -3,18 +3,29 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 import { DeleteBookServiceAdapter } from './delete-book.service.adapter';
 import { GenericService } from '@services/generic/generic-service';
+import { Book } from '@modules/library/models/book';
 
-
-class DeleteBookObject {
-    id: number;
-    name: string;
-    author: string = null;
-    publisher: string = null;
-    bookNumber: number = null;
-    typeOfBook: any = null;
+class DeleteBookObject extends Book {
     selected: boolean = false;
+    index: number = 0;
 }
 
+class ColumnFilter {
+    showSerialNumber = true;
+    showName = true;
+    showAuthor = true;
+    showPublisher = true;
+    showDateOfPurchase = true;
+    showBookNumber = true;
+    showEdition = false;
+    showNumberOfPages = false;
+    showPrintedCost = false;
+    showCoverType = false;
+    showLocation = false;
+    showBookType = false;
+    showFrontImage = false;
+    showBackImage = false;
+}
 @Component({
     selector: 'delete-book',
     templateUrl: './delete-book.component.html',
@@ -40,6 +51,8 @@ export class DeleteBookComponent implements OnInit {
     selectedBookTypes = [];
     searchBookName = '';
 
+    columnFilter: ColumnFilter;
+
     NONE_FILTER_SELECTION = '';
 
     // Lists of all unique authors, publishers and bookTypes that can be selected when filtering
@@ -52,10 +65,23 @@ export class DeleteBookComponent implements OnInit {
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new DeleteBookServiceAdapter();
+        this.columnFilter = new ColumnFilter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
     }
 
+    selectAllColumns(): void {
+        Object.keys(this.columnFilter).forEach((key) => {
+            this.columnFilter[key] = true;
+        });
+    }
+    unSelectAllColumns(): void {
+        Object.keys(this.columnFilter).forEach((key) => {
+            this.columnFilter[key] = false;
+        });
+    }
+
+    // For sorting the books on the basis of the column clicked
     sortComparator = (book1, book2) => {
         let a = book1[this.sortBy];
         let b = book2[this.sortBy];
@@ -93,9 +119,10 @@ export class DeleteBookComponent implements OnInit {
 
             return (authorValid && publisherValid && bookTypeValid && nameMatchesSearch);
 
-        }).sort(this.sortComparator);
-
-        // this.updateSortingParameters('');
+        }).sort(this.sortComparator).map((book, index) => {
+            book.index = index + 1;
+            return book;
+        });
     }
 
     selectAllBooks() {
@@ -129,5 +156,9 @@ export class DeleteBookComponent implements OnInit {
         if (confirm("Are you sure you want to delete the selected books?")) {
             this.serviceAdapter.deleteBooks();
         }
+    }
+
+    hasAnyColumnSelected(): boolean {
+        return Object.values(this.columnFilter).some(value => value);
     }
 }
