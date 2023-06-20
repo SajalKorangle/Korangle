@@ -424,8 +424,7 @@ export class UpdateMarksServiceAdapter {
                         let subjectFullName = testDataSingle['subjectName'];
 
                         if (!testDataSingle['subjectFullName']) {
-                            testDataSingle['subjectFullName'] =
-                            testDataSingle['testType'] ? subjectFullName + " - " + testDataSingle['testType'] : subjectFullName;
+                            testDataSingle['subjectFullName'] = subjectFullName;
                         }
                         testDataSingle['maximumMarks'] = subjectMaxMarksMap.get(testDataSingle['subjectFullName']);
                     }
