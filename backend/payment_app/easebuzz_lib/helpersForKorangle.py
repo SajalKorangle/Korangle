@@ -38,7 +38,7 @@ def calculateAmount(order):
         return False
     return str(round(final_amount, 2))
 
-def createOrder(orderData, orderId):
+def createSelfOrder(orderData, orderId):
     snfurl = orderData["returnData"]["origin"] + \
         reverse("easebuzz_order_completion") + '?' + \
         orderData['returnData']['searchParams']
@@ -60,6 +60,77 @@ def createOrder(orderData, orderId):
 
     if(order["amount"]==False):
         return {"failure": "Could not generate url"}
+
+    final_response = easebuzz.initiatePaymentAPI(order)
+
+    result = json.loads(final_response)
+    if result["status"] == 1:
+        return {"success": result["data"]}
+    else:
+        return {"failure": "Could not generate url"}
+    
+
+def calculatePlatformCharges(amount, modeOfPayment, schoolMerchantAccount):
+    final_amount = amount
+    mode = ModeOfPayment.objects.filter(
+        apiCode=modeOfPayment["apiCode"],
+        parentPaymentGateway__name="Easebuzz"
+    ).first()
+    mopCharges = ModeOfPaymentCharges.objects.filter(
+        parentModeOfPayment=mode).all()
+    for charge in mopCharges:
+        price = float(charge.charge)
+        if charge.chargeType == "Flat":
+            final_amount = (amount + KORANGLE_CHARGE) + price*(1+GST)
+        elif charge.chargeType == "Percentage":
+            final_amount = ((amount + KORANGLE_CHARGE) * 100)/(100-price*(1+GST))
+        if final_amount >= charge.minimumAmount and (charge.maximumAmount == -1 or final_amount <= charge.maximumAmount):
+            break
+    totalPlatformCharge = round(final_amount-amount, 2)
+    schoolPlatformCharge = totalPlatformCharge
+    if schoolMerchantAccount.platformFeeOnSchoolType == "Flat":
+        schoolPlatformCharge = min(totalPlatformCharge, schoolMerchantAccount.maxPlatformFeeOnSchool)
+    else:
+        schoolPlatformCharge = round(
+            totalPlatformCharge * (schoolMerchantAccount.percentageOfPlatformFeeOnSchool/100), 2)
+    shares = {
+        "parent": round(totalPlatformCharge - schoolPlatformCharge, 2),
+        "school": schoolPlatformCharge,
+        "total": totalPlatformCharge
+    }
+    shares["korangle_final"] = round(KORANGLE_CHARGE + (KORANGLE_CHARGE*(totalPlatformCharge -
+                                     KORANGLE_CHARGE))/(final_amount - schoolPlatformCharge - totalPlatformCharge + KORANGLE_CHARGE), 2)
+    shares["school_final"] = round(amount + shares["parent"] - shares["korangle_final"], 2)
+    return shares
+
+
+def createSchoolOrder(orderData, orderId, schoolMerchantAccount):
+    snfurl = orderData["returnData"]["origin"] + \
+        reverse("easebuzz_order_completion") + '?' + \
+        orderData['returnData']['searchParams']
+    platformCharges = calculatePlatformCharges(
+        orderData["orderAmount"], orderData["paymentMode"], schoolMerchantAccount)
+    finalAmountForParent = round(orderData["orderAmount"] + platformCharges["parent"], 2)
+    if(finalAmountForParent != orderData["orderTotalAmount"]):
+        return {"failure": "Could not generate url"}
+    if(orderData["orderAmount"]<=platformCharges["school"]):
+        return {"failure": "Invalid payment amount. Please enter greater amount."}
+
+    order = defaultdict(str, {
+        "txnid": orderId,
+        "amount": str(finalAmountForParent),
+        "productinfo": orderData["orderNote"][:45],
+        "firstname": orderData["customerName"],
+        "phone": orderData["customerPhone"],
+        "email": orderData["customerEmail"],
+        "surl": snfurl,
+        "furl": snfurl,
+        "show_payment_mode": orderData["paymentMode"]["apiCode"],
+        "split_payments": json.dumps({
+            schoolMerchantAccount.easebuzzBankLabel: platformCharges["school_final"],
+            KORANGLE_EASEBUZZ_BANK_LABEL: platformCharges["korangle_final"]
+        })
+    })
 
     final_response = easebuzz.initiatePaymentAPI(order)
 
