@@ -183,7 +183,7 @@ export default class ManagePlanServiceAdapter {
             ? await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlanToEmployee" }, { filter: { __or__: removeEmployeeChoiceList } })
             : null;
         // associate new employees to this leave plan
-        addEmployeeChoiceList.length ? this.vm.genericService.createObjectList({ leaves_app: "SchoolLeavePlanToEmployee" }, addEmployeeChoiceList) : null;
+        addEmployeeChoiceList.length ? await this.vm.genericService.createObjectList({ leaves_app: "SchoolLeavePlanToEmployee" }, addEmployeeChoiceList) : null;
         // ends :- Request changes
         this.initializeData();
     }
