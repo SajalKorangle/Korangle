@@ -21,8 +21,12 @@ export default class ManagePlanServiceAdapter {
             parentSchoolLeavePlan__parentSchool__id: this.vm.user.activeSchool.dbId
         } }), this.vm.genericService.getObjectList({ leaves_app: "SchoolLeaveType" }, { filter: {
             parentSchool: this.vm.user.activeSchool.dbId
+        } }), this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlanToEmployee" }, { filter: {
+            parentSchoolLeavePlan__parentSchool: this.vm.user.activeSchool.dbId
+        } }), this.vm.genericService.getObjectList({ employee_app: "Employee" }, { filter: {
+            parentSchool: this.vm.user.activeSchool.dbId
         } })]).then((results) => {
-            [this.vm.leavePlanList, this.vm.leavePlanToLeaveTypeList, this.vm.leaveTypeList] = [results[0], results[1], results[2]];
+            [this.vm.leavePlanList, this.vm.leavePlanToLeaveTypeList, this.vm.leaveTypeList, this.vm.leavePlanToEmployeeList, this.vm.employeeChoiceList] = [results[0], results[1], results[2], results[3], results[4]];
             this.vm.leavePlanList.sort((leavePlanA, leavePlanB) => leavePlanA.leavePlanName < leavePlanB.leavePlanName ? -1 : 1);
             this.vm.resetComponent();
             this.vm.isLoading = false;
