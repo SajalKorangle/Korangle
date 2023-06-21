@@ -49,30 +49,6 @@ export class ManagePlanComponent implements OnInit {
         this.leaveTypeChoiceList = this.currentLeaveTypeChoiceList = this.appliedLeaveTypeChoiceList = [];
         this.currentEmployeeChoiceList = this.appliedEmployeeChoiceList = [];
     }
-    // async handleDelete(): Promise<any> {
-    //     let oldLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
-    //     let oldEmployeeChoiceList: Array<any> = [];
-    //     this.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
-    //         leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id ? oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem) : null;
-    //     });
-    //     this.leavePlanToEmployeeList.map((leavePlanToEmployee) => {
-    //         leavePlanToEmployee.parentSchoolLeavePlan === this.currentLeavePlan.id ? oldEmployeeChoiceList.push(leavePlanToEmployee) : null;
-    //     });
-    //     if (oldLeaveTypeChoiceList.length) {
-    //         await this.serviceAdapter.handleDataChange({
-    //                 check: null, data: oldLeaveTypeChoiceList, database: { leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, operation: "deleteBatch",
-    //             }, "leavePlanToLeaveTypeList");
-    //     }
-    //     if (oldEmployeeChoiceList.length) {
-    //         await this.serviceAdapter.handleDataChange({
-    //             check: null, data: oldEmployeeChoiceList, database: {leaves_app: "SchoolLeavePlanToEmployee"}, operation: "deleteBatch"
-    //         }, "leavePlanToEmployee");
-    //     }
-    //     await this.serviceAdapter.handleDataChange({
-    //             check: null, data: [this.currentLeavePlan], database: { leaves_app: "SchoolLeavePlan" }, operation: "delete",
-    //         }, "leavePlanList");
-    //     this.resetComponent();
-    // }
     setPlan(leavePlan): void {
         this.isLeavePlanOpen = true;
         this.currentLeavePlan = JSON.parse(JSON.stringify(leavePlan));
