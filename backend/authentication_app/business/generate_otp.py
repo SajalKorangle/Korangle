@@ -78,7 +78,7 @@ def generate_otp(data):
         "smsContent": str(number) + otpTemplates[data['action']],
         "routeId": "1",
         "mobileNumbers": data['mobileNumber'],
-        "senderId": 'KORNGL',
+        "senderId": 'KRANGL',
         "smsContentType": 'english',
     }
 
