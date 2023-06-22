@@ -15,7 +15,7 @@ from authentication_app.models import OTP
 otpTemplates = {
     'SIGN UP': ' is the OTP requested by you to sign up for korangle.com',
     'FORGOT PASSWORD': ' is the OTP requested by you to reset your password for korangle.com',
-    'CREATE SCHOOL': ' is the OTP requested by you to create school for korangle.com'
+    'CREATE SCHOOL': ' is the OTP requested by you to create ID for korangle.com'
 }
 
 
