@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { User } from "@classes/user";
 import { GenericService } from "@services/generic/generic-service";
-import { LeavePlan, LeavePlanToLeaveType, LeaveType } from "@modules/leaves/classes/leaves";
+import { LeavePlan, LeavePlanToEmployee, LeavePlanToLeaveType, LeaveType } from "@modules/leaves/classes/leaves";
 import ManagePlanServiceAdapter from "./manage_plan.service.adapter";
 
 @Component({
@@ -20,6 +20,14 @@ export class ManagePlanComponent implements OnInit {
     leavePlanName: string = "";
     isAddNewOpen: boolean = false;
     currentLeavePlan: any = {};
+    // employee choices
+    employeeChoiceList: Array<any> = [];
+    currentEmployeeChoiceList: Array<any> = [];
+    appliedEmployeeChoiceList: Array<any> = [];
+    filteredEmployeeChoiceList: Array<any> = [];
+    filter: string = "";
+    // employee to leave Plan
+    leavePlanToEmployeeList: Array<LeavePlanToEmployee> = [];
     // choices
     leaveTypeChoiceList: Array<LeaveType> = [];
     currentLeaveTypeChoiceList: Array<LeaveType> = [];
@@ -39,14 +47,26 @@ export class ManagePlanComponent implements OnInit {
         this.leavePlanName = "";
         this.isLeavePlanOpen = this.isSelectLeavePlanToLeaveTypeVisible = this.isAddNewOpen = false;
         this.leaveTypeChoiceList = this.currentLeaveTypeChoiceList = this.appliedLeaveTypeChoiceList = [];
+        this.currentEmployeeChoiceList = this.appliedEmployeeChoiceList = [];
     }
     setPlan(leavePlan): void {
         this.isLeavePlanOpen = true;
         this.currentLeavePlan = JSON.parse(JSON.stringify(leavePlan));
         this.appliedLeaveTypeChoiceList = [];
-        this.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id
-        ? this.appliedLeaveTypeChoiceList.push(this.leaveTypeList.find((leaveType) => leaveType.id === leavePlanToLeaveTypeItem.parentSchoolLeaveType))
-        : null);
+        this.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
+            leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id ? this.appliedLeaveTypeChoiceList.push(
+                this.leaveTypeList.find((leaveType) => leaveType.id === leavePlanToLeaveTypeItem.parentSchoolLeaveType),
+            ) : null;
+        });
+        this.filteredEmployeeChoiceList = this.employeeChoiceList;
+        this.appliedEmployeeChoiceList = [];
+        this.leavePlanToEmployeeList.forEach((leavePlanToEmployee) => {
+            leavePlanToEmployee.parentSchoolLeavePlan == this.currentLeavePlan.id ? this.appliedEmployeeChoiceList.push(
+                this.employeeChoiceList.find((employee) => employee.id === leavePlanToEmployee.parentEmployee)
+            ) : null;
+        });
+        this.currentEmployeeChoiceList = this.appliedEmployeeChoiceList;
+        this.filter = "";
     }
     enableAddPlanToLeaveType(): void {
         this.isSelectLeavePlanToLeaveTypeVisible = true;
@@ -73,5 +93,19 @@ export class ManagePlanComponent implements OnInit {
         this.currentLeaveTypeChoiceList = [];
         this.appliedLeaveTypeChoiceList = temporaryLeaveTypeChoiceList;
         this.updateChoiceList();
+    }
+    updateEmployeeChoiceList(): void {
+        this.filteredEmployeeChoiceList = [];
+        this.employeeChoiceList.forEach((employee) => {
+            employee.name.startsWith(this.filter) || this.currentEmployeeChoiceList.includes(employee) ? this.filteredEmployeeChoiceList.push(employee) : null;
+        });
+    }
+    removeEmployee(selectedEmployee): void {
+        let temporaryEmployeeChoiceList = [];
+        this.appliedEmployeeChoiceList.forEach((employee) => {
+            employee.id === selectedEmployee.id ? null : temporaryEmployeeChoiceList.push(employee);
+        });
+        this.appliedEmployeeChoiceList = temporaryEmployeeChoiceList;
+        this.currentEmployeeChoiceList = temporaryEmployeeChoiceList;
     }
 }
