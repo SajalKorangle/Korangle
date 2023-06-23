@@ -123,16 +123,19 @@ export class ManagePlanComponent implements OnInit {
     updateEmployeeChoiceList(): void {
         this.currentEmployeeChoiceList.sort((employee1, employee2) => employee1.name.localeCompare(employee2.name));
         this.filteredEmployeeChoiceList = [];
+        let temporaryEmployeeChoiceList = [];
         this.currentEmployeeChoiceList.forEach((employee) => {
             employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) ? this.filteredEmployeeChoiceList.push(employee) : null;
+            temporaryEmployeeChoiceList.push(employee);
         });
         this.employeeChoiceList.forEach((employee) => {
             employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) && !this.currentEmployeeChoiceList.includes(employee)
                 ? this.filteredEmployeeChoiceList.push(employee)
                 : null;
+            !this.currentEmployeeChoiceList.includes(employee) ? temporaryEmployeeChoiceList.push(employee) : null;
         });
-        if(this.filteredEmployeeChoiceList.length == 0) {
-            this.filter = "";
+        if (this.filteredEmployeeChoiceList.length == 0) {
+            this.filteredEmployeeChoiceList = temporaryEmployeeChoiceList;
         }
     }
     // ends :- update employee choices
