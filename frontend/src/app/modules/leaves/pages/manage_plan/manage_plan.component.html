@@ -85,7 +85,7 @@
                     <!-- ends :- update leave plan name / delete leave plan -->
 
                     <!-- starts :- list of leave type currently in selected leave plan -->
-                    <div class="contentRow" style="height: 30%; overflow-y: scroll">
+                    <div class="contentRow" style="height: 250px; overflow-y: auto">
                         <div class="contentColItem" style="flex-grow: 1; justify-content: flex-start">
                             <div class="contentRowItem" style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px">
                                 <span class="contentColItem" style="width: 30%"><span style="width: 100%; color: #fc9701">Name</span></span>
@@ -174,21 +174,17 @@
                                     <mat-select
                                         (selectionChange)="updateEmployeeChoiceList()"
                                         [(ngModel)]="currentEmployeeChoiceList"
-                                        multiple
+                                        multiple="true"
                                         [disabled]="employeeChoiceList.length === 0"
                                     >
-                                        <mat-form-field appearance="outline" style="width: 100%; padding: 5px">
-                                            <mat-label>Search Employee</mat-label>
-                                            <input
-                                                [(ngModel)]="filter"
-                                                (keyup)="updateEmployeeChoiceList()"
-                                                matInput
-                                                placeholder="Enter Employee Name"
-                                                autofocus
-                                            />
-                                        </mat-form-field>
+                                        <div style="width: 100%; padding: 5px; position: sticky; top: 0; z-index: 1; background: white">
+                                            <mat-form-field appearance="outline" style="width: 100%">
+                                                <mat-label>Search Employee</mat-label>
+                                                <input [(ngModel)]="filter" (keyup)="updateEmployeeChoiceList()" matInput placeholder="Enter Employee Name" />
+                                            </mat-form-field>
+                                        </div>
                                         <mat-option *ngFor="let employee of filteredEmployeeChoiceList" [value]="employee">
-                                            ({{ employee.id }}) - {{ employee.name }}
+                                            {{ employee.name }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -211,14 +207,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="contentRow" style="flex-grow: 1; overflow-y: scroll; max-height: 40%">
+                    <div class="contentRow" style="flex-grow: 1; overflow-y: auto; height: 250px">
                         <div class="contentColItem" style="flex-grow: 1; justify-content: flex-start">
                             <div class="contentRowItem" style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px">
-                                <span class="contentColItem" style="width: 40%"
-                                    ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: #fc9701"
-                                        >Employee Id</span
-                                    ></span
-                                >
                                 <span class="contentColItem" style="width: 40%"
                                     ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: #fc9701">Name</span></span
                                 >
@@ -229,9 +220,6 @@
                                 *ngFor="let employee of appliedEmployeeChoiceList"
                                 style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px"
                             >
-                                <span class="contentColItem" style="width: 40%"
-                                    ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis">{{ employee.id }}</span></span
-                                >
                                 <span class="contentColItem" style="width: 40%"
                                     ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis">{{ employee.name }}</span></span
                                 >

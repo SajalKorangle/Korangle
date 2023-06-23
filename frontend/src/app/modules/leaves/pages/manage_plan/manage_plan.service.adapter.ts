@@ -64,6 +64,7 @@ export default class ManagePlanServiceAdapter {
                 results[3],
                 results[4],
             ];
+            this.vm.employeeChoiceList.sort((employee1, employee2) => employee1.name.localeCompare(employee2.name));
             this.vm.leavePlanList.sort((leavePlanA, leavePlanB) => (leavePlanA.leavePlanName < leavePlanB.leavePlanName ? -1 : 1));
             this.vm.resetComponent();
             this.vm.isLoading = false;
@@ -102,6 +103,7 @@ export default class ManagePlanServiceAdapter {
 
     // starts :- Function to save plan
     async savePlan(data): Promise<any> {
+        console.log(data);
         // starts :- Check if the current leave plan entered is valid or not.
         if (!data.leavePlanName.match(/[A-Za-z][A-Za-z0-9- ]*/g) || data.leavePlanName.match(/[A-Za-z][A-Za-z0-9- ]*/g).length !== 1) {
             return alert(
@@ -164,43 +166,83 @@ export default class ManagePlanServiceAdapter {
         // ends :- Create List of leave types.
         // starts :- Make requests to update leave plan name, delete leave types and add leave types
         data.parentSchool = this.vm.user.activeSchool.dbId;
-        data.id
+        let response = data.id
             ? await this.vm.genericService.partiallyUpdateObject({ leaves_app: "SchoolLeavePlan" }, data)
             : await this.vm.genericService.createObject({ leaves_app: "SchoolLeavePlan" }, data);
+        if (!response) {
+            alert("Failed to update leave plan.");
+            this.vm.isLoading = false;
+            return false;
+        }
         // remove deleted leave types
-        removeLeaveTypeChoiceList.length
+        response = removeLeaveTypeChoiceList.length
             ? await this.vm.genericService.deleteObjectList(
                   { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
                   { filter: { __or__: removeLeaveTypeChoiceList } },
               )
-            : null;
+            : true;
+        if (!response) {
+            alert("Failed to delete old leave types. Please try again later.");
+            this.vm.isLoading = false;
+            return false;
+        }
         // add new leave types
-        addLeaveTypeChoiceList.length
+        response = addLeaveTypeChoiceList.length
             ? await this.vm.genericService.createObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, addLeaveTypeChoiceList)
-            : null;
+            : true;
+        if (!response) {
+            alert("Failed to add new leave types. Please try again later.");
+            this.vm.isLoading = false;
+            return false;
+        }
         // remove un-associated with this leave plan
-        removeEmployeeChoiceList.length
+        response = removeEmployeeChoiceList.length
             ? await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlanToEmployee" }, { filter: { __or__: removeEmployeeChoiceList } })
-            : null;
+            : true;
+        if (!response) {
+            alert("Unable to delete old employees. Please try again later.");
+            return false;
+        }
         // associate new employees to this leave plan
-        addEmployeeChoiceList.length ? await this.vm.genericService.createObjectList({ leaves_app: "SchoolLeavePlanToEmployee" }, addEmployeeChoiceList) : null;
+        addEmployeeChoiceList.length ? await this.vm.genericService.createObjectList({ leaves_app: "SchoolLeavePlanToEmployee" }, addEmployeeChoiceList) : true;
+        if (!response) {
+            alert("Unable to add new employees. Please try again later.");
+            return false;
+        }
         // ends :- Request changes
+        alert(`Leave Plan ${data.id ? "Updated" : "Created"} Successfully!`);
         this.initializeData();
     }
     // ends :- function to save plan
 
     // starts :- Function to delete currently selected plan
     async handleDelete(): Promise<any> {
-        let oldLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
-        this.vm.isLoading = true;
-        this.vm.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
-            leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.vm.currentLeavePlan.id ? oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem) : null;
-        });
-        oldLeaveTypeChoiceList.length
-            ? await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, { filter: { __or__: oldLeaveTypeChoiceList } })
-            : null;
-        await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlan" }, { filter: this.vm.currentLeavePlan });
-        this.initializeData();
+        if (confirm("Do you want to delete the leave plan?")) {
+            let oldLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
+            this.vm.isLoading = true;
+            this.vm.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
+                leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.vm.currentLeavePlan.id ? oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem) : null;
+            });
+            let response = oldLeaveTypeChoiceList.length
+                ? await this.vm.genericService.deleteObjectList(
+                      { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
+                      { filter: { __or__: oldLeaveTypeChoiceList } },
+                  )
+                : true;
+            if (response) {
+                let response = await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlan" }, { filter: this.vm.currentLeavePlan });
+                if (response) {
+                    alert("Leave Plan Deleted Successfully!");
+                    this.initializeData();
+                } else {
+                    alert("Failed to delete leave plan. please try again.");
+                    this.vm.isLoading = false;
+                }
+            } else {
+                alert("Failed to delete leave plan. please try again.");
+                this.vm.isLoading = false;
+            }
+        }
     }
     // ends :- Function to delete currently selected plan
 }

@@ -54,16 +54,16 @@ export class ManagePlanComponent implements OnInit {
         this.currentLeavePlan = JSON.parse(JSON.stringify(leavePlan));
         this.appliedLeaveTypeChoiceList = [];
         this.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
-            leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id ? this.appliedLeaveTypeChoiceList.push(
-                this.leaveTypeList.find((leaveType) => leaveType.id === leavePlanToLeaveTypeItem.parentSchoolLeaveType),
-            ) : null;
+            leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.currentLeavePlan.id
+                ? this.appliedLeaveTypeChoiceList.push(this.leaveTypeList.find((leaveType) => leaveType.id === leavePlanToLeaveTypeItem.parentSchoolLeaveType))
+                : null;
         });
         this.filteredEmployeeChoiceList = this.employeeChoiceList;
         this.appliedEmployeeChoiceList = [];
         this.leavePlanToEmployeeList.forEach((leavePlanToEmployee) => {
-            leavePlanToEmployee.parentSchoolLeavePlan == this.currentLeavePlan.id ? this.appliedEmployeeChoiceList.push(
-                this.employeeChoiceList.find((employee) => employee.id === leavePlanToEmployee.parentEmployee)
-            ) : null;
+            leavePlanToEmployee.parentSchoolLeavePlan == this.currentLeavePlan.id
+                ? this.appliedEmployeeChoiceList.push(this.employeeChoiceList.find((employee) => employee.id === leavePlanToEmployee.parentEmployee))
+                : null;
         });
         this.currentEmployeeChoiceList = this.appliedEmployeeChoiceList;
         this.filter = "";
@@ -75,8 +75,9 @@ export class ManagePlanComponent implements OnInit {
     updateChoiceList(): void {
         this.leaveTypeChoiceList = [];
         this.leaveTypeList.map((leaveType) => {
-            !this.appliedLeaveTypeChoiceList.filter((appliedLeaveType) => leaveType.id === appliedLeaveType.id).length ?
-            this.leaveTypeChoiceList.push(leaveType) : null;
+            !this.appliedLeaveTypeChoiceList.filter((appliedLeaveType) => leaveType.id === appliedLeaveType.id).length
+                ? this.leaveTypeChoiceList.push(leaveType)
+                : null;
         });
     }
     savePlanToLeaveType(LeavePlanToLeaveType): void {
@@ -95,9 +96,13 @@ export class ManagePlanComponent implements OnInit {
         this.updateChoiceList();
     }
     updateEmployeeChoiceList(): void {
+        this.currentEmployeeChoiceList.sort((employee1, employee2) => employee1.name.localeCompare(employee2.name));
         this.filteredEmployeeChoiceList = [];
+        this.currentEmployeeChoiceList.forEach((employee) => {
+            employee.name.startsWith(this.filter) ? this.filteredEmployeeChoiceList.push(employee) : null;
+        });
         this.employeeChoiceList.forEach((employee) => {
-            employee.name.startsWith(this.filter) || this.currentEmployeeChoiceList.includes(employee) ? this.filteredEmployeeChoiceList.push(employee) : null;
+            employee.name.startsWith(this.filter) && !this.currentEmployeeChoiceList.includes(employee) ? this.filteredEmployeeChoiceList.push(employee) : null;
         });
     }
     removeEmployee(selectedEmployee): void {
