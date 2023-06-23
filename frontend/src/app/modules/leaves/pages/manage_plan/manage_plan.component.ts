@@ -76,6 +76,7 @@ export class ManagePlanComponent implements OnInit {
         });
         this.currentEmployeeChoiceList = this.appliedEmployeeChoiceList;
         this.filter = "";
+        this.updateEmployeeChoiceList();
     }
     // ends :- Set the selected plan so that it can be updated and displayed on screen.
 
@@ -123,11 +124,16 @@ export class ManagePlanComponent implements OnInit {
         this.currentEmployeeChoiceList.sort((employee1, employee2) => employee1.name.localeCompare(employee2.name));
         this.filteredEmployeeChoiceList = [];
         this.currentEmployeeChoiceList.forEach((employee) => {
-            employee.name.startsWith(this.filter) ? this.filteredEmployeeChoiceList.push(employee) : null;
+            employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) ? this.filteredEmployeeChoiceList.push(employee) : null;
         });
         this.employeeChoiceList.forEach((employee) => {
-            employee.name.startsWith(this.filter) && !this.currentEmployeeChoiceList.includes(employee) ? this.filteredEmployeeChoiceList.push(employee) : null;
+            employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) && !this.currentEmployeeChoiceList.includes(employee)
+                ? this.filteredEmployeeChoiceList.push(employee)
+                : null;
         });
+        if(this.filteredEmployeeChoiceList.length == 0) {
+            this.filter = "";
+        }
     }
     // ends :- update employee choices
 
