@@ -94,14 +94,6 @@ export class SetBankAccountServiceAdapter {
         }
         this.vm.intermediateUpdateState.ifscVerificationLoading = false;
 
-        // Reducing School Bank Account Updation Permission Count by 1 before account creation/updation starts
-        this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0].bankAccountUpdationPermissionCount -= 1;
-        await this.vm.genericService.updateObject(
-            {payment_app: 'SchoolBankAccountUpdationPermissionCount'},
-            this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0]
-        );
-        // Reducing School Bank Account Updation Permission Count by 1 before account creation/updation ends
-
         const account_verification_data = {
             accountNumber: this.vm.schoolMerchantAccount.vendorData.bank.accountNumber,
             ifsc: this.vm.schoolMerchantAccount.vendorData.bank.ifsc
@@ -115,21 +107,40 @@ export class SetBankAccountServiceAdapter {
         this.vm.intermediateUpdateState.accountVerificationLoading = false;
 
         if (this.vm.schoolMerchantAccount.id) {
-            this.vm.schoolMerchantAccount =
-                await this.vm.paymentService.updateObject(this.vm.paymentService.school_merchant_account, newOnlinePaymentAccount);
-            this.vm.snackBar.open(
-                'Successfully requested for your updating Payment Account, please give us some time to approve these changes.',
-                undefined, { duration: 5000 }
-            );
+            let res = await this.vm.paymentService.updateObject(this.vm.paymentService.school_merchant_account, newOnlinePaymentAccount);
+            if (res) {
+                this.vm.schoolMerchantAccount = res;
+                this.vm.snackBar.open(
+                    'Successfully requested for your updating Payment Account, please give us some time to approve these changes.',
+                    undefined, { duration: 5000 }
+                );
+                // Reducing School Bank Account Updation Permission Count by 1 after successful account updation starts
+                this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0].bankAccountUpdationPermissionCount -= 1;
+                await this.vm.genericService.updateObject(
+                    {payment_app: 'SchoolBankAccountUpdationPermissionCount'},
+                    this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0]
+                );
+                // Reducing School Bank Account Updation Permission Count by 1 after successful account updation ends
+            }
         }
         else {
-            this.vm.schoolMerchantAccount =
-                await this.vm.paymentService.createObject(this.vm.paymentService.school_merchant_account, newOnlinePaymentAccount);
-            this.vm.snackBar.open(
-                'Successfully requested for creating your Payment Account, please give us some time to approve your account.',
-                undefined, { duration: 5000 }
-            );
+            let res = await this.vm.paymentService.createObject(this.vm.paymentService.school_merchant_account, newOnlinePaymentAccount);
+            if (res) {
+                this.vm.schoolMerchantAccount = res;
+                this.vm.snackBar.open(
+                    'Successfully requested for creating your Payment Account, please give us some time to approve your account.',
+                    undefined, { duration: 5000 }
+                );
+                // Reducing School Bank Account Updation Permission Count by 1 after successful account creation starts
+                this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0].bankAccountUpdationPermissionCount -= 1;
+                await this.vm.genericService.updateObject(
+                    {payment_app: 'SchoolBankAccountUpdationPermissionCount'},
+                    this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0]
+                );
+                // Reducing School Bank Account Updation Permission Count by 1 after successful account creation ends
+            }
         }
+
         this.vm.resetIntermediateUpdateState();
     }
 
