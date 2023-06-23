@@ -166,6 +166,8 @@
                     <!-- ends :- select and add/remove leave types -->
 
                     <!-- starts :- add / remove employees from selected plan -->
+
+                    <!-- starts :- selection field for employees -->
                     <div class="contentRow">
                         <div class="contentColItem" style="width: 100%">
                             <div class="contentRowItem" style="width: 100%">
@@ -188,6 +190,8 @@
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
+
+                                <!-- starts :- accept or reject the changes for employees. -->
                                 <span
                                     *ngIf="employeeChoiceList.length !== 0 && currentEmployeeChoiceList !== appliedEmployeeChoiceList"
                                     class="material-icons-outlined"
@@ -204,9 +208,13 @@
                                 >
                                     clear
                                 </span>
+                                <!-- ends :- accept or reject the changes for employees -->
                             </div>
                         </div>
                     </div>
+                    <!-- ends :- selection field for employees -->
+
+                    <!-- starts :- list of selected employees -->
                     <div class="contentRow" style="flex-grow: 1; overflow-y: auto; height: 250px">
                         <div class="contentColItem" style="flex-grow: 1; justify-content: flex-start">
                             <div class="contentRowItem" style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px">
@@ -241,6 +249,8 @@
                             </div>
                         </div>
                     </div>
+                    <!-- ends :- list of selected employees -->
+
                     <!-- ends :- add / remove employees -->
 
                     <!-- starts :- Save leave plan -->

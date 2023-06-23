@@ -36,12 +36,18 @@ export class ManagePlanComponent implements OnInit {
     leavePlanList: Array<LeavePlan> = [];
     leavePlanToLeaveTypeList: Array<LeavePlanToLeaveType> = [];
     leaveTypeList: Array<LeaveType> = [];
-
+    
+    // Initialize the generic service
     constructor(public genericService: GenericService) {}
+
+    // Initialize the service adapter and get the data
     async ngOnInit(): Promise<void> {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
     }
+
+    // starts :- Function to reset the component
+    // It is used when user clicks on go back or cancel.
     resetComponent(): void {
         this.currentLeavePlan = {};
         this.leavePlanName = "";
@@ -49,6 +55,9 @@ export class ManagePlanComponent implements OnInit {
         this.leaveTypeChoiceList = this.currentLeaveTypeChoiceList = this.appliedLeaveTypeChoiceList = [];
         this.currentEmployeeChoiceList = this.appliedEmployeeChoiceList = [];
     }
+    // ends :- Function to reset the component
+
+    // starts :- Set the selected plan so that it can be updated and displayed on screen.
     setPlan(leavePlan): void {
         this.isLeavePlanOpen = true;
         this.currentLeavePlan = JSON.parse(JSON.stringify(leavePlan));
@@ -68,10 +77,16 @@ export class ManagePlanComponent implements OnInit {
         this.currentEmployeeChoiceList = this.appliedEmployeeChoiceList;
         this.filter = "";
     }
+    // ends :- Set the selected plan so that it can be updated and displayed on screen.
+
+    // starts :- Display the form to add new leave plan
     enableAddPlanToLeaveType(): void {
         this.isSelectLeavePlanToLeaveTypeVisible = true;
         this.updateChoiceList();
     }
+    // ends :- Display the form to add new leave plan
+
+    // starts :- update leave types choices.
     updateChoiceList(): void {
         this.leaveTypeChoiceList = [];
         this.leaveTypeList.map((leaveType) => {
@@ -80,12 +95,18 @@ export class ManagePlanComponent implements OnInit {
                 : null;
         });
     }
+    // ends :- update leave types choices.
+
+    // starts :- save plan to leave type
     savePlanToLeaveType(LeavePlanToLeaveType): void {
         LeavePlanToLeaveType.length ? this.appliedLeaveTypeChoiceList.push(...LeavePlanToLeaveType) : null;
         this.currentLeaveTypeChoiceList = !LeavePlanToLeaveType.length ? this.appliedLeaveTypeChoiceList : this.currentLeaveTypeChoiceList;
         this.isSelectLeavePlanToLeaveTypeVisible = false;
         this.currentLeaveTypeChoiceList = [];
     }
+    // ends :- save plan to leave type
+
+    // starts :- remove leave type choice
     removeLeaveTypeChoice(LeaveTypeChoice): void {
         let temporaryLeaveTypeChoiceList: Array<LeaveType> = [];
         this.appliedLeaveTypeChoiceList.map((leaveTypeChoiceItem) => {
@@ -95,6 +116,9 @@ export class ManagePlanComponent implements OnInit {
         this.appliedLeaveTypeChoiceList = temporaryLeaveTypeChoiceList;
         this.updateChoiceList();
     }
+    // ends :- remove leave type choice
+
+    // starts :- update employee choices
     updateEmployeeChoiceList(): void {
         this.currentEmployeeChoiceList.sort((employee1, employee2) => employee1.name.localeCompare(employee2.name));
         this.filteredEmployeeChoiceList = [];
@@ -105,6 +129,9 @@ export class ManagePlanComponent implements OnInit {
             employee.name.startsWith(this.filter) && !this.currentEmployeeChoiceList.includes(employee) ? this.filteredEmployeeChoiceList.push(employee) : null;
         });
     }
+    // ends :- update employee choices
+
+    // starts :- remove employee from list of selected employees.
     removeEmployee(selectedEmployee): void {
         let temporaryEmployeeChoiceList = [];
         this.appliedEmployeeChoiceList.forEach((employee) => {
@@ -113,4 +140,5 @@ export class ManagePlanComponent implements OnInit {
         this.appliedEmployeeChoiceList = temporaryEmployeeChoiceList;
         this.currentEmployeeChoiceList = temporaryEmployeeChoiceList;
     }
+    // ends :- remove employee from list of selected employees.
 }
