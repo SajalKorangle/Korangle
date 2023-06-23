@@ -1,3 +1,107 @@
-<div class="card-content">
-    Under Construction !!!
+<div class="card-content" *ngIf="!isLoading">
+    <div
+        style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center"
+    >
+        <input type="file" multiple="false" accept=".xlsx" style="display: block; font-size: 1.6rem" />
+        <button class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="margin-left: auto">
+            Download Template
+        </button>
+    </div>
+    <p>Download template or Upload and map table headers to existing parameters. </p>
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between">
+        <div>
+            <p style="display: inline-block">Mapped 10 of 14 Columns, 4 unmapped parameters left blank.</p>
+            <p style="margin-left: 3rem; color: #6f6f6f"><em> Displaying 40 items. </em></p>
+            <p style="display: flex; align-items: center; flex-direction: row; flex-wrap: wrap; color: #6f6f6f">
+                <span
+                    style="
+                        display: inline-block;
+                        height: 2rem;
+                        width: 2rem;
+                        margin-right: 1rem;
+                        background-color: #ff8585;
+                    "
+                ></span>
+                <em>3 cells with errors</em>
+            </p>
+        </div>
+        <mat-form-field>
+            <mat-label>Filter Rows</mat-label>
+            <mat-select>
+                <mat-option value="all">All Rows</mat-option>
+                <mat-option value="errors">Rows with errors</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <cdk-virtual-scroll-viewport itemSize="0" style="height: 60vh; width: 100%; margin-top: 1rem">
+        <table class="table">
+            <thead style="color: #a30000">
+                <tr>
+                    <th scope="col" style="font-weight: bold; border-width: 2px">Column 1</th>
+                    <th scope="col" style="font-weight: bold; border-width: 2px">Column 2</th>
+                    <th scope="col" style="font-weight: bold; border-width: 2px">Column 3</th>
+                </tr>
+                <tr>
+                    <th scope="col" style="border-width: 2px">
+                        <mat-form-field>
+                            <mat-label>Select Parameter</mat-label>
+                            <mat-select class="mat-select-{{ user.activeSchool.secondaryThemeColor }}">
+                                <mat-option value="all">All Rows</mat-option>
+                                <mat-option value="errors">Rows with errors</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </th>
+                    <th scope="col" style="border-width: 2px">
+                        <mat-form-field>
+                            <mat-label>Select Parameter</mat-label>
+                            <mat-select>
+                                <mat-option value="all">All Rows</mat-option>
+                                <mat-option value="errors">Rows with errors</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </th>
+                    <th scope="col" style="border-width: 2px">
+                        <mat-form-field>
+                            <mat-label>Select Parameter</mat-label>
+                            <mat-select>
+                                <mat-option value="all">All Rows</mat-option>
+                                <mat-option value="errors">Rows with errors</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Row 1</td>
+                    <td>Row 1</td>
+                    <td>Row 1</td>
+                </tr>
+            </tbody>
+        </table>
+    </cdk-virtual-scroll-viewport>
 </div>
+
+<div
+    style="
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding-inline: 1rem;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 1rem;
+        border-top: 1px solid #c4c4c4;
+    "
+>
+    <p>20 cells with errors, rectify before uploading</p>
+    <button class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"> Upload </button>
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
