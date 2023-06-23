@@ -36,7 +36,7 @@ export class ManagePlanComponent implements OnInit {
     leavePlanList: Array<LeavePlan> = [];
     leavePlanToLeaveTypeList: Array<LeavePlanToLeaveType> = [];
     leaveTypeList: Array<LeaveType> = [];
-    
+
     // Initialize the generic service
     constructor(public genericService: GenericService) {}
 
