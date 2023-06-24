@@ -196,7 +196,7 @@
                                     *ngIf="employeeChoiceList.length !== 0 && currentEmployeeChoiceList !== appliedEmployeeChoiceList"
                                     class="material-icons-outlined"
                                     style="width: fit; padding: 8px; cursor: pointer; color: green"
-                                    (click)="appliedEmployeeChoiceList = currentEmployeeChoiceList"
+                                    (click)="addEmployee()"
                                 >
                                     check
                                 </span>
@@ -204,7 +204,7 @@
                                     *ngIf="employeeChoiceList.length !== 0 && currentEmployeeChoiceList !== appliedEmployeeChoiceList"
                                     class="material-icons-outlined"
                                     style="width: fit; padding: 8px; cursor: pointer; color: red"
-                                    (click)="currentEmployeeChoiceList = appliedEmployeeChoiceList"
+                                    (click)="currentEmployeeChoiceList = appliedEmployeeChoiceList; filter = ''; updateEmployeeChoiceList()"
                                 >
                                     clear
                                 </span>
