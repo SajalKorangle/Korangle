@@ -192,18 +192,14 @@
                                 </mat-form-field>
 
                                 <!-- starts :- accept or reject the changes for employees. -->
-                                <span
-                                    *ngIf="employeeChoiceList.length !== 0 && currentEmployeeChoiceList !== appliedEmployeeChoiceList"
-                                    class="material-icons-outlined"
-                                    style="width: fit; padding: 8px; cursor: pointer; color: green"
+                                <span *ngIf="employeeChoiceList.length !== 0 && currentEmployeeChoiceList !== appliedEmployeeChoiceList"
+                                    class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: green"
                                     (click)="addEmployee()"
                                 >
                                     check
                                 </span>
-                                <span
-                                    *ngIf="employeeChoiceList.length !== 0 && currentEmployeeChoiceList !== appliedEmployeeChoiceList"
-                                    class="material-icons-outlined"
-                                    style="width: fit; padding: 8px; cursor: pointer; color: red"
+                                <span *ngIf="employeeChoiceList.length !== 0 && currentEmployeeChoiceList !== appliedEmployeeChoiceList"
+                                    class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: red"
                                     (click)="currentEmployeeChoiceList = appliedEmployeeChoiceList; filter = ''; updateEmployeeChoiceList()"
                                 >
                                     clear
