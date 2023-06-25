@@ -554,8 +554,8 @@ export class UpdateMarksServiceAdapter {
 
             //Starts: Adding testId to studentData
             this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.forEach((test) => {
-                studentData.forEach((dataItem) =>{
-                    if(dataItem.parentSubject === test.parentSubject && dataItem.testType === test.testType){
+                studentData.forEach((dataItem) => {
+                    if (dataItem.parentSubject === test.parentSubject && dataItem.testType === test.testType) {
                         dataItem['testId'] = test.id;
                     }
                 });
