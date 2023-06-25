@@ -264,8 +264,6 @@ export class UpdateMarksServiceAdapter {
                                             tempSection['testList'].push(test);
                                         }
 
-                                        subject['testDetails'] = testDetails;
-
                                         tempSection['subjectList'].push(subject);
                                     }
                                 });
@@ -408,8 +406,8 @@ export class UpdateMarksServiceAdapter {
                 let subjectMap = new Map<number, string>();
                 let subjectMaxMarksMap = new Map<string, number>();
                 this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.forEach((test) => {
-                    if (!subjectMap.has(test.subject.id)) {
-                        subjectMap.set(test.subject.id, test.name);
+                    if (!subjectMap.has(test.id)) {
+                        subjectMap.set(test.id, test.name);
                     }
                     if (!subjectMaxMarksMap.has(test.name)) {
                         subjectMaxMarksMap.set(test.name, test.maximumMarks);
@@ -420,7 +418,7 @@ export class UpdateMarksServiceAdapter {
                 // add subject name to each student's test data
                 this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.studentList.forEach((student) => {
                     student.testData.forEach((testDataSingle) => {
-                        testDataSingle['subjectName'] = subjectMap.get(testDataSingle.parentSubject);
+                        testDataSingle['subjectName'] = subjectMap.get(testDataSingle.testId);
                         let subjectFullName = testDataSingle['subjectName'];
 
                         if (!testDataSingle['subjectFullName']) {
@@ -553,6 +551,17 @@ export class UpdateMarksServiceAdapter {
                 }) != undefined;
             });
             // Ends: Deciding whether student is studing the subject of selected tests or not
+
+            //Starts: Adding testId to studentData
+            this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList.forEach((test) => {
+                studentData.forEach((dataItem) =>{
+                    if(dataItem.parentSubject === test.parentSubject && dataItem.testType === test.testType){
+                        dataItem['testId'] = test.id;
+                    }
+                });
+            });
+
+            //Ends: Adding testId to studentData
 
             student['testData'] = studentData;
             this.vm.selectedExamination.selectedClass.selectedSection.selectedTestList['studentList'].push(student);
