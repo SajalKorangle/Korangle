@@ -10,7 +10,7 @@
                         <mat-label>Search Employee</mat-label>
                         <input [(ngModel)]="filter" (keyup)="updateEmployeeChoiceList()" matInput placeholder="Enter Employee Name" />
                     </mat-form-field>
-                    <mat-option *ngFor="let employee of filteredEmployeeChoiceList" [value]="employee"> ({{ employee.id }}) - {{ employee.name }} </mat-option>
+                    <mat-option *ngFor="let employee of filteredEmployeeChoiceList" [value]="employee"> {{ employee.name }} </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>

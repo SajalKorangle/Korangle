@@ -14,9 +14,29 @@ export default class ManageLeavePlanServiceAdapter {
     // ends :- Initialize adapter
 
     // starts :- Initialize Data (send GET request to backend to fetch data)
-    async initializeData(database: Partial<APP_MODEL_STRUCTURE_INTERFACE>, variableName: string, query: QUERY_INTERFACE = {}): Promise<void> {
-        this.vm[variableName] = await this.vm.genericService.getObjectList(database, query);
+    async initializeData(): Promise<void> {
+        this.vm.isLoading = true;
+        let results = await Promise.all([
+            this.vm.genericService.getObjectList({ employee_app: "Employee" }, {
+                filter: { parentSchool: this.vm.user.activeSchool.dbId },
+            }),
+            this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlanToEmployee" }, {
+                filter: { parentSchoolLeavePlan__parentSchool: this.vm.user.activeSchool.dbId },
+            }),
+            this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlan" }, {
+                filter: { parentSchool: this.vm.user.activeSchool.dbId },
+            }),
+            this.vm.genericService.getObjectList({ leaves_app: "EmployeeLeavePlan" }, {
+                filter: { activeLeavePlan__parentSchool: this.vm.user.activeSchool.dbId },
+            }),
+        ]);
+        [this.vm.employeeChoiceList, this.vm.leavePlanToEmployeeList, this.vm.leavePlanList, this.vm.employeeLeavePlanList] = [results[0], results[1], results[2], results[3]];
+        this.vm.employeeChoiceList.sort((a, b) => a.name.localeCompare(b.name));
+        this.vm.filteredEmployeeChoiceList = this.vm.employeeChoiceList;
         this.vm.isLoading = false;
+        console.log(results[1]);
+        console.log(results[2]);
+        console.log(results[3]);
     }
     // ends :- Initialize Data
 
@@ -70,7 +90,7 @@ export default class ManageLeavePlanServiceAdapter {
             response = await this.vm.genericService.deleteObjectList(Operation.database, { filter: { __or__: Operation.data } });
         }
         if (response !== null) {
-            await this.initializeData(Operation.database, variableName);
+            await this.initializeData();
         }
         this.vm.isLoading = false;
         return response;
@@ -81,9 +101,7 @@ export default class ManageLeavePlanServiceAdapter {
     async applyLeavePlan(): Promise<void> {
         let response = await this.handleDataChange(
             {
-                check: (data1, data2) => {
-                    return [];
-                },
+                check: (data1, data2) => [],
                 data: [
                     {
                         id:
@@ -102,6 +120,8 @@ export default class ManageLeavePlanServiceAdapter {
         if (response) {
             this.vm.activeLeavePlan = this.vm.currentLeavePlan;
             alert("Leave-Plan updated successfully");
+        } else {
+            alert("Failed to update Leave-Plan.");
         }
     }
     // ends :- function to apply leave plan

@@ -17,19 +17,7 @@ export class ManageLeavePlanComponent implements OnInit {
     constructor(public genericService: GenericService) {}
     async ngOnInit(): Promise<void> {
         this.serviceAdapter.initializeAdapter(this);
-        await this.serviceAdapter.initializeData({ employee_app: "Employee" }, "employeeChoiceList", {
-            filter: { parentSchool: this.user.activeSchool.dbId },
-        });
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeavePlanToEmployee" }, "leavePlanToEmployeeList", {
-            filter: { parentSchoolLeavePlan__parentSchool: this.user.activeSchool.dbId },
-        });
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeavePlan" }, "leavePlanList", {
-            filter: { parentSchool: this.user.activeSchool.dbId },
-        });
-        await this.serviceAdapter.initializeData({ leaves_app: "EmployeeLeavePlan" }, "employeeLeavePlanList", {
-            filter: { activeLeavePlan__parentSchool: this.user.activeSchool.dbId },
-        });
-        this.filteredEmployeeChoiceList = this.employeeChoiceList;
+        this.serviceAdapter.initializeData();
     }
     // LeavePlans
     leavePlanList: Array<LeavePlan> = [];
