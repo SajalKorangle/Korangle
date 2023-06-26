@@ -33,7 +33,8 @@ export class ManageLeavePlanComponent implements OnInit {
     activeLeavePlan: LeavePlan = null;
     employeeLeavePlanList: Array<EmployeeLeavePlan> = [];
     currentLeavePlan: LeavePlan = null;
-    // update list of employees
+
+    // starts :- function to update list of employees
     updateEmployeeChoiceList(): void {
         this.filteredEmployeeChoiceList = [];
         this.employeeChoiceList.forEach((employee) => {
@@ -42,7 +43,9 @@ export class ManageLeavePlanComponent implements OnInit {
                 : null;
         });
     }
-    // update leavePlanList for an employee
+    // ends :- function to update list of employees
+
+    // starts :- function to update leavePlanList for an employee
     updateLeavePlanList(): void {
         this.currentLeavePlanList = [];
         this.activeLeavePlan = null;
@@ -63,7 +66,11 @@ export class ManageLeavePlanComponent implements OnInit {
         });
         this.currentLeavePlan = this.activeLeavePlan;
     }
+    // ends :- function to update leavePlanList for an employee
+
+    // starts :- function to refresh data.
     refreshEmployeeData(): void {
         alert("Under Construction!");
     }
+    // ends :- function to refresh data.
 }
