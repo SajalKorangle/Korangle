@@ -13,17 +13,19 @@
 
     <div class="main-content">
         <div class="container-fluid">
-            <div class="card" *ngIf="user.section && user.activeSchool" style="min-height: 100%">
-                <div class="card-header hidden-xs hidden-sm"
-                     [attr.data-background-color]="user.activeSchool.primaryThemeColor">
+            <div class="card" *ngIf="user.section && user.activeSchool" style="min-height: 100%; margin: 25px 0 0 0">
+                <div
+                    class="card-header hidden-xs hidden-sm"
+                    [attr.data-background-color]="user.activeSchool.primaryThemeColor"
+                >
                     <div class="card-header-part1">
                         <h4 class="title">{{ user.section.title }} - {{ user.section.subTitle }}</h4>
                         <div style="display: flex">
-                            <span style="font-size: 16px;">{{getExpiryStatement()}}</span>
+                            <span style="font-size: 16px">{{ getExpiryStatement() }}</span>
                             <a
-                                    *ngIf="user.section.videoUrl"
-                                    style="text-decoration: none; cursor: pointer"
-                                    (click)="showTutorial(user.section.videoUrl)"
+                                *ngIf="user.section.videoUrl"
+                                style="text-decoration: none; cursor: pointer"
+                                (click)="showTutorial(user.section.videoUrl)"
                             >
                                 <i class="material-icons playButtonShadow">play_circle_outline</i>
                             </a>
@@ -38,9 +40,9 @@
                     <div class="card-header-part1">
                         <h4 class="title">{{ user.section.title }} - {{ user.section.subTitle }}</h4>
                         <a
-                                *ngIf="user.section.videoUrl"
-                                style="text-decoration: none; cursor: pointer"
-                                (click)="showTutorial(user.section.videoUrl)"
+                            *ngIf="user.section.videoUrl"
+                            style="text-decoration: none; cursor: pointer"
+                            (click)="showTutorial(user.section.videoUrl)"
                         >
                             <i class="material-icons playButtonShadow">play_circle_outline</i>
                         </a>
