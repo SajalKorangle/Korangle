@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ClassService } from '../../../../services/modules/class/class.service';
-import { EnquiryOldService } from '../../../../services/modules/enquiry/enquiry-old.service';
 import { DataStorage } from '../../../../classes/data-storage';
+import { Query } from '@services/generic/query';
 
 @Component({
     selector: 'add-enquiry',
@@ -18,18 +17,17 @@ export class AddEnquiryComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(private enquiryService: EnquiryOldService, private classService: ClassService) {}
+    constructor() {}
 
-    ngOnInit(): void {
+    async ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
         this.newEnquiry = {};
 
-        this.classService.getObjectList(this.classService.classs, {}).then((classList) => {
-            this.classList = classList;
-        });
+        this.classList = await new Query()
+            .getObjectList({'class_app': 'Class'});
     }
 
-    createEnquiry(): void {
+    async createEnquiry() {
         if (this.newEnquiry.enquirerName === undefined || this.newEnquiry.enquirerName === '') {
             alert("Enquirer's Name should be populated");
             return;
@@ -50,15 +48,14 @@ export class AddEnquiryComponent implements OnInit {
 
         this.isLoading = true;
 
-        this.enquiryService.createEnquiry(this.newEnquiry, this.user.jwt).then(
-            (message) => {
-                this.isLoading = false;
-                alert(message);
-                this.newEnquiry = {};
-            },
-            (error) => {
-                this.isLoading = false;
-            }
-        );
+        await new Query()
+            .createObject({'enquiry_app': 'Enquiry'}, this.newEnquiry);
+
+        alert('Enquiry created successfully');
+
+        this.newEnquiry = {};
+
+        this.isLoading = false;
+
     }
 }

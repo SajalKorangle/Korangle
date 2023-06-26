@@ -27,9 +27,9 @@ def add_manage_plans(apps, schema_editor):
     Task = apps.get_model('team_app', 'Task')
     EmployeePermission = apps.get_model('employee_app', 'EmployeePermission')
     # extract feature Flag
-    feature_flag_object = FeatureFlag.objects.filter(name='Leaves').first()
+    feature_flag_object = FeatureFlag.objects.get(name='Leaves')
     # filter module
-    module_object = Module.objects.filter(title='Leaves')[0]
+    module_object = Module.objects.get(title='Leaves')
     # add entry into Task for leaves
     # manage_plan
     manage_plan = Task(parentModule=module_object, path='manage_plan', title='Manage Plans',
@@ -54,7 +54,7 @@ def add_manage_leave_plans(apps, schema_editor):
     # add entry into Task for leaves
     # manage_plan
     manage_leave_plan = Task(parentModule=module_object, path='manage_leave_plan', title='Manage Leave Plans',
-                       parentBoard=None, videoUrl='', parentFeatureFlag=feature_flag_object, orderNumber=2)
+                       parentBoard=None, videoUrl='', parentFeatureFlag=feature_flag_object, orderNumber=3)
     manage_leave_plan.save()
     # add entry for employee permission for all tasks in Leaves
     for employee_permission in EmployeePermission.objects.filter(parentTask__path='assign_task'):
@@ -62,3 +62,10 @@ def add_manage_leave_plans(apps, schema_editor):
         employee.parentTask = manage_leave_plan
         employee.parentEmployee = employee_permission.parentEmployee
         employee.save()
+
+def move_leaves_module(apps, schema_editor):
+    Module = apps.get_model('team_app', 'Module')
+    # filter module
+    module_object = Module.objects.get(title='Leaves')
+    module_object.orderNumber = 7
+    module_object.save()

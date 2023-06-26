@@ -144,7 +144,7 @@ export class GenericService extends RestApiGateway {
 }
 export interface APP_MODEL_STRUCTURE_INTERFACE {
     leaves_app: 'SchoolLeaveType' | 'SchoolLeavePlan' | 'SchoolLeavePlanToSchoolLeaveType' | 'SchoolLeaveTypeMonth' | 'SchoolLeavePlanToEmployee' | 'EmployeeLeavePlan';
-    fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder' | 'StudentFee' | 'FeeSchoolSettings' | 'ViewDefaulterPermissions';
+    fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder' | 'StudentFee' | 'FeeSchoolSettings' | 'ViewDefaulterPermissions' | 'CustomFilterFee' | 'FeeType' | 'SchoolFeeRule';
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport'
         | 'PaymentGateway' | 'ModeOfPayment' | 'ModeOfPaymentCharges';
@@ -164,6 +164,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     notification_app: 'Notification';
     user_app: 'User';
     attendance_app: 'AttendancePermission';
+    enquiry_app: 'Enquiry' | 'ViewEnquiryInPagePermissions';
 }
 
 

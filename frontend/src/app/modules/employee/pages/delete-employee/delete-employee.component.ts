@@ -4,7 +4,6 @@ import { EmployeeService } from '../../../../services/modules/employee/employee.
 import { DataStorage } from '../../../../classes/data-storage';
 import { DeleteEmployeeServiceAdapter } from './delete-employee.service.adapter';
 import { AttendanceService } from '../../../../services/modules/attendance/attendance.service';
-import { EnquiryService } from '../../../../services/modules/enquiry/enquiry-service';
 import { SalaryService } from '../../../../services/modules/salary/salary-service';
 import { FeeService } from '../../../../services/modules/fees/fee.service';
 import { SubjectService } from '../../../../services/modules/subject/subject.service';
@@ -13,7 +12,7 @@ import { SubjectService } from '../../../../services/modules/subject/subject.ser
     selector: 'app-delete-employee',
     templateUrl: './delete-employee.component.html',
     styleUrls: ['./delete-employee.component.css'],
-    providers: [EmployeeOldService, EmployeeService, FeeService, EnquiryService, SalaryService, AttendanceService, SubjectService],
+    providers: [EmployeeOldService, EmployeeService, FeeService, SalaryService, AttendanceService, SubjectService],
 })
 export class DeleteEmployeeComponent implements OnInit {
     user;
@@ -30,7 +29,6 @@ export class DeleteEmployeeComponent implements OnInit {
         public employeeOldService: EmployeeOldService,
         public employeeService: EmployeeService,
         public attendanceService: AttendanceService,
-        public enquiryService: EnquiryService,
         public salaryService: SalaryService,
         public feeService: FeeService,
         public subjectService: SubjectService

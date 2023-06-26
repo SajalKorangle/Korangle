@@ -19,4 +19,5 @@ export class PaymentService extends ServiceObject {
 
     // easebuzz payment routes
     public easebuzz_order_self = '/easebuzz-order-self';
+    public easebuzz_order_school = '/easebuzz-order-school';
 }

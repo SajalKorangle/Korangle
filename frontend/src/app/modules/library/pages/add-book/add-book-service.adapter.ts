@@ -13,7 +13,8 @@ export class AddBookServiceAdapter {
     async getBook(newBookNumber) {
         const bookQuery = {
             filter: {
-                bookNumber: newBookNumber
+                bookNumber: newBookNumber,
+                parentSchool_id: this.vm.user.activeSchool.dbId
             }
         };
         const fetchedBook = await this.vm.genericService.getObject({library_app: "Book"}, bookQuery);
@@ -40,14 +41,6 @@ export class AddBookServiceAdapter {
     }
 
     async createNewBook() {
-
-        // Nullify empty fields, because undefined fields do not get carried over to form data, and cause adding books to the database to fail
-        Object.keys(this.vm.newBook).forEach(key => {
-            if (this.vm.newBook[key] === undefined || this.vm.newBook[key] === '') {
-                this.vm.newBook[key] = null;
-            }
-        });
-
         const fetchedBook = await this.getBook(this.vm.newBook.bookNumber);
 
         if (fetchedBook) {

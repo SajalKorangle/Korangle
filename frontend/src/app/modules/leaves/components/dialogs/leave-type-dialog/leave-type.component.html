@@ -220,10 +220,10 @@
 
             <!-- Starts :- Buttons to Close / Save the form -->
             <div class="modalRow" style="padding: 5px 5px 5px 20px; margin-top: 12px; margin-bottom: 12px; justify-content: end">
-                <button (click)="saveData($event)" class="modalButton" style="color: white; background: #fe9800" [disabled]="isSaving">
+                <button (click)="saveData($event)" class="modalButton" style="color: white; background: #fe9800">
                     {{ leaveTypeId === -1 ? "Add" : "Update" }}
                 </button>
-                <button class="modalButton" (click)="close.emit($event)" style="border: 1px solid #fe9800" [disabled]="isSaving">Cancel</button>
+                <button class="modalButton" (click)="close.emit($event)" style="border: 1px solid #fe9800">Cancel</button>
             </div>
             <!-- Ends :- Buttons to Close / Save the form -->
         </div>

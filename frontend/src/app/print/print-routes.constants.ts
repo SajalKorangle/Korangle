@@ -53,3 +53,6 @@ export const PRINT_LEDGER = 'print-ledger';
 
 // Parent Support
 export const PRINT_COUNT_ALL_TABLE_COMPLAINTS = 'print-count-all-table-complaints';
+
+// Library
+export const PRINT_BOOK_LIST = 'print-book-list';
