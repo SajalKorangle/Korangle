@@ -15,7 +15,7 @@ export default class ManagePlanServiceAdapter {
     // starts :- Initialize Data (send GET request to backend to fetch data)
     async initializeData(): Promise<void> {
         this.vm.isLoading = true;
-        Promise.all([
+        let results = await Promise.all([
             this.vm.genericService.getObjectList(
                 { leaves_app: "SchoolLeavePlan" },
                 {
@@ -56,19 +56,18 @@ export default class ManagePlanServiceAdapter {
                     },
                 },
             ),
-        ]).then((results) => {
-            [this.vm.leavePlanList, this.vm.leavePlanToLeaveTypeList, this.vm.leaveTypeList, this.vm.leavePlanToEmployeeList, this.vm.employeeChoiceList] = [
-                results[0],
-                results[1],
-                results[2],
-                results[3],
-                results[4],
-            ];
-            this.vm.employeeChoiceList.sort((employee1, employee2) => employee1.name.localeCompare(employee2.name));
-            this.vm.leavePlanList.sort((leavePlanA, leavePlanB) => (leavePlanA.leavePlanName < leavePlanB.leavePlanName ? -1 : 1));
-            this.vm.resetComponent();
-            this.vm.isLoading = false;
-        });
+        ]);
+        [this.vm.leavePlanList, this.vm.leavePlanToLeaveTypeList, this.vm.leaveTypeList, this.vm.leavePlanToEmployeeList, this.vm.employeeChoiceList] = [
+            results[0],
+            results[1],
+            results[2],
+            results[3],
+            results[4],
+        ];
+        this.vm.employeeChoiceList.sort((employee1, employee2) => employee1.name.localeCompare(employee2.name));
+        this.vm.leavePlanList.sort((leavePlanA, leavePlanB) => (leavePlanA.leavePlanName < leavePlanB.leavePlanName ? -1 : 1));
+        this.vm.resetComponent();
+        this.vm.isLoading = false;
     }
     // ends :- Initialize Data
 
@@ -103,7 +102,6 @@ export default class ManagePlanServiceAdapter {
 
     // starts :- Function to save plan
     async savePlan(data): Promise<any> {
-        console.log(data);
         // starts :- Check if the current leave plan entered is valid or not.
         if (!data.leavePlanName.match(/[A-Za-z][A-Za-z0-9- ]*/g) || data.leavePlanName.match(/[A-Za-z][A-Za-z0-9- ]*/g).length !== 1) {
             return alert(
