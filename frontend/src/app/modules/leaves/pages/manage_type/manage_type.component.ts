@@ -18,7 +18,7 @@ export class ManageTypeComponent implements OnInit {
     leaveTypeMonthList: Array<LeaveTypeMonth> = [];
     leavePlanToLeaveTypeList: Array<LeavePlanToLeaveType> = [];
     isFormVisible: boolean = false;
-    isLoading: boolean = true;
+    isLoading: boolean = false;
     invalidNameList: Array<string> = [];
     currentSchoolLeaveType: LeaveType = {
         id: -1,
@@ -42,9 +42,7 @@ export class ManageTypeComponent implements OnInit {
             });
         });
         this.serviceAdapter.initializeAdapter(this);
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeaveType" }, "leaveTypeList");
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeaveTypeMonth" }, "leaveTypeMonthList");
-        await this.serviceAdapter.initializeData({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, "leavePlanToLeaveTypeList");
+        this.serviceAdapter.initializeData();
     }
     constructor(public genericService: GenericService) {}
     // handle Modal
@@ -84,67 +82,5 @@ export class ManageTypeComponent implements OnInit {
     }
     closeAddNewType(event): void {
         this.isFormVisible = false;
-    }
-    async saveLeaveType(data): Promise<any> {
-        this.isSaving = true;
-        let response = await this.serviceAdapter.handleDataChange(data, data.setVariable);
-        if (response !== null && response !== undefined && JSON.stringify(response) !== "{}") {
-            if (data.setVariableNameMap) {
-                Object.keys(data.setVariableNameMap).map((variableName) => {
-                    this[variableName] = data.setVariableNameMap[variableName] === "response" ? response : data.setVariableNameMap[variableName];
-                });
-            }
-            if (data.close) {
-                if (data.operation.startsWith("update")) {
-                    alert("Leave Type updated successfully.");
-                }
-                this.isSaving = false;
-                this.closeAddNewType(data);
-            }
-        } else {
-            this.isSaving = false;
-        }
-    }
-    async deleteType(event, schoolLeaveType): Promise<any> {
-        if (this.leavePlanToLeaveTypeList.find(
-            (leavePlanToLeaveType) => leavePlanToLeaveType.parentSchoolLeaveType === schoolLeaveType.id)) {
-            return alert("This Leave type cannot be deleted since it's used in Leave Plan");
-        }
-        if (confirm("Do you want to delete this leave type?")) {
-            this.currentSchoolLeaveType = schoolLeaveType;
-            this.currentSchoolLeaveTypeMonthList = [];
-            this.leaveTypeMonthList.map((leaveTypeMonth) => {
-                if (this.currentSchoolLeaveType.id === leaveTypeMonth.parentSchoolLeaveType) {
-                    this.currentSchoolLeaveTypeMonthList.push(leaveTypeMonth);
-                }
-            });
-            let response = await this.serviceAdapter.handleDataChange(
-                {
-                    database: { leaves_app: "SchoolLeaveTypeMonth" },
-                    operation: "deleteBatch",
-                    check: (data1, data2) => {
-                        return [];
-                    },
-                    data: this.currentSchoolLeaveTypeMonthList,
-                },
-                "leaveTypeMonthList",
-            );
-            if (response !== null && response !== undefined && JSON.stringify(response) !== "{}") {
-                response = await this.serviceAdapter.handleDataChange(
-                    {
-                        database: { leaves_app: "SchoolLeaveType" },
-                        operation: "delete",
-                        check: (data1, data2) => {
-                            return [];
-                        },
-                        data: [this.currentSchoolLeaveType],
-                    },
-                    "leaveTypeList",
-                );
-                if (response && JSON.stringify(response) !== "{}") {
-                    alert("Leave Type deleted successfully");
-                }
-            }
-        }
     }
 }

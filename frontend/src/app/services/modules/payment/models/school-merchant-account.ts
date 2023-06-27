@@ -3,8 +3,8 @@ export class SchoolMerchantAccount {
     parentSchool: number;
     vendorId: string;
     isEnabled: boolean = true;
-    isAllowed: boolean = true;
-    platformFeeOnSchoolType: string = "percentage";
+    easebuzzBankLabel: string = "";
+    platformFeeOnSchoolType: string = "Percentage";
     percentageOfPlatformFeeOnSchool: number;
     maxPlatformFeeOnSchool: number;
     vendorData: {

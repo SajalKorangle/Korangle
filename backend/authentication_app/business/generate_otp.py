@@ -15,7 +15,7 @@ from authentication_app.models import OTP
 otpTemplates = {
     'SIGN UP': ' is the OTP requested by you to sign up for korangle.com',
     'FORGOT PASSWORD': ' is the OTP requested by you to reset your password for korangle.com',
-    'CREATE SCHOOL': ' is the OTP requested by you to create school for korangle.com'
+    'CREATE SCHOOL': ' is the OTP requested by you to create ID for korangle.com'
 }
 
 
@@ -78,7 +78,7 @@ def generate_otp(data):
         "smsContent": str(number) + otpTemplates[data['action']],
         "routeId": "1",
         "mobileNumbers": data['mobileNumber'],
-        "senderId": 'KORNGL',
+        "senderId": 'KRANGL',
         "smsContentType": 'english',
     }
 

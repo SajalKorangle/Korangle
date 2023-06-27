@@ -101,6 +101,9 @@
     flex-direction: column;
     padding: 10px;
 }
+.cardContainer {
+    height: 81vh;
+}
 .responsiveText {
     display: block;
 }

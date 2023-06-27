@@ -16,7 +16,6 @@ export class DeleteBookServiceAdapter {
             filter: {
                 parentSchool_id: this.vm.user.activeSchool.dbId
             },
-            fields_list: ["name", "author", "id", 'bookNumber', 'typeOfBook', 'publisher']
         };
         const fetchedBookList = await this.vm.genericService.getObjectList({ library_app: "Book" }, query);
         fetchedBookList.forEach(book => {

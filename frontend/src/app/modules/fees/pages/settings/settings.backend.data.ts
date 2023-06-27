@@ -13,7 +13,7 @@ export class SettingsBackendData {
     schoolMerchantAccount: {
         id: number,
         isEnabled: boolean,
-        isAllowed: boolean,
+        easebuzzBankLabel: string,
         platformFeeOnSchoolType: string,
         percentageOfPlatformFeeOnSchool: number,
         maxPlatformFeeOnSchool: number
