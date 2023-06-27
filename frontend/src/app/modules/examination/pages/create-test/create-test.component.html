@@ -185,7 +185,7 @@
                 <button
                     type="submit"
                     style="padding: 13px 15px"
-                    [disabled]="!isUpdated"
+                    [disabled]="isLocked || !isUpdated"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                     (click)="serviceAdapter.UpdateHelper()"
                 >
@@ -195,7 +195,7 @@
                 <button
                     type="submit"
                     style="padding: 13px 15px; margin-right: 20px"
-                    [disabled]="!isUpdated"
+                    [disabled]="isLocked || !isUpdated"
                     class="btn"
                     (click)="resetList()"
                 >
