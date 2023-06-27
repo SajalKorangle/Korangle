@@ -13,7 +13,7 @@ export class SetBankAccountHtmlRenderer {
 
     isUpdatingBankDetailsAllowed(): boolean {
         if (DataStorage.getInstance().isFeatureEnabled("Easebuzz in Pay Fees page feature flag")) {
-            return this.vm.schoolMerchantAccount.isAllowed;
+            return this.vm.schoolMerchantAccount.easebuzzBankLabel != "";
         }
         return true;
     }

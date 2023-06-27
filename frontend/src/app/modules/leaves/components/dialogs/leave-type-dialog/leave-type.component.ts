@@ -11,7 +11,6 @@ export class LeaveTypeDialog {
     @Output() close: EventEmitter<any> = new EventEmitter<any>();
     @Input() schoolLeaveType: LeaveType;
     @Input() schoolLeaveTypeMonth: Array<LeaveTypeMonth>;
-    @Input() isSaving: boolean;
     @Input() InvalidNameList: Array<string>;
     // dialog variables
     // prettier-ignore
@@ -46,24 +45,8 @@ export class LeaveTypeDialog {
     color: string = "";
     SchoolLeaveTypeMonthMap: { [id: string]: LeaveTypeMonth } = {};
     schoolLeaveTypeMonthList: Array<LeaveTypeMonth> = [];
-    // Initialize Data
-    ngOnChanges() {
-        if (this.schoolLeaveType.id !== -1 && this.isSaving) {
-            this.schoolLeaveTypeMonth.map((leaveTypeMonth) => {
-                leaveTypeMonth.parentSchoolLeaveType = this.schoolLeaveType.id;
-            });
-            this.save.emit({
-                database: { leaves_app: "SchoolLeaveTypeMonth" },
-                operation: this.schoolLeaveTypeMonth[0].id === -1 ? "insertBatch" : "updateBatch",
-                check: (data1, data2) => {
-                    return [];
-                },
-                data: this.schoolLeaveTypeMonth,
-                setVariable: "leaveTypeMonthList",
-                close: true,
-            });
-        }
-    }
+
+    // Initialize data
     ngOnInit() {
         this.leaveTypeName = this.schoolLeaveType.leaveTypeName;
         this.leaveType = this.schoolLeaveType.leaveType;
@@ -110,30 +93,16 @@ export class LeaveTypeDialog {
             Object.keys(this.SchoolLeaveTypeMonthMap).map((month) => {
                 this.schoolLeaveTypeMonthList.push(this.SchoolLeaveTypeMonthMap[month]);
             });
-            await this.save.emit({
-                database: { leaves_app: "SchoolLeaveType" },
-                operation: this.leaveTypeId === -1 ? "insert" : "update",
-                check: (data1, data2) => {
-                    let sameVariables = [];
-                    if (data1.id !== data2.id && data1.leaveTypeName.toLowerCase() === data2.leaveTypeName.toLowerCase()) sameVariables.push("Name");
-                    else if (data1.id != data2.id && data1.color.toLowerCase() === data2.color.toLowerCase()) sameVariables.push("Color");
-                    return sameVariables;
+            await this.save.emit([
+                {
+                    id: this.leaveTypeId,
+                    leaveTypeName: this.leaveTypeName,
+                    leaveType: this.leaveType,
+                    color: this.color,
                 },
-                data: [
-                    {
-                        id: this.leaveTypeId,
-                        leaveTypeName: this.leaveTypeName,
-                        leaveType: this.leaveType,
-                        color: this.color,
-                    },
-                ],
-                close: false,
-                setVariable: "leaveTypeList",
-                setVariableNameMap: {
-                    currentSchoolLeaveType: "response",
-                    currentSchoolLeaveTypeMonthList: this.schoolLeaveTypeMonthList,
-                },
-            });
+                this.schoolLeaveTypeMonth,
+            ]);
+            this.close.emit();
         }
     }
     updateLeaves(event, month): void {

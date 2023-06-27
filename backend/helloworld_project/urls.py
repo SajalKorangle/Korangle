@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from generic.generic_views import GenericView, GenericListView
 
-api_version = 'v8.5/'
+api_version = 'v8.6/'
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

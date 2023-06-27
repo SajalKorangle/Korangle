@@ -1,7 +1,5 @@
 from django.db import models
 from school_app.model.models import School
-from django.dispatch import receiver
-from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
 from common.common import BasePermission
 from employee_app.models import Employee
@@ -125,3 +123,15 @@ class SchoolLeaveTypeMonth(models.Model):
         RelationsToSchool = ['parentSchoolLeaveType__parentSchool__id']
         RelationsToStudent = []
 
+class SchoolLeavePlanToEmployee(models.Model):
+    # Employee
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, default=0)
+    # School Leave plan
+    parentSchoolLeavePlan = models.ForeignKey(SchoolLeavePlan, on_delete=models.CASCADE, default=0)
+
+    class Meta:
+        db_table = 'school_leave_plan_employee'
+        unique_together = ('parentSchoolLeavePlan', 'parentEmployee')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchoolLeavePlan__parentSchool__id']

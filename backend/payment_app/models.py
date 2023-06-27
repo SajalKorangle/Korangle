@@ -16,7 +16,6 @@ class SchoolMerchantAccount(models.Model):
     vendorId = models.CharField(max_length=20, unique=True)
     easebuzzBankLabel = models.CharField(max_length=20, default="", blank=True)
     isEnabled = models.BooleanField(default=True)
-    isAllowed = models.BooleanField(default=True)
     platformFeeOnSchoolType = models.CharField(max_length=15, choices=platformFeeTypes, default="Percentage")
     percentageOfPlatformFeeOnSchool = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     maxPlatformFeeOnSchool = models.PositiveIntegerField(default=0)
