@@ -60,6 +60,7 @@ export class CreateTestComponent implements OnInit {
     }>;
 
     isUpdated = false;
+    isLocked = false;
 
     user;
 
