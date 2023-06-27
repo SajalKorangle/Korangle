@@ -358,7 +358,6 @@ def ifscVerification(ifsc):
 
 
 def bankAccountVerification(accountNumber, ifsc):
-
     headers = {
         'Authorization': getBearerToken(),
         'Content-Type': 'Application/JSON',
