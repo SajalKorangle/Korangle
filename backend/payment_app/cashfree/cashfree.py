@@ -358,10 +358,6 @@ def ifscVerification(ifsc):
 
 
 def bankAccountVerification(accountNumber, ifsc):
-    if(DEBUG):
-        return {
-            "accountStatusCode": "ACCOUNT_IS_VALID",
-        }
 
     headers = {
         'Authorization': getBearerToken(),
