@@ -1,6 +1,6 @@
 import { DataStorage } from "@classes/data-storage";
 import { ManagePlanComponent } from "./manage_plan.component";
-import { LeavePlanToLeaveType } from "@modules/leaves/classes/leaves";
+import { LeavePlanToEmployee, LeavePlanToLeaveType } from "@modules/leaves/classes/leaves";
 
 export default class ManagePlanServiceAdapter {
     vm: ManagePlanComponent;
@@ -15,18 +15,59 @@ export default class ManagePlanServiceAdapter {
     // starts :- Initialize Data (send GET request to backend to fetch data)
     async initializeData(): Promise<void> {
         this.vm.isLoading = true;
-        Promise.all([this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlan" }, { filter: {
-            parentSchool: this.vm.user.activeSchool.dbId
-        } }), this.vm.genericService.getObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, { filter: {
-            parentSchoolLeavePlan__parentSchool__id: this.vm.user.activeSchool.dbId
-        } }), this.vm.genericService.getObjectList({ leaves_app: "SchoolLeaveType" }, { filter: {
-            parentSchool: this.vm.user.activeSchool.dbId
-        } })]).then((results) => {
-            [this.vm.leavePlanList, this.vm.leavePlanToLeaveTypeList, this.vm.leaveTypeList] = [results[0], results[1], results[2]];
-            this.vm.leavePlanList.sort((leavePlanA, leavePlanB) => leavePlanA.leavePlanName < leavePlanB.leavePlanName ? -1 : 1);
-            this.vm.resetComponent();
-            this.vm.isLoading = false;
-        });
+        let results = await Promise.all([
+            this.vm.genericService.getObjectList(
+                { leaves_app: "SchoolLeavePlan" },
+                {
+                    filter: {
+                        parentSchool: this.vm.user.activeSchool.dbId,
+                    },
+                },
+            ),
+            this.vm.genericService.getObjectList(
+                { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
+                {
+                    filter: {
+                        parentSchoolLeavePlan__parentSchool__id: this.vm.user.activeSchool.dbId,
+                    },
+                },
+            ),
+            this.vm.genericService.getObjectList(
+                { leaves_app: "SchoolLeaveType" },
+                {
+                    filter: {
+                        parentSchool: this.vm.user.activeSchool.dbId,
+                    },
+                },
+            ),
+            this.vm.genericService.getObjectList(
+                { leaves_app: "SchoolLeavePlanToEmployee" },
+                {
+                    filter: {
+                        parentSchoolLeavePlan__parentSchool: this.vm.user.activeSchool.dbId,
+                    },
+                },
+            ),
+            this.vm.genericService.getObjectList(
+                { employee_app: "Employee" },
+                {
+                    filter: {
+                        parentSchool: this.vm.user.activeSchool.dbId,
+                    },
+                },
+            ),
+        ]);
+        [this.vm.leavePlanList, this.vm.leavePlanToLeaveTypeList, this.vm.leaveTypeList, this.vm.leavePlanToEmployeeList, this.vm.employeeChoiceList] = [
+            results[0],
+            results[1],
+            results[2],
+            results[3],
+            results[4],
+        ];
+        this.vm.employeeChoiceList.sort((employee1, employee2) => employee1.name.localeCompare(employee2.name));
+        this.vm.leavePlanList.sort((leavePlanA, leavePlanB) => (leavePlanA.leavePlanName < leavePlanB.leavePlanName ? -1 : 1));
+        this.vm.resetComponent();
+        this.vm.isLoading = false;
     }
     // ends :- Initialize Data
 
@@ -69,57 +110,137 @@ export default class ManagePlanServiceAdapter {
         }
         // ends :- End of check for leave plan name.
         this.vm.isLoading = true;
-        // starts :- Create List for each leave type inside currentLeavePlan (leave types to be deleted and leave types to be added)
+        // create arrays representing leave types to be added and deleted
         let removeLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
         let addLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
         let oldLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
+        // create arrays representing employees to be added and deleted
+        let removeEmployeeChoiceList: Array<LeavePlanToEmployee> = [];
+        let addEmployeeChoiceList: Array<LeavePlanToEmployee> = [];
+        let oldEmployeeChoiceList: Array<LeavePlanToEmployee> = [];
+        // starts :- Create List for each leave type inside currentLeavePlan (leave types to be deleted and leave types to be added)
         this.vm.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
             leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.vm.currentLeavePlan.id ? oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem) : null;
         });
+        // create original array of employees associated to this leave plan
+        this.vm.leavePlanToEmployeeList.map((leavePlanToEmployee) => {
+            leavePlanToEmployee.parentSchoolLeavePlan === this.vm.currentLeavePlan.id ? oldEmployeeChoiceList.push(leavePlanToEmployee) : null;
+        });
+        // create array of leave types to be removed
         oldLeaveTypeChoiceList.map((oldLeaveTypeChoice) => {
             let similarLeaveType = this.vm.appliedLeaveTypeChoiceList.find((leaveType) => {
                 return leaveType.id === oldLeaveTypeChoice.parentSchoolLeaveType;
             });
             !similarLeaveType ? removeLeaveTypeChoiceList.push(oldLeaveTypeChoice) : null;
         });
+        // create array of employees to be removed
+        oldEmployeeChoiceList.map((oldEmployeeChoice) => {
+            let similarEmployee = this.vm.appliedEmployeeChoiceList.find((employee) => employee.id === oldEmployeeChoice.parentEmployee);
+            !similarEmployee ? removeEmployeeChoiceList.push(oldEmployeeChoice) : null;
+        });
+        // create array of leave types to be added
         this.vm.appliedLeaveTypeChoiceList.map((leaveType) => {
             let similarLeaveType = oldLeaveTypeChoiceList.find((oldLeaveTypeChoice) => leaveType.id === oldLeaveTypeChoice.parentSchoolLeaveType);
             !similarLeaveType
-                ? addLeaveTypeChoiceList.push({ id: -1, parentSchoolLeavePlan: this.vm.currentLeavePlan.id, parentSchoolLeaveType: leaveType.id }) : null;
+                ? addLeaveTypeChoiceList.push({ id: -1, parentSchoolLeavePlan: this.vm.currentLeavePlan.id, parentSchoolLeaveType: leaveType.id })
+                : null;
         });
-        if (await this.compareAndAlert("leavePlanList", { leaves_app: "SchoolLeavePlan" },
-        (data1, data2) => data2.id != data1.id && data1.leavePlanName.toLowerCase() === data2.leavePlanName.toLowerCase() ? ["Leave Plan Name"] : [], data)) {
+        // create array of employees to be added
+        this.vm.appliedEmployeeChoiceList.map((employee) => {
+            let similarEmployee = oldEmployeeChoiceList.find((oldEmployeeChoice) => oldEmployeeChoice.parentEmployee === employee.id);
+            !similarEmployee ? addEmployeeChoiceList.push({ id: -1, parentSchoolLeavePlan: this.vm.currentLeavePlan.id, parentEmployee: employee.id }) : null;
+        });
+        if (
+            await this.compareAndAlert(
+                "leavePlanList",
+                { leaves_app: "SchoolLeavePlan" },
+                (data1, data2) => (data2.id != data1.id && data1.leavePlanName.toLowerCase() === data2.leavePlanName.toLowerCase() ? ["Leave Plan Name"] : []),
+                data,
+            )
+        ) {
             this.vm.isLoading = false;
             return false;
         }
         // ends :- Create List of leave types.
         // starts :- Make requests to update leave plan name, delete leave types and add leave types
         data.parentSchool = this.vm.user.activeSchool.dbId;
-        data.id
-        ? await this.vm.genericService.partiallyUpdateObject({ leaves_app: "SchoolLeavePlan" }, data)
-        : await this.vm.genericService.createObject({ leaves_app: "SchoolLeavePlan" }, data);
-        removeLeaveTypeChoiceList.length ?
-        await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, { filter: { __or__: removeLeaveTypeChoiceList } })
-        : null;
-        addLeaveTypeChoiceList.length ?
-        await this.vm.genericService.createObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, addLeaveTypeChoiceList) : null;
+        let response = data.id
+            ? await this.vm.genericService.partiallyUpdateObject({ leaves_app: "SchoolLeavePlan" }, data)
+            : await this.vm.genericService.createObject({ leaves_app: "SchoolLeavePlan" }, data);
+        if (!response) {
+            alert("Failed to update leave plan.");
+            this.vm.isLoading = false;
+            return false;
+        }
+        // remove deleted leave types
+        response = removeLeaveTypeChoiceList.length
+            ? await this.vm.genericService.deleteObjectList(
+                  { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
+                  { filter: { __or__: removeLeaveTypeChoiceList } },
+              )
+            : true;
+        if (!response) {
+            alert("Failed to delete old leave types. Please try again later.");
+            this.vm.isLoading = false;
+            return false;
+        }
+        // add new leave types
+        response = addLeaveTypeChoiceList.length
+            ? await this.vm.genericService.createObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, addLeaveTypeChoiceList)
+            : true;
+        if (!response) {
+            alert("Failed to add new leave types. Please try again later.");
+            this.vm.isLoading = false;
+            return false;
+        }
+        // remove un-associated with this leave plan
+        response = removeEmployeeChoiceList.length
+            ? await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlanToEmployee" }, { filter: { __or__: removeEmployeeChoiceList } })
+            : true;
+        if (!response) {
+            alert("Unable to delete old employees. Please try again later.");
+            return false;
+        }
+        // associate new employees to this leave plan
+        addEmployeeChoiceList.length ? await this.vm.genericService.createObjectList({ leaves_app: "SchoolLeavePlanToEmployee" }, addEmployeeChoiceList) : true;
+        if (!response) {
+            alert("Unable to add new employees. Please try again later.");
+            return false;
+        }
         // ends :- Request changes
+        alert(`Leave Plan ${data.id ? "Updated" : "Created"} Successfully!`);
         this.initializeData();
     }
     // ends :- function to save plan
 
     // starts :- Function to delete currently selected plan
     async handleDelete(): Promise<any> {
-        let oldLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
-        this.vm.isLoading = true;
-        this.vm.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
-            leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.vm.currentLeavePlan.id ? oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem) : null;
-        });
-        oldLeaveTypeChoiceList.length
-        ? await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlanToSchoolLeaveType" }, { filter: { __or__: oldLeaveTypeChoiceList } })
-        : null;
-        await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlan" }, { filter: this.vm.currentLeavePlan });
-        this.initializeData();
+        if (confirm("Do you want to delete the leave plan?")) {
+            let oldLeaveTypeChoiceList: Array<LeavePlanToLeaveType> = [];
+            this.vm.isLoading = true;
+            this.vm.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
+                leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.vm.currentLeavePlan.id ? oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem) : null;
+            });
+            let response = oldLeaveTypeChoiceList.length
+                ? await this.vm.genericService.deleteObjectList(
+                      { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
+                      { filter: { __or__: oldLeaveTypeChoiceList } },
+                  )
+                : true;
+            if (response) {
+                let response = await this.vm.genericService.deleteObjectList({ leaves_app: "SchoolLeavePlan" }, { filter: this.vm.currentLeavePlan });
+                if (response) {
+                    alert("Leave Plan Deleted Successfully!");
+                    this.initializeData();
+                } else {
+                    alert("Failed to delete leave plan. please try again.");
+                    this.vm.isLoading = false;
+                }
+            } else {
+                alert("Failed to delete leave plan. please try again.");
+                this.vm.isLoading = false;
+            }
+        }
     }
     // ends :- Function to delete currently selected plan
 }
