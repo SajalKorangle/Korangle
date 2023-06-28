@@ -106,6 +106,14 @@ export class SetBankAccountServiceAdapter {
         }
         this.vm.intermediateUpdateState.accountVerificationLoading = false;
 
+        // Reducing School Bank Account Updation Permission Count by 1 before account updation starts
+        this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0].bankAccountUpdationPermissionCount -= 1;
+        await this.vm.genericService.updateObject(
+            {payment_app: 'SchoolBankAccountUpdationPermissionCount'},
+            this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0]
+        );
+        // Reducing School Bank Account Updation Permission Count by 1 before account updation ends
+
         if (this.vm.schoolMerchantAccount.id) {
             let res = await this.vm.paymentService.updateObject(this.vm.paymentService.school_merchant_account, newOnlinePaymentAccount);
             if (res) {
@@ -114,13 +122,6 @@ export class SetBankAccountServiceAdapter {
                     'Successfully requested for your updating Payment Account, please give us some time to approve these changes.',
                     undefined, { duration: 5000 }
                 );
-                // Reducing School Bank Account Updation Permission Count by 1 after successful account updation starts
-                this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0].bankAccountUpdationPermissionCount -= 1;
-                await this.vm.genericService.updateObject(
-                    {payment_app: 'SchoolBankAccountUpdationPermissionCount'},
-                    this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0]
-                );
-                // Reducing School Bank Account Updation Permission Count by 1 after successful account updation ends
             }
         }
         else {
@@ -131,13 +132,6 @@ export class SetBankAccountServiceAdapter {
                     'Successfully requested for creating your Payment Account, please give us some time to approve your account.',
                     undefined, { duration: 5000 }
                 );
-                // Reducing School Bank Account Updation Permission Count by 1 after successful account creation starts
-                this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0].bankAccountUpdationPermissionCount -= 1;
-                await this.vm.genericService.updateObject(
-                    {payment_app: 'SchoolBankAccountUpdationPermissionCount'},
-                    this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0]
-                );
-                // Reducing School Bank Account Updation Permission Count by 1 after successful account creation ends
             }
         }
 
