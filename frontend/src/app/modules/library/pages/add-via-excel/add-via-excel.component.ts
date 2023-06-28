@@ -51,7 +51,7 @@ export class AddViaExcelComponent implements OnInit {
                 // The book number should be a number and should not been used before
                 if (!num) return false;
                 if (isNaN(num) || isNaN(parseFloat(num))) return false;
-                if(num < 0) return false;
+                if (num < 0) return false;
                 if (this.usedBookNumbers.includes(num)) return false;
                 if (this.bookList.filter((book) => book[this.mappedParameter.indexOf(this.parameters[1])] === num).length > 1) return false;
                 return true;
@@ -149,10 +149,10 @@ export class AddViaExcelComponent implements OnInit {
             this.bookList = xlsx.utils.sheet_to_json(ws, { header: 1 });
 
             // // remove empty rows
-            while(!this.bookList[this.bookList.length - 1].reduce((a, b) => a || b, false)) {
+            while (!this.bookList[this.bookList.length - 1].reduce((a, b) => a || b, false)) {
                 this.bookList.pop();
             }
-            
+
             // // if blank file is uploaded
             if (this.bookList.length === 0) {
                 this.hasFileSelected = false;
@@ -168,7 +168,7 @@ export class AddViaExcelComponent implements OnInit {
 
             this.hasFileSelected = true;
             this.isLoading = false;
-        }
+        };
     }
 
     getTotalMappedParameters() {
@@ -212,12 +212,16 @@ export class AddViaExcelComponent implements OnInit {
     }
 
     getAvailableParameters(i) {
-        return this.parameters.filter((parameter) => (!this.mappedParameter.includes(parameter) || parameter.name === "None") || this.mappedParameter.indexOf(parameter)===i) ;
+        return this.parameters.filter((parameter) => (
+            !this.mappedParameter.includes(parameter) ||
+            parameter.name === "None" ||
+            this.mappedParameter.indexOf(parameter) === i
+        ));
     }
 
     handleParameterSelection(event, index) {
         let parameter = this.parameters.find((parameter) => parameter.name === event);
-        if(parameter) {
+        if (parameter) {
             this.mappedParameter[index] = parameter;
         }
         this.checkRows();

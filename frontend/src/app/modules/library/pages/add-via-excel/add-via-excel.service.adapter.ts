@@ -5,7 +5,7 @@ export class AddViaExcelServiceAdapter {
     vm: AddViaExcelComponent;
 
     constructor() { }
-    
+
     initializeAdapter(vm: AddViaExcelComponent): void {
         this.vm = vm;
     }
