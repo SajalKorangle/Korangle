@@ -94,6 +94,14 @@ export class SetBankAccountServiceAdapter {
         }
         this.vm.intermediateUpdateState.ifscVerificationLoading = false;
 
+        // Reducing School Bank Account Updation Permission Count by 1 before account creation/updation starts
+        this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0].bankAccountUpdationPermissionCount -= 1;
+        await this.vm.genericService.updateObject(
+            {payment_app: 'SchoolBankAccountUpdationPermissionCount'},
+            this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0]
+        );
+        // Reducing School Bank Account Updation Permission Count by 1 before account creation/updation ends
+
         const account_verification_data = {
             accountNumber: this.vm.schoolMerchantAccount.vendorData.bank.accountNumber,
             ifsc: this.vm.schoolMerchantAccount.vendorData.bank.ifsc
@@ -105,14 +113,6 @@ export class SetBankAccountServiceAdapter {
             return;
         }
         this.vm.intermediateUpdateState.accountVerificationLoading = false;
-
-        // Reducing School Bank Account Updation Permission Count by 1 before account updation starts
-        this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0].bankAccountUpdationPermissionCount -= 1;
-        await this.vm.genericService.updateObject(
-            {payment_app: 'SchoolBankAccountUpdationPermissionCount'},
-            this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0]
-        );
-        // Reducing School Bank Account Updation Permission Count by 1 before account updation ends
 
         if (this.vm.schoolMerchantAccount.id) {
             let res = await this.vm.paymentService.updateObject(this.vm.paymentService.school_merchant_account, newOnlinePaymentAccount);
