@@ -41,3 +41,10 @@ def add_manage_plans(apps, schema_editor):
         employee.parentTask = manage_plan
         employee.parentEmployee = employee_permission.parentEmployee
         employee.save()
+
+def move_leaves_module(apps, schema_editor):
+    Module = apps.get_model('team_app', 'Module')
+    # filter module
+    module_object = Module.objects.get(title='Leaves')
+    module_object.orderNumber = 7
+    module_object.save()
