@@ -28,8 +28,11 @@ export class AddViaExcelComponent implements OnInit {
     serviceAdapter: AddViaExcelServiceAdapter;
 
     usedBookNumbers: Number[] = [];
+    columnHeader: Array<any> = [];
     bookList: Array<Array<any>> = [];
-    isUploadable: boolean = false;
+    errorCells = {};
+    errorCount = 0;
+    hasRequiredColumns: boolean = false;
     mappedParameter: Parameter[] = [];
     hasFileSelected: boolean = false;
 
@@ -142,34 +145,39 @@ export class AddViaExcelComponent implements OnInit {
             const ws: xlsx.WorkSheet = wb.Sheets[wsname];
 
             // save data
+            this.bookList = [];
             this.bookList = xlsx.utils.sheet_to_json(ws, { header: 1 });
 
-            // remove empty rows
+            // // remove empty rows
             while(!this.bookList[this.bookList.length - 1].reduce((a, b) => a || b, false)) {
                 this.bookList.pop();
             }
             
-            // if blank file is uploaded
+            // // if blank file is uploaded
             if (this.bookList.length === 0) {
                 this.hasFileSelected = false;
                 this.isLoading = false;
                 return;
             }
-            
+
+            this.columnHeader = this.bookList.shift();
+
             this.matchHeaders();
+            this.checkRows();
+            this.checkRequiredColumns();
 
             this.hasFileSelected = true;
             this.isLoading = false;
         }
     }
 
-    getIndexofParameter(parameterName: string) {
-        return this.mappedParameter.findIndex((parameter) => parameter.name === parameterName);
+    getTotalMappedParameters() {
+        return this.mappedParameter.filter((parameter) => parameter.name !== "None").length;
     }
 
     matchHeaders() {
-        let headers = this.bookList[0];
-
+        let headers = this.columnHeader;
+        this.mappedParameter = [];
         headers.forEach((header, index) => {
             let parameter = this.parameters.find((parameter) => parameter.name === header);
             if (parameter) {
@@ -180,15 +188,40 @@ export class AddViaExcelComponent implements OnInit {
         });
     }
 
-    getAvailableParameters() {
-        return [this.parameters.filter((parameter) => parameter.name==="None" || !this.mappedParameter.includes(parameter))];
+    checkRows() {
+        this.errorCells = {};
+        this.errorCount = 0;
+        this.bookList.forEach((book, index) => {
+            book.forEach((cell, cellIndex) => {
+                if (!this.mappedParameter[cellIndex].filter(cell)) {
+                    this.errorCells[`${index} ${cellIndex}`] = true;
+                    this.errorCount++;
+                }
+            });
+        });
+    }
+
+    checkRequiredColumns() {
+        this.hasRequiredColumns = true;
+        this.parameters.forEach((parameter) => {
+            if (parameter.required && !this.mappedParameter.includes(parameter)) {
+                this.hasRequiredColumns = false;
+                return false;
+            }
+        });
+    }
+
+    getAvailableParameters(i) {
+        return this.parameters.filter((parameter) => (!this.mappedParameter.includes(parameter) || parameter.name === "None") || this.mappedParameter.indexOf(parameter)===i) ;
     }
 
     handleParameterSelection(event, index) {
-        let parameter = this.parameters.find((parameter) => parameter.name === event.value);
+        let parameter = this.parameters.find((parameter) => parameter.name === event);
         if(parameter) {
             this.mappedParameter[index] = parameter;
         }
+        this.checkRows();
+        this.checkRequiredColumns();
     }
 
     handleExcelFile(event) {
@@ -205,5 +238,9 @@ export class AddViaExcelComponent implements OnInit {
         let wb = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, ws, "Sheet1");
         xlsx.writeFile(wb, "BooksToAdd.xlsx");
+    }
+
+    addBookList() {
+        alert("Under Construction!!!");
     }
 }

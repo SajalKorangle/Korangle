@@ -23,8 +23,13 @@
         *ngIf="hasFileSelected"
     >
         <div>
-            <p style="display: inline-block">Mapped 10 of 14 Columns, 4 unmapped parameters left blank.</p>
-            <p style="margin-left: 3rem; color: #6f6f6f"><em> Displaying 40 items. </em></p>
+            <p style="display: inline-block"
+                >Mapped {{ getTotalMappedParameters() }} of {{ mappedParameter.length }} Columns,
+                {{ mappedParameter.length - getTotalMappedParameters() }} unmapped parameters left blank.</p
+            >
+            <p style="margin-left: 3rem; color: #6f6f6f"
+                ><em> Displaying {{ bookList.length }} items. </em></p
+            >
             <p style="display: flex; align-items: center; flex-direction: row; flex-wrap: wrap; color: #6f6f6f">
                 <span
                     style="
@@ -35,7 +40,7 @@
                         background-color: #ff8585;
                     "
                 ></span>
-                <em>3 cells with errors</em>
+                <em> {{ errorCount }} cells with errors</em>
             </p>
         </div>
         <mat-form-field>
@@ -55,19 +60,28 @@
         <table class="table">
             <thead style="color: #a30000">
                 <tr>
-                    <th scope="col" style="font-weight: bold; border-width: 2px" *ngFor="let header of bookList[0]">
+                    <th scope="col" style="font-weight: bold; border-width: 2px" *ngFor="let header of columnHeader">
                         {{ header }}
                     </th>
                 </tr>
                 <tr>
-                    <th scope="col" style="border-width: 2px" *ngFor="let header of bookList[0]; index as i"> </th>
+                    <th scope="col" style="border-width: 2px" *ngFor="let header of columnHeader; index as i">
+                        <mat-select
+                            [(ngModel)]="mappedParameter[i]"
+                            (ngModelChange)="handleParameterSelection($event, i)"
+                        >
+                            <mat-option *ngFor="let option of getAvailableParameters(i)" [value]="option">
+                                {{ option.name + (option.required ? " *" : "") }}
+                            </mat-option>
+                        </mat-select>
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Row 1</td>
-                    <td>Row 1</td>
-                    <td>Row 1</td>
+                <tr *ngFor="let row of bookList; index as rc">
+                    <td *ngFor="let header of columnHeader; index as i" [class.bgDanger]="errorCells[rc + ' ' + i]">
+                        {{ row[i] }}
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -90,8 +104,15 @@
     "
     *ngIf="!isLoading && hasFileSelected"
 >
-    <p>20 cells with errors, rectify before uploading</p>
-    <button class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"> Upload </button>
+    <p *ngIf="!hasRequiredColumns">Please map the required parameters.</p>
+    <p *ngIf="hasRequiredColumns && errorCount > 0">{{ errorCount }} cells with errors, rectify before uploading</p>
+    <button
+        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+        (click)="addBookList()"
+        [disabled]="!hasRequiredColumns || errorCount > 0"
+    >
+        Upload
+    </button>
 </div>
 
 <ng-container *ngIf="isLoading">
