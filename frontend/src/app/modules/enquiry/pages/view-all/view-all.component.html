@@ -24,7 +24,7 @@
                 <i class="material-icons">search</i></button
             ><br />
         </div>
-        <div *ngIf="enquiryList.length >= 1 && !isMobile()" class="col-md-3" align="left">
+        <div *ngIf="getFilteredEnquiryList() && !isMobile()" class="col-md-3" align="left">
             <button
                 type="button"
                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
@@ -38,11 +38,20 @@
         </div>
     </div>
 
-    <i>
-        Displaying {{ enquiryList.length }}
-        <span *ngIf="enquiryList.length <= 1">enquiry</span>
-        <span *ngIf="enquiryList.length > 1">enquiries</span>
-    </i>
+    <ng-container *ngIf="!isLoading && enquiryList">
+        <ng-container *ngIf="getFilteredEnquiryList().length > 0; else NotFound">
+            <i>
+                Displaying {{ getFilteredEnquiryList().length }}
+                <span *ngIf="getFilteredEnquiryList().length <= 1">enquiry</span>
+                <span *ngIf="getFilteredEnquiryList().length > 1">enquiries</span>
+            </i>
+        </ng-container>
+        <ng-template #NotFound>
+            <i>
+                No enquiries found
+            </i>
+        </ng-template>
+    </ng-container>
     <br />
     <br />
 

@@ -14,7 +14,7 @@ import { ViewAllServiceAdapter } from './view-all.service.adapter';
 export class ViewAllComponent implements OnInit {
     user: any;
 
-    enquiryList = [];
+    enquiryList: any;
 
     classList = [];
     employeeList = [];
