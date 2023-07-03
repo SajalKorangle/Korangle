@@ -41,8 +41,6 @@ export default class ManageLeavePlanServiceAdapter {
         this.vm.employeeChoiceList.sort((a, b) => a.name.localeCompare(b.name));
         this.vm.filteredEmployeeChoiceList = this.vm.employeeChoiceList;
         this.vm.currentEmployee = null;
-        console.log(results[1]);
-        console.log(results[2]);
         this.vm.isLoading = false;
     }
     // ends :- Initialize Data
