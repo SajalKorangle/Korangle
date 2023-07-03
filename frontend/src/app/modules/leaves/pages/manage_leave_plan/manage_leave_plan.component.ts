@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { User } from "@classes/user";
 import { GenericService } from "@services/generic/generic-service";
 import ManageLeavePlanServiceAdapter from "./manage_leave_plan.service.adapter";
-import { EmployeeLeavePlan, LeavePlan, LeavePlanToEmployee } from "@modules/leaves/classes/leaves";
+import { LeavePlan, LeavePlanToEmployee } from "@modules/leaves/classes/leaves";
 
 @Component({
     selector: "manage-leave-plan",
@@ -26,12 +26,10 @@ export class ManageLeavePlanComponent implements OnInit {
     filteredEmployeeChoiceList: Array<any> = [];
     currentEmployee: any = null;
     filter: string = "";
-    // leavePlans available for a specific employee
+    // Active Leave Plans for an employee
     leavePlanToEmployeeList: Array<LeavePlanToEmployee> = [];
-    currentLeavePlanList: Array<LeavePlan> = [];
     // active Leave Plan
     activeLeavePlan: LeavePlan = null;
-    employeeLeavePlanList: Array<EmployeeLeavePlan> = [];
     currentLeavePlan: LeavePlan = null;
 
     // starts :- function to update list of employees
@@ -47,23 +45,13 @@ export class ManageLeavePlanComponent implements OnInit {
 
     // starts :- function to update leavePlanList for an employee
     updateLeavePlanList(): void {
-        this.currentLeavePlanList = [];
         this.activeLeavePlan = null;
         this.filter = "";
         this.filteredEmployeeChoiceList = this.employeeChoiceList;
-        this.leavePlanToEmployeeList.forEach((leavePlanToEmployee) => {
-            this.currentEmployee.id === leavePlanToEmployee.parentEmployee
-                ? this.currentLeavePlanList.push(this.leavePlanList.find((leavePlan) => leavePlan.id === leavePlanToEmployee.parentSchoolLeavePlan))
-                : null;
-        });
-        this.employeeLeavePlanList.forEach((employeeLeavePlan) => {
-            this.activeLeavePlan =
-                this.currentEmployee.id === employeeLeavePlan.parentEmployee
-                    ? this.currentLeavePlanList.find((leavePlan) => {
-                        return leavePlan.id === employeeLeavePlan.activeLeavePlan;
-                    })
-                    : this.activeLeavePlan;
-        });
+        const employeeLeavePlan = this.leavePlanToEmployeeList.find(
+            (leavePlanToEmployee) => leavePlanToEmployee.parentEmployee === this.currentEmployee.id
+        );
+        this.activeLeavePlan = employeeLeavePlan ?this.leavePlanList.find((leavePlan) => leavePlan.id === employeeLeavePlan.parentSchoolLeavePlan) : null;
         this.currentLeavePlan = this.activeLeavePlan;
     }
     // ends :- function to update leavePlanList for an employee

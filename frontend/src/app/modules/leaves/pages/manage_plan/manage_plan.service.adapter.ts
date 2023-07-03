@@ -148,7 +148,7 @@ export default class ManagePlanServiceAdapter {
         // create array of employees to be added
         this.vm.appliedEmployeeChoiceList.map((employee) => {
             let similarEmployee = oldEmployeeChoiceList.find((oldEmployeeChoice) => oldEmployeeChoice.parentEmployee === employee.id);
-            !similarEmployee ? addEmployeeChoiceList.push({ id: -1, parentSchoolLeavePlan: this.vm.currentLeavePlan.id, parentEmployee: employee.id }) : null;
+            !similarEmployee ? addEmployeeChoiceList.push({ id: -1, parentSchoolLeavePlan: this.vm.currentLeavePlan.id, parentEmployee: employee.id, isCustomized: false, leavePlanName: this.vm.currentLeavePlan.leavePlanName }) : null;
         });
         if (
             await this.compareAndAlert(

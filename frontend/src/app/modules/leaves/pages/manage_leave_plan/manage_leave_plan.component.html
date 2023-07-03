@@ -38,8 +38,8 @@
                 <div class="flexRow">
                     <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 400px">
                         <mat-label>Select LeavePlan</mat-label>
-                        <mat-select [(ngModel)]="currentLeavePlan" [disabled]="currentLeavePlanList.length === 0">
-                            <mat-option *ngFor="let leavePlan of currentLeavePlanList" [value]="leavePlan"> {{ leavePlan.leavePlanName }} </mat-option>
+                        <mat-select [(ngModel)]="currentLeavePlan" [disabled]="leavePlanList.length === 0">
+                            <mat-option *ngFor="let leavePlan of leavePlanList" [value]="leavePlan"> {{ leavePlan.leavePlanName }} </mat-option>
                         </mat-select>
                     </mat-form-field>
                     <button
