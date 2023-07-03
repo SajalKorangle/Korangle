@@ -194,7 +194,7 @@ export class AddViaExcelComponent implements OnInit {
     matchHeaders() {
         let headers = this.columnHeader;
         this.mappedParameter = [];
-        for (let index = 0; index < headers.length; index++){
+        for (let index = 0; index < headers.length; index++) {
             let header = headers[index];
             let parameter = this.parameters.find((parameter) => parameter.name === header);
             if (parameter) {
@@ -202,7 +202,7 @@ export class AddViaExcelComponent implements OnInit {
             } else {
                 this.mappedParameter[index] = this.parameters[0];
             }
-        };
+        }
     }
 
     checkRows() {
@@ -246,7 +246,7 @@ export class AddViaExcelComponent implements OnInit {
     }
 
     isRowVisible(i : number) {
-        if(this.filterType==='all') return true;
+        if (this.filterType === 'all') return true;
         for (let j = 0; j < this.bookList[i].length; j++) {
             if (this.errorCells[`${i} ${j}`]) {
                 return true;
@@ -287,7 +287,7 @@ export class AddViaExcelComponent implements OnInit {
     }
 
     downloadTemplate() {
-        let headerRow = this.parameters.filter((param)=>param.name!=="None").map((parameter) => parameter.name);
+        let headerRow = this.parameters.filter((param) => param.name !== "None").map((parameter) => parameter.name);
         let data = [headerRow];
         let ws = xlsx.utils.aoa_to_sheet(data);
         let wb = xlsx.utils.book_new();
