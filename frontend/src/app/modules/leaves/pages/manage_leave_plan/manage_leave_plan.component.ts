@@ -51,7 +51,7 @@ export class ManageLeavePlanComponent implements OnInit {
         const employeeLeavePlan = this.leavePlanToEmployeeList.find(
             (leavePlanToEmployee) => leavePlanToEmployee.parentEmployee === this.currentEmployee.id
         );
-        this.activeLeavePlan = employeeLeavePlan ?this.leavePlanList.find((leavePlan) => leavePlan.id === employeeLeavePlan.parentSchoolLeavePlan) : null;
+        this.activeLeavePlan = employeeLeavePlan ? this.leavePlanList.find((leavePlan) => leavePlan.id === employeeLeavePlan.parentSchoolLeavePlan) : null;
         this.currentLeavePlan = this.activeLeavePlan;
     }
     // ends :- function to update leavePlanList for an employee

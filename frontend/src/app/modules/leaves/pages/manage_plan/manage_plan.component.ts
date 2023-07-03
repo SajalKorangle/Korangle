@@ -131,8 +131,10 @@ export class ManagePlanComponent implements OnInit {
             temporaryEmployeeChoiceList.push(employee);
         });
         this.employeeChoiceList.forEach((employee) => {
-            employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) && !this.currentEmployeeChoiceList.includes(employee)
-                && !this.doesEmployeeBelongToOtherLeavePlan(employee, this.currentLeavePlan.id) ? this.filteredEmployeeChoiceList.push(employee)
+            employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) &&
+            !this.currentEmployeeChoiceList.includes(employee) &&
+            !this.doesEmployeeBelongToOtherLeavePlan(employee, this.currentLeavePlan.id)
+                ? this.filteredEmployeeChoiceList.push(employee)
                 : null;
             !this.currentEmployeeChoiceList.includes(employee) ? temporaryEmployeeChoiceList.push(employee) : null;
         });
@@ -169,7 +171,11 @@ export class ManagePlanComponent implements OnInit {
 
     // starts :- function to check if employee belongs to other leave plan.
     doesEmployeeBelongToOtherLeavePlan(employee, leavePlanId): boolean {
-        return this.leavePlanToEmployeeList.find((leavePlanToEmployee) => leavePlanToEmployee.parentEmployee === employee.id && leavePlanToEmployee.parentSchoolLeavePlan !== leavePlanId) ? true : false;
+        return this.leavePlanToEmployeeList.find(
+            (leavePlanToEmployee) => leavePlanToEmployee.parentEmployee === employee.id && leavePlanToEmployee.parentSchoolLeavePlan !== leavePlanId
+        )
+            ? true
+            : false;
     }
     // ends :- function to check if employee belongs to other leave plan.
 }
