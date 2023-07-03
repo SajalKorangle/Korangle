@@ -104,15 +104,13 @@ export default class ManageLeavePlanServiceAdapter {
 
     // starts :- function to apply leave plan on an employee
     async applyLeavePlan(): Promise<void> {
-    //   {
-    //     parentEmployee: number; parentSchoolLeavePlan: number; id: number;
-    //     isCustomized: boolean; leavePlanName: string;
-    // }
+        const parentLeavePlanToEmployee = this.vm.leavePlanToEmployeeList.find(x => x.parentEmployee == this.vm.currentEmployee.id);
         let response = await this.handleDataChange(
             {
                 check: (_, __) => [],
                 data: [
                     {
+                        id: parentLeavePlanToEmployee ? parentLeavePlanToEmployee.id : -1,
                         parentEmployee: this.vm.currentEmployee.id,
                         parentSchoolLeavePlan: this.vm.currentLeavePlan.id,
                         isCustomized: true,
@@ -125,8 +123,6 @@ export default class ManageLeavePlanServiceAdapter {
             "leavePlanToEmployeeList"
         );
         if (response) {
-            this.vm.activeLeavePlan = this.vm.currentLeavePlan;
-            console.log(this.vm.activeLeavePlan);
             alert("Leave-Plan updated successfully");
         } else {
             alert("Failed to update Leave-Plan.");
