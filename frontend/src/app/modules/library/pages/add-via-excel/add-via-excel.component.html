@@ -7,6 +7,7 @@
             multiple="false"
             accept=".xlsx"
             (change)="handleExcelFile($event)"
+            (click)="clearData($event)"
             style="display: block; font-size: 1.6rem"
         />
         <button
@@ -23,13 +24,13 @@
         *ngIf="hasFileSelected"
     >
         <div>
-            <p style="display: inline-block"
-                >Mapped {{ getTotalMappedParameters() }} of {{ mappedParameter.length }} Columns,
-                {{ mappedParameter.length - getTotalMappedParameters() }} unmapped parameters left blank.</p
-            >
-            <p style="margin-left: 3rem; color: #6f6f6f"
-                ><em> Displaying {{ bookList.length }} items. </em></p
-            >
+            <p style="display: inline-block">
+                Mapped {{ getTotalMappedParameters() }} of {{ mappedParameter.length }} Columns,
+                {{ mappedParameter.length - getTotalMappedParameters() }} unmapped parameters left blank.
+            </p>
+            <p style="margin-left: 3rem; color: #6f6f6f">
+                <em> Displaying {{ getVisibleRowCount() }} books out of {{ bookList.length }} </em>
+            </p>
             <p style="display: flex; align-items: center; flex-direction: row; flex-wrap: wrap; color: #6f6f6f">
                 <span
                     style="
@@ -45,7 +46,7 @@
         </div>
         <mat-form-field>
             <mat-label>Filter Rows</mat-label>
-            <mat-select>
+            <mat-select [(ngModel)]="filterType">
                 <mat-option value="all">All Rows</mat-option>
                 <mat-option value="errors">Rows with errors</mat-option>
             </mat-select>
@@ -78,11 +79,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let row of bookList; index as rc">
-                    <td *ngFor="let header of columnHeader; index as i" [class.bgDanger]="errorCells[rc + ' ' + i]">
-                        {{ row[i] }}
-                    </td>
-                </tr>
+                <ng-container *ngFor="let row of bookList; index as rc">
+                    <tr *ngIf="isRowVisible(rc)">
+                        <td *ngFor="let header of columnHeader; index as i" [class.bgDanger]="errorCells[rc + ' ' + i]">
+                            {{ row[i] }}
+                        </td>
+                    </tr>
+                </ng-container>
             </tbody>
         </table>
     </cdk-virtual-scroll-viewport>

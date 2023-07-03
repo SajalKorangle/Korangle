@@ -36,6 +36,8 @@ export class AddViaExcelComponent implements OnInit {
     mappedParameter: Parameter[] = [];
     hasFileSelected: boolean = false;
 
+    filterType: string = "all";
+
     reader: FileReader = new FileReader();
 
     parameters: Parameter[] = [
@@ -49,7 +51,9 @@ export class AddViaExcelComponent implements OnInit {
             field: "bookNumber",
             filter: (num) => {
                 // The book number should be a number and should not been used before
-                if (!num) return false;
+                if (!num) {
+                    return false;
+                }
                 if (isNaN(num) || isNaN(parseFloat(num))) return false;
                 if (num < 0) return false;
                 if (this.usedBookNumbers.includes(num)) return false;
@@ -149,8 +153,20 @@ export class AddViaExcelComponent implements OnInit {
             this.bookList = xlsx.utils.sheet_to_json(ws, { header: 1 });
 
             // // remove empty rows
+            if (this.bookList.length === 0) {
+                this.hasFileSelected = false;
+                this.isLoading = false;
+                alert("You have uploaded a blank file");
+                return;
+            }
             while (!this.bookList[this.bookList.length - 1].reduce((a, b) => a || b, false)) {
                 this.bookList.pop();
+                if (this.bookList.length === 0) {
+                    this.hasFileSelected = false;
+                    this.isLoading = false;
+                    alert("You have uploaded a blank file");
+                    return;
+                }
             }
 
             // // if blank file is uploaded
@@ -178,26 +194,27 @@ export class AddViaExcelComponent implements OnInit {
     matchHeaders() {
         let headers = this.columnHeader;
         this.mappedParameter = [];
-        headers.forEach((header, index) => {
+        for (let index = 0; index < headers.length; index++){
+            let header = headers[index];
             let parameter = this.parameters.find((parameter) => parameter.name === header);
             if (parameter) {
                 this.mappedParameter[index] = parameter;
             } else {
                 this.mappedParameter[index] = this.parameters[0];
             }
-        });
+        };
     }
 
     checkRows() {
         this.errorCells = {};
         this.errorCount = 0;
         this.bookList.forEach((book, index) => {
-            book.forEach((cell, cellIndex) => {
-                if (!this.mappedParameter[cellIndex].filter(cell)) {
+            for (let cellIndex = 0; cellIndex < this.columnHeader.length; cellIndex++) {
+                if (!this.mappedParameter[cellIndex].filter(book[cellIndex])) {
                     this.errorCells[`${index} ${cellIndex}`] = true;
                     this.errorCount++;
                 }
-            });
+            }
         });
     }
 
@@ -228,15 +245,49 @@ export class AddViaExcelComponent implements OnInit {
         this.checkRequiredColumns();
     }
 
+    isRowVisible(i : number) {
+        if(this.filterType==='all') return true;
+        for (let j = 0; j < this.bookList[i].length; j++) {
+            if (this.errorCells[`${i} ${j}`]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    getVisibleRowCount() {
+        let count = 0;
+        for (let i = 0; i < this.bookList.length; i++) {
+            if (this.isRowVisible(i)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     handleExcelFile(event) {
         if (event.target.files.length > 0) {
             const file = event.target.files[0];
+            if (!file.name.endsWith(".xlsx")) {
+                alert("Only Excel files (.xlsx) are supported.");
+                return;
+            }
             this.reader.readAsBinaryString(file);
         }
     }
 
+    clearData(event) {
+        event.target.value = "";
+        this.bookList = [];
+        this.hasFileSelected = false;
+        this.errorCells = {};
+        this.errorCount = 0;
+        this.mappedParameter = [];
+        this.hasRequiredColumns = true;
+    }
+
     downloadTemplate() {
-        let headerRow = this.parameters.map((parameter) => parameter.name);
+        let headerRow = this.parameters.filter((param)=>param.name!=="None").map((parameter) => parameter.name);
         let data = [headerRow];
         let ws = xlsx.utils.aoa_to_sheet(data);
         let wb = xlsx.utils.book_new();
