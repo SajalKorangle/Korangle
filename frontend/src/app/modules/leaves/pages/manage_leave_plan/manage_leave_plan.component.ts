@@ -36,7 +36,7 @@ export class ManageLeavePlanComponent implements OnInit {
     updateEmployeeChoiceList(): void {
         this.filteredEmployeeChoiceList = [];
         this.employeeChoiceList.forEach((employee) => {
-            employee.name.startsWith(this.filter) || (this.currentEmployee !== null && this.currentEmployee.id === employee.id)
+            employee.name.toLowerCase().startsWith(this.filter.toLowerCase())
                 ? this.filteredEmployeeChoiceList.push(employee)
                 : null;
         });

@@ -119,13 +119,13 @@ export default class ManagePlanServiceAdapter {
         let addEmployeeChoiceList: Array<LeavePlanToEmployee> = [];
         let oldEmployeeChoiceList: Array<LeavePlanToEmployee> = [];
         // starts :- Create List for each leave type inside currentLeavePlan (leave types to be deleted and leave types to be added)
-        this.vm.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
+        this.vm.currentLeavePlan ? this.vm.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
             leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.vm.currentLeavePlan.id ? oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem) : null;
-        });
+        }) : null;
         // create original array of employees associated to this leave plan
-        this.vm.leavePlanToEmployeeList.map((leavePlanToEmployee) => {
+        this.vm.currentLeavePlan ? this.vm.leavePlanToEmployeeList.map((leavePlanToEmployee) => {
             leavePlanToEmployee.parentSchoolLeavePlan === this.vm.currentLeavePlan.id ? oldEmployeeChoiceList.push(leavePlanToEmployee) : null;
-        });
+        }) : null;
         // create array of leave types to be removed
         oldLeaveTypeChoiceList.map((oldLeaveTypeChoice) => {
             let similarLeaveType = this.vm.appliedLeaveTypeChoiceList.find((leaveType) => {
@@ -139,14 +139,14 @@ export default class ManagePlanServiceAdapter {
             !similarEmployee ? removeEmployeeChoiceList.push(oldEmployeeChoice) : null;
         });
         // create array of leave types to be added
-        this.vm.appliedLeaveTypeChoiceList.map((leaveType) => {
+        this.vm.currentLeavePlan ? this.vm.appliedLeaveTypeChoiceList.map((leaveType) => {
             let similarLeaveType = oldLeaveTypeChoiceList.find((oldLeaveTypeChoice) => leaveType.id === oldLeaveTypeChoice.parentSchoolLeaveType);
             !similarLeaveType
                 ? addLeaveTypeChoiceList.push({ id: -1, parentSchoolLeavePlan: this.vm.currentLeavePlan.id, parentSchoolLeaveType: leaveType.id })
                 : null;
-        });
+        }) : null;
         // create array of employees to be added
-        this.vm.appliedEmployeeChoiceList.map((employee) => {
+        this.vm.currentLeavePlan ? this.vm.appliedEmployeeChoiceList.map((employee) => {
             let similarEmployee = oldEmployeeChoiceList.find((oldEmployeeChoice) => oldEmployeeChoice.parentEmployee === employee.id);
             !similarEmployee
                 ? addEmployeeChoiceList.push({
@@ -157,7 +157,7 @@ export default class ManagePlanServiceAdapter {
                       leavePlanName: this.vm.currentLeavePlan.leavePlanName,
                   })
                 : null;
-        });
+        }) : null;
         if (
             await this.compareAndAlert(
                 "leavePlanList",

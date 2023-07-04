@@ -6,11 +6,11 @@
             <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 600px">
                 <mat-label>Select Employee</mat-label>
                 <mat-select (selectionChange)="updateLeavePlanList()" [(ngModel)]="currentEmployee" [disabled]="employeeChoiceList.length === 0">
-                    <mat-form-field appearance="outline" style="width: 100%; padding: 5px">
+                    <mat-form-field appearance="outline" style="width: 100%; padding: 5px; position: sticky; top: 0; z-index: 1; background: white">
                         <mat-label>Search Employee</mat-label>
                         <input [(ngModel)]="filter" (keyup)="updateEmployeeChoiceList()" matInput placeholder="Enter Employee Name" />
                     </mat-form-field>
-                    <mat-option *ngFor="let employee of filteredEmployeeChoiceList" [value]="employee"> {{ employee.name }} </mat-option>
+                    <mat-option *ngFor="let employee of filteredEmployeeChoiceList" [value]="employee"> {{ employee.name | titlecase }} </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>

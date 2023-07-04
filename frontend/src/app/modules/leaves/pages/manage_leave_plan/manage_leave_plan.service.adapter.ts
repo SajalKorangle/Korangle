@@ -40,7 +40,10 @@ export default class ManageLeavePlanServiceAdapter {
         [this.vm.employeeChoiceList, this.vm.leavePlanToEmployeeList, this.vm.leavePlanList] = [results[0], results[1], results[2]];
         this.vm.employeeChoiceList.sort((a, b) => a.name.localeCompare(b.name));
         this.vm.filteredEmployeeChoiceList = this.vm.employeeChoiceList;
-        this.vm.currentEmployee = null;
+        this.vm.currentEmployee = this.vm.currentEmployee
+            ? this.vm.employeeChoiceList.find((employee) => employee.id == this.vm.currentEmployee.id)
+            : this.vm.currentEmployee;
+        this.vm.currentEmployee ? this.vm.updateLeavePlanList() : null;
         this.vm.isLoading = false;
     }
     // ends :- Initialize Data
@@ -104,7 +107,7 @@ export default class ManageLeavePlanServiceAdapter {
 
     // starts :- function to apply leave plan on an employee
     async applyLeavePlan(): Promise<void> {
-        const parentLeavePlanToEmployee = this.vm.leavePlanToEmployeeList.find(x => x.parentEmployee == this.vm.currentEmployee.id);
+        const parentLeavePlanToEmployee = this.vm.leavePlanToEmployeeList.find((x) => x.parentEmployee == this.vm.currentEmployee.id);
         let response = await this.handleDataChange(
             {
                 check: (_, __) => [],
