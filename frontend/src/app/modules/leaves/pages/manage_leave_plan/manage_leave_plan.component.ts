@@ -40,6 +40,9 @@ export class ManageLeavePlanComponent implements OnInit {
                 ? this.filteredEmployeeChoiceList.push(employee)
                 : null;
         });
+        if(this.filteredEmployeeChoiceList.length == 0) {
+            this.filteredEmployeeChoiceList = this.employeeChoiceList;
+        } 
     }
     // ends :- function to update list of employees
 
