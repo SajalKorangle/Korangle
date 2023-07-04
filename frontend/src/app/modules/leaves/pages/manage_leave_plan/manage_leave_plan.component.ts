@@ -36,13 +36,11 @@ export class ManageLeavePlanComponent implements OnInit {
     updateEmployeeChoiceList(): void {
         this.filteredEmployeeChoiceList = [];
         this.employeeChoiceList.forEach((employee) => {
-            employee.name.toLowerCase().startsWith(this.filter.toLowerCase())
-                ? this.filteredEmployeeChoiceList.push(employee)
-                : null;
+            employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) ? this.filteredEmployeeChoiceList.push(employee) : null;
         });
-        if(this.filteredEmployeeChoiceList.length == 0) {
+        if (this.filteredEmployeeChoiceList.length == 0) {
             this.filteredEmployeeChoiceList = this.employeeChoiceList;
-        } 
+        }
     }
     // ends :- function to update list of employees
 
@@ -51,9 +49,7 @@ export class ManageLeavePlanComponent implements OnInit {
         this.activeLeavePlan = null;
         this.filter = "";
         this.filteredEmployeeChoiceList = this.employeeChoiceList;
-        const employeeLeavePlan = this.leavePlanToEmployeeList.find(
-            (leavePlanToEmployee) => leavePlanToEmployee.parentEmployee === this.currentEmployee.id
-        );
+        const employeeLeavePlan = this.leavePlanToEmployeeList.find((leavePlanToEmployee) => leavePlanToEmployee.parentEmployee === this.currentEmployee.id);
         this.activeLeavePlan = employeeLeavePlan ? this.leavePlanList.find((leavePlan) => leavePlan.id === employeeLeavePlan.parentSchoolLeavePlan) : null;
         this.currentLeavePlan = this.activeLeavePlan;
     }
