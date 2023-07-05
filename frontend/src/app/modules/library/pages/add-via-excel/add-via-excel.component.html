@@ -1,4 +1,4 @@
-<div class="card-content" *ngIf="!isLoading">
+<div class="card-content" *ngIf="!isLoading && !checkMobile()">
     <div
         style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center"
     >
@@ -79,7 +79,7 @@
                 </tr>
             </thead>
             <tbody>
-                <ng-container *ngFor="let row of bookList; index as rc">
+                <ng-container *ngFor="let row of parsedBookList; index as rc">
                     <tr *ngIf="isRowVisible(rc)">
                         <td *ngFor="let header of columnHeader; index as i" [class.bgDanger]="errorCells[rc + ' ' + i]">
                             {{ row[i] }}
@@ -104,6 +104,7 @@
         align-items: center;
         gap: 1rem;
         border-top: 1px solid #c4c4c4;
+        background-color: #ffffff;
     "
     *ngIf="!isLoading && hasFileSelected"
 >
@@ -116,6 +117,10 @@
     >
         Upload
     </button>
+</div>
+
+<div *ngIf="checkMobile()" style="padding: 1.5rem">
+    <p><em>Only available for Desktops</em></p>
 </div>
 
 <ng-container *ngIf="isLoading">

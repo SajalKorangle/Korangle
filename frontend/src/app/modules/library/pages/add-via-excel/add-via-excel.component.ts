@@ -4,12 +4,14 @@ import xlsx = require('xlsx');
 import { DataStorage } from "@classes/data-storage";
 import { GenericService } from '@services/generic/generic-service';
 import { AddViaExcelServiceAdapter } from './add-via-excel.service.adapter';
-import { Book } from '@modules/library/models/book';
+import { isMobile } from '../../../../classes/common';
+
 
 interface Parameter {
     name: string;
     field: string;
     filter: (any) => boolean;
+    parse: ((any) => any);
     required?: boolean;
 }
 
@@ -30,6 +32,7 @@ export class AddViaExcelComponent implements OnInit {
     usedBookNumbers: Number[] = [];
     columnHeader: Array<any> = [];
     bookList: Array<Array<any>> = [];
+    parsedBookList: Array<Array<any>> = [];
     errorCells = {};
     errorCount = 0;
     hasRequiredColumns: boolean = false;
@@ -44,7 +47,8 @@ export class AddViaExcelComponent implements OnInit {
         {
             name: "None",
             field: "none",
-            filter: () => true
+            filter: () => true,
+            parse: (value) => value
         },
         {
             name: "Book Number",
@@ -60,38 +64,54 @@ export class AddViaExcelComponent implements OnInit {
                 if (this.bookList.filter((book) => book[this.mappedParameter.indexOf(this.parameters[1])] === num).length > 1) return false;
                 return true;
             },
+            parse: (num) => num,
             required: true
         },
         {
             name: "Name",
             field: "name",
             filter: (name) => !!name,
+            parse: (name) => name,
             required: true
         },
         {
             name: "Author",
             field: "author",
+            parse: (author) => author,
             filter: () => true
         },
         {
             name: "Publisher",
             field: "publisher",
-            filter: () => true
+            filter: () => true,
+            parse: (publisher) => publisher
         },
         {
             name: "Date of Purchase",
             field: "dateOfPurchase",
             filter: (date) => {
                 // if the date is present, it should be a valid date
+                console.log(date);
                 if (!date) return true;
                 if (isNaN(Date.parse(date))) return false;
                 return true;
+            },
+            parse: (date) => {
+                if (!date) return null;
+                let dateObj = new Date(date);
+                if (typeof date === 'number' && date.toString().length === 5) {
+                    var utc_days  = Math.floor(date - 25569);
+                    var utc_value = utc_days * 86400;
+                    dateObj = new Date(utc_value * 1000);
+                }
+                return dateObj.toDateString();
             }
         },
         {
             name: "Edition",
             field: "edition",
-            filter: () => true
+            filter: () => true,
+            parse: (edition) => edition
         },
         {
             name: "Number of Pages",
@@ -101,7 +121,8 @@ export class AddViaExcelComponent implements OnInit {
                 if (!numPages) return true;
                 if (isNaN(numPages) || isNaN(parseFloat(numPages))) return false;
                 return true;
-            }
+            },
+            parse: (numPages) => numPages
         },
         {
             name: "Printed Cost",
@@ -111,22 +132,26 @@ export class AddViaExcelComponent implements OnInit {
                 if (!cost) return true;
                 if (isNaN(cost) || isNaN(parseFloat(cost))) return false;
                 return true;
-            }
+            },
+            parse: (cost) => cost
         },
         {
             name: "Cover Type",
             field: "coverType",
-            filter: () => true
+            filter: () => true,
+            parse: (coverType) => coverType
         },
         {
             name: "Type of Book",
             field: "typeOfBook",
-            filter: () => true
+            filter: () => true,
+            parse: (typeOfBook) => typeOfBook
         },
         {
             name: "Location",
             field: "location",
-            filter: () => true
+            filter: () => true,
+            parse: (location) => location
         }
     ];
 
@@ -209,11 +234,14 @@ export class AddViaExcelComponent implements OnInit {
         this.errorCells = {};
         this.errorCount = 0;
         this.bookList.forEach((book, index) => {
+            this.parsedBookList[index] = [];
             for (let cellIndex = 0; cellIndex < this.columnHeader.length; cellIndex++) {
-                if (!this.mappedParameter[cellIndex].filter(book[cellIndex])) {
+                let val = this.mappedParameter[cellIndex].parse(book[cellIndex]);
+                if (!this.mappedParameter[cellIndex].filter(val)) {
                     this.errorCells[`${index} ${cellIndex}`] = true;
                     this.errorCount++;
                 }
+                this.parsedBookList[index][cellIndex] = val;
             }
         });
     }
@@ -270,6 +298,7 @@ export class AddViaExcelComponent implements OnInit {
             const file = event.target.files[0];
             if (!file.name.endsWith(".xlsx")) {
                 alert("Only Excel files (.xlsx) are supported.");
+                event.target.value = "";
                 return;
             }
             this.reader.readAsBinaryString(file);
@@ -279,6 +308,8 @@ export class AddViaExcelComponent implements OnInit {
     clearData(event) {
         event.target.value = "";
         this.bookList = [];
+        this.parsedBookList = [];
+        this.columnHeader = [];
         this.hasFileSelected = false;
         this.errorCells = {};
         this.errorCount = 0;
@@ -297,5 +328,10 @@ export class AddViaExcelComponent implements OnInit {
 
     addBookList() {
         alert("Under Construction!!!");
+    }
+
+    //Checking if it is in mobile
+    checkMobile(): any {
+        return isMobile();
     }
 }
