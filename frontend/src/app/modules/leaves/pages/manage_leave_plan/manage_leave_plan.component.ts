@@ -38,14 +38,14 @@ export class ManageLeavePlanComponent implements OnInit {
         this.employeeChoiceList.forEach((employee) => {
             employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) ? this.filteredEmployeeChoiceList.push(employee) : null;
         });
-        if (this.filteredEmployeeChoiceList.length == 0) {
-            this.filteredEmployeeChoiceList = this.employeeChoiceList;
-        }
     }
     // ends :- function to update list of employees
 
     // starts :- function to update leavePlanList for an employee
     updateLeavePlanList(): void {
+        if (!this.currentEmployee) {
+            return;
+        }
         this.activeLeavePlan = null;
         this.filter = "";
         this.filteredEmployeeChoiceList = this.employeeChoiceList;
