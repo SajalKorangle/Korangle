@@ -1,29 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import xlsx = require('xlsx');
+import { Component, OnInit } from "@angular/core";
+import xlsx = require("xlsx");
 
 import { DataStorage } from "@classes/data-storage";
-import { GenericService } from '@services/generic/generic-service';
-import { AddViaExcelServiceAdapter } from './add-via-excel.service.adapter';
-import { isMobile } from '../../../../classes/common';
-
+import { GenericService } from "@services/generic/generic-service";
+import { AddViaExcelServiceAdapter } from "./add-via-excel.service.adapter";
+import { isMobile } from "../../../../classes/common";
 
 interface Parameter {
     name: string;
     field: string;
     filter: (any) => boolean;
-    parse: ((any) => any);
     required?: boolean;
 }
 
 @Component({
-    selector: 'add-via-excel',
-    templateUrl: './add-via-excel.component.html',
-    styleUrls: ['./add-via-excel.component.css'],
+    selector: "add-via-excel",
+    templateUrl: "./add-via-excel.component.html",
+    styleUrls: ["./add-via-excel.component.css"],
     providers: [GenericService],
 })
-
 export class AddViaExcelComponent implements OnInit {
-
     user: any;
     isLoading: boolean = false;
 
@@ -32,7 +28,6 @@ export class AddViaExcelComponent implements OnInit {
     usedBookNumbers: Number[] = [];
     columnHeader: Array<any> = [];
     bookList: Array<Array<any>> = [];
-    parsedBookList: Array<Array<any>> = [];
     errorCells = {};
     errorCount = 0;
     hasRequiredColumns: boolean = false;
@@ -48,7 +43,6 @@ export class AddViaExcelComponent implements OnInit {
             name: "None",
             field: "none",
             filter: () => true,
-            parse: (value) => value
         },
         {
             name: "Book Number",
@@ -61,57 +55,102 @@ export class AddViaExcelComponent implements OnInit {
                 if (isNaN(num) || isNaN(parseFloat(num))) return false;
                 if (num < 0) return false;
                 if (this.usedBookNumbers.includes(num)) return false;
-                if (this.bookList.filter((book) => book[this.mappedParameter.indexOf(this.parameters[1])] === num).length > 1) return false;
+                if (
+                    this.bookList.filter((book) => book[this.mappedParameter.indexOf(this.parameters[1])] === num)
+                        .length > 1
+                )
+                    return false;
                 return true;
             },
-            parse: (num) => num,
-            required: true
+            required: true,
         },
         {
             name: "Name",
             field: "name",
             filter: (name) => !!name,
-            parse: (name) => name,
-            required: true
+            required: true,
         },
         {
             name: "Author",
             field: "author",
-            parse: (author) => author,
-            filter: () => true
+            filter: () => true,
         },
         {
             name: "Publisher",
             field: "publisher",
             filter: () => true,
-            parse: (publisher) => publisher
         },
         {
             name: "Date of Purchase",
             field: "dateOfPurchase",
-            filter: (date) => {
-                // if the date is present, it should be a valid date
-                console.log(date);
-                if (!date) return true;
-                if (isNaN(Date.parse(date))) return false;
-                return true;
-            },
-            parse: (date) => {
-                if (!date) return null;
-                let dateObj = new Date(date);
-                if (typeof date === 'number' && date.toString().length === 5) {
-                    var utc_days  = Math.floor(date - 25569);
-                    var utc_value = utc_days * 86400;
-                    dateObj = new Date(utc_value * 1000);
+            filter: (inputText) => {
+                if (inputText === null || inputText === undefined) {
+                    return true;
                 }
-                return dateObj.toDateString();
-            }
+
+                if (typeof inputText !== "string") {
+                    return false;
+                }
+
+                let dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4}|\d{2})$/;
+
+                // Match the date format through regular expression
+                if (inputText.match(dateformat)) {
+                    //document.form1.text1.focus();
+
+                    //Test which seperator is used '/' or '-'
+                    let opera1 = inputText.split("/");
+                    let opera2 = inputText.split("-");
+                    let lopera1 = opera1.length;
+                    let lopera2 = opera2.length;
+
+                    // Extract the string into month, date and year
+                    let pdate;
+                    if (lopera1 > 1) {
+                        pdate = inputText.split("/");
+                    } else if (lopera2 > 1) {
+                        pdate = inputText.split("-");
+                    }
+                    let dd = parseInt(pdate[0]);
+                    let mm = parseInt(pdate[1]);
+                    let yy = parseInt(pdate[2]);
+
+                    if (yy < 100 && yy > 30) {
+                        yy += 1900;
+                    }
+                    if (yy <= 30) {
+                        yy += 2000;
+                    }
+
+                    // Create list of days of a month [assume there is no leap year by default]
+                    let ListofDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                    if (mm == 1 || mm > 2) {
+                        if (dd > ListofDays[mm - 1]) {
+                            return false;
+                        }
+                    }
+                    if (mm == 2) {
+                        var lyear = false;
+                        if ((!(yy % 4) && yy % 100) || !(yy % 400)) {
+                            lyear = true;
+                        }
+                        if (lyear == false && dd >= 29) {
+                            return false;
+                        }
+                        if (lyear == true && dd > 29) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            },
         },
         {
             name: "Edition",
             field: "edition",
             filter: () => true,
-            parse: (edition) => edition
         },
         {
             name: "Number of Pages",
@@ -122,7 +161,6 @@ export class AddViaExcelComponent implements OnInit {
                 if (isNaN(numPages) || isNaN(parseFloat(numPages))) return false;
                 return true;
             },
-            parse: (numPages) => numPages
         },
         {
             name: "Printed Cost",
@@ -133,29 +171,25 @@ export class AddViaExcelComponent implements OnInit {
                 if (isNaN(cost) || isNaN(parseFloat(cost))) return false;
                 return true;
             },
-            parse: (cost) => cost
         },
         {
             name: "Cover Type",
             field: "coverType",
             filter: () => true,
-            parse: (coverType) => coverType
         },
         {
             name: "Type of Book",
             field: "typeOfBook",
             filter: () => true,
-            parse: (typeOfBook) => typeOfBook
         },
         {
             name: "Location",
             field: "location",
             filter: () => true,
-            parse: (location) => location
-        }
+        },
     ];
 
-    constructor (public genericService: GenericService) { }
+    constructor(public genericService: GenericService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -167,7 +201,7 @@ export class AddViaExcelComponent implements OnInit {
             this.isLoading = true;
             // read workbook
             const bstr: string = e.target.result;
-            const wb: xlsx.WorkBook = xlsx.read(bstr, { type: 'binary' });
+            const wb: xlsx.WorkBook = xlsx.read(bstr, { type: "binary" });
 
             // grab first sheet
             const wsname: string = wb.SheetNames[0];
@@ -234,14 +268,11 @@ export class AddViaExcelComponent implements OnInit {
         this.errorCells = {};
         this.errorCount = 0;
         this.bookList.forEach((book, index) => {
-            this.parsedBookList[index] = [];
             for (let cellIndex = 0; cellIndex < this.columnHeader.length; cellIndex++) {
-                let val = this.mappedParameter[cellIndex].parse(book[cellIndex]);
-                if (!this.mappedParameter[cellIndex].filter(val)) {
+                if (!this.mappedParameter[cellIndex].filter(book[cellIndex])) {
                     this.errorCells[`${index} ${cellIndex}`] = true;
                     this.errorCount++;
                 }
-                this.parsedBookList[index][cellIndex] = val;
             }
         });
     }
@@ -257,11 +288,12 @@ export class AddViaExcelComponent implements OnInit {
     }
 
     getAvailableParameters(i) {
-        return this.parameters.filter((parameter) => (
-            !this.mappedParameter.includes(parameter) ||
-            parameter.name === "None" ||
-            this.mappedParameter.indexOf(parameter) === i
-        ));
+        return this.parameters.filter(
+            (parameter) =>
+                !this.mappedParameter.includes(parameter) ||
+                parameter.name === "None" ||
+                this.mappedParameter.indexOf(parameter) === i
+        );
     }
 
     handleParameterSelection(event, index) {
@@ -273,8 +305,8 @@ export class AddViaExcelComponent implements OnInit {
         this.checkRequiredColumns();
     }
 
-    isRowVisible(i : number) {
-        if (this.filterType === 'all') return true;
+    isRowVisible(i: number) {
+        if (this.filterType === "all") return true;
         for (let j = 0; j < this.bookList[i].length; j++) {
             if (this.errorCells[`${i} ${j}`]) {
                 return true;
@@ -308,7 +340,6 @@ export class AddViaExcelComponent implements OnInit {
     clearData(event) {
         event.target.value = "";
         this.bookList = [];
-        this.parsedBookList = [];
         this.columnHeader = [];
         this.hasFileSelected = false;
         this.errorCells = {};

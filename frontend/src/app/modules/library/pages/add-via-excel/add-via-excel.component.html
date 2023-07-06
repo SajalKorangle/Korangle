@@ -55,7 +55,7 @@
 
     <cdk-virtual-scroll-viewport
         itemSize="0"
-        style="height: 60vh; width: 100%; margin-top: 1rem"
+        style="height: calc(70vh - 15rem); width: 100%; margin-top: 1rem"
         *ngIf="hasFileSelected"
     >
         <table class="table">
@@ -79,7 +79,7 @@
                 </tr>
             </thead>
             <tbody>
-                <ng-container *ngFor="let row of parsedBookList; index as rc">
+                <ng-container *ngFor="let row of bookList; index as rc">
                     <tr *ngIf="isRowVisible(rc)">
                         <td *ngFor="let header of columnHeader; index as i" [class.bgDanger]="errorCells[rc + ' ' + i]">
                             {{ row[i] }}
