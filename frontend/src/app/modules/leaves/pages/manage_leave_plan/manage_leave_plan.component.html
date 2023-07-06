@@ -6,11 +6,20 @@
             <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 600px">
                 <mat-label>Select Employee</mat-label>
                 <mat-select (selectionChange)="updateLeavePlanList()" [(ngModel)]="currentEmployee" [disabled]="employeeChoiceList.length === 0">
-                    <mat-form-field appearance="outline" style="width: 100%; padding: 5px">
+                    <mat-form-field appearance="outline" style="width: 100%; padding: 5px; position: sticky; top: 0; z-index: 1; background: white">
                         <mat-label>Search Employee</mat-label>
-                        <input [(ngModel)]="filter" (keyup)="updateEmployeeChoiceList()" matInput placeholder="Enter Employee Name" />
+                        <input
+                            [(ngModel)]="filter"
+                            (keydown)="$event.stopPropagation()"
+                            (keyup)="updateEmployeeChoiceList()"
+                            matInput
+                            placeholder="Enter Employee Name"
+                        />
                     </mat-form-field>
-                    <mat-option *ngFor="let employee of filteredEmployeeChoiceList" [value]="employee"> ({{ employee.id }}) - {{ employee.name }} </mat-option>
+                    <mat-option *ngIf="filteredEmployeeChoiceList.length === 0" [value]="null" style="text-align: center"> No Employee found. </mat-option>
+                    <mat-option *ngFor="let employee of filteredEmployeeChoiceList" [value]="employee">
+                        {{ employee.name | titlecase }}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
@@ -38,8 +47,8 @@
                 <div class="flexRow">
                     <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 400px">
                         <mat-label>Select LeavePlan</mat-label>
-                        <mat-select [(ngModel)]="currentLeavePlan" (selectionChange)="updateLeavePlanList()" [disabled]="currentLeavePlanList.length === 0">
-                            <mat-option *ngFor="let leavePlan of currentLeavePlanList" [value]="leavePlan"> {{ leavePlan.leavePlanName }} </mat-option>
+                        <mat-select [(ngModel)]="currentLeavePlan" [disabled]="leavePlanList.length === 0">
+                            <mat-option *ngFor="let leavePlan of leavePlanList" [value]="leavePlan"> {{ leavePlan.leavePlanName }} </mat-option>
                         </mat-select>
                     </mat-form-field>
                     <button

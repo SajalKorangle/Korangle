@@ -59,7 +59,7 @@
                                 </div>
                             </div>
                             <div class="leaveTableRowItem">
-                                <div class="leaveTableColItem" style="cursor: pointer" (click)="deleteType($event, item)">
+                                <div class="leaveTableColItem" style="cursor: pointer" (click)="serviceAdapter.deleteType($event, item)">
                                     <span class="leaveTableColDataContainer"
                                         ><span style="color: rgba(255, 0, 0, 0.5)" class="material-icons-outlined">delete_forever</span></span
                                     >
@@ -91,10 +91,9 @@
         <!-- Starts :- Modal (to display the form) -->
         <div *ngIf="isFormVisible">
             <leave-type-dialog
-                [isSaving]="isSaving"
                 [schoolLeaveType]="currentSchoolLeaveType"
                 [schoolLeaveTypeMonth]="currentSchoolLeaveTypeMonthList"
-                (save)="saveLeaveType($event)"
+                (save)="serviceAdapter.saveLeaveType($event)"
                 (close)="closeAddNewType($event)"
                 [InvalidNameList]="invalidNameList"
             ></leave-type-dialog>

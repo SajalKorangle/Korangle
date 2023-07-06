@@ -9,6 +9,7 @@ import { TeamService } from '../../../../services/modules/team/team.service';
 import { InPagePermissionDialogComponent } from '@modules/employee/component/in-page-permission-dialog/in-page-permission-dialog.component';
 import { TASK_PERMISSION_LIST } from '@modules/common/in-page-permission';
 import { ViewDefaulterPermissionModalComponent } from './view-defaulter-permission-modal/view-defaulter-permission-modal.component';
+import { ViewEnquiryPermissionModalComponent } from './enquiry/view-enquiry-permission-modal/view-enquiry-permission-modal.component';
 
 @Component({
     selector: 'assign-task',
@@ -93,11 +94,21 @@ export class AssignTaskComponent implements OnInit {
 
     openInPagePermissionDialog(module, task, employee) {
         // module = {id: 15, path: 'fees', ...}, task = {id: 66, path: 'view_defaulters', ...}
+        // module = {id: 8, path: 'enquiry', ...}, task = {id: 26, path: 'view_all', ...}
         if (module.id === 15 && task.id === 66) { // For new implementation
             let parentEmployeePermission = this.currentPermissionList.find(currentPermission => {
                 return currentPermission.parentTask == 66;
             });
             this.dialog.open(ViewDefaulterPermissionModalComponent, {
+                data: {
+                    module, task, employee, parentEmployeePermission
+                }
+            });
+        } else if (module.id === 8 && task.id === 26) {
+            let parentEmployeePermission = this.currentPermissionList.find(currentPermission => {
+                return currentPermission.parentTask == 26;
+            });
+            this.dialog.open(ViewEnquiryPermissionModalComponent, {
                 data: {
                     module, task, employee, parentEmployeePermission
                 }
@@ -133,6 +144,11 @@ export class AssignTaskComponent implements OnInit {
 
         // module = {id: 15, path: 'fees', ...}, task = {id: 66, path: 'view_defaulters', ...}
         if (module.id === 15 && task.id === 66) {
+            return true;
+        }
+
+        // module = {id: 8, path: 'enquiry', ...}, task = {id: 26, path: 'view_all', ...}
+        if (module.id === 8 && task.id === 26) {
             return true;
         }
 

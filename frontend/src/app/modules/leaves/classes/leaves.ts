@@ -4,12 +4,6 @@ export interface LeaveTypeMonth {
     month: string; value: number;
     remainingLeavesAction: string;
 }
-
-export interface LeaveType {
-    id: number; leaveTypeName: string;
-    color: string; leaveType: string;
-    parentSchool: string;
-}
 // prettier-ignore
 export interface LeaveType {
     leaveTypeName: string; leaveType: string; parentSchool: string;
@@ -26,10 +20,7 @@ export interface LeavePlan {
 // prettier-ignore
 export interface LeavePlanToEmployee {
     parentEmployee: number; parentSchoolLeavePlan: number; id: number;
-}
-// prettier-ignore
-export interface EmployeeLeavePlan {
-    id: number; parentEmployee: number; activeLeavePlan: number;
+    isCustomized: boolean; leavePlanName: string;
 }
 // prettier-ignore
 export interface EmployeeLeaveType {

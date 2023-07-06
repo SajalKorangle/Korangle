@@ -20,7 +20,8 @@ export class SettingsHtmlRenderer {
 
     isUpdatingOnlineFeePaymentAllowed() {
         if (this.isEasebuzzInPayFeesFeatureFlagEnabled) {
-            return this.vm.backendData.schoolMerchantAccount.isAllowed;
+            if (!this.vm.backendData.schoolMerchantAccount) return true;
+            return this.vm.backendData.schoolMerchantAccount.easebuzzBankLabel !== "";
         }
         return true;
     }

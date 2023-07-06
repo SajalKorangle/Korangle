@@ -1,23 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 
-import { EnquiryOldService } from '../../../../services/modules/enquiry/enquiry-old.service';
-import { ClassService } from '../../../../services/modules/class/class.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_ENQUIRY_LIST } from '../../../../print/print-routes.constants';
-import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 import { DataStorage } from '../../../../classes/data-storage';
 import {CommonFunctions} from '@classes/common-functions';
+import { ViewAllServiceAdapter } from './view-all.service.adapter';
 
 @Component({
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [EmployeeOldService, ClassService],
 })
 export class ViewAllComponent implements OnInit {
     user: any;
 
-    enquiryList = [];
+    enquiryList: any;
 
     classList = [];
     employeeList = [];
@@ -31,28 +28,23 @@ export class ViewAllComponent implements OnInit {
     startDate = this.todaysDate();
     endDate = this.todaysDate();
 
+    inPagePermissions: any;
+
+    serviceAdapter: ViewAllServiceAdapter;
+
     isLoading = false;
 
     constructor(
-        private enquiryService: EnquiryOldService,
-        private classService: ClassService,
         private printService: PrintService,
-        private employeeService: EmployeeOldService
     ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
-        let data = {
-            parentSchool: this.user.activeSchool.dbId,
-        };
 
-        Promise.all([
-            this.classService.getObjectList(this.classService.classs, {}),
-            this.employeeService.getEmployeeProfileList(data, this.user.jwt),
-        ]).then((res) => {
-            this.classList = res[0];
-            this.employeeList = res[1];
-        });
+        this.serviceAdapter = new ViewAllServiceAdapter();
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
+
     }
 
     isMobile(): boolean {
@@ -73,25 +65,6 @@ export class ViewAllComponent implements OnInit {
         }
 
         return year + '-' + month + '-' + day;
-    }
-
-    getEnquiryList(): void {
-        let data = {
-            startDate: this.startDate,
-            endDate: this.endDate,
-            parentSchool: this.user.activeSchool.dbId,
-        };
-
-        this.isLoading = true;
-        this.enquiryService.getEnquiryList(data, this.user.jwt).then(
-            (enquiryList) => {
-                this.isLoading = false;
-                this.enquiryList = enquiryList;
-            },
-            (error) => {
-                this.isLoading = false;
-            }
-        );
     }
 
     getEmployeeName(employeeId: number): string {
@@ -163,4 +136,9 @@ export class ViewAllComponent implements OnInit {
         });
         return this.filteredClassList;
     }
+
+    isAdmin(): boolean {
+        return !this.inPagePermissions || this.inPagePermissions.userType == 'Admin';
+    }
+
 }

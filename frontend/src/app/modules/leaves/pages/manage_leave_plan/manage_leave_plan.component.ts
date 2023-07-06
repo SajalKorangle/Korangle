@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { User } from "@classes/user";
 import { GenericService } from "@services/generic/generic-service";
 import ManageLeavePlanServiceAdapter from "./manage_leave_plan.service.adapter";
-import { EmployeeLeavePlan, EmployeeLeaveType, LeavePlan, LeavePlanToEmployee, LeavePlanToLeaveType, LeaveType } from "@modules/leaves/classes/leaves";
+import { LeavePlan, LeavePlanToEmployee } from "@modules/leaves/classes/leaves";
 
 @Component({
     selector: "manage-leave-plan",
@@ -12,7 +12,13 @@ import { EmployeeLeavePlan, EmployeeLeaveType, LeavePlan, LeavePlanToEmployee, L
 })
 export class ManageLeavePlanComponent implements OnInit {
     user: User;
-    isLoading: boolean = true;
+    isLoading: boolean = false;
+    serviceAdapter: ManageLeavePlanServiceAdapter = new ManageLeavePlanServiceAdapter();
+    constructor(public genericService: GenericService) {}
+    async ngOnInit(): Promise<void> {
+        this.serviceAdapter.initializeAdapter(this);
+        this.serviceAdapter.initializeData();
+    }
     // LeavePlans
     leavePlanList: Array<LeavePlan> = [];
     // LeaveTypes
@@ -22,10 +28,8 @@ export class ManageLeavePlanComponent implements OnInit {
     filteredEmployeeChoiceList: Array<any> = [];
     currentEmployee: any = null;
     filter: string = "";
-    isLeaveTypeChoiceVisible: boolean = false;
-    // leavePlans available for a specific employee
+    // Active Leave Plans for an employee
     leavePlanToEmployeeList: Array<LeavePlanToEmployee> = [];
-    currentLeavePlanList: Array<LeavePlan> = [];
     // leaveTypes available for a specific employee
     employeeLeaveTypeList: Array<EmployeeLeaveType> = [];
     selectedEmployeeLeaveTypeList: Array<LeaveType> = [];
@@ -35,31 +39,29 @@ export class ManageLeavePlanComponent implements OnInit {
     leavePlanToLeaveTypeList: Array<LeavePlanToLeaveType> = [];
     // active Leave Plan
     activeLeavePlan: LeavePlan = null;
-    employeeLeavePlanList: Array<EmployeeLeavePlan> = [];
     currentLeavePlan: LeavePlan = null;
-    // service adapter and data initialization
-    serviceAdapter: ManageLeavePlanServiceAdapter = new ManageLeavePlanServiceAdapter();
-    constructor(public genericService: GenericService) {}
-    async ngOnInit(): Promise<void> {
-        this.serviceAdapter.initializeAdapter(this);
-        await this.serviceAdapter.initializeData();
-        this.filteredEmployeeChoiceList = this.employeeChoiceList;
-    }
-    // update list of employees
+
+    // starts :- function to update list of employees
     updateEmployeeChoiceList(): void {
         this.filteredEmployeeChoiceList = [];
         this.employeeChoiceList.forEach((employee) => {
-            employee.name.startsWith(this.filter) || (this.currentEmployee !== null && this.currentEmployee.id === employee.id)
-                ? this.filteredEmployeeChoiceList.push(employee)
-                : null;
+            employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) ? this.filteredEmployeeChoiceList.push(employee) : null;
         });
     }
-    // update leavePlanList for an employee
+    // ends :- function to update list of employees
+
+    // starts :- function to update leavePlanList for an employee
     updateLeavePlanList(): void {
-        this.currentLeavePlanList = [];
+        if (!this.currentEmployee) {
+            return;
+        }
         this.activeLeavePlan = null;
         this.filter = "";
         this.filteredEmployeeChoiceList = this.employeeChoiceList;
+        const employeeLeavePlan = this.leavePlanToEmployeeList.find((leavePlanToEmployee) => leavePlanToEmployee.parentEmployee === this.currentEmployee.id);
+        this.activeLeavePlan = employeeLeavePlan ? this.leavePlanList.find((leavePlan) => leavePlan.id === employeeLeavePlan.parentSchoolLeavePlan) : null;
+        this.currentLeavePlan = this.activeLeavePlan;
+        // set employee leave type
         this.employeeLeaveTypeChoiceList = [];
         this.selectedEmployeeLeaveTypeList = [];
         this.isLeaveTypeChoiceVisible = false;
@@ -92,9 +94,13 @@ export class ManageLeavePlanComponent implements OnInit {
             this.currentEmployeeLeaveTypeList = this.selectedEmployeeLeaveTypeList;
         }
     }
+    // ends :- function to update leavePlanList for an employee
+
+    // starts :- function to refresh data.
     async refreshEmployeeData(): Promise<void> {
         this.isLoading = true;
         await this.serviceAdapter.initializeData();
         this.updateLeavePlanList();
     }
+    // ends :- function to refresh data.
 }

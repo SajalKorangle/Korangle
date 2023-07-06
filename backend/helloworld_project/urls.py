@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from generic.generic_views import GenericView, GenericListView
 
-api_version = 'v8.2/'
+api_version = 'v8.7/'
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -20,7 +20,6 @@ urlpatterns = [
     url(r'^'+api_version+'examinations/', include('examination_app.urls')),
     url(r'^'+api_version+'team/', include('team_app.urls')),
     url(r'^'+api_version+'employee/', include('employee_app.urls')),
-    url(r'^'+api_version+'enquiry/', include('enquiry_app.urls')),
     url(r'^'+api_version+'sms/', include('sms_app.urls')),
     url(r'^'+'sms/', include('sms_app.api_version_free_urls')),
     url(r'^'+api_version+'vehicle/', include('vehicle_app.urls')),
@@ -45,7 +44,8 @@ urlpatterns = [
     url(r'^' + api_version + 'online-class/', include('online_classes_app.urls')),
     url(r'^' + api_version + 'payment/', include('payment_app.urls')),
     url(r'^'+api_version+'feature-flag/', include('feature_flag_app.urls')),
-    url(r'^'+api_version+'contact/', include('contact_app.urls'))
+    url(r'^'+api_version+'contact/', include('contact_app.urls')),
+    url(r'^'+api_version+'library/', include('library_app.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
