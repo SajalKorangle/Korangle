@@ -69,3 +69,16 @@ def move_leaves_module(apps, schema_editor):
     module_object = Module.objects.get(title='Leaves')
     module_object.orderNumber = 7
     module_object.save()
+
+def rename_leaves_module(apps, schema_editor):
+    Task = apps.get_model('team_app', 'Task')
+    # filter Task
+    manage_plan_task = Task.objects.get(path='manage_plan')
+    manage_leave_plan_task = Task.objects.get(path='manage_leave_plan')
+    manage_plan_task.title = 'Manage Leave Plans'
+    manage_plan_task.orderNumber = 3
+    manage_plan_task.save()
+    manage_leave_plan_task.title = 'Manage Plans'
+    manage_leave_plan_task.orderNumber = 2
+    manage_leave_plan_task.save()
+
