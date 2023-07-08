@@ -5,6 +5,7 @@ import { DataStorage } from "@classes/data-storage";
 import { GenericService } from "@services/generic/generic-service";
 import { AddViaExcelServiceAdapter } from "./add-via-excel.service.adapter";
 import { isMobile } from "../../../../classes/common";
+import { ExcelService } from "../../../../excel/excel-service";
 
 interface Parameter {
     name: string;
@@ -17,7 +18,7 @@ interface Parameter {
     selector: "add-via-excel",
     templateUrl: "./add-via-excel.component.html",
     styleUrls: ["./add-via-excel.component.css"],
-    providers: [GenericService],
+    providers: [GenericService, ExcelService],
 })
 export class AddViaExcelComponent implements OnInit {
     user: any;
@@ -35,8 +36,6 @@ export class AddViaExcelComponent implements OnInit {
     hasFileSelected: boolean = false;
 
     filterType: string = "all";
-
-    reader: FileReader = new FileReader();
 
     parameters: Parameter[] = [
         {
@@ -84,7 +83,7 @@ export class AddViaExcelComponent implements OnInit {
             name: "Date of Purchase",
             field: "dateOfPurchase",
             filter: (inputText) => {
-                if (inputText === null || inputText === undefined) {
+                if (!inputText) {
                     return true;
                 }
 
@@ -139,61 +138,13 @@ export class AddViaExcelComponent implements OnInit {
         },
     ];
 
-    constructor(public genericService: GenericService) {}
+    constructor(public genericService: GenericService, public excelService: ExcelService) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new AddViaExcelServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-
-        this.reader.onload = (e: any) => {
-            this.isLoading = true;
-            // read workbook
-            const bstr: string = e.target.result;
-            const wb: xlsx.WorkBook = xlsx.read(bstr, { type: "binary" });
-
-            // grab first sheet
-            const wsname: string = wb.SheetNames[0];
-            const ws: xlsx.WorkSheet = wb.Sheets[wsname];
-
-            // save data
-            this.bookList = [];
-            this.bookList = xlsx.utils.sheet_to_json(ws, { header: 1 });
-
-            // // remove empty rows
-            if (this.bookList.length === 0) {
-                this.hasFileSelected = false;
-                this.isLoading = false;
-                alert("You have uploaded a blank file");
-                return;
-            }
-            while (!this.bookList[this.bookList.length - 1].reduce((a, b) => a || b, false)) {
-                this.bookList.pop();
-                if (this.bookList.length === 0) {
-                    this.hasFileSelected = false;
-                    this.isLoading = false;
-                    alert("You have uploaded a blank file");
-                    return;
-                }
-            }
-
-            // // if blank file is uploaded
-            if (this.bookList.length === 0) {
-                this.hasFileSelected = false;
-                this.isLoading = false;
-                return;
-            }
-
-            this.columnHeader = this.bookList.shift();
-
-            this.matchHeaders();
-            this.checkRows();
-            this.checkRequiredColumns();
-
-            this.hasFileSelected = true;
-            this.isLoading = false;
-        };
     }
 
     getTotalMappedParameters() {
@@ -278,12 +229,23 @@ export class AddViaExcelComponent implements OnInit {
     handleExcelFile(event) {
         if (event.target.files.length > 0) {
             const file = event.target.files[0];
-            if (!file.name.endsWith(".xlsx")) {
-                alert("Only Excel files (.xlsx) are supported.");
+            if (!file.name.endsWith(".csv")) {
+                alert("Only CSV files (.csv) are supported.");
                 event.target.value = "";
                 return;
             }
-            this.reader.readAsBinaryString(file);
+            // this.reader.readAsBinaryString(file);
+            this.isLoading = true;
+            this.excelService.getData(event, (result, file) => {
+                this.bookList = result.data;
+                this.bookList = this.bookList.filter((row) => row.length > 1);
+                this.columnHeader = this.bookList.shift();
+                this.matchHeaders();
+                this.checkRows();
+                this.checkRequiredColumns();
+                this.hasFileSelected = true;
+                this.isLoading = false;
+            });
         }
     }
 
@@ -301,10 +263,7 @@ export class AddViaExcelComponent implements OnInit {
     downloadTemplate() {
         let headerRow = this.parameters.filter((param) => param.name !== "None").map((parameter) => parameter.name);
         let data = [headerRow];
-        let ws = xlsx.utils.aoa_to_sheet(data);
-        let wb = xlsx.utils.book_new();
-        xlsx.utils.book_append_sheet(wb, ws, "Sheet1");
-        xlsx.writeFile(wb, "BooksToAdd.xlsx");
+        this.excelService.downloadFile(data, "BooksToAdd.csv");
     }
 
     addBookList() {
