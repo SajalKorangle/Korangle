@@ -82,19 +82,7 @@ export class AddViaExcelComponent implements OnInit {
         {
             name: "Date of Purchase",
             field: "dateOfPurchase",
-            filter: (inputText) => {
-                if (!inputText) {
-                    return true;
-                }
-
-                if (typeof inputText !== "string") {
-                    return false;
-                }
-
-                let parsedDate = Date.parse(inputText);
-                if (isNaN(parsedDate)) return false;
-                return true;
-            },
+            filter: (inputText) => true,
         },
         {
             name: "Edition",
