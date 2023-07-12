@@ -11,6 +11,7 @@ interface Parameter {
     name: string;
     field: string;
     filter: (any) => boolean;
+    parse?: (any) => any;
     required?: boolean;
 }
 
@@ -82,7 +83,112 @@ export class AddViaExcelComponent implements OnInit {
         {
             name: "Date of Purchase",
             field: "dateOfPurchase",
-            filter: (inputText) => true,
+            filter: (inputText) => {
+                if (!inputText) {
+                    return true;
+                }
+
+                if (typeof inputText !== "string") {
+                    return false;
+                }
+
+                let dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4}|\d{2})$/;
+
+                // Match the date format through regular expression
+                if (inputText.match(dateformat)) {
+                    //document.form1.text1.focus();
+
+                    //Test which seperator is used '/' or '-'
+                    let opera1 = inputText.split("/");
+                    let opera2 = inputText.split("-");
+                    let lopera1 = opera1.length;
+                    let lopera2 = opera2.length;
+
+                    // Extract the string into month, date and year
+                    let pdate;
+                    if (lopera1 > 1) {
+                        pdate = inputText.split("/");
+                    } else if (lopera2 > 1) {
+                        pdate = inputText.split("-");
+                    }
+                    let dd = parseInt(pdate[0]);
+                    let mm = parseInt(pdate[1]);
+                    let yy = parseInt(pdate[2]);
+
+                    if (yy < 100 && yy > 30) {
+                        yy += 1900;
+                    }
+                    if (yy <= 30) {
+                        yy += 2000;
+                    }
+
+                    // Create list of days of a month [assume there is no leap year by default]
+                    let ListofDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                    if (mm == 1 || mm > 2) {
+                        if (dd > ListofDays[mm - 1]) {
+                            return false;
+                        }
+                    }
+                    if (mm == 2) {
+                        var lyear = false;
+                        if ((!(yy % 4) && yy % 100) || !(yy % 400)) {
+                            lyear = true;
+                        }
+                        if (lyear == false && dd >= 29) {
+                            return false;
+                        }
+                        if (lyear == true && dd > 29) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            parse: (inputText) => {
+                let result = null;
+
+                if (!inputText) {
+                    return result;
+                }
+
+                if (typeof inputText !== "string") {
+                    return result;
+                }
+
+                let dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4}|\d{2})$/;
+
+                // Match the date format through regular expression
+                if (inputText.match(dateformat)) {
+                    //Test which seperator is used '/' or '-'
+                    let opera1 = inputText.split("/");
+                    let opera2 = inputText.split("-");
+                    let lopera1 = opera1.length;
+                    let lopera2 = opera2.length;
+
+                    // Extract the string into month, date and year
+                    let pdate;
+                    if (lopera1 > 1) {
+                        pdate = inputText.split("/");
+                    } else if (lopera2 > 1) {
+                        pdate = inputText.split("-");
+                    }
+                    let dd = parseInt(pdate[0]);
+                    let mm = parseInt(pdate[1]);
+                    let yy = parseInt(pdate[2]);
+
+                    if (yy < 100 && yy > 30) {
+                        yy += 1900;
+                    }
+                    if (yy <= 30) {
+                        yy += 2000;
+                    }
+
+                    result = yy.toString() + "/" + mm.toString() + "/" + dd.toString();
+                }
+                return result;
+            },
         },
         {
             name: "Edition",
@@ -97,6 +203,10 @@ export class AddViaExcelComponent implements OnInit {
                 if (!numPages) return true;
                 if (isNaN(numPages) || isNaN(parseFloat(numPages))) return false;
                 return true;
+            },
+            parse: (numPages) => {
+                if (!numPages) return 0;
+                else return parseInt(numPages);
             },
         },
         {
@@ -238,7 +348,7 @@ export class AddViaExcelComponent implements OnInit {
     }
 
     clearData(event) {
-        event.target.value = "";
+        if (event) event.target.value = "";
         this.bookList = [];
         this.columnHeader = [];
         this.hasFileSelected = false;
@@ -254,8 +364,16 @@ export class AddViaExcelComponent implements OnInit {
         this.excelService.downloadFile(data, "BooksToAdd.csv");
     }
 
-    addBookList() {
-        alert("Under Construction!!!");
+    async addBookList() {
+        this.isLoading = true;
+        if (confirm("Are you sure you want to add these books?")) {
+            let res = await this.serviceAdapter.uploadBooks();
+            if (res) {
+                this.clearData(null);
+                alert("Books added successfully!");
+            }
+        }
+        this.isLoading = false;
     }
 
     //Checking if it is in mobile
