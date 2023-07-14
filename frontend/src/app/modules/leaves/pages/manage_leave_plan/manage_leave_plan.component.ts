@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { User } from "@classes/user";
 import { GenericService } from "@services/generic/generic-service";
 import ManageLeavePlanServiceAdapter from "./manage_leave_plan.service.adapter";
-import { LeavePlan, LeavePlanToEmployee } from "@modules/leaves/classes/leaves";
+import { EmployeeLeaveType, LeavePlan, LeavePlanToEmployee, LeavePlanToLeaveType, LeaveType } from "@modules/leaves/classes/leaves";
 
 @Component({
     selector: "manage-leave-plan",
@@ -23,6 +23,7 @@ export class ManageLeavePlanComponent implements OnInit {
     leavePlanList: Array<LeavePlan> = [];
     // LeaveTypes
     leaveTypeList: Array<LeaveType> = [];
+    currentLeaveTypeList: Array<LeaveType> = [];
     // employee Data
     employeeChoiceList: Array<any> = [];
     filteredEmployeeChoiceList: Array<any> = [];
@@ -32,15 +33,13 @@ export class ManageLeavePlanComponent implements OnInit {
     leavePlanToEmployeeList: Array<LeavePlanToEmployee> = [];
     // leaveTypes available for a specific employee
     employeeLeaveTypeList: Array<EmployeeLeaveType> = [];
-    selectedEmployeeLeaveTypeList: Array<LeaveType> = [];
-    employeeLeaveTypeChoiceList: Array<LeaveType> = [];
-    currentEmployeeLeaveTypeList: Array<LeaveType> = [];
+    selectedEmployeeLeaveTypeList: Array<EmployeeLeaveType> = [];
     // leavePlan to leaveType
     leavePlanToLeaveTypeList: Array<LeavePlanToLeaveType> = [];
     // active Leave Plan
     activeLeavePlan: LeavePlan = null;
     currentLeavePlan: LeavePlan = null;
-
+    isCustomized: boolean = false;
     // starts :- function to update list of employees
     updateEmployeeChoiceList(): void {
         this.filteredEmployeeChoiceList = [];
@@ -59,43 +58,22 @@ export class ManageLeavePlanComponent implements OnInit {
         this.filter = "";
         this.filteredEmployeeChoiceList = this.employeeChoiceList;
         const employeeLeavePlan = this.leavePlanToEmployeeList.find((leavePlanToEmployee) => leavePlanToEmployee.parentEmployee === this.currentEmployee.id);
+        this.isCustomized = employeeLeavePlan ? employeeLeavePlan.isCustomized : false;
         this.activeLeavePlan = employeeLeavePlan ? this.leavePlanList.find((leavePlan) => leavePlan.id === employeeLeavePlan.parentSchoolLeavePlan) : null;
         this.currentLeavePlan = this.activeLeavePlan;
-        // set employee leave type
-        this.employeeLeaveTypeChoiceList = [];
-        this.selectedEmployeeLeaveTypeList = [];
-        this.isLeaveTypeChoiceVisible = false;
-        this.leavePlanToEmployeeList.forEach((leavePlanToEmployee) => {
-            this.currentEmployee.id === leavePlanToEmployee.parentEmployee
-                ? this.currentLeavePlanList.push(this.leavePlanList.find((leavePlan) => leavePlan.id === leavePlanToEmployee.parentSchoolLeavePlan))
-                : null;
-        });
-        this.employeeLeavePlanList.forEach((employeeLeavePlan) => {
-            this.activeLeavePlan =
-                this.currentEmployee.id === employeeLeavePlan.parentEmployee
-                    ? this.currentLeavePlanList.find((leavePlan) => {
-                          return leavePlan.id === employeeLeavePlan.activeLeavePlan;
-                      })
-                    : this.activeLeavePlan;
-        });
-        this.currentLeavePlan = this.currentLeavePlan === null ? this.activeLeavePlan : this.currentLeavePlan;
-        // update list of leave type under this leave plan
-        if (this.currentLeavePlan !== null) {
-            this.leavePlanToLeaveTypeList.forEach((leavePlanToLeaveType) => {
-                leavePlanToLeaveType.parentSchoolLeavePlan === this.currentLeavePlan.id
-                    ? this.employeeLeaveTypeChoiceList.push(this.leaveTypeList.find((leaveType) => leaveType.id === leavePlanToLeaveType.parentSchoolLeaveType))
-                    : null;
-            });
-            this.employeeLeaveTypeList.forEach((employeeLeaveType) => {
-                employeeLeaveType.parentEmployee === this.currentEmployee.id && employeeLeaveType.parentLeavePlan === this.currentLeavePlan.id
-                    ? this.selectedEmployeeLeaveTypeList.push(this.leaveTypeList.find((leaveType) => leaveType.id === employeeLeaveType.parentLeaveType))
-                    : null;
-            });
-            this.currentEmployeeLeaveTypeList = this.selectedEmployeeLeaveTypeList;
-        }
+        this.selectedEmployeeLeaveTypeList = this.employeeLeaveTypeList.filter(
+            (employeeLeaveType) => employeeLeaveType.parentEmployee == this.currentEmployee.id
+        );
+        this.currentLeaveTypeList = this.getCurrentLeaveTypeList();
     }
     // ends :- function to update leavePlanList for an employee
 
+    // starts :- function to get current leave type list
+    getCurrentLeaveTypeList(): Array<LeaveType> {
+        return this.leaveTypeList.filter(leaveType => this.selectedEmployeeLeaveTypeList.find(employeeLeaveType=> employeeLeaveType.parentLeaveType == leaveType.id));
+    }
+    // ends :- function to get current leave type list
+    
     // starts :- function to refresh data.
     async refreshEmployeeData(): Promise<void> {
         this.isLoading = true;

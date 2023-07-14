@@ -24,5 +24,6 @@ export interface LeavePlanToEmployee {
 }
 // prettier-ignore
 export interface EmployeeLeaveType {
-    id: number; parentEmployee: number; parentLeaveType: number; parentLeavePlan: number;
+    id: number; parentEmployee: number; parentLeaveType: number;
+    leaveTypeName: string; leaveType: "Paid" | "Unpaid"; color: string;
 }

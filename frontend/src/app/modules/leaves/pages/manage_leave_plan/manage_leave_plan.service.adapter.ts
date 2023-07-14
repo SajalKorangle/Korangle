@@ -15,48 +15,6 @@ export default class ManageLeavePlanServiceAdapter {
 
     // starts :- Initialize Data (send GET request to backend to fetch data)
     async initializeData(): Promise<void> {
-        // this.vm.employeeChoiceList = await this.vm.genericService.getObjectList(
-        //     { employee_app: "Employee" },
-        //     {
-        //         filter: { parentSchool: this.vm.user.activeSchool.dbId },
-        //     },
-        // );
-        // this.vm.leavePlanToEmployeeList = await this.vm.genericService.getObjectList(
-        //     { leaves_app: "SchoolLeavePlanToEmployee" },
-        //     {
-        //         filter: { parentSchoolLeavePlan__parentSchool: this.vm.user.activeSchool.dbId },
-        //     },
-        // );
-        // this.vm.leavePlanList = await this.vm.genericService.getObjectList(
-        //     { leaves_app: "SchoolLeavePlan" },
-        //     {
-        //         filter: { parentSchool: this.vm.user.activeSchool.dbId },
-        //     },
-        // );
-        // this.vm.employeeLeavePlanList = await this.vm.genericService.getObjectList(
-        //     { leaves_app: "EmployeeLeavePlan" },
-        //     {
-        //         filter: { activeLeavePlan__parentSchool: this.vm.user.activeSchool.dbId },
-        //     },
-        // );
-        // this.vm.leavePlanToLeaveTypeList = await this.vm.genericService.getObjectList(
-        //     { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
-        //     {
-        //         filter: { parentSchoolLeavePlan__parentSchool: this.vm.user.activeSchool.dbId },
-        //     },
-        // );
-        // this.vm.employeeLeaveTypeList = await this.vm.genericService.getObjectList(
-        //     { leaves_app: "EmployeeLeaveType" },
-        //     {
-        //         filter: { parentLeaveType__parentSchool: this.vm.user.activeSchool.dbId },
-        //     },
-        // );
-        // this.vm.leaveTypeList = await this.vm.genericService.getObjectList(
-        //     { leaves_app: "SchoolLeaveType" },
-        //     {
-        //         filter: { parentSchool: this.vm.user.activeSchool.dbId },
-        //     },
-        // );
         this.vm.isLoading = true;
         let results = await Promise.all([
             this.vm.genericService.getObjectList(
@@ -79,8 +37,23 @@ export default class ManageLeavePlanServiceAdapter {
                     filter: { parentSchool: this.vm.user.activeSchool.dbId },
                 }
             ),
+            this.vm.genericService.getObjectList(
+                { leaves_app: "EmployeeLeaveType" },
+                {
+                    filter: { parentLeaveType__parentSchool: this.vm.user.activeSchool.dbId },
+                }
+            ),
+            this.vm.genericService.getObjectList(
+                { leaves_app: "SchoolLeaveType" },
+                {
+                    filter: { parentSchool: this.vm.user.activeSchool.dbId },
+                }
+            ),
         ]);
-        [this.vm.employeeChoiceList, this.vm.leavePlanToEmployeeList, this.vm.leavePlanList] = [results[0], results[1], results[2]];
+        // prettier-ignore
+        [this.vm.employeeChoiceList, this.vm.leavePlanToEmployeeList, this.vm.leavePlanList, this.vm.employeeLeaveTypeList, this.vm.leaveTypeList] = [
+            results[0], results[1], results[2], results[3], results[4],
+        ];
         this.vm.employeeChoiceList.sort((a, b) => a.name.localeCompare(b.name));
         this.vm.filteredEmployeeChoiceList = this.vm.employeeChoiceList;
         this.vm.currentEmployee = this.vm.currentEmployee
@@ -122,11 +95,6 @@ export default class ManageLeavePlanServiceAdapter {
             // ends :- alert for duplicate entry (returns null indicating error else moves ahead.)
         }
         let response = null;
-        if (!Operation.operation.endsWith("Batch")) {
-            Operation.data.forEach((data) => {
-                data.parentSchool = this.vm.user.activeSchool.dbId;
-            });
-        }
         if (Operation.operation === "insert") {
             response = await this.vm.genericService.createObject(Operation.database, Operation.data[0]);
         } else if (Operation.operation === "update") {
@@ -151,23 +119,15 @@ export default class ManageLeavePlanServiceAdapter {
     // starts :- function to apply leave plan on an employee
     async applyLeavePlan(): Promise<void> {
         const parentLeavePlanToEmployee = this.vm.leavePlanToEmployeeList.find((x) => x.parentEmployee == this.vm.currentEmployee.id);
-        let response = await this.handleDataChange(
-            {
-                check: (_, __) => [],
-                data: [
-                    {
+        // prettier-ignore
+        let response = await this.handleDataChange({
+                check: (_, __) => [], database: { leaves_app: "SchoolLeavePlanToEmployee" }, operation: this.vm.activeLeavePlan === null ? "insert" : "update",
+                data: [{
                         id: parentLeavePlanToEmployee ? parentLeavePlanToEmployee.id : -1,
-                        parentEmployee: this.vm.currentEmployee.id,
-                        parentSchoolLeavePlan: this.vm.currentLeavePlan.id,
-                        isCustomized: true,
-                        leavePlanName: this.vm.currentLeavePlan.leavePlanName,
-                    },
-                ],
-                database: { leaves_app: "SchoolLeavePlanToEmployee" },
-                operation: this.vm.activeLeavePlan === null ? "insert" : "update",
-            },
-            "leavePlanToEmployeeList"
-        );
+                        parentEmployee: this.vm.currentEmployee.id, parentSchoolLeavePlan: this.vm.currentLeavePlan.id,
+                        isCustomized: false, leavePlanName: this.vm.currentLeavePlan.leavePlanName,
+                    },],
+            }, "leavePlanToEmployeeList");
         if (response) {
             alert("Leave-Plan updated successfully");
         } else {
@@ -178,90 +138,53 @@ export default class ManageLeavePlanServiceAdapter {
 
     // starts :- function to save leave type associated to this leave plan and employee
     async saveLeaveTypes(): Promise<void> {
-        if (this.vm.currentLeavePlan !== null) {
+        if (
+            this.vm.currentLeavePlan !== null &&
+            confirm("Do you want to update the leave types? (This operation might alter this plan to customized / stock for the selected employee)")
+        ) {
             this.vm.isLoading = true;
-            let addEmployeeLeaveType: Array<EmployeeLeaveType> = [];
-            let removeEmployeeLeaveType: Array<EmployeeLeaveType> = [];
-            this.vm.selectedEmployeeLeaveTypeList.forEach((selectedEmployeeLeaveType) => {
-                !this.vm.currentEmployeeLeaveTypeList.find((currentEmployeeLeaveType) => currentEmployeeLeaveType.id === selectedEmployeeLeaveType.id)
-                    ? removeEmployeeLeaveType.push({
-                          id: this.vm.employeeLeaveTypeList.find((employeeLeaveType) => employeeLeaveType.parentLeaveType === selectedEmployeeLeaveType.id).id,
-                          parentEmployee: this.vm.currentEmployee.id,
-                          parentLeavePlan: this.vm.currentLeavePlan.id,
-                          parentLeaveType: selectedEmployeeLeaveType.id,
-                      })
-                    : null;
-            });
-            this.vm.currentEmployeeLeaveTypeList.forEach((currentEmployeeLeaveType) => {
-                !this.vm.selectedEmployeeLeaveTypeList.find((selectedEmployeeLeaveType) => currentEmployeeLeaveType.id === selectedEmployeeLeaveType.id)
-                    ? addEmployeeLeaveType.push({
-                          id: -1,
-                          parentEmployee: this.vm.currentEmployee.id,
-                          parentLeavePlan: this.vm.currentLeavePlan.id,
-                          parentLeaveType: currentEmployeeLeaveType.id,
-                      })
-                    : null;
-            });
-            let response = removeEmployeeLeaveType.length
-                ? await this.handleDataChange(
-                      {
-                          check: null,
-                          data: removeEmployeeLeaveType,
-                          database: { leaves_app: "EmployeeLeaveType" },
-                          operation: "deleteBatch",
-                      },
-                      "employeeLeaveTypeList",
-                  )
-                : true;
-            if (!response) {
-                this.vm.isLoading = false;
-                alert("Unable to delete new leave types.");
+            let insertList = this.vm.currentLeaveTypeList
+                .filter((leaveType) => !this.vm.selectedEmployeeLeaveTypeList.find((employeeLeaveType) => employeeLeaveType.parentLeaveType == leaveType.id))
+                .map((leaveType) => {
+                    // prettier-ignore
+                    return {
+                        id: -1, parentLeaveType: leaveType.id, parentEmployee: this.vm.currentEmployee.id,
+                        leaveTypeName: leaveType.leaveTypeName, leaveType: leaveType.leaveType, color: leaveType.color,
+                    };
+                });
+            let deleteList = this.vm.selectedEmployeeLeaveTypeList.filter(
+                (employeeLeaveType) => !this.vm.currentLeaveTypeList.find((leaveType) => leaveType.id == employeeLeaveType.parentLeaveType)
+            );
+            // prettier-ignore
+            let response = insertList.length
+                ? this.handleDataChange({
+                        check: null, data: insertList, operation: "insertBatch",
+                        database: { leaves_app: "EmployeeLeaveType" },
+                    }, null) : true;
+            if (response) {
+                // prettier-ignore
+                response = deleteList.length
+                    ? this.handleDataChange({
+                            check: null, data: deleteList, operation: "deleteBatch",
+                            database: { leaves_app: "EmployeeLeaveType" },
+                        }, null ) : true;
+                response ? alert("Leave Types updated successfully") : alert("Failed to update Leave Types.");
             } else {
-                let response = addEmployeeLeaveType.length
-                    ? await this.handleDataChange(
-                          {
-                              check: null,
-                              data: addEmployeeLeaveType,
-                              database: { leaves_app: "EmployeeLeaveType" },
-                              operation: "insertBatch",
-                          },
-                          "employeeLeaveTypeList",
-                      )
-                    : true;
-                if (!response) {
-                    this.vm.isLoading = false;
-                    alert("Unable to insert new leave types.");
-                } else {
-                    this.vm.isLoading = false;
-                    this.vm.selectedEmployeeLeaveTypeList = this.vm.currentEmployeeLeaveTypeList;
-                    alert("Updated Leave Types successfully.");
-                }
+                alert("Failed to update Leave Types.");
             }
-        } else {
-            alert("Please apply a leave plan.");
+            this.vm.isLoading = false;
         }
     }
     // ends :- function to save leave type associated to this leave plan and employee
 
     // starts :- function to delete a specific employee leave type
-    async deleteLeaveType(employeeLeaveType: LeaveType): Promise<void> {
+    async deleteLeaveType(employeeLeaveType: EmployeeLeaveType): Promise<void> {
         this.vm.isLoading = true;
-        let response = await this.handleDataChange(
-            {
-                check: null,
-                data: [
-                    {
-                        id: this.vm.employeeLeaveTypeList.find((EmployeeLeaveType) => EmployeeLeaveType.parentLeaveType === employeeLeaveType.id).id,
-                        parentEmployee: this.vm.currentEmployee.id,
-                        parentLeavePlan: this.vm.currentLeavePlan.id,
-                        parentLeaveType: employeeLeaveType.id,
-                    },
-                ],
+        // prettier-ignore
+        let response = await this.handleDataChange({
+                check: null, data: [employeeLeaveType], operation: "deleteBatch",
                 database: { leaves_app: "EmployeeLeaveType" },
-                operation: "deleteBatch",
-            },
-            "employeeLeaveTypeList",
-        );
+            }, null);
         if (response) {
             this.vm.updateLeavePlanList();
             alert("Leave Type removed successfully.");

@@ -44,11 +44,13 @@
 
             <!-- Starts :- Activate a leave Plan for selected employee -->
             <div class="flexRow" *ngIf="currentEmployee !== null" style="padding-top: 20px; justify-content: space-between; width: 100%">
-                <div class="flexRow">
-                    <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 400px">
+                <div class="flexRow" style="flex-grow: 1">
+                    <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 350px">
                         <mat-label>Select LeavePlan</mat-label>
                         <mat-select [(ngModel)]="currentLeavePlan" [disabled]="leavePlanList.length === 0">
-                            <mat-option *ngFor="let leavePlan of leavePlanList" [value]="leavePlan"> {{ leavePlan.leavePlanName }} </mat-option>
+                            <mat-option *ngFor="let leavePlan of leavePlanList" [value]="leavePlan">
+                                {{ leavePlan.leavePlanName }} {{ isCustomized && activeLeavePlan == leavePlan ? "( Customized )" : "" }}
+                            </mat-option>
                         </mat-select>
                     </mat-form-field>
                     <button
@@ -60,12 +62,20 @@
                             color: activeLeavePlan === currentLeavePlan ? '#fd9700' : '#ffffff',
                             cursor: activeLeavePlan === currentLeavePlan ? 'not-allowed' : 'pointer'
                         }"
-                        [disabled]="activeLeavePlan === currentLeavePlan"
+                        [disabled]="activeLeavePlan == currentLeavePlan"
                     >
                         Apply
                     </button>
                 </div>
-                <div class="material-icons-outlined" style="padding: 5px; cursor: pointer" (click)="refreshEmployeeData()">refresh</div>
+                <div
+                    class="material-icons-outlined"
+                    style="padding: 5px; cursor: pointer; height: 100%; display: flex; align-items: center"
+                    (click)="refreshEmployeeData()"
+                    matTooltip="refresh"
+                    matTooltipPosition="left"
+                >
+                    refresh
+                </div>
             </div>
             <!-- Ends :- Activate a leave Plan for selected employee -->
 
@@ -80,22 +90,40 @@
                     </div>
                 </div>
             </div>
-            <div class="flexCol" *ngIf="currentEmployee !== null && selectedEmployeeLeaveTypeList.length"
-                style="width: 100%; height: 250px; overflow-y: scroll;">
-                <div class="flexRow" *ngFor="let EmployeeLeaveType of selectedEmployeeLeaveTypeList"
-                    style="width:100%; border-bottom: 1px solid rgba(0, 0, 0, 0.25); color: rgba(0, 0, 0, 0.5); max-height: 45px; padding-top: 5px">
+            <div
+                class="flexCol"
+                *ngIf="currentEmployee !== null && selectedEmployeeLeaveTypeList.length"
+                style="width: 100%; max-height: 300px; overflow-y: auto"
+            >
+                <div
+                    class="flexRow"
+                    *ngFor="let EmployeeLeaveType of selectedEmployeeLeaveTypeList"
+                    style="width: 100%; border-bottom: 1px solid rgba(0, 0, 0, 0.25); color: rgba(0, 0, 0, 0.5); padding-top: 5px"
+                >
                     <div class="flexRow" style="width: 100%; max-width: 600px; padding: 10px">
-                        <div class="flexRow" style="width: 30%; padding: 2px">{{EmployeeLeaveType.leaveTypeName}}</div>
-                        <div class="flexRow" style="width: 30%; padding: 2px">{{EmployeeLeaveType.leaveType}}</div>
+                        <div class="flexRow" style="width: 30%; padding: 2px">{{ EmployeeLeaveType.leaveTypeName }}</div>
+                        <div class="flexRow" style="width: 30%; padding: 2px">{{ EmployeeLeaveType.leaveType }}</div>
                         <div class="flexRow" style="width: 30%; padding: 2px">
-                            <div style="height: 25px; width: 25px; border: 1px solid black; border-radius: 5px;" [ngStyle]="{backgroundColor: EmployeeLeaveType.color}"></div>
+                            <div
+                                style="height: 25px; width: 25px; border: 1px solid black; border-radius: 5px"
+                                [ngStyle]="{ backgroundColor: EmployeeLeaveType.color }"
+                            ></div>
                         </div>
-                        <div class="flexRow material-icons-outlined" style="width: 10%; padding: 2px; color: red; cursor: pointer" (click)="serviceAdapter.deleteLeaveType(EmployeeLeaveType)">delete_forever</div>
+                        <div
+                            class="flexRow material-icons-outlined"
+                            style="width: 10%; padding: 2px; color: red; cursor: pointer"
+                            (click)="serviceAdapter.deleteLeaveType(EmployeeLeaveType)"
+                        >
+                            delete_forever
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="flexRow" *ngIf="currentEmployee !== null && !selectedEmployeeLeaveTypeList.length"
-                style="padding: 5px; justify-content: space-between; width: 100%">
+            <div
+                class="flexRow"
+                *ngIf="currentEmployee !== null && !selectedEmployeeLeaveTypeList.length"
+                style="padding: 5px; justify-content: space-between; width: 100%"
+            >
                 <div class="flexRow" style="flex-grow: 1; border-bottom: 1px solid rgba(0, 0, 0, 0.25); color: rgba(0, 0, 0, 0.5)">
                     <div class="flexRow" style="width: 100%; max-width: 600px; padding-top: 5px">
                         <div class="flexRow" style="flex-grow: 1; padding: 10px">No Leave Types available currently.</div>
@@ -105,30 +133,54 @@
             <!-- Ends :- Update Allowed Leave Types for this employee -->
 
             <!-- Starts :- Button to add / remove leave types selected employee -->
-            <div class="flexRow" *ngIf="currentEmployee !== null" style="padding-top: 16px; justify-content: space-between; width: 100%">
+            <div class="flexRow" *ngIf="currentEmployee !== null" style="padding-top: 16px; justify-content: space-between; width: 100%; margin-top: 30px">
                 <div class="flexRow" style="flex-grow: 1">
                     <div class="flexRow" style="flex-grow: 1">
-                        <button *ngIf="!isLeaveTypeChoiceVisible"
+                        <button
+                            *ngIf="!isLeaveTypeChoiceVisible"
                             (click)="isLeaveTypeChoiceVisible = true"
-                            style="height: 48px; padding-left: 30px; padding-right: 30px; border-radius: 5px; font-weight: 500;
-                                background-color: #FD9700; border: 1px solid rgba(0, 0, 0, 0.25); color: white; width: fit-content;
-                                display: flex; flex-direction: row; justify-content: space-evenly; height: 30px"
+                            style="
+                                height: 48px;
+                                padding: 25px 20px;
+                                border-radius: 5px;
+                                font-weight: 500;
+                                background-color: #fd9700;
+                                border: 1px solid rgba(0, 0, 0, 0.25);
+                                color: white;
+                                width: fit-content;
+                                display: flex;
+                                flex-direction: row;
+                                justify-content: space-evenly;
+                                height: 30px;
+                            "
                         >
-                            <span class="material-icons" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">add</span>
-                            <span style="height: 100%; display: flex; flex-direction: column; justify-content: center;">Add Leave Type</span>
+                            <span class="material-icons" style="height: 100%; display: flex; flex-direction: column; justify-content: center">add</span>
+                            <span style="height: 100%; display: flex; flex-direction: column; justify-content: center">Add Leave Type</span>
                         </button>
                         <mat-form-field appearance="fill" *ngIf="isLeaveTypeChoiceVisible" style="max-width: 400px; flex-grow: 1">
                             <mat-label>Select Leave Type</mat-label>
-                            <mat-select [(ngModel)]="currentEmployeeLeaveTypeList" multiple [disabled]="!employeeLeaveTypeChoiceList.length">
-                              <mat-option *ngFor="let leaveType of employeeLeaveTypeChoiceList" [value]="leaveType">
-                                {{leaveType.leaveTypeName}} ( {{leaveType.leaveType}} )
-                              </mat-option>
+                            <mat-select [(ngModel)]="currentLeaveTypeList" multiple [disabled]="!leaveTypeList.length">
+                                <mat-option *ngFor="let leaveType of leaveTypeList" [value]="leaveType">
+                                    {{ leaveType.leaveTypeName }} ( {{ leaveType.leaveType }} )
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <div (click)="serviceAdapter.saveLeaveTypes(); isLeaveTypeChoiceVisible = false" class="material-icons" *ngIf="isLeaveTypeChoiceVisible"
-                        style="height: 59px; padding: 5px; color: green; display: flex; flex-direction: column; justify-content: center; cursor: pointer;">check</div>
-                        <div (click)="currentEmployeeLeaveTypeList = selectedEmployeeLeaveTypeList; isLeaveTypeChoiceVisible = false;"class="material-icons" *ngIf="isLeaveTypeChoiceVisible"
-                        style="height: 59px; padding: 5px; color: red; display: flex; flex-direction: column; justify-content: center; cursor: pointer;">clear</div>
+                        <div
+                            (click)="serviceAdapter.saveLeaveTypes(); isLeaveTypeChoiceVisible = false"
+                            class="material-icons"
+                            *ngIf="isLeaveTypeChoiceVisible"
+                            style="height: 59px; padding: 5px; color: green; display: flex; flex-direction: column; justify-content: center; cursor: pointer"
+                        >
+                            check
+                        </div>
+                        <div
+                            (click)="currentLeaveTypeList = updateLeavePlanList(); isLeaveTypeChoiceVisible = false"
+                            class="material-icons"
+                            *ngIf="isLeaveTypeChoiceVisible"
+                            style="height: 59px; padding: 5px; color: red; display: flex; flex-direction: column; justify-content: center; cursor: pointer"
+                        >
+                            clear
+                        </div>
                     </div>
                 </div>
             </div>
