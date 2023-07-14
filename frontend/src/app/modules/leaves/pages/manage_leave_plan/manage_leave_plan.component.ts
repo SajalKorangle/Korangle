@@ -70,10 +70,12 @@ export class ManageLeavePlanComponent implements OnInit {
 
     // starts :- function to get current leave type list
     getCurrentLeaveTypeList(): Array<LeaveType> {
-        return this.leaveTypeList.filter(leaveType => this.selectedEmployeeLeaveTypeList.find(employeeLeaveType=> employeeLeaveType.parentLeaveType == leaveType.id));
+        return this.leaveTypeList.filter((leaveType) =>
+            this.selectedEmployeeLeaveTypeList.find((employeeLeaveType) => employeeLeaveType.parentLeaveType == leaveType.id)
+        );
     }
     // ends :- function to get current leave type list
-    
+
     // starts :- function to refresh data.
     async refreshEmployeeData(): Promise<void> {
         this.isLoading = true;

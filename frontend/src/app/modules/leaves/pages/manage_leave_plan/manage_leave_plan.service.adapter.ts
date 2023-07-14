@@ -126,7 +126,7 @@ export default class ManageLeavePlanServiceAdapter {
                         id: parentLeavePlanToEmployee ? parentLeavePlanToEmployee.id : -1,
                         parentEmployee: this.vm.currentEmployee.id, parentSchoolLeavePlan: this.vm.currentLeavePlan.id,
                         isCustomized: false, leavePlanName: this.vm.currentLeavePlan.leavePlanName,
-                    },],
+                    }, ],
             }, "leavePlanToEmployeeList");
         if (response) {
             alert("Leave-Plan updated successfully");
