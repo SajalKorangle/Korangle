@@ -46,7 +46,7 @@
             <div class="flexRow" *ngIf="currentEmployee !== null" style="padding-top: 20px; justify-content: space-between; width: 100%">
                 <div class="flexRow" style="flex-grow: 1">
                     <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 350px">
-                        <mat-label>Select LeavePlan</mat-label>
+                        <mat-label>Select Leave Plan</mat-label>
                         <mat-select [(ngModel)]="currentLeavePlan" [disabled]="leavePlanList.length === 0">
                             <mat-option *ngFor="let leavePlan of leavePlanList" [value]="leavePlan">
                                 {{ leavePlan.leavePlanName }} {{ isCustomized && activeLeavePlan == leavePlan ? "( Customized )" : "" }}
