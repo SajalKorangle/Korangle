@@ -15,6 +15,11 @@ const routes: Routes = [
         data: { moduleName: 'leaves' },
     },
     {
+        path: 'manage_leave_plan',
+        loadChildren: 'app/modules/leaves/pages/manage_leave_plan/manage_leave_plan.module#ManageLeavePlanModule',
+        data: { moduleName: 'leaves' },
+    },
+    {
         path: '',
         component: LeavesComponent,
     },

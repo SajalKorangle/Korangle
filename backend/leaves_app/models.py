@@ -125,13 +125,16 @@ class SchoolLeaveTypeMonth(models.Model):
 
 class SchoolLeavePlanToEmployee(models.Model):
     # Employee
-    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, default=0)
+    parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, default=0, unique=True)
     # School Leave plan
     parentSchoolLeavePlan = models.ForeignKey(SchoolLeavePlan, on_delete=models.CASCADE, default=0)
+    # Boolean for customized plan
+    isCustomized = models.BooleanField(default=False, null=False)
+    # Leave Plan Name
+    leavePlanName = models.TextField(null=False, verbose_name='leave_plan_name', default='invalid_plan')
 
     class Meta:
         db_table = 'school_leave_plan_employee'
-        unique_together = ('parentSchoolLeavePlan', 'parentEmployee')
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchoolLeavePlan__parentSchool__id']

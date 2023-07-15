@@ -22,7 +22,7 @@ export default class ManagePlanServiceAdapter {
                     filter: {
                         parentSchool: this.vm.user.activeSchool.dbId,
                     },
-                },
+                }
             ),
             this.vm.genericService.getObjectList(
                 { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
@@ -30,7 +30,7 @@ export default class ManagePlanServiceAdapter {
                     filter: {
                         parentSchoolLeavePlan__parentSchool__id: this.vm.user.activeSchool.dbId,
                     },
-                },
+                }
             ),
             this.vm.genericService.getObjectList(
                 { leaves_app: "SchoolLeaveType" },
@@ -38,7 +38,7 @@ export default class ManagePlanServiceAdapter {
                     filter: {
                         parentSchool: this.vm.user.activeSchool.dbId,
                     },
-                },
+                }
             ),
             this.vm.genericService.getObjectList(
                 { leaves_app: "SchoolLeavePlanToEmployee" },
@@ -46,7 +46,7 @@ export default class ManagePlanServiceAdapter {
                     filter: {
                         parentSchoolLeavePlan__parentSchool: this.vm.user.activeSchool.dbId,
                     },
-                },
+                }
             ),
             this.vm.genericService.getObjectList(
                 { employee_app: "Employee" },
@@ -54,7 +54,7 @@ export default class ManagePlanServiceAdapter {
                     filter: {
                         parentSchool: this.vm.user.activeSchool.dbId,
                     },
-                },
+                }
             ),
         ]);
         [this.vm.leavePlanList, this.vm.leavePlanToLeaveTypeList, this.vm.leaveTypeList, this.vm.leavePlanToEmployeeList, this.vm.employeeChoiceList] = [
@@ -105,7 +105,7 @@ export default class ManagePlanServiceAdapter {
         // starts :- Check if the current leave plan entered is valid or not.
         if (!data.leavePlanName.match(/[A-Za-z][A-Za-z0-9- ]*/g) || data.leavePlanName.match(/[A-Za-z][A-Za-z0-9- ]*/g).length !== 1) {
             return alert(
-                "Please Enter a valid Leave Plan Name. (start with lowercase / uppercase english alphabets and contains only alphabets, numbers, spaces and hyphens.)",
+                "Please Enter a valid Leave Plan Name. (start with lowercase / uppercase english alphabets and contains only alphabets, numbers, spaces and hyphens.)"
             );
         }
         // ends :- End of check for leave plan name.
@@ -119,13 +119,13 @@ export default class ManagePlanServiceAdapter {
         let addEmployeeChoiceList: Array<LeavePlanToEmployee> = [];
         let oldEmployeeChoiceList: Array<LeavePlanToEmployee> = [];
         // starts :- Create List for each leave type inside currentLeavePlan (leave types to be deleted and leave types to be added)
-        this.vm.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
+        this.vm.currentLeavePlan ? this.vm.leavePlanToLeaveTypeList.map((leavePlanToLeaveTypeItem) => {
             leavePlanToLeaveTypeItem.parentSchoolLeavePlan === this.vm.currentLeavePlan.id ? oldLeaveTypeChoiceList.push(leavePlanToLeaveTypeItem) : null;
-        });
+        }) : null;
         // create original array of employees associated to this leave plan
-        this.vm.leavePlanToEmployeeList.map((leavePlanToEmployee) => {
+        this.vm.currentLeavePlan ? this.vm.leavePlanToEmployeeList.map((leavePlanToEmployee) => {
             leavePlanToEmployee.parentSchoolLeavePlan === this.vm.currentLeavePlan.id ? oldEmployeeChoiceList.push(leavePlanToEmployee) : null;
-        });
+        }) : null;
         // create array of leave types to be removed
         oldLeaveTypeChoiceList.map((oldLeaveTypeChoice) => {
             let similarLeaveType = this.vm.appliedLeaveTypeChoiceList.find((leaveType) => {
@@ -139,23 +139,31 @@ export default class ManagePlanServiceAdapter {
             !similarEmployee ? removeEmployeeChoiceList.push(oldEmployeeChoice) : null;
         });
         // create array of leave types to be added
-        this.vm.appliedLeaveTypeChoiceList.map((leaveType) => {
+        this.vm.currentLeavePlan ? this.vm.appliedLeaveTypeChoiceList.map((leaveType) => {
             let similarLeaveType = oldLeaveTypeChoiceList.find((oldLeaveTypeChoice) => leaveType.id === oldLeaveTypeChoice.parentSchoolLeaveType);
             !similarLeaveType
                 ? addLeaveTypeChoiceList.push({ id: -1, parentSchoolLeavePlan: this.vm.currentLeavePlan.id, parentSchoolLeaveType: leaveType.id })
                 : null;
-        });
+        }) : null;
         // create array of employees to be added
-        this.vm.appliedEmployeeChoiceList.map((employee) => {
+        this.vm.currentLeavePlan ? this.vm.appliedEmployeeChoiceList.map((employee) => {
             let similarEmployee = oldEmployeeChoiceList.find((oldEmployeeChoice) => oldEmployeeChoice.parentEmployee === employee.id);
-            !similarEmployee ? addEmployeeChoiceList.push({ id: -1, parentSchoolLeavePlan: this.vm.currentLeavePlan.id, parentEmployee: employee.id }) : null;
-        });
+            !similarEmployee
+                ? addEmployeeChoiceList.push({
+                      id: -1,
+                      parentSchoolLeavePlan: this.vm.currentLeavePlan.id,
+                      parentEmployee: employee.id,
+                      isCustomized: false,
+                      leavePlanName: this.vm.currentLeavePlan.leavePlanName,
+                  })
+                : null;
+        }) : null;
         if (
             await this.compareAndAlert(
                 "leavePlanList",
                 { leaves_app: "SchoolLeavePlan" },
                 (data1, data2) => (data2.id != data1.id && data1.leavePlanName.toLowerCase() === data2.leavePlanName.toLowerCase() ? ["Leave Plan Name"] : []),
-                data,
+                data
             )
         ) {
             this.vm.isLoading = false;
@@ -176,7 +184,7 @@ export default class ManagePlanServiceAdapter {
         response = removeLeaveTypeChoiceList.length
             ? await this.vm.genericService.deleteObjectList(
                   { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
-                  { filter: { __or__: removeLeaveTypeChoiceList } },
+                  { filter: { __or__: removeLeaveTypeChoiceList } }
               )
             : true;
         if (!response) {
@@ -224,7 +232,7 @@ export default class ManagePlanServiceAdapter {
             let response = oldLeaveTypeChoiceList.length
                 ? await this.vm.genericService.deleteObjectList(
                       { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
-                      { filter: { __or__: oldLeaveTypeChoiceList } },
+                      { filter: { __or__: oldLeaveTypeChoiceList } }
                   )
                 : true;
             if (response) {
