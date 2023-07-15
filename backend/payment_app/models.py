@@ -14,7 +14,7 @@ class SchoolMerchantAccount(models.Model):
     )
     parentSchool = models.ForeignKey(School, unique=True, on_delete=models.CASCADE, related_name='SchoolMerchantAccountList')
     vendorId = models.CharField(max_length=20, unique=True)
-    easebuzzBankLabel = models.CharField(max_length=20, default="", blank=True)
+    easebuzzBankLabel = models.CharField(max_length=50, default="", blank=True)
     isEnabled = models.BooleanField(default=True)
     platformFeeOnSchoolType = models.CharField(max_length=15, choices=platformFeeTypes, default="Percentage")
     percentageOfPlatformFeeOnSchool = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
