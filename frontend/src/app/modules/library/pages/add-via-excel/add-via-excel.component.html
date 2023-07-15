@@ -1,3 +1,131 @@
-<div class="card-content">
-    Under Construction !!!
+<div class="card-content" *ngIf="!isLoading && !checkMobile()">
+    <div
+        style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center"
+    >
+        <input
+            type="file"
+            multiple="false"
+            accept=".csv"
+            (change)="handleExcelFile($event)"
+            (click)="clearData($event)"
+            style="display: block; font-size: 1.6rem"
+        />
+        <button
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="margin-left: auto"
+            (click)="downloadTemplate()"
+        >
+            Download Template
+        </button>
+    </div>
+    <p *ngIf="!hasFileSelected">Download template or Upload and map table headers to existing parameters. </p>
+    <div
+        style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between"
+        *ngIf="hasFileSelected"
+    >
+        <div>
+            <p style="display: inline-block">
+                Mapped {{ getTotalMappedParameters() }} of {{ mappedParameter.length }} Columns,
+                {{ mappedParameter.length - getTotalMappedParameters() }} unmapped parameters left blank.
+            </p>
+            <p style="margin-left: 3rem; color: #6f6f6f">
+                <em> Suggested Date Formats are: dd/mm/yyyy and dd-mm-yyyy </em>
+            </p>
+            <p style="margin-left: 3rem; color: #6f6f6f">
+                <em> Displaying {{ getVisibleRowCount() }} books out of {{ bookList.length }} </em>
+            </p>
+            <p style="display: flex; align-items: center; flex-direction: row; flex-wrap: wrap; color: #6f6f6f">
+                <span
+                    style="
+                        display: inline-block;
+                        height: 2rem;
+                        width: 2rem;
+                        margin-right: 1rem;
+                        background-color: #ff8585;
+                    "
+                ></span>
+                <em> {{ errorCount }} cells with errors</em>
+            </p>
+        </div>
+        <mat-form-field>
+            <mat-label>Filter Rows</mat-label>
+            <mat-select [(ngModel)]="filterType">
+                <mat-option value="all">All Rows</mat-option>
+                <mat-option value="errors">Rows with errors</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <cdk-virtual-scroll-viewport
+        itemSize="0"
+        style="height: calc(70vh - 15rem); width: 100%; margin-top: 1rem"
+        *ngIf="hasFileSelected"
+    >
+        <table class="table">
+            <thead style="color: #a30000">
+                <tr>
+                    <th scope="col" style="font-weight: bold; border-width: 2px" *ngFor="let header of columnHeader">
+                        {{ header }}
+                    </th>
+                </tr>
+                <tr>
+                    <th scope="col" style="border-width: 2px" *ngFor="let header of columnHeader; index as i">
+                        <mat-select
+                            [(ngModel)]="mappedParameter[i]"
+                            (ngModelChange)="handleParameterSelection($event, i)"
+                        >
+                            <mat-option *ngFor="let option of getAvailableParameters(i)" [value]="option">
+                                {{ option.name + (option.required ? " *" : "") }}
+                            </mat-option>
+                        </mat-select>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let row of bookList; index as rc">
+                    <tr *ngIf="isRowVisible(rc)">
+                        <td *ngFor="let header of columnHeader; index as i" [class.bgDanger]="errorCells[rc + ' ' + i]">
+                            {{ row[i] }}
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </cdk-virtual-scroll-viewport>
 </div>
+
+<div
+    style="
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding-inline: 1rem;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 1rem;
+        border-top: 1px solid #c4c4c4;
+        background-color: #ffffff;
+    "
+    *ngIf="!isLoading && hasFileSelected"
+>
+    <p *ngIf="!hasRequiredColumns">Please map the required parameters.</p>
+    <p *ngIf="hasRequiredColumns && errorCount > 0">{{ errorCount }} cells with errors, rectify before uploading</p>
+    <button
+        class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+        (click)="addBookList()"
+        [disabled]="!hasRequiredColumns || errorCount > 0"
+    >
+        Upload
+    </button>
+</div>
+
+<div *ngIf="checkMobile()" style="padding: 1.5rem">
+    <p><em>Only available for Desktops</em></p>
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
