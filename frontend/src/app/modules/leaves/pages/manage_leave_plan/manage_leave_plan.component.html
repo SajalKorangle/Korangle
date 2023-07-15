@@ -126,7 +126,9 @@
             >
                 <div class="flexRow" style="flex-grow: 1; border-bottom: 1px solid rgba(0, 0, 0, 0.25); color: rgba(0, 0, 0, 0.5)">
                     <div class="flexRow" style="width: 100%; max-width: 600px; padding-top: 5px">
-                        <div class="flexRow" style="flex-grow: 1; padding: 10px">No Leave Types available currently.</div>
+                        <div class="flexRow" style="flex-grow: 1; padding: 10px">
+                            {{ activeLeavePlan ? "No Leave Types available currently." : "Please Select Leave Plan." }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -139,20 +141,22 @@
                         <button
                             *ngIf="!isLeaveTypeChoiceVisible"
                             (click)="isLeaveTypeChoiceVisible = true"
+                            [disabled]="activeLeavePlan"
                             style="
                                 height: 48px;
                                 padding: 25px 20px;
                                 border-radius: 5px;
                                 font-weight: 500;
-                                background-color: #fd9700;
                                 border: 1px solid rgba(0, 0, 0, 0.25);
-                                color: white;
                                 width: fit-content;
                                 display: flex;
                                 flex-direction: row;
                                 justify-content: space-evenly;
                                 height: 30px;
                             "
+                            [matTooltip]="activeLeavePlan ? 'Add / Remove Leave Types' : 'Please Select Leave Plan'"
+                            [matTooltipPosition]="above"
+                            [ngStyle]="{ backgroundColor: activeLeavePlan ? '#fd9700' : 'rgba(27, 27, 27, 0.1)', color: activeLeavePlan ? 'white' : 'black' }"
                         >
                             <span class="material-icons" style="height: 100%; display: flex; flex-direction: column; justify-content: center">add</span>
                             <span style="height: 100%; display: flex; flex-direction: column; justify-content: center">Add Leave Type</span>
