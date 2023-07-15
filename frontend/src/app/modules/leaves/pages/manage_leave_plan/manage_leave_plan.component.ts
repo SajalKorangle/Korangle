@@ -15,7 +15,7 @@ export class ManageLeavePlanComponent implements OnInit {
     isLoading: boolean = false;
     serviceAdapter: ManageLeavePlanServiceAdapter = new ManageLeavePlanServiceAdapter();
     constructor(public genericService: GenericService) {}
-    ngOnInit(): Promise<void> {
+    ngOnInit() {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
     }
