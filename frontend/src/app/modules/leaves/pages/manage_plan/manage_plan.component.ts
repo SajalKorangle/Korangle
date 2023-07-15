@@ -136,7 +136,9 @@ export class ManagePlanComponent implements OnInit {
             !this.doesEmployeeBelongToOtherLeavePlan(employee, this.currentLeavePlan.id)
                 ? this.filteredEmployeeChoiceList.push(employee)
                 : null;
-            !this.currentEmployeeChoiceList.includes(employee) ? temporaryEmployeeChoiceList.push(employee) : null;
+            !this.currentEmployeeChoiceList.includes(employee) && !this.doesEmployeeBelongToOtherLeavePlan(employee, this.currentLeavePlan.id)
+                ? temporaryEmployeeChoiceList.push(employee)
+                : null;
         });
         if (this.filteredEmployeeChoiceList.length == 0) {
             this.filteredEmployeeChoiceList = temporaryEmployeeChoiceList;
