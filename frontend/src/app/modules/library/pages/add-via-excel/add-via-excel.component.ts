@@ -370,6 +370,7 @@ export class AddViaExcelComponent implements OnInit {
             let res = await this.serviceAdapter.uploadBooks();
             if (res) {
                 this.clearData(null);
+                this.serviceAdapter.initializeData();
                 alert("Books added successfully!");
             }
         }
