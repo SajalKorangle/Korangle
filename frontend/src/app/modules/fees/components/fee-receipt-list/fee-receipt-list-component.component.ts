@@ -65,6 +65,7 @@ export class FeeReceiptListComponent implements OnInit {
             employeeList: this.employeeList,
             boardList: this.boardList,
             sessionList: this.sessionList,
+            feeReceiptBookList: this.feeReceiptBookList,
             printSingleReceipt: this.printSingleReceipt
         };
 

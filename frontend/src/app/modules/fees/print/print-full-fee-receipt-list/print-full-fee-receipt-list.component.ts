@@ -23,6 +23,7 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
     sectionList: any;
     employeeList: any;
     boardList: any;
+    feeReceiptBookList: any;
 
     checkView = false;
 
@@ -46,6 +47,7 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
         this.boardList = value['boardList'];
         this.sessionList = value['sessionList'];
         this.checkView = true;
+        this.feeReceiptBookList = value['feeReceiptBookList'];
         this.printSingleReceipt = value['printSingleReceipt'];
     }
 
@@ -157,34 +159,10 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
         return numberOfRows;
     }
 
-    /*getMonthRange(subFeeReceipt: any): string {
-        if (subFeeReceipt.frequency === FREQUENCY_LIST[0]) {
-            return '';
-        } else if (subFeeReceipt.frequency === FREQUENCY_LIST[1]) {
-            let startingMonth = '', endingMonth = '';
-            subFeeReceipt['monthList'].forEach( month => {
-                if (month.amount > 0) {
-                    if (startingMonth === '') {
-                        startingMonth = month['month'];
-                        endingMonth = month['month'];
-                    } else {
-                        endingMonth = month['month'];
-                    }
-                }
-            });
-            if (startingMonth === endingMonth) {
-                return this.getMonthAbbreviation(startingMonth);
-            } else {
-                return this.getMonthAbbreviation(startingMonth) + ' - ' + this.getMonthAbbreviation(endingMonth);
-            }
-        }
+    getFeeReceiptNo(feeReceipt: any): any {
+        return this.feeReceiptBookList.find(feeReceiptBook => {
+            return feeReceiptBook.id == feeReceipt.parentFeeReceiptBook;
+        }).receiptNumberPrefix + feeReceipt.receiptNumber;
     }
 
-    getMonthAbbreviation(monthName: string): string {
-        if (monthName.length === 3) {
-            return monthName;
-        } else {
-            return monthName.substr(0,3) + '.';
-        }
-    }*/
 }
