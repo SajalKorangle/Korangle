@@ -1,4 +1,9 @@
-<div class="card-content">
+<div class="card-content" *ngIf="!selectedFeeReceiptBook">
+    <div class="col-sm-12">
+        Please activate at least one receipt book from 'Add Receipt Book' page!!!
+    </div>
+</div>
+<div class="card-content" *ngIf="selectedFeeReceiptBook">
     <div class="row main-row">
         <div [hidden]="searchBy == searchFilterList[0]" class="col-md-7">
             <parent-student-filter
@@ -10,7 +15,16 @@
                 [studentTcGenerated]="false"
             ></parent-student-filter>
         </div>
-        <div *ngIf="searchBy == searchFilterList[0]" class="col-md-5">
+        <div *ngIf="searchBy == searchFilterList[0]" class="col-md-2">
+            <mat-form-field style="width: 100%">
+                <mat-select placeholder="Select Receipt Book" [(ngModel)]="selectedFeeReceiptBook">
+                    <mat-option *ngFor="let feeReceiptBook of feeReceiptBookList" [value]="feeReceiptBook">
+                        {{ feeReceiptBook.name }} ({{ feeReceiptBook.receiptNumberPrefix }})
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div *ngIf="searchBy == searchFilterList[0]" class="col-md-3">
             <mat-form-field style="width: 100%">
                 <input
                     matInput
@@ -89,7 +103,7 @@
                             <div class="row">
                                 <div class="col-sm-2 col-xs-6">Receipt No. :</div>
                                 <div class="col-sm-2 col-xs-6">
-                                    {{ feeReceipt.receiptNumber }}
+                                    {{ getFeeReceiptNo(feeReceipt) }}
                                 </div>
                             </div>
 
@@ -163,7 +177,7 @@
                 </mat-accordion>
             </ng-container>
 
-            <ng-template #emptyFeeReceiptList> No Receipt Found </ng-template>
+            <ng-template #emptyFeeReceiptList> No Receipt Found in any active fee receipt books </ng-template>
         </ng-container>
     </ng-container>
 

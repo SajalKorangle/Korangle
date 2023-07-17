@@ -186,6 +186,7 @@ export class FeeReceiptListComponent implements OnInit {
                     this.getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession),
                 fathersName: this.getStudent(feeReceipt.parentStudent).fathersName,
                 collectedBy: this.getEmployeeName(feeReceipt.parentEmployee),
+                feeReceiptBookList: this.feeReceiptBookList,
             },
         });
 

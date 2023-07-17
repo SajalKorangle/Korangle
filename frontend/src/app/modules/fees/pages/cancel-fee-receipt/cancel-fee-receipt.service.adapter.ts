@@ -1,4 +1,5 @@
 import { CancelFeeReceiptComponent } from './cancel-fee-receipt.component';
+import { Query } from '@services/generic/query';
 
 export class CancelFeeReceiptServiceAdapter {
     vm: CancelFeeReceiptComponent;
@@ -20,14 +21,17 @@ export class CancelFeeReceiptServiceAdapter {
         };
 
         Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 0
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), // 1
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list), // 2
+            new Query().filter({parentSchool: this.vm.user.activeSchool.dbId}).getObjectList({fees_third_app: 'FeeReceiptBook'}), // 3
         ]).then(
             (value) => {
                 this.vm.classList = value[0];
                 this.vm.sectionList = value[1];
                 this.vm.employeeList = value[2];
+                this.vm.feeReceiptBookList = value[3];
+                this.vm.selectedFeeReceiptBook = this.vm.feeReceiptBookList.find(feeReceiptBook => feeReceiptBook.active);
                 this.vm.searchBy = this.vm.searchFilterList[0];
 
                 this.vm.isLoading = false;
@@ -76,22 +80,15 @@ export class CancelFeeReceiptServiceAdapter {
 
     fetchReceiptsOfCount() {
         let fee_receipt_list = {};
-        let sub_fee_receipt_list = {};
 
         if (this.vm.searchBy === this.vm.searchFilterList[0]) {
             //if cheque or receipt no search
             fee_receipt_list = {
                 parentSchool: this.vm.user.activeSchool.dbId,
+                parentFeeReceiptBook: this.vm.selectedFeeReceiptBook.id,
                 receiptNumber__or: this.vm.searchParameter,
                 chequeNumber: this.vm.searchParameter,
                 korangle__order: '-generationDateTime',
-                korangle__count: this.vm.receiptCount.toString() + ',' + (this.vm.receiptCount + this.vm.loadingCount).toString(),
-            };
-            sub_fee_receipt_list = {
-                parentFeeReceipt__parentSchool: this.vm.user.activeSchool.dbId,
-                parentFeeReceipt__receiptNumber__or: this.vm.searchParameter,
-                parentFeeReceipt__chequeNumber: this.vm.searchParameter,
-                korangle__order: '-parentFeeReceipt__generationDateTime',
                 korangle__count: this.vm.receiptCount.toString() + ',' + (this.vm.receiptCount + this.vm.loadingCount).toString(),
             };
         } else {
@@ -99,14 +96,9 @@ export class CancelFeeReceiptServiceAdapter {
             let studentListId = this.vm.selectedStudentList.map((a) => a.id).join();
             fee_receipt_list = {
                 parentSchool: this.vm.user.activeSchool.dbId,
+                parentFeeReceiptBook__active: 'true__boolean',
                 parentStudent__in: studentListId,
                 korangle__order: '-generationDateTime',
-                korangle__count: this.vm.receiptCount.toString() + ',' + (this.vm.receiptCount + this.vm.loadingCount).toString(),
-            };
-            sub_fee_receipt_list = {
-                parentFeeReceipt__parentSchool: this.vm.user.activeSchool.dbId,
-                parentFeeReceipt__parentStudent__in: studentListId,
-                korangle__order: '-parentFeeReceipt__generationDateTime',
                 korangle__count: this.vm.receiptCount.toString() + ',' + (this.vm.receiptCount + this.vm.loadingCount).toString(),
             };
         }
@@ -115,7 +107,6 @@ export class CancelFeeReceiptServiceAdapter {
             this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list), //0
         ]).then(
             (value) => {
-                console.log(value);
                 this.vm.receiptCount += value[0].length; // incrementing receipt count
 
                 if (value[0].length < this.vm.loadingCount) {
@@ -189,7 +180,6 @@ export class CancelFeeReceiptServiceAdapter {
                         if (service_list.length > 0) {
                             Promise.all(service_list).then(
                                 (value2) => {
-                                    console.log(value2);
 
                                     if (student_list.id__in.length != 0) {
                                         this.vm.studentList = this.vm.studentList.concat(value2[0]);

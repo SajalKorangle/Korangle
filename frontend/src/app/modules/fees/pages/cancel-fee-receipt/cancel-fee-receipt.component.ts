@@ -27,6 +27,7 @@ export class CancelFeeReceiptComponent implements OnInit {
     searchParameter: any;
 
     feeReceiptList: any;
+    feeReceiptBookList: any;
     subFeeReceiptList = [];
     studentList = [];
     studentSectionList = [];
@@ -42,6 +43,7 @@ export class CancelFeeReceiptComponent implements OnInit {
 
     serviceAdapter: CancelFeeReceiptServiceAdapter;
 
+    selectedFeeReceiptBook: any;
     receiptCount = 0;
     loadingCount = 6;
     isLoading = false;
@@ -179,6 +181,7 @@ export class CancelFeeReceiptComponent implements OnInit {
                     this.getSectionName(feeReceipt.parentStudent, feeReceipt.parentSession),
                 fathersName: this.getStudent(feeReceipt).fathersName,
                 collectedBy: this.getEmployeeName(feeReceipt),
+                feeReceiptBookList: this.feeReceiptBookList,
             },
         });
 
@@ -187,6 +190,12 @@ export class CancelFeeReceiptComponent implements OnInit {
                 this.serviceAdapter.cancelFeeReceipt(feeReceipt);
             }
         });
+    }
+
+    getFeeReceiptNo(feeReceipt: any): any {
+        return this.feeReceiptBookList.find(feeReceiptBook => {
+            return feeReceiptBook.id == feeReceipt.parentFeeReceiptBook;
+        }).receiptNumberPrefix + feeReceipt.receiptNumber;
     }
 
     isMobile(): boolean {
