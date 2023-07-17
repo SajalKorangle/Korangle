@@ -188,6 +188,8 @@
                                         <mat-option *ngFor="let employee of filteredEmployeeChoiceList" [value]="employee">
                                             {{ employee.name }}
                                         </mat-option>
+                                        <mat-option value="null" style="display: none;"></mat-option>
+                                        <div *ngIf="filteredEmployeeChoiceList.length === 0" style="text-align: center; width: 100%; padding: 10px" id="noEmployeeMessage"> No Employee found. </div>
                                     </mat-select>
                                 </mat-form-field>
 

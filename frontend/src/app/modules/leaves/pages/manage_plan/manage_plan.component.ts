@@ -140,9 +140,6 @@ export class ManagePlanComponent implements OnInit {
                 ? temporaryEmployeeChoiceList.push(employee)
                 : null;
         });
-        if (this.filteredEmployeeChoiceList.length == 0) {
-            this.filteredEmployeeChoiceList = temporaryEmployeeChoiceList;
-        }
     }
     // ends :- update employee choices
 

@@ -140,7 +140,7 @@ export default class ManageLeavePlanServiceAdapter {
     async saveLeaveTypes(): Promise<void> {
         if (
             this.vm.currentLeavePlan !== null &&
-            confirm("Do you want to update the leave types? (This operation might alter this plan to customized / stock for the selected employee)")
+            confirm("Do you want to update the leave plan? (This operation might alter this leave plan to customized / stock for the selected employee)")
         ) {
             this.vm.isLoading = true;
             let insertList = this.vm.currentLeaveTypeList
@@ -157,20 +157,20 @@ export default class ManageLeavePlanServiceAdapter {
             );
             // prettier-ignore
             let response = insertList.length
-                ? this.handleDataChange({
+                ? await this.handleDataChange({
                         check: null, data: insertList, operation: "insertBatch",
                         database: { leaves_app: "EmployeeLeaveType" },
                     }, null) : true;
             if (response) {
                 // prettier-ignore
                 response = deleteList.length
-                    ? this.handleDataChange({
+                    ? await this.handleDataChange({
                             check: null, data: deleteList, operation: "deleteBatch",
                             database: { leaves_app: "EmployeeLeaveType" },
                         }, null ) : true;
-                response ? alert("Leave Types updated successfully") : alert("Failed to update Leave Types.");
+                response ? alert("Leave Plan updated successfully") : alert("Failed to update Leave Plan.");
             } else {
-                alert("Failed to update Leave Types.");
+                alert("Failed to update Leave Plan.");
             }
             this.vm.isLoading = false;
         }
