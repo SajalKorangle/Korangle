@@ -35,7 +35,7 @@
                         <button
                             type="submit"
                             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                            [disabled]="isFeeReceiptBookUpdateDisabled(feeReceiptBook)"
+                            [disabled]="htmlRenderer.isFeeReceiptBookUpdateDisabled(feeReceiptBook)"
                             style="padding: 3px 8px"
                             (click)="serviceAdapter.updateFeeReceiptBook(feeReceiptBook)"
                         >
@@ -58,7 +58,7 @@
                         <input type="text" placeholder="Type name here ...." [(ngModel)]="feeReceiptBookNameToBeAdded" />
                     </td>
                     <td>
-                        <input type="text" placeholder="Type receipt numebr prefix here ...." [(ngModel)]="feeReceiptBookReceiptNumberPrefixToBeAdded" />
+                        <input type="text" placeholder="Type receipt number prefix here ...." [(ngModel)]="feeReceiptBookReceiptNumberPrefixToBeAdded" />
                     </td>
                     <td>
                         <button
@@ -66,6 +66,7 @@
                             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                             style="padding: 3px 8px"
                             (click)="serviceAdapter.createFeeReceiptBook()"
+                            [disabled]="htmlRenderer.isAddButtonDisabled()"
                         >
                             Add
                         </button>

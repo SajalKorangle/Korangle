@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { AddReceiptBookServiceAdapter } from './add-receipt-book.service.adapter';
 import { DataStorage } from '../../../../classes/data-storage';
 import { GenericService } from '@services/generic/generic-service';
+import { AddReceiptBookHtmlRenderer } from './add-receipt-book.html.renderer';
 
 @Component({
     selector: 'add-receipt-book',
@@ -18,6 +19,7 @@ export class AddReceiptBookComponent implements OnInit {
     feeReceiptBookReceiptNumberPrefixToBeAdded = '';
 
     serviceAdapter: AddReceiptBookServiceAdapter;
+    htmlRenderer: AddReceiptBookHtmlRenderer;
 
     isLoading = false;
 
@@ -29,22 +31,13 @@ export class AddReceiptBookComponent implements OnInit {
         this.serviceAdapter = new AddReceiptBookServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new AddReceiptBookHtmlRenderer();
+        this.htmlRenderer.initializeAdapter(this);
     }
 
     detectChanges(): void {
         this.cdRef.detectChanges();
     }
 
-    isFeeReceiptBookUpdateDisabled(feeReceiptBook: any): boolean {
-        if (
-            (
-                feeReceiptBook.newName == feeReceiptBook.name &&
-                feeReceiptBook.newReceiptNumberPrefix == feeReceiptBook.receiptNumberPrefix &&
-                feeReceiptBook.newActive == feeReceiptBook.active
-            )
-            || feeReceiptBook.updating) {
-            return true;
-        }
-        return false;
-    }
 }

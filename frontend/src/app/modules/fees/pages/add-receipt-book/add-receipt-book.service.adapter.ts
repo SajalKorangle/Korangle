@@ -35,6 +35,7 @@ export class AddReceiptBookServiceAdapter {
     }
 
     async createFeeReceiptBook() {
+        this.vm.feeReceiptBookNameToBeAdded = this.vm.feeReceiptBookNameToBeAdded.trim();
         if (this.vm.feeReceiptBookNameToBeAdded === null || this.vm.feeReceiptBookNameToBeAdded == '') {
             alert('Name should be populated');
             return;
@@ -64,7 +65,6 @@ export class AddReceiptBookServiceAdapter {
 
         let value = await this.vm.genericService.createObject({fees_third_app: 'FeeReceiptBook'}, data);
 
-        console.log(value);
         this.addToFeeReceiptBookList(value);
         this.vm.feeReceiptBookNameToBeAdded = null;
         this.vm.feeReceiptBookReceiptNumberPrefixToBeAdded = null;
@@ -81,6 +81,9 @@ export class AddReceiptBookServiceAdapter {
 
     // Update fee receipt book
     async updateFeeReceiptBook(feeReceiptBook: any) {
+        
+        feeReceiptBook.newName = feeReceiptBook.newName.trim();
+
         if (feeReceiptBook.newName === null || feeReceiptBook.newName == '') {
             alert('Name should be populated');
             return;
