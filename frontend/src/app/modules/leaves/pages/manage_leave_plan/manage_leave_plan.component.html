@@ -141,7 +141,6 @@
                         <button
                             *ngIf="!isLeaveTypeChoiceVisible"
                             (click)="isLeaveTypeChoiceVisible = activeLeavePlan ? true : false"
-                            [disabled]="activeLeavePlan ? false : true"
                             style="
                                 outline: none;
                                 border-radius: 5px;
@@ -158,7 +157,7 @@
                                 cursor: activeLeavePlan ? 'pointer' : 'not-allowed'
                             }"
                             [matTooltip]="activeLeavePlan ? 'Add / Remove Leave Types' : 'Please select leave plan before adding leave type'"
-                            [matTooltipPosition]="above"
+                            matTooltipPosition="above"
                         >
                             <span class="material-icons" style="display: flex; flex-direction: column; justify-content: center; margin: 0px 5px">add</span>
                             <span style="height: 100%; display: flex; flex-direction: column; justify-content: center; margin: 0px 5px">Add Leave Type</span>
