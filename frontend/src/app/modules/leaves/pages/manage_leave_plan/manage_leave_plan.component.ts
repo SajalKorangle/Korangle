@@ -34,6 +34,7 @@ export class ManageLeavePlanComponent implements OnInit {
     // leaveTypes available for a specific employee
     employeeLeaveTypeList: Array<EmployeeLeaveType> = [];
     selectedEmployeeLeaveTypeList: Array<EmployeeLeaveType> = [];
+    temporaryEmployeeLeaveTypeList: Array<EmployeeLeaveType> = [];
     // leavePlan to leaveType
     leavePlanToLeaveTypeList: Array<LeavePlanToLeaveType> = [];
     // active Leave Plan
@@ -65,6 +66,7 @@ export class ManageLeavePlanComponent implements OnInit {
             (employeeLeaveType) => employeeLeaveType.parentEmployee == this.currentEmployee.id
         );
         this.currentLeaveTypeList = this.getCurrentLeaveTypeList();
+        this.prepareTemporaryLeavePlan();
     }
     // ends :- function to update leavePlanList for an employee
 
@@ -83,4 +85,22 @@ export class ManageLeavePlanComponent implements OnInit {
         this.updateLeavePlanList();
     }
     // ends :- function to refresh data.
+
+    // starts :- function to prepare a temporary leave types list
+    prepareTemporaryLeavePlan() {
+        this.temporaryEmployeeLeaveTypeList = this.leavePlanToLeaveTypeList
+        .filter(leavePlanToLeaveType => leavePlanToLeaveType.parentSchoolLeavePlan == this.currentLeavePlan.id)
+        .map(leavePlanToLeaveType => {
+            const similarLeaveType = this.leaveTypeList.find(leaveType => leaveType.id == leavePlanToLeaveType.parentSchoolLeaveType);
+            return {
+                id: -1,
+                color: similarLeaveType.color,
+                leaveType: similarLeaveType.leaveType,
+                parentEmployee: this.currentEmployee.id,
+                parentLeaveType: similarLeaveType.id,
+                leaveTypeName: similarLeaveType.leaveTypeName
+            };
+        });
+    }
+    // ends :- function to prepare a temporary leave types list
 }

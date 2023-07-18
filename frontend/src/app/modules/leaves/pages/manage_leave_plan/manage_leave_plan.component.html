@@ -47,7 +47,7 @@
                 <div class="flexRow" style="flex-grow: 1">
                     <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 350px">
                         <mat-label>Select Leave Plan</mat-label>
-                        <mat-select [(ngModel)]="currentLeavePlan" [disabled]="leavePlanList.length === 0">
+                        <mat-select [(ngModel)]="currentLeavePlan" (selectionChange)="prepareTemporaryLeavePlan()" [disabled]="leavePlanList.length === 0">
                             <mat-option *ngFor="let leavePlan of leavePlanList" [value]="leavePlan">
                                 {{ leavePlan.leavePlanName }} {{ isCustomized && activeLeavePlan == leavePlan ? "( Customized )" : "" }}
                             </mat-option>
@@ -92,7 +92,7 @@
             </div>
             <div
                 class="flexCol"
-                *ngIf="currentEmployee !== null && selectedEmployeeLeaveTypeList.length"
+                *ngIf="currentEmployee !== null && selectedEmployeeLeaveTypeList.length && activeLeavePlan == currentLeavePlan"
                 style="width: 100%; max-height: 300px; overflow-y: auto"
             >
                 <div
@@ -120,14 +120,43 @@
                 </div>
             </div>
             <div
+                class="flexCol"
+                *ngIf="currentEmployee !== null && activeLeavePlan != currentLeavePlan && temporaryEmployeeLeaveTypeList.length"
+                style="width: 100%; max-height: 300px; overflow-y: auto"
+            >
+                <div
+                    class="flexRow"
+                    *ngFor="let EmployeeLeaveType of temporaryEmployeeLeaveTypeList"
+                    style="width: 100%; border-bottom: 1px solid rgba(0, 0, 0, 0.25); color: rgba(0, 0, 0, 0.5); padding-top: 5px"
+                >
+                    <div class="flexRow" style="width: 100%; max-width: 600px; padding: 10px">
+                        <div class="flexRow" style="width: 30%; padding: 2px">{{ EmployeeLeaveType.leaveTypeName }}</div>
+                        <div class="flexRow" style="width: 30%; padding: 2px">{{ EmployeeLeaveType.leaveType }}</div>
+                        <div class="flexRow" style="width: 30%; padding: 2px">
+                            <div
+                                style="height: 25px; width: 25px; border: 1px solid black; border-radius: 5px"
+                                [ngStyle]="{ backgroundColor: EmployeeLeaveType.color }"
+                            ></div>
+                        </div>
+                        <div
+                            class="flexRow material-icons-outlined"
+                            style="width: 10%; padding: 2px; color: gray; cursor: pointer"
+                            matTooltip="View Only Mode (Apply the leavePlan to interact with this button)" matTooltipPosition="right"
+                        >
+                            delete_forever
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
                 class="flexRow"
-                *ngIf="currentEmployee !== null && !selectedEmployeeLeaveTypeList.length"
+                *ngIf="currentEmployee !== null && (!selectedEmployeeLeaveTypeList.length || !temporaryEmployeeLeaveTypeList.length) && (!selectedEmployeeLeaveTypeList.length && !temporaryEmployeeLeaveTypeList.length)"
                 style="padding: 5px; justify-content: space-between; width: 100%"
             >
                 <div class="flexRow" style="flex-grow: 1; border-bottom: 1px solid rgba(0, 0, 0, 0.25); color: rgba(0, 0, 0, 0.5)">
                     <div class="flexRow" style="width: 100%; max-width: 600px; padding-top: 5px">
                         <div class="flexRow" style="flex-grow: 1; padding: 10px">
-                            {{ activeLeavePlan ? "No Leave Types available currently." : "Please select a Leave Plan." }}
+                            {{ currentLeavePlan == null ? "Please select a leave plan to preview" : "No leave types in this leave plan" }}
                         </div>
                     </div>
                 </div>
@@ -140,7 +169,7 @@
                     <div class="flexRow" style="flex-grow: 1">
                         <button
                             *ngIf="!isLeaveTypeChoiceVisible"
-                            (click)="isLeaveTypeChoiceVisible = activeLeavePlan ? true : false"
+                            (click)="isLeaveTypeChoiceVisible = activeLeavePlan && currentLeavePlan == activeLeavePlan ? true : false"
                             style="
                                 outline: none;
                                 border-radius: 5px;
@@ -151,12 +180,12 @@
                                 width: fit-content;
                             "
                             [ngStyle]="{
-                                backgroundColor: activeLeavePlan ? '#fd9700' : '#ffffff',
-                                color: activeLeavePlan ? '#ffffff' : '#fd9700',
-                                border: activeLeavePlan ? '0.5px solid rgba(0, 0, 0, 0.33)' : '0.5px solid rgb(253, 151, 0)',
-                                cursor: activeLeavePlan ? 'pointer' : 'not-allowed'
+                                backgroundColor: activeLeavePlan && currentLeavePlan == activeLeavePlan ? '#fd9700' : '#ffffff',
+                                color: activeLeavePlan && currentLeavePlan == activeLeavePlan ? '#ffffff' : '#fd9700',
+                                border: activeLeavePlan && currentLeavePlan == activeLeavePlan ? '0.5px solid rgba(0, 0, 0, 0.33)' : '0.5px solid rgb(253, 151, 0)',
+                                cursor: activeLeavePlan && currentLeavePlan == activeLeavePlan ? 'pointer' : 'not-allowed'
                             }"
-                            [matTooltip]="activeLeavePlan ? 'Add / Remove Leave Types' : 'Please select leave plan before adding leave type'"
+                            [matTooltip]="activeLeavePlan && currentLeavePlan == activeLeavePlan ? 'Add / Remove Leave Types' : 'Please apply a leave plan before adding leave type'"
                             matTooltipPosition="above"
                         >
                             <span class="material-icons" style="display: flex; flex-direction: column; justify-content: center; margin: 0px 5px">add</span>

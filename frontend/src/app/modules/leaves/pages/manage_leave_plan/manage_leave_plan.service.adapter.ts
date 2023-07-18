@@ -49,10 +49,17 @@ export default class ManageLeavePlanServiceAdapter {
                     filter: { parentSchool: this.vm.user.activeSchool.dbId },
                 }
             ),
+            this.vm.genericService.getObjectList(
+                { leaves_app: "SchoolLeavePlanToSchoolLeaveType" },
+                {
+                    filter: { parentSchoolLeavePlan__parentSchool: this.vm.user.activeSchool.dbId },
+                }
+            ),
         ]);
         // prettier-ignore
-        [this.vm.employeeChoiceList, this.vm.leavePlanToEmployeeList, this.vm.leavePlanList, this.vm.employeeLeaveTypeList, this.vm.leaveTypeList] = [
-            results[0], results[1], results[2], results[3], results[4],
+        [this.vm.employeeChoiceList, this.vm.leavePlanToEmployeeList, this.vm.leavePlanList,
+            this.vm.employeeLeaveTypeList, this.vm.leaveTypeList, this.vm.leavePlanToLeaveTypeList] = [
+            results[0], results[1], results[2], results[3], results[4], results[5]
         ];
         this.vm.employeeChoiceList.sort((a, b) => a.name.localeCompare(b.name));
         this.vm.filteredEmployeeChoiceList = this.vm.employeeChoiceList;

@@ -6,7 +6,7 @@ export interface LeaveTypeMonth {
 }
 // prettier-ignore
 export interface LeaveType {
-    leaveTypeName: string; leaveType: string; parentSchool: string;
+    leaveTypeName: string; leaveType: "Paid" | "Unpaid" | "None"; parentSchool: string;
     color: string; id: number;
 }
 // prettier-ignore
@@ -25,5 +25,5 @@ export interface LeavePlanToEmployee {
 // prettier-ignore
 export interface EmployeeLeaveType {
     id: number; parentEmployee: number; parentLeaveType: number;
-    leaveTypeName: string; leaveType: "Paid" | "Unpaid"; color: string;
+    leaveTypeName: string; leaveType: "Paid" | "Unpaid" | "None"; color: string;
 }
