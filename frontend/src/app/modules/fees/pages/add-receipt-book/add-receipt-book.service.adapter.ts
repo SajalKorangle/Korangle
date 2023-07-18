@@ -81,7 +81,7 @@ export class AddReceiptBookServiceAdapter {
 
     // Update fee receipt book
     async updateFeeReceiptBook(feeReceiptBook: any) {
-        
+
         feeReceiptBook.newName = feeReceiptBook.newName.trim();
 
         if (feeReceiptBook.newName === null || feeReceiptBook.newName == '') {
