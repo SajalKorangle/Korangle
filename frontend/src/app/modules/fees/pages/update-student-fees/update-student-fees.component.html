@@ -54,16 +54,16 @@
                                         {{ newStudentFee[installment + 'Amount'] }}
                                     </td>
                                     <td>
-                                        {{ newStudentFee[installment + 'LastDate'] | date: 'dd - MMM - yyyy' }}
+                                        {{ (newStudentFee[installment + 'LastDate'] != null) ? (newStudentFee[installment + 'LastDate'] | date: 'dd - MMM - yyyy') : "-" }}
                                     </td>
                                     <td>
-                                        {{ newStudentFee[installment + 'LateFee'] }}
+                                        {{ newStudentFee[installment + 'LateFee'] || "-" }}
                                     </td>
                                     <td>
-                                        {{ newStudentFee[installment + 'MaximumLateFee'] }}
+                                        {{ newStudentFee[installment + 'MaximumLateFee'] || "-" }}
                                     </td>
                                     <td>
-                                        {{ newStudentFee[installment + 'ClearanceDate'] | date: 'dd - MMM - yyyy' }}
+                                        {{ (newStudentFee[installment + 'ClearanceDate'] != null) ? (newStudentFee[installment + 'ClearanceDate'] | date: 'dd - MMM - yyyy') : "-" }}
                                     </td>
                                 </tr>
                                 <tr *ngIf="!disableNewStudentFeeInstallmentChange(installment)">
@@ -139,10 +139,12 @@
                     <table class="table table-hover">
                         <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                             <tr>
+                                <th>Installment</th>
                                 <th>Amount</th>
                                 <th>Last Date</th>
                                 <th>Late Fee per day</th>
                                 <th>Max. Late Fee</th>
+                                <th>Subimission Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -152,16 +154,16 @@
                                     {{ newStudentFee['aprilAmount'] }}
                                 </td>
                                 <td>
-                                    {{ newStudentFee['aprilLastDate'] | date: 'dd - MMM - yyyy' }}
+                                    {{ (newStudentFee['aprilLastDate'] != null) ? (newStudentFee['aprilLastDate'] | date: 'dd - MMM - yyyy') : "-" }}
                                 </td>
                                 <td>
-                                    {{ newStudentFee['aprilLateFee'] }}
+                                    {{ newStudentFee['aprilLateFee'] || "-" }}
                                 </td>
                                 <td>
-                                    {{ newStudentFee['aprilMaximumLateFee'] }}
+                                    {{ newStudentFee['aprilMaximumLateFee'] || "-" }}
                                 </td>
                                 <td>
-                                    {{ newStudentFee['aprilClearanceDate'] | date: 'dd - MMM - yyyy' }}
+                                    {{ (newStudentFee['aprilClearanceDate'] != null) ? (newStudentFee['aprilClearanceDate'] | date: 'dd - MMM - yyyy') : "-" }}
                                 </td>
                             </tr>
                             <tr *ngIf="!disableNewStudentFeeInstallmentChange('april')">
@@ -286,6 +288,30 @@
                                         "
                                     >
                                         {{ i + 1 }}. {{ getBusStopName(busStopFilterFee.parentBusStop) }}<br />
+                                    </ng-container>
+                                    <br />
+                                </div>
+
+                                <!-- Custom Filter -->
+                                <div class="col-md-6" *ngIf="schoolFeeRule.customfilterfee.length > 0">
+                                    Custom Filters :-
+                                    <br/>
+                                    <ng-container
+                                        *ngFor="
+                                            let customFilterFee of schoolFeeRule.customfilterfee;
+                                            let i = index
+                                        "
+                                    >
+                                        {{ i + 1 }}. {{ getStudentParameterName(customFilterFee.parentStudentParameter) }}<br />
+                                            <ul class="custom-filter-values"
+                                            *ngFor="
+                                                let value of customFilterFee.selectedFilterValues;
+                                            "
+                                        >
+                                            <li>
+                                                {{ value }}
+                                            </li>
+                                        </ul>
                                     </ng-container>
                                     <br />
                                 </div>

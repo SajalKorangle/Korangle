@@ -11,6 +11,7 @@ import { StudentService } from '@services/modules/student/student.service';
 import { ClassService } from '@services/modules/class/class.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import {TCService} from '@services/modules/tc/tc.service';
+import { GenericService } from '@services/generic/generic-service';
 
 @Component({
     selector: 'block-student',
@@ -20,7 +21,8 @@ import {TCService} from '@services/modules/tc/tc.service';
         StudentService,
         ClassService,
         OnlineClassService,
-        TCService
+        TCService,
+        GenericService,
     ],
 })
 
@@ -41,7 +43,8 @@ export class BlockStudentComponent implements OnInit {
         public studentService: StudentService,
         public classService: ClassService,
         public onlineClassService: OnlineClassService,
-        public tcService: TCService
+        public tcService: TCService,
+        public genericService: GenericService,
     ) { }
 
     ngOnInit(): void {

@@ -70,8 +70,10 @@ export class RecordAttendanceServiceAdapter {
             division_permission_list = value[2].map(div => div.id);
         } else {
             value[1].forEach((element) => {
-                class_permission_list.push(element.parentClass);
-                division_permission_list.push(element.parentDivision);
+                class_permission_list.push(element.id);
+            });
+            value[2].forEach((element) => {
+                division_permission_list.push(element.id);
             });
         }
         // ------------------- Fetching Valid Student Data Starts ---------------------
@@ -168,16 +170,20 @@ export class RecordAttendanceServiceAdapter {
                     dbId: studentDetails.id,
                     scholarNumber: studentDetails.scholarNumber,
                     mobileNumber: studentDetails.mobileNumber,
+                    rollNumber: studentSection.rollNumber
                 };
                 this.vm.classSectionStudentList[classIndex].sectionList[divisionIndex].studentList.push(tempData);
             }
         });
         // ------------------- Populating  classSectionStudentList Ends ---------------------
 
-        // ------------------- Sorting Students with names (A-Z), Sections and Classes with DbId Starts ---------------------
+        // ------------------- Sorting Students with Roll Number, names (A-Z), Sections and Classes with DbId Starts ---------------------
         this.vm.classSectionStudentList.forEach((classs) => {
             classs.sectionList.forEach((section) => {
                 section.studentList.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+
+                section.studentList.sort((a, b) =>
+                (a.rollNumber || a.name.toUpperCase()).localeCompare((b.rollNumber || b.name.toUpperCase()), 'en', { numeric: true }));
             });
             classs.sectionList.sort((a, b) => (a.dbId < b.dbId ? -1 : a.dbId > b.dbId ? 1 : 0));
         });
@@ -186,7 +192,7 @@ export class RecordAttendanceServiceAdapter {
             this.vm.selectedClass = this.vm.classSectionStudentList[0];
             this.vm.changeSelectedSectionToFirst();
         }
-        // ------------------- Sorting Students with names (A-Z), Sections and Classes with DbId Ends ---------------------
+        // ------------------- Sorting Students with Roll Number, names (A-Z), Sections and Classes with DbId Ends ---------------------
     }
 
     getStudentsAttendanceStatusList(): void {
@@ -231,6 +237,7 @@ export class RecordAttendanceServiceAdapter {
                 }
             });
         });
+        this.vm.changeSortType();
         this.vm.messageService.fetchGCMDevicesNew(this.vm.studentAttendanceStatusList);
     }
 

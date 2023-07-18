@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {DataStorage} from "../../../../classes/data-storage";
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
-import { SchoolService } from './../../../../services/modules/school/school.service';
-import { EmployeeService } from './../../../../services/modules/employee/employee.service';
+import { GenericService } from '@services/generic/generic-service';
 import { TransferBalanceServiceAdapter } from './transfer-balance.service.adapter';
 import { HEADS_LIST} from '@services/modules/accounts/models/head';
 import { AccountSession } from '@services/modules/accounts/models/account-session';
@@ -16,8 +15,7 @@ import {CommonFunctions} from '@classes/common-functions';
     styleUrls: ['./transfer-balance.component.css'],
     providers: [
         AccountsService,
-        SchoolService,
-        EmployeeService,
+        GenericService,
     ]
 })
 
@@ -65,8 +63,7 @@ export class TransferBalanceComponent implements OnInit{
 
     constructor(
         public accountsService: AccountsService,
-        public schoolService: SchoolService,
-        public employeeService: EmployeeService,
+        public genericService: GenericService,
     ) { }
 
     ngOnInit(): void {

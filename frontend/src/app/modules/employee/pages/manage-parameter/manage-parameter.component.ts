@@ -41,7 +41,8 @@ export class ManageParameterComponent implements OnInit {
         'Monthly Salary',
         'Paid Leave',
         'Address',
-        'Remark'
+        'Remark',
+        'Is Non-Salaried Employee'
     ];
 
     ADD_PARAMETER_STRING = '<Add New Parameter>';
@@ -101,6 +102,10 @@ export class ManageParameterComponent implements OnInit {
 
     addFilter(filter: any) {
         filter = filter.trim();
+        if (!filter || filter.length === 0) {
+            alert("Filter cannot be blank");
+            return;
+        }
         if (this.currentParameter.filterValues.indexOf(filter) !== -1) {
             alert('Filter Value:- ' + filter + ' is already present.');
             return;

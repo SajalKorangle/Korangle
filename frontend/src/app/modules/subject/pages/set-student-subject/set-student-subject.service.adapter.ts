@@ -167,41 +167,19 @@ export class SetStudentSubjectServiceAdapter {
     }
 
     addStudentSubjectAndTests(item: any): void {
+
         let student_subject_data = {
             parentStudent: this.vm.selectedStudent.id,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
             parentSubject: item.subjectId,
         };
 
-        let student_test_data = this.prepareStudentTestDataToAdd(item.subjectId);
-
         Promise.all([
             this.vm.subjectService.createStudentSubject(student_subject_data, this.vm.user.jwt),
-            this.vm.examinationOldService.createStudentTestList(student_test_data, this.vm.user.jwt),
         ]).then((value) => {
             item.studentSubjectId = value[0].id;
-            value[1].forEach((itemTwo) => {
-                this.studentTestList.push(itemTwo);
-            });
             item.updating = false;
         });
-    }
-
-    prepareStudentTestDataToAdd(subjectId: any): any {
-        let data_list = [];
-        this.classTestList.forEach((item) => {
-            if (item.parentSubject === subjectId) {
-                let data = {
-                    parentExamination: item.parentExamination,
-                    parentSubject: item.parentSubject,
-                    parentStudent: this.vm.selectedStudent.id,
-                    testType: item.testType,
-                    marksObtained: 0,
-                };
-                data_list.push(data);
-            }
-        });
-        return data_list;
     }
 
     removeStudentSubjectAndTests(item: any): void {

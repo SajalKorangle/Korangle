@@ -11,8 +11,18 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 from authentication_app.models import OTP
 
+# OTP templates for corresponding actions in generate OTP
+otpTemplates = {
+    'SIGN UP': ' is the OTP requested by you to sign up for korangle.com',
+    'FORGOT PASSWORD': ' is the OTP requested by you to reset your password for korangle.com',
+    'CREATE SCHOOL': ' is the OTP requested by you to create ID for korangle.com'
+}
+
 
 def generate_otp(data):
+    return_response = {'status': 'success', 'message': 'OTP generated successfully'}
+
+    # --- Verifying The Captcha Section starts ---
 
     payload = {
         'secret': '6LdNiNgZAAAAAGsOxSLZY6MDiuTGJKFMjpngekZV',
@@ -24,28 +34,51 @@ def generate_otp(data):
     if response.json()['success'] == False:
         return {'status': 'failure', 'message': 'Captcha Failed'}
 
+    # --- Verifying The Captcha Section Ends ---
+
+
+    # ----- Validation of the user mobile number and max OTP limits starts -----
+
     user_object_list = User.objects.filter(username=data['mobileNumber'])
 
-    if user_object_list.count() != 1:
+    if user_object_list.count() != 1 and data['action'] == 'FORGOT PASSWORD':
         return {'status': 'failure', 'message': 'Mobile No. doesn\'t exist in our database'}
 
-    otp_object_list = OTP.objects.filter(mobileNumber=data['mobileNumber'], generationDateTime__gte=timezone.now() - timedelta(minutes=5))
+    if user_object_list.count() > 0 and data['action'] == 'SIGN UP':
+        return {'status': 'failure', 'message': 'Mobile No. already exists in our database'}
+
+    otp_object_list = OTP.objects.filter(mobileNumber=data['mobileNumber'],
+                                         generationDateTime__gte=timezone.now() - timedelta(minutes=5))
 
     if otp_object_list.count() > 3:
         return {'status': 'failure', 'message': 'You are only allowed 3 attempts in 5 minutes'}
 
-    number = randint(100000, 999999)
+    # ----- Validation of the user mobile number and max OTP limits ends -----
 
-    otp_object = OTP(mobileNumber=data['mobileNumber'], otp=number, action='FORGOT PASSWORD')
+    # ----- Preparing Return Data for Create School Starts -----
+
+    # if user already exists and the action is create school, we are adding the user details in response
+    # that is why the return_response in initialized at the beginning
+    if user_object_list.count() > 0 and data['action'] == 'CREATE SCHOOL':
+        return_response['existingUser'] = {'first_name': user_object_list[0].first_name,
+                                           'last_name': user_object_list[0].last_name,
+                                           'email': user_object_list[0].email}
+
+    # ----- Preparing Return Data for Create School Ends -----
+
+    # ------- Creation and Sending of OTP starts --------
+    number = randint(100000, 999999)
+    # Here action can be : (SIGN UP) (FORGOT PASSWORD) (CREATE SCHOOL)
+    otp_object = OTP(mobileNumber=data['mobileNumber'], otp=number, action=data['action'])
     otp_object.save()
 
     conn = http.client.HTTPConnection("msg.msgclub.net")
 
     anotherPayload = {
-        "smsContent": str(number) + ' is the OTP requested by you to reset your password for korangle.com',
+        "smsContent": str(number) + otpTemplates[data['action']],
         "routeId": "1",
         "mobileNumbers": data['mobileNumber'],
-        "senderId": 'KORNGL',
+        "senderId": 'KRANGL',
         "smsContentType": 'english',
     }
 
@@ -62,4 +95,6 @@ def generate_otp(data):
 
     requestIdFromMsgClub = str(json.loads(response.decode("utf-8"))['response'])
 
-    return {'status': 'success', 'message': 'OTP generated successfully'}
+    # ------- Creation and Sending of OTP Ends --------
+
+    return return_response

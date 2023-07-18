@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_delete
+from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
 
 # Create your models here.
@@ -9,6 +9,7 @@ from student_app.models import Student
 from class_app.models import Class, Division
 from subject_app.models import Subject, SubjectSecond, ExtraSubField
 from student_app.models import StudentSection
+from common.common import BasePermission
 
 
 
@@ -98,6 +99,11 @@ EXAMINATION_STATUS = (
     ('Declared', 'Declared'),
 )
 
+MARKS_UPDATION_STATUS = (
+    ('Locked', 'Locked'),
+    ('Unlocked', 'Unlocked')
+)
+
 
 class Examination(models.Model):
 
@@ -105,9 +111,14 @@ class Examination(models.Model):
     parentSchool = models.ForeignKey(School, models.PROTECT, null=False, default=0, verbose_name='parentSchool')
     parentSession = models.ForeignKey(Session, models.PROTECT, null=False, default=0, verbose_name='parentSession')
     status = models.CharField(max_length=20, choices=EXAMINATION_STATUS, null=False, default='Created', verbose_name='examinationStatus')
+    marksUpdationStatus = models.CharField(max_length=20, choices=MARKS_UPDATION_STATUS, null=False, default='Unlocked', verbose_name='marksUpdationStatus')
 
     def __str__(self):
         return self.name
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
 
     class Meta:
         db_table = 'examination'
@@ -133,9 +144,19 @@ class TestSecond(models.Model):
     testType = models.CharField(max_length=10, choices=TEST_TYPE, null=True, default=None, verbose_name='testType')
     maximumMarks = models.PositiveIntegerField(null=False, verbose_name='maximumMarks', default=100)
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentExamination__parentSchool__id']
+        RelationsToStudent = []
+
     class Meta:
         db_table = 'test_second'
         unique_together = ('parentExamination', 'parentSubject', 'parentClass', 'parentDivision', 'testType')
+
+
+@receiver(post_delete, sender=TestSecond)
+def delete_test_second_student_test(sender, instance, **kwargs):
+    for student_section in StudentSection.objects.filter(parentStudent__parentSchool=instance.parentExamination.parentSchool,parentClass=instance.parentClass,parentDivision=instance.parentDivision,parentSession=instance.parentExamination.parentSession):
+        StudentTest.objects.filter(testType=instance.testType,parentExamination=instance.parentExamination,parentSubject=instance.parentSubject,parentStudent=student_section.parentStudent).delete()
 
 
 class StudentTest(models.Model):
@@ -147,16 +168,37 @@ class StudentTest(models.Model):
     marksObtained = models.DecimalField(max_digits=20, decimal_places=3,null=False, verbose_name='marksObtained', default=0)
     absent = models.BooleanField(default=False, verbose_name='absent')
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'student_test'
         unique_together = ('parentExamination', 'parentSubject', 'parentStudent', 'testType')
 
 
-@receiver(post_delete, sender=TestSecond)
-def delete_test_second_student_test(sender, instance, **kwargs):
-    for student_section in StudentSection.objects.filter(parentStudent__parentSchool=instance.parentExamination.parentSchool,parentClass=instance.parentClass,parentDivision=instance.parentDivision,parentSession=instance.parentExamination.parentSession):
-        StudentTest.objects.filter(testType=instance.testType,parentExamination=instance.parentExamination,parentSubject=instance.parentSubject,parentStudent=student_section.parentStudent).delete()
+@receiver(pre_save, sender=StudentTest)
+def stop_student_test_marks_duplication(sender, instance, **kwargs):
+
+    if instance.id is None: # if object is getting created instead of being updated
+        if StudentTest.objects.filter(
+            parentExamination = instance.parentExamination,
+            parentSubject = instance.parentSubject,
+            parentStudent = instance.parentStudent,
+            testType = instance.testType
+        ).count() > 0:
+            raise "Student Test Marks already exists!!!"
+    
+    else: # if object is getting updated instead of being created
+        # Delete all other student test marks with same exam, subject, and test type
+        StudentTest.objects.filter(
+            parentExamination = instance.parentExamination,
+            parentSubject = instance.parentSubject,
+            parentStudent = instance.parentStudent,
+            testType = instance.testType
+        ).exclude(
+            id = instance.id
+        ).delete()
 
 
 class StudentExtraSubField(models.Model):
@@ -165,6 +207,10 @@ class StudentExtraSubField(models.Model):
     parentExtraSubField = models.ForeignKey(ExtraSubField, models.PROTECT, null=False, default=0, verbose_name='parentExtraSubField')
     parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
     marksObtained = models.DecimalField(max_digits=6, decimal_places=2, null=False, verbose_name='marksObtained', default=0)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'student_extra_sub_field'
@@ -261,6 +307,10 @@ class CCEMarks(models.Model):
     parentStudent = models.ForeignKey(Student, models.CASCADE, null=False, default=0, verbose_name='parentStudent')
     parentSession = models.ForeignKey(Session, models.PROTECT, null=False, default=0, verbose_name='parentSession')
     marksObtained = models.DecimalField(max_digits=6, decimal_places=1,null=False, verbose_name='marksObtained', default=0)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'cce_marks'

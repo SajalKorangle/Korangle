@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { FeeService } from '../../../../services/modules/fees/fee.service';
-import { StudentService } from '../../../../services/modules/student/student.service';
 
 import { PayFeesServiceAdapter } from './pay-fees.service.adapter';
 import { PayFeesHTMLRenderer } from './pay-fees.html.renderer';
@@ -16,16 +15,15 @@ import { StudentFee } from '../../../../services/modules/fees/models/student-fee
 import { Discount } from '../../../../services/modules/fees/models/discount';
 import { SubDiscount } from '../../../../services/modules/fees/models/sub-discount';
 import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-old.service';
-import { EmployeeService } from '../../../../services/modules/employee/employee.service';
 import { CommonFunctions } from '../../../../classes/common-functions';
-import { ClassService } from '../../../../services/modules/class/class.service';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { VALIDATORS_REGX } from '@classes/regx-validators';
 import { Student } from '@services/modules/student/models/student';
 import { Session } from '@services/modules/school/models/session';
-import { UserService } from '@services/modules/user/user.service';
 import { PaymentService } from '@services/modules/payment/payment.service';
+import { SchoolMerchantAccount } from '@services/modules/payment/models/school-merchant-account';
 
 import { Order } from '@services/modules/payment/models/order';
 import { OnlineFeePaymentTransaction } from '@services/modules/fees/models/online-fee-payment-transaction';
@@ -36,7 +34,13 @@ declare const $: any;
     selector: 'view-fee',
     templateUrl: './pay-fees.component.html',
     styleUrls: ['./pay-fees.component.css'],
-    providers: [FeeService, StudentService, ClassService, VehicleOldService, EmployeeService, SchoolService, UserService, PaymentService],
+    providers: [
+        FeeService,
+        VehicleOldService,
+        SchoolService,
+        GenericService,
+        PaymentService
+    ],
 })
 
 export class PayFeesComponent implements OnInit {
@@ -83,7 +87,7 @@ export class PayFeesComponent implements OnInit {
     orderList: Array<Order>;
     parsedOrder: Array<ParsedOrder>;
 
-    schoolMerchantAccount;
+    schoolMerchantAccount: SchoolMerchantAccount;
 
     isMobile = CommonFunctions.getInstance().isMobileMenu;
 
@@ -94,12 +98,9 @@ export class PayFeesComponent implements OnInit {
 
     constructor(
         public schoolService: SchoolService,
+        public genericService: GenericService,
         public feeService: FeeService,
-        public studentService: StudentService,
         public vehicleService: VehicleOldService,
-        public employeeService: EmployeeService,
-        public classService: ClassService,
-        public userService: UserService,
         public paymentService: PaymentService,
         private cdRef: ChangeDetectorRef,
         public dialog: MatDialog,
@@ -169,6 +170,7 @@ export class PayFeesComponent implements OnInit {
     }
 
     handleOverallPaymentChange(student: Student): void {
+        this.amountMappedByStudentId[student.id] = Math.round(this.amountMappedByStudentId[student.id]);
         if (this.amountError(student)())
             return;
         let paymentLeft = this.amountMappedByStudentId[student.id];
@@ -507,7 +509,7 @@ export class PayFeesComponent implements OnInit {
                 return this.getSessionFeesDue(student, session) + this.getSessionLateFeesDue(student, session) > 0;
             })
             .sort((a, b) => {
-                return a.id - b.id;
+                return a.orderNumber - b.orderNumber;
             });
     }
 

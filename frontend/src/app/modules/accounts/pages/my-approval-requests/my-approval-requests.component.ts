@@ -9,8 +9,7 @@ import { UseFortransactionDialogComponent } from './components/use-for-transacti
 import { Approval, APPROVAL_STATUS_CHOICES } from './../../../../services/modules/accounts/models/approval';
 
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
-import { EmployeeService } from './../../../../services/modules/employee/employee.service';
-import { SchoolService } from './../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import {MyApprovalRequestsHtmlRenderer} from './my-approval-requests.html.renderer';
 
 @Component({
@@ -19,8 +18,7 @@ import {MyApprovalRequestsHtmlRenderer} from './my-approval-requests.html.render
     styleUrls: ['./my-approval-requests.component.css'],
     providers: [
         AccountsService,
-        EmployeeService,
-        SchoolService,
+        GenericService,
     ]
 
 })
@@ -54,8 +52,7 @@ export class MyApprovalRequestsComponent implements OnInit {
     constructor(
         public dialog: MatDialog,
         public accountsService: AccountsService,
-        public employeeService: EmployeeService,
-        public schoolService: SchoolService,
+        public genericService: GenericService,
     ) { }
     // Server Handling - Initial
     ngOnInit(): void {
@@ -197,18 +194,21 @@ export class MyApprovalRequestsComponent implements OnInit {
     }
 
     isAccountNotMentioned(approval: NewCustomApproval): boolean {
+        let temp = false;
         approval.payFrom.forEach(acc => {
             if (acc.account == null) {
-                return true;
+                temp = true;
+                return;
             }
         });
 
         approval.payTo.forEach(acc => {
             if (acc.account == null) {
-                return true;
+                temp = true;
+                return;
             }
         });
-        return false;
+        return temp;
     }
 
     isAmountUnEqual(approval: NewCustomApproval): boolean {
@@ -224,17 +224,18 @@ export class MyApprovalRequestsComponent implements OnInit {
     }
 
     isAmountLessThanMinimum(approval: NewCustomApproval): boolean {
+        let temp = false;
         approval.payFrom.forEach(acc => {
             if (acc.amount < 0.01 && acc.account != null) {
-                return true;
+                temp = true;
             }
         });
         approval.payTo.forEach(acc => {
             if (acc.amount < 0.01 && acc.account != null) {
-                return true;
+                temp = true;
             }
         });
-        return false;
+        return temp;
     }
 
     isAccountRepeated(approval: NewCustomApproval): boolean {

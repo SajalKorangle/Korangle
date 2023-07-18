@@ -23,7 +23,8 @@ export class ParentStudentFilterServiceAdapter {
         let student_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
             fields__korangle:
-                'id,profileImage,name,fathersName,mobileNumber,secondMobileNumber,scholarNumber,address,currentBusStop,rte,parentTransferCertificate',
+                'id,profileImage,name,fathersName,motherName,mobileNumber,secondMobileNumber,scholarNumber,' +
+                'address,currentBusStop,rte,parentTransferCertificate',
         };
 
         if (!this.vm.studentTcGenerated) {
@@ -38,14 +39,13 @@ export class ParentStudentFilterServiceAdapter {
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
         ]).then(
             (value) => {
-                console.log(value);
-
                 this.vm.classList = value[0];
                 this.vm.sectionList = value[1];
                 this.vm.studentSectionList = value[2];
 
                 this.populateStudentList(value[3]);
                 this.populateMobileNumberList();
+                this.sortStudentList('name');
 
                 this.vm.handleDataLoading();
 
@@ -69,6 +69,12 @@ export class ParentStudentFilterServiceAdapter {
         this.vm.mobileNumberList.concat(this.vm.studentList.map((a) => a.secondMobileNumber));
         this.vm.mobileNumberList = this.vm.mobileNumberList.filter((item, index) => {
             return item != null && this.vm.mobileNumberList.indexOf(item) == index;
+        });
+    }
+
+    sortStudentList(item: any) {
+        this.vm.studentList = this.vm.studentList.sort(function(a: any, b: any) {
+            return (a[item].toLowerCase() > b[item].toLowerCase()) ? 1 : ((a[item].toLowerCase() < b[item].toLowerCase()) ? -1 : 0);
         });
     }
 }

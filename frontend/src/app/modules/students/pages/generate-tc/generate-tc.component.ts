@@ -1,21 +1,26 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Student } from '../../../../classes/student';
 
 import { TransferCertificate } from '../../classes/transfer-certificate';
 
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
-import { SchoolOldService } from '../../../../services/modules/school/school-old.service';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_TC } from '../../../../print/print-routes.constants';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from '../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
+
 
 @Component({
     selector: 'generate-tc',
     templateUrl: './generate-tc.component.html',
     styleUrls: ['./generate-tc.component.css'],
-    providers: [StudentOldService, SchoolOldService, SchoolService],
+    providers: [
+        StudentOldService,
+        GenericService,
+        SchoolService
+    ],
 })
 export class GenerateTcComponent implements OnInit {
     user;
@@ -57,7 +62,12 @@ export class GenerateTcComponent implements OnInit {
     flag = false;
     count = 0;
 
-    constructor(private studentService: StudentOldService, private schoolService: SchoolService, private printService: PrintService) {}
+    constructor(
+        private studentService: StudentOldService,
+        private schoolService: SchoolService,
+        private genericService: GenericService,
+        private printService: PrintService
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -84,7 +94,7 @@ export class GenerateTcComponent implements OnInit {
     }
 
     getSessionList(): void {
-        this.schoolService.getObjectList(this.schoolService.session, {}).then((sessionList) => {
+        this.genericService.getObjectList({school_app: 'Session'}, {}).then((sessionList) => {
             this.sessionList = sessionList;
             this.sessionList.every((session) => {
                 if (session.id === this.user.activeSchool.currentSessionDbId) {
@@ -197,6 +207,7 @@ export class GenerateTcComponent implements OnInit {
                         this.isLoading = false;
                         if (response.status === 'success') {
                             alert('Transfer Certificate generated successfully');
+
                             this.currentTransferCertificate.id = data.parentTransferCertificate;
                             this.selectedTransferCertificate.copy(this.currentTransferCertificate);
                             this.printTCSecondFormat();
@@ -226,6 +237,7 @@ export class GenerateTcComponent implements OnInit {
             (response) => {
                 this.isLoading = false;
                 alert(response.message);
+
                 this.selectedTransferCertificate.copy(this.currentTransferCertificate);
             },
             (error) => {
@@ -253,6 +265,7 @@ export class GenerateTcComponent implements OnInit {
             (response) => {
                 this.isLoading = false;
                 alert('TC has been cancelled successfully');
+
                 this.selectedTransferCertificate.id = 0;
                 this.selectedStudent.parentTransferCertificate = null;
                 this.studentFromFilter.parentTransferCertificate = null;

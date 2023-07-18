@@ -1,0 +1,110 @@
+<div class="card-content">
+    <!-- Starts :- Main Page content -->
+    <div *ngIf="!isLoading">
+        <!-- Starts :- Page Title -->
+        <div class="title">Leave types</div>
+        <!-- Ends :- Page Title -->
+
+        <!-- Starts :- Table (to display data if data is present) -->
+        <div>
+            <div class="leaveTypeTable">
+                <div class="leaveTypeTableRowContainerHeading">
+                    <div class="leaveTableRow">
+                        <div class="leaveTableRowItem">
+                            <div class="leaveTableColItem"><span class="leaveTableColDataContainer">Name</span></div>
+                        </div>
+                        <div class="leaveTableRowItem">
+                            <div class="leaveTableColItem"><span class="leaveTableColDataContainer">Leave Type</span></div>
+                        </div>
+                        <div class="leaveTableRowItem">
+                            <div class="leaveTableColItem"><span class="leaveTableColDataContainer">Colour</span></div>
+                        </div>
+                        <div class="leaveTableRowItem">
+                            <div class="leaveTableColItem"></div>
+                        </div>
+                        <div class="leaveTypeRowItem">
+                            <div class="leaveTypeColItem"></div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="leaveTypeList.length" style="width: 100%">
+                    <div class="leaveTypeTableRowContainer" *ngFor="let item of leaveTypeList">
+                        <div class="leaveTableRow">
+                            <div class="leaveTableRowItem">
+                                <div class="leaveTableColItem">
+                                    <span class="leaveTableColDataContainer">{{ item.leaveTypeName }}</span>
+                                </div>
+                            </div>
+                            <div class="leaveTableRowItem">
+                                <div class="leaveTableColItem">
+                                    <span class="leaveTableColDataContainer">{{ item.leaveType }}</span>
+                                </div>
+                            </div>
+                            <div class="leaveTableRowItem">
+                                <div class="leaveTableColItem">
+                                    <span class="leaveTableColDataContainer"
+                                        ><span style="display: flex; width: 100%"
+                                            ><span
+                                                style="height: 25px; width: 25px; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.25)"
+                                                [ngStyle]="{ backgroundColor: item.color }"
+                                            ></span></span
+                                    ></span>
+                                </div>
+                            </div>
+                            <div class="leaveTableRowItem">
+                                <div class="leaveTableColItem" style="cursor: pointer" (click)="addOrUpdateLeaveType(false, item)">
+                                    <span class="leaveTableColDataContainer"
+                                        ><span style="color: rgba(128, 128, 128, 0.5)" class="material-icons-outlined">edit</span></span
+                                    >
+                                </div>
+                            </div>
+                            <div class="leaveTableRowItem">
+                                <div class="leaveTableColItem" style="cursor: pointer" (click)="serviceAdapter.deleteType($event, item)">
+                                    <span class="leaveTableColDataContainer"
+                                        ><span style="color: rgba(255, 0, 0, 0.5)" class="material-icons-outlined">delete_forever</span></span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="leaveTypeTableRowContainerHeading" *ngIf="!leaveTypeList.length">
+                    <div class="leaveTableRow">
+                        <!-- Starts :- Message (to show that the data is not present) -->
+                        <span style="color: rgba(0, 0, 0, 0.5)">No Type Available Currently</span>
+                        <!-- Ends :- Message -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Ends :- Table -->
+
+        <!-- Starts :- Button (to add new type) -->
+        <div class="add-new-type-container">
+            <button (click)="addOrUpdateLeaveType(true, {})" class="addBtn">
+                <span class="material-icons" style="font-size: large">add</span>
+                <span style="margin-left: 8px">Add Type</span>
+            </button>
+        </div>
+        <!-- Ends :- Button -->
+
+        <!-- Starts :- Modal (to display the form) -->
+        <div *ngIf="isFormVisible">
+            <leave-type-dialog
+                [schoolLeaveType]="currentSchoolLeaveType"
+                [schoolLeaveTypeMonth]="currentSchoolLeaveTypeMonthList"
+                (save)="serviceAdapter.saveLeaveType($event)"
+                (close)="closeAddNewType($event)"
+                [InvalidNameList]="invalidNameList"
+            ></leave-type-dialog>
+        </div>
+        <!-- Ends :- Modal -->
+    </div>
+    <!-- Ends :- Main Page -->
+
+    <!-- Starts :- Spinner (to be displayed when the data is being loaded) -->
+    <div *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </div>
+    <!-- Ends :- Spinner -->
+</div>

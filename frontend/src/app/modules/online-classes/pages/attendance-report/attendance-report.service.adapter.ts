@@ -18,17 +18,21 @@ export class AttendanceReportServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
 
+        let sessionList;
         [
-            this.vm.backendData.classList,
-            this.vm.backendData.divisionList,
-            this.vm.backendData.classSubjectList,
-            this.vm.backendData.subjectList,
+            this.vm.backendData.classList, // 0
+            this.vm.backendData.divisionList, // 1
+            this.vm.backendData.classSubjectList, // 2
+            this.vm.backendData.subjectList, // 3
+            sessionList, // 4
         ] = await Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 0
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 1
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_request), // 2
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), //3
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 4
         ]);
+        this.vm.backendData.activeSession = sessionList.find(session => session.id == this.vm.user.activeSchool.currentSessionDbId);
         this.vm.populateInitilizationData();
         this.vm.stateKeeper.isLoading = false;
     }

@@ -12,10 +12,13 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.app.ActivityCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.ValueCallback;
@@ -43,6 +46,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -59,10 +63,12 @@ public class MainActivity extends AppCompatActivity {
     Snackbar snackbar;
     SwipeRefreshLayout mySwipeRefreshLayout;
 
-    String websiteNotFound = "Not able to connect with Korangle!\nContact +91 - 7999951154";
+    String websiteNotFound = "Not able to connect with Korangle!\nContact +91 - 6261617172";
     String notInternetConnection = "No Internet Connection!\n Swipe down to refresh";
     String slowOrNoInternetConnection = "Slow or No Internet Connection!!\n Swipe down to retry";
     public static final String TEL_PREFIX = "tel:";
+
+    public static final String UPI_PREFIX = "upi:";
 
     // Request Code
     public static final int INPUT_FILE_REQUEST_CODE = 1;
@@ -92,13 +98,18 @@ public class MainActivity extends AppCompatActivity {
 
     private long pressedTime;
 
-    public String webapp_url = "https://www.korangle.com";
+    public String webapp_url = "https://app.korangle.com";
+    public String s3_bucket_url = "https://korangleplus.s3.amazonaws.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(BuildConfig.DEBUG) {
+            webapp_url="https://test.korangle.com";
+        }
 
         // Check App updates
         // Creates instance of the manager.
@@ -284,19 +295,7 @@ public class MainActivity extends AppCompatActivity {
         // progressBarView.setVisibility(ProgressBar.VISIBLE);
         mySwipeRefreshLayout.setEnabled(false);
         progressMessageView.setText("Checking Updates");
-        if (BuildConfig.DEBUG) {
-            String url = "http://";
-            try {
-                JSONObject jsonObject = new JSONObject(resJSON2String("korangle/debug_ip.json"));
-                url += jsonObject.getString("IP");
-            } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(),
-                        "JSON Deserialization ERROR",
-                        Toast.LENGTH_LONG).show();
-            }
-
-            webview.loadUrl(url + ":4200");   // YOUR SYSTEM (FRONTEND) IP GOES HERE
-        } else { volleyFace.checkingUpdates(); }
+        volleyFace.checkingUpdates();
     }
 
     private String resJSON2String(String filename_res){
@@ -368,12 +367,12 @@ public class MainActivity extends AppCompatActivity {
 
             // Check that the response is a good one
             if (resultCode == Activity.RESULT_OK) {
-                if (data == null || data.getDataString() == null) {
-                    // If there is not data, then we may have taken a photo
+                if (data == null || data.getDataString() == null) { // Getting data from camera
+                    // If there is no data, then we may have taken a photo
                     if (mCameraPhotoPath != null) {
                         results = new Uri[]{Uri.parse(mCameraPhotoPath)};
                     }
-                } else {
+                } else { // Getting data from file chooser
                     String dataString = data.getDataString();
                     if (dataString != null) {
                         results = new Uri[]{Uri.parse(dataString)};

@@ -1,0 +1,6 @@
+
+.card-content {
+    display: block;
+    max-height: 88vh;
+    overflow: scroll;
+}

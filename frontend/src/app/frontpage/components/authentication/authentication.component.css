@@ -1,0 +1,137 @@
+.background {
+    min-height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.mobile-header {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(147.48deg, #0B0D17 -15.91%, #707379 97.45%);
+}
+
+.mobile-logo {
+    margin-top: 10px;
+    margin-left: 15px;
+    position: relative;
+}
+
+.mobile-logo-name {
+    font-weight: bold;
+    font-size: 20px;
+    color: #FF7131;
+    top: 9px;
+    margin-left: 6px;
+    position: relative;
+}
+
+.centered-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+}
+
+label {
+    color: black;
+}
+
+:host ::ng-deep .mat-tab-label {
+    font-size: 18px;
+    padding: 0 !important;
+    text-align: left !important;
+    justify-content: normal !important;
+}
+
+:host ::ng-deep .mat-tab-group {
+    flex-direction: column !important;
+    align-content: center !important;
+    flex-wrap: wrap !important;
+}
+
+:host ::ng-deep .mat-tab-label-active {
+    color: #FF7131 !important;
+    opacity: 0.6 !important;
+}
+
+:host ::ng-deep .mat-tab-label {
+    color: #000000;
+}
+
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+    background-color: #F9F9F9 !important;
+}
+
+.example-container .mat-form-field+.mat-form-field {
+    margin-left: 8px;
+}
+
+:host ::ng-deep .wrapper {
+    height: fit-content !important;
+}
+
+.btn {
+    padding: 9px 20px !important;
+}
+
+:host ::ng-deep .mat-form-field {
+    font-size: 12px;
+}
+
+:host ::ng-deep .otp-input {
+    font-size: 16px !important;
+    width: 35px !important;
+    height: 35px !important;
+    font-weight: bold !important;
+    background-color: #F9F9F9 !important;
+}
+
+:host ::ng-deep .btn {
+    background-color: #FF7131 !important;
+}
+
+.footer {
+    position: relative;
+    z-index: 1;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background-color: #c4c4c4;
+}
+
+.logo {
+    margin-left: 15px;
+    margin-top: 15px;
+    position: relative;
+}
+
+.logo-name {
+    font-weight: bold;
+    font-size: 23px;
+    color: #FF7131;
+    top: 13px;
+    margin-left: 10px;
+    position: relative;
+}
+
+:host ::ng-deep mat-form-field {
+    width: 100%;
+}
+
+.loader-custom {
+    margin-left: 5px;
+    display: inline-block;
+    border: 2px solid lightgrey;
+    border-radius: 50%;
+    border-top: 2px solid dimgrey;
+    width: 18px;
+    height: 18px;
+    -webkit-animation: spin 2s linear infinite;
+    /* Safari */
+    animation: spin 2s linear infinite;
+}

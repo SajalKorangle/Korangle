@@ -1,0 +1,195 @@
+<!-- Starts: Modal Container -->
+<mat-dialog-content class="modal-container">
+    <!-- Starts: Modal Header -->
+    <b class="modal-header">Apply Filters</b>
+    <!-- Ends: Modal Header -->
+
+    <br />
+    <br />
+    <!-- Starts: Page Names  &&  Employee Names Section -->
+    <div class="names">
+
+        <!-- Starts: Page Names -->
+        <div class="page-name-section">
+            <b>Page Names</b><br /><br />
+            <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+                <mat-option style="background-color: #F5F5F5">
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllPages(); $event.stopPropagation()">
+                        Select All
+                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllPages(); $event.stopPropagation()">
+                        Clear All
+                    </button>
+                </mat-option>
+
+                <ng-container *ngFor="let task of taskList">
+                    <mat-option class="mat-option-page-name">
+                        <mat-checkbox
+                            [(ngModel)]="task.selected"
+                            (click)="$event.stopPropagation()"
+                        >
+                            {{ task.moduleTitle }} - <br/> {{ task.taskTitle }}
+                        </mat-checkbox>
+                    </mat-option>
+                </ng-container>
+            </cdk-virtual-scroll-viewport>
+        </div>
+        <!-- Ends: Page Names -->
+
+        <!-- Starts: Employee Names -->
+        <div class="employee-name-section">
+            <b>Employee Names</b><br /><br />
+            <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+                <mat-option style="background-color: #F5F5F5">
+                    <button class="btn" style="padding: 4px 7px" (click)="selectAllEmployees(); $event.stopPropagation()">
+                        Select All
+                    </button>
+                    <button class="btn" style="padding: 4px 7px" (click)="unselectAllEmployees(); $event.stopPropagation()">
+                        Clear All
+                    </button>
+                </mat-option>
+
+                <ng-container *ngFor="let employee of employeeList">
+                    <mat-option class="mat-option-employee-name">
+                        <mat-checkbox
+                            [(ngModel)]="employee.selected"
+                            (click)="$event.stopPropagation()"
+                        >
+                            {{ employee.name }}
+                        </mat-checkbox>
+                    </mat-option>
+                </ng-container>
+            </cdk-virtual-scroll-viewport>
+        </div>
+        <!-- Ends: Employee Names -->
+
+    </div>
+    <!-- Ends: Page Names  &&  Employee Names Section -->
+
+    <br />
+    <br />
+    <!-- Starts: Time Span Section -->
+    <div class="time-span-section">
+        <b>Time Span</b><br />
+
+        <!-- Starts: Start Date -- Time Span Sub-Section -->
+        <div class="time-span-sub-section">
+            <div class="title">
+                Start Date -
+            </div>
+            <div class="radio-btns">
+                <mat-radio-group
+                    class="radio-btn-group"
+                    [(ngModel)]="startDate"
+                >
+                    <mat-radio-button class="radio-button" value="sDate">
+                        <input
+                            class="customInput"
+                            type="date"
+                            (keydown)="handleOnKeyDown($event)"
+                            [(ngModel)]="sDate"
+                        />
+                    </mat-radio-button>
+                    <mat-radio-button class="radio-button" value="dayOne">
+                        1st of ongoing month
+                    </mat-radio-button>
+                    <mat-radio-button class="radio-button" value="startDays">
+                        <input type="number" style="width: 60px" [(ngModel)]="startDays"/>
+                        days ago
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+        <!-- Ends: Start Date -- Time Span Sub-Section -->
+
+        <!-- Starts: End Date -- Time Span Sub-Section -->
+        <div class="time-span-sub-section">
+            <div class="title">
+                End Date -
+            </div>
+            <div class="radio-btns">
+                <mat-radio-group
+                    class="radio-btn-group"
+                    [(ngModel)]="endDate"
+                >
+                    <mat-radio-button class="radio-button" value="eDate">
+                        <input
+                            class="customInput"
+                            type="date"
+                            (keydown)="handleOnKeyDown($event)"
+                            [(ngModel)]="eDate"
+                        />
+                    </mat-radio-button>
+                    <mat-radio-button class="radio-button" value="today">
+                        Today
+                    </mat-radio-button>
+                    <mat-radio-button class="radio-button" value="endDays">
+                        <input type="number" style="width: 60px" [(ngModel)]="endDays"/>
+                        days ago
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+        <!-- Ends: End Date -- Time Span Sub-Section -->
+
+        <!-- Starts: Sort Type -- Time Span Sub-Section -->
+        <div class="time-span-sub-section">
+            <div class="title">
+                Sort
+            </div>
+            <div class="radio-btns">
+                <mat-radio-group
+                    class="radio-btn-group"
+                    [(ngModel)]="sortType"
+                >
+                    <mat-radio-button class="radio-button" value="Newest First" style="margin-bottom: 1rem;">
+                        Newest First
+                    </mat-radio-button>
+                    <mat-radio-button class="radio-button" value="Oldest First">
+                        Oldest First
+                    </mat-radio-button>
+                    <mat-radio-button *ngIf="!htmlRenderer.isMobile()" class="radio-button temp-btn">
+                        temp
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+        <!-- Ends: Sort Type -- Time Span Sub-Section -->
+    </div>
+    <!-- Ends: Time Span Section -->
+
+    <br />
+    <!-- Starts: Filter-description -->
+    <div class="filters-list">
+        <b>Pages </b> <span>{{ htmlRenderer.getPagesList() }}, </span>
+        <b>Employees </b> <span>{{ htmlRenderer.getEmployeesList() }}, </span>
+        <b>Time Span </b> <span>{{ htmlRenderer.getTimeSpanData()["dateFormat"] ? htmlRenderer.getTimeSpanData()["dateFormat"] : "- None" }}</span><span>{{ htmlRenderer.getSortType() }}</span>
+    </div>
+    <!-- Ends: Filter-description -->
+
+    <br />
+    <!-- Starts: Clear All Btn  &&  Apply Btn -->
+    <div class="bottom-btns">
+        <button
+            type="button"
+            class="btn clear-btn"
+            matTooltip="Clear All Filters"
+            tooltip-position="left"
+            (click) = "clearAllClick()"
+        >
+            Clear all
+        </button>
+        <button
+            type="button"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            matTooltip="Apply Filters"
+            tooltip-position="left"
+            (click) = "applyClick()"
+            style="padding: 7px 25px; text-transform: capitalize;"
+        >
+            Apply
+        </button>
+    </div>
+    <!-- Ends: Clear All Btn  &&  Apply Btn -->
+</mat-dialog-content>
+<!-- Ends: Modal Container -->

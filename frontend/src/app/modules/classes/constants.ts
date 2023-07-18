@@ -177,6 +177,31 @@ export const EVENT_GALLERY_VARIABLE_LIST = [
     })
 ];
 
+export const DISCOUNT_VARIABLE_LIST = [
+    SettingsStructure.getStructure('discountAmount', 'discountAmount', (dataObject) => {
+        return Number(dataObject['student'].discountAmount).toLocaleString('en-IN');
+    }),
+    SettingsStructure.getStructure('session', 'session', (dataObject) => {
+        return dataObject['student'].session.name;
+    })
+];  // Creating a variable list so that discountAmount, session variables can be accessed while parsing the SMS template content
+
+export const FEE_RECEIPT_VARIABLE_LIST = [
+    SettingsStructure.getStructure('feeAmount', 'feeAmount', (dataObject) => {
+        return Number(dataObject['student'].feeAmount).toLocaleString('en-IN');
+    }),
+    SettingsStructure.getStructure('dueFeeAmount', 'dueFeeAmount', (dataObject) => {
+        return Number(dataObject['student'].dueFeeAmount).toLocaleString('en-IN');
+    }),
+    SettingsStructure.getStructure('session', 'session', (dataObject) => {
+        return dataObject['student'].session.name;
+    }),
+    SettingsStructure.getStructure('feeReceiptNumber', 'feeReceiptNumber', (dataObject) => {
+        return dataObject['student'].feeReceipt.receiptNumber;
+    })
+
+];  // Creating a variable list so that feeAmount, dueFeeAmount and session variables can be accessed while parsing the SMS template content
+
 
 class MappingEventWithVariableStructure {
     static getStructure(SMSEventId, variableList) {
@@ -204,5 +229,7 @@ export const VARIABLE_MAPPED_EVENT_LIST = [
     MappingEventWithVariableStructure.getStructure(14, STUDENT_VARIABLE_LIST.concat(TUTORIAL_VARIABLE_LIST)), // Tutorial Deletion
     MappingEventWithVariableStructure.getStructure(15, COMMON_PERSON_VARIABLE_LIST.concat(EVENT_GALLERY_VARIABLE_LIST)), // Event Gallery Creation
     MappingEventWithVariableStructure.getStructure(16, COMMON_PERSON_VARIABLE_LIST.concat(EVENT_GALLERY_VARIABLE_LIST)), // Event Gallery Updation
-    MappingEventWithVariableStructure.getStructure(17, COMMON_PERSON_VARIABLE_LIST.concat(EVENT_GALLERY_VARIABLE_LIST)) // Event Gallery Deletion
+    MappingEventWithVariableStructure.getStructure(17, COMMON_PERSON_VARIABLE_LIST.concat(EVENT_GALLERY_VARIABLE_LIST)), // Event Gallery Deletion
+    MappingEventWithVariableStructure.getStructure(18, STUDENT_VARIABLE_LIST.concat(DISCOUNT_VARIABLE_LIST)), // Discount Details Notification
+    MappingEventWithVariableStructure.getStructure(19, STUDENT_VARIABLE_LIST.concat(FEE_RECEIPT_VARIABLE_LIST)) // Fee Receipt Notification
 ];

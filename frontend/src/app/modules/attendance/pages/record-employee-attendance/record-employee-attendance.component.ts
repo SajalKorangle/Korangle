@@ -9,6 +9,7 @@ import { PrintService } from '../../../../print/print-service';
 import { PRINT_EMPLOYEE_ATTENDANCE } from '../../../../print/print-routes.constants';
 import { ExcelService } from '../../../../excel/excel-service';
 import { DataStorage } from '../../../../classes/data-storage';
+import { isMobile } from '../../../../classes/common';
 
 @Component({
     selector: 'record-employee-attendance',
@@ -49,6 +50,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
         let request_employee_data = {
             parentSchool: this.user.activeSchool.dbId,
+            isNonSalariedEmployee: false,
         };
 
         this.isInitialLoading = true;
@@ -66,7 +68,7 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
 
     initializeEmployeeList(employeeList: any): void {
         this.employeeList = employeeList.filter((employee) => {
-            return employee.dateOfLeaving === null;
+            return employee.dateOfLeaving === null && employee.isNonSalariedEmployee === false;
         });
     }
 
@@ -173,7 +175,14 @@ export class RecordEmployeeAttendanceComponent implements OnInit {
         );
     }
 
+    //Checking if it is in mobile
+    checkMobile(): any {
+        return isMobile();
+    }
+
+
     // For Printing
+
     printEmployeeAttendanceList(): void {
         let value = {
             employeeAttendanceList: this.employeeAttendanceStatusList,

@@ -18,9 +18,9 @@ export class PrintProfileServiceAdapter {
         };
 
         Promise.all([
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}),
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, dataForBusStop),
+            this.vm.genericService.getObjectList({school_app: 'BusStop'}, {filter: dataForBusStop}),
         ]).then(
             (value) => {
                 this.vm.sessionList = value[0];
@@ -39,7 +39,7 @@ export class PrintProfileServiceAdapter {
         let data = {
             id: studentId,
         };
-        this.vm.studentService.getObject(this.vm.studentService.student, data).then((value) => {
+        this.vm.genericService.getObject({student_app: 'Student'}, {filter: data}).then((value) => {
             console.log(value);
             this.vm.selectedStudent = value;
             this.vm.isLoading = false;

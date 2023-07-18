@@ -1,4 +1,4 @@
-type InputTypeInterface = "number" | "select";
+type InputTypeInterface = "number" | "select" | "groupOfCheckBox";
 type AllowedValueInterface = Array<[any, string]>;   // [any: value, string: displayName]
 export type valueType = number | string;
 
@@ -20,6 +20,14 @@ export class InPagePermission {
     }
 
 }
+export class GroupOfCheckBoxPermission extends InPagePermission {
+    checkBoxValues: AllowedValueInterface;
+
+    constructor(displayName: string, inputType: InputTypeInterface, checkBoxValues: AllowedValueInterface, options: Options = {}) {
+        super(displayName, inputType, null, options);
+        this.checkBoxValues = checkBoxValues;
+    }
+}
 
 export class TaskPermissionStructure {
     modulePath: string;
@@ -39,6 +47,9 @@ export const TASK_PERMISSION_LIST: Array<TaskPermissionStructure> = [];   // All
 const feesTotalCollection = new TaskPermissionStructure('fees', 'total_collection');
 feesTotalCollection.inPagePermissionMappedByKey['numberOfDays'] = new InPagePermission('No. of Days', 'number');
 
+// Employees -> Assign Task
+const employeeAssignTask = new TaskPermissionStructure('employees', 'assign_task');
+
 // Online Classes
 import '@modules/online-classes/pages/add-account/add-account.permissions';
 
@@ -57,3 +68,6 @@ import '@modules/grade/pages/grade-student/grade-student.permissions';
 
 // Attendance
 import '@modules/attendance/pages/record-attendance/record-attendance.permissions';
+
+// Parent Support
+import '@modules/complaints/pages/manage-complaints/manage-complaints.permissions';

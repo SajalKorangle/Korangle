@@ -40,7 +40,7 @@ export class ManageAccountsServiceAdapter {
                 Promise.all([
                     this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),  // 0
                     this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),   // 1
-                    this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 2
+                    this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 2
                 ]).then(value => {
 
                     const currentSession = value[2].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId);

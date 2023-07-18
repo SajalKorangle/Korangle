@@ -1,16 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ClassService } from '../../../../services/modules/class/class.service';
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
-import { StudentService } from '../../../../services/modules/student/student.service';
 
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_LIST } from '../../../../print/print-routes.constants';
 import { ExcelService } from '../../../../excel/excel-service';
 import { DataStorage } from '../../../../classes/data-storage';
-import { BusStopService } from '@services/modules/school/bus-stop.service';
-import { SchoolService } from '@services/modules/school/school.service';
-import { TCService } from './../../../../services/modules/tc/tc.service';
+import { GenericService } from '@services/generic/generic-service';
 
 import { MatDialog } from '@angular/material';
 import { ImagePdfPreviewDialogComponent } from '../../../../components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
@@ -24,6 +20,14 @@ import { ComponentsModule } from 'app/components/components.module';
 
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import { ViewAllBackendData } from './view-all.backend.data';
+import { ViewAllHtmlRenderer } from './view-all.html.renderer';
+
+import { getAge } from "../../common/common-functions";
+
+import { MessageService } from '@services/message-service';
+import { NotificationService } from '@services/modules/notification/notification.service';
+import { UserService } from '@services/modules/user/user.service';
+import { SmsService } from '@services/modules/sms/sms.service';
 
 class ColumnFilter {
     showSerialNumber = true;
@@ -63,7 +67,14 @@ class ColumnFilter {
     selector: 'view-all',
     templateUrl: './view-all.component.html',
     styleUrls: ['./view-all.component.css'],
-    providers: [StudentService, StudentOldService, ClassService, ExcelService, BusStopService, SchoolService, TCService],
+    providers: [
+        StudentOldService,
+        ExcelService,
+        GenericService,
+        NotificationService,
+        UserService,
+        SmsService
+    ],
 })
 export class ViewAllComponent implements OnInit {
     user;
@@ -106,6 +117,11 @@ export class ViewAllComponent implements OnInit {
     noTC = true;
     yesTC = true;
 
+    /* Is Logged In? Options */
+    messageService: any;
+    isLogged = false;
+    isNotLogged = false;
+
     displayStudentNumber = 0;
 
     classSectionList = [];
@@ -143,17 +159,17 @@ export class ViewAllComponent implements OnInit {
 
     serviceAdapter: ViewAllServiceAdapter;
     backendData: ViewAllBackendData;
+    htmlRenderer: ViewAllHtmlRenderer;
 
     constructor(
         public studentOldService: StudentOldService,
-        public studentService: StudentService,
-        public classService: ClassService,
         public excelService: ExcelService,
-        public schoolService: SchoolService,
         public printService: PrintService,
-        public busStopService: BusStopService,
-        public tcService: TCService,
-        public dialog: MatDialog
+        public genericService: GenericService,
+        public dialog: MatDialog,
+        public notificationService: NotificationService,
+        public userService: UserService,
+        public smsService: SmsService,
     ) { }
 
     ngOnInit(): void {
@@ -164,9 +180,14 @@ export class ViewAllComponent implements OnInit {
         this.backendData = new ViewAllBackendData();
         this.backendData.initialize(this);
 
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
+
         this.serviceAdapter = new ViewAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.htmlRenderer = new ViewAllHtmlRenderer();
+        this.htmlRenderer.initializeRenderer(this);
 
         this.currentProfileDocumentFilter = this.profileDocumentSelectList[0];
         this.percent_download_comlpleted = 0;
@@ -246,14 +267,6 @@ export class ViewAllComponent implements OnInit {
             return x.name.includes(parameter.filterFilterValues);
         });
     }
-
-    /*initializeClassList(classList: any): void {
-        this.classList = classList;
-    }
-
-    initializeSectionList(sectionList: any): void {
-        this.sectionList = sectionList;
-    }*/
 
     initializeStudentFullProfileList(studentFullProfileList: any): void {
         this.studentFullProfileList = studentFullProfileList;
@@ -459,11 +472,14 @@ export class ViewAllComponent implements OnInit {
 
             /* Age Check */
             if (this.asOnDate) {
-                let age = student.dateOfBirth
-                    ? Math.floor((new Date(this.asOnDate).getTime() - new Date(student.dateOfBirth).getTime()) / (1000 * 60 * 60 * 24 * 365.25))
-                    : null;
-                if (this.minAge != '' && this.minAge != null && !isNaN(this.minAge)) {
-                    if (!age) {
+                let age = null;
+
+                if (student.dateOfBirth) {
+                    age = getAge(this.asOnDate, student.dateOfBirth);
+                }
+
+                if (this.minAge != null && !isNaN(this.minAge)) {
+                    if (age == null) {
                         student.show = false;
                         return;
                     } else if (age < this.minAge) {
@@ -471,8 +487,9 @@ export class ViewAllComponent implements OnInit {
                         return;
                     }
                 }
-                if (this.maxAge != '' && this.maxAge != null && !isNaN(this.maxAge)) {
-                    if (!age) {
+
+                if (this.maxAge != null && !isNaN(this.maxAge)) {
+                    if (age == null) {
                         student.show = false;
                         return;
                     } else if (age > this.maxAge) {
@@ -580,6 +597,15 @@ export class ViewAllComponent implements OnInit {
                 || (this.yesTC && (student.parentTransferCertificate || student.newTransferCertificate)))) {
                 student.show = false;
                 return;
+            }
+
+            // isLoggedIn Filter Check
+            if (!(this.isLogged && this.isNotLogged) && !(!this.isLogged && !this.isNotLogged)) {
+                if ((this.isLogged && !(student.notification || student.secondNumberNotification)) ||
+                (this.isNotLogged && (student.notification || student.secondNumberNotification))) {
+                    student.show = false;
+                    return;
+                }
             }
 
             // Custom filters check

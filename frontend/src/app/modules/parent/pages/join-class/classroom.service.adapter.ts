@@ -19,14 +19,16 @@ export class ClassroomServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId
         };
 
+        let sessionList;
         [
-            this.vm.backendData.studentSection,
+            this.vm.backendData.studentSection, // 0
+            sessionList, // 1
         ] = await Promise.all([
-            this.vm.studentService.getObject(this.vm.studentService.student_section, student_section_request),  // 1
+            this.vm.studentService.getObject(this.vm.studentService.student_section, student_section_request),  // 0
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 1
         ]);
 
-
-        if (CommonFunctions.getActiveSession().id == this.vm.user.activeSchool.currentSessionDbId) { // only if in current session
+        if (CommonFunctions.isSessionActive(this.vm.user.activeSchool.currentSessionDbId, sessionList)) { // only if in current session
             this.vm.isActiveSession = true;
 
             const class_subject_request = {

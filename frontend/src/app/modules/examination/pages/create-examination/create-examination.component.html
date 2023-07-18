@@ -1,50 +1,5 @@
 <div class="card-content">
     <ng-container *ngIf="!isLoading">
-        <table class="table table-hover" *ngIf="examinationList && examinationList.length > 0">
-            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                <tr>
-                    <th>S No.</th>
-                    <th>Examination</th>
-                    <th>Status</th>
-                    <th>-</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let examination of examinationList; let i = index">
-                    <td>{{ i + 1 }}.</td>
-                    <td>
-                        <input type="text" [(ngModel)]="examination.newName" [disabled]="examination.updating" />
-                    </td>
-                    <td>
-                        <mat-form-field>
-                            <mat-select
-                                placeholder="Select Status"
-                                [ngModel]="examination.newStatus"
-                                (ngModelChange)="examination.newStatus = $event"
-                            >
-                                <mat-option value="Created">Created</mat-option>
-                                <mat-option value="Declared">Declared</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </td>
-                    <td>
-                        <button
-                            type="submit"
-                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                            [disabled]="isExaminationUpdateDisabled(examination)"
-                            style="padding: 3px 8px"
-                            (click)="serviceAdapter.updateExamination(examination)"
-                        >
-                            Update
-                        </button>
-                        <div *ngIf="examination.updating" class="loader-custom"></div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <br /><br /><br />
-
         <table class="table table-hover">
             <tbody>
                 <tr>
@@ -64,6 +19,77 @@
                 </tr>
             </tbody>
         </table>
+        <cdk-virtual-scroll-viewport itemSize="12" class="example-viewport">
+            <table class="table table-hover" *ngIf="examinationList && examinationList.length > 0">
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th>S No.</th>
+                        <th>Examination</th>
+                        <th>Marks Updation Status</th>
+                        <th>Result Status</th>
+                        <th>-</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *cdkVirtualFor="let examination of examinationList; let i = index">
+                        <tr>
+                            <td>{{ i + 1 }}.</td>
+
+                            <!-- Starts : Examination Name Input field -->
+                            <td>
+                                <input type="text" [(ngModel)]="examination.newName" [disabled]="examination.updating" />
+                            </td>
+                            <!-- Ends : Examination Name Input field -->
+
+                            <!-- Starts : Dropdown for updating marks modify policy -->
+                            <td>
+                                <mat-form-field>
+                                    <mat-select
+                                        placeholder="Select Marks Status"
+                                        [ngModel]="examination.newMarksUpdationStatus"
+                                        (ngModelChange)="examination.newMarksUpdationStatus = $event"
+                                        [disabled]="examination.updating"
+                                    >
+                                        <mat-option [value]="MARKS_UPDATION_LOCKED_STATUS_BACKEND">Locked</mat-option>
+                                        <mat-option [value]="MARKS_UPDATION_UNLOCKED_STATUS_BACKEND">Unlocked</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <!-- Ends : Dropdown for updating marks modify policy -->
+
+                            <!-- Starts : Dropdown for Exam Result status -->
+                            <td>
+                                <mat-form-field>
+                                    <mat-select
+                                        placeholder="Select Result Status"
+                                        [ngModel]="examination.newStatus"
+                                        (ngModelChange)="examination.newStatus = $event"
+                                        [disabled]="examination.updating"
+                                    >
+                                        <mat-option value="Created">Undeclared</mat-option>
+                                        <mat-option value="Declared">Declared</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <!-- Ends : Dropdown for Exam Result status -->
+
+                            <td>
+                                <button
+                                    type="submit"
+                                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                                    [disabled]="isExaminationUpdateDisabled(examination)"
+                                    style="padding: 3px 8px"
+                                    (click)="serviceAdapter.updateExamination(examination)"
+                                >
+                                    Update
+                                </button>
+                                <div *ngIf="examination.updating" class="loader-custom"></div>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </cdk-virtual-scroll-viewport>
     </ng-container>
 
     <ng-container *ngIf="isLoading">

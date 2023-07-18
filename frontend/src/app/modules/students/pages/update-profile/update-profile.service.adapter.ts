@@ -1,5 +1,7 @@
 import { UpdateProfileComponent } from './update-profile.component';
 import { toInteger } from 'lodash';
+import { CommonFunctions } from '@modules/common/common-functions';
+import { Query } from '@services/generic/query';
 
 export class UpdateProfileServiceAdapter {
     vm: UpdateProfileComponent;
@@ -20,11 +22,14 @@ export class UpdateProfileServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, {
                 parentSchool: this.vm.user.activeSchool.dbId,
             }),
+
+            new Query().getObjectList({school_app: 'Session'}),
         ]).then(
             (value) => {
                 this.vm.studentParameterList = value[0].map((x) => ({ ...x, filterValues: JSON.parse(x.filterValues) }));
                 // this.vm.studentParameterValueList = value[1];
                 this.vm.busStopList = value[1];
+                this.vm.sessionList = value[2];
                 this.vm.isLoading = false;
             },
             (error) => {
@@ -72,7 +77,7 @@ export class UpdateProfileServiceAdapter {
             this.vm.currentStudent.mobileNumber.toString().length !== 0 &&
             this.vm.currentStudent.mobileNumber.toString().length !== 10
         ) {
-            alert('mobile number should be of l0 digits!');
+            alert('mobile number should be of 10 digits!');
             return;
         }
         if (
@@ -138,7 +143,7 @@ export class UpdateProfileServiceAdapter {
             x.parentStudent = this.vm.selectedStudent.id;
         });
         this.vm.studentParameterList.forEach((parameter) => {
-            if (this.vm.checkCustomFieldChanged(parameter)) {
+            if (this.vm.htmlRenderer.checkCustomFieldChanged(parameter)) {
                 let temp_obj = this.vm.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
                 if (temp_obj) {
                     const data = { ...temp_obj };
@@ -232,6 +237,13 @@ export class UpdateProfileServiceAdapter {
                 this.vm.deleteList = [];
                 this.vm.profileImage = null;
                 alert('Student: ' + this.vm.selectedStudent.name + ' updated successfully');
+
+                let parentEmployee = this.vm.user.activeSchool.employeeId;
+                let moduleName = this.vm.user.section.title;
+                let taskName = this.vm.user.section.subTitle;
+                let moduleList = this.vm.user.activeSchool.moduleList;
+                let actionString = " updated student profile of " + this.vm.selectedStudent.name;
+                CommonFunctions.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
                 this.vm.isLoading = false;
             },
             (error) => {
@@ -274,7 +286,6 @@ export class UpdateProfileServiceAdapter {
                     }
                 });
 
-            console.log(this.vm.studentParameterValueList);
             this.vm.studentParameterValueList
                 .filter((x) => x.parentStudent === studentId)
                 .forEach((item) => {

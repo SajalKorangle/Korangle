@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { DataStorage } from "../../../../classes/data-storage";
 import { SettingsServiceAdapter } from './settings.service.adapter';
 import { SettingsBackendData } from './settings.backend.data';
-import { SESSION_CONSTANT } from './../../../../services/modules/school/models/session';
 
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
 import { SchoolService } from './../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 
 import { CommonFunctions } from './../../../../classes/common-functions';
 
@@ -16,6 +16,7 @@ import { CommonFunctions } from './../../../../classes/common-functions';
     providers: [
         AccountsService,
         SchoolService,
+        GenericService,
     ],
 })
 
@@ -40,6 +41,7 @@ export class SettingsComponent {
     constructor(
         public accountsService: AccountsService,
         public schoolService: SchoolService,
+        public genericService: GenericService,
     ) { }
     // Server Handling - Initial
     ngOnInit(): void {
@@ -49,9 +51,6 @@ export class SettingsComponent {
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
         this.backendData = new SettingsBackendData();
-
-        this.currentSession = SESSION_CONSTANT.find(session => session.id == this.user.activeSchool.currentSessionDbId);
-        // console.log("this: ", this);
     }
 
     handleEmployeeSelection(employee: any): void {

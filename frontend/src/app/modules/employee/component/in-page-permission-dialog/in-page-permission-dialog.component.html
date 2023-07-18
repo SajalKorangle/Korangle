@@ -27,25 +27,63 @@
             <hr style="margin-left: 8px; flex-grow: 1; background-color: black;" />
         </div>
         <ng-container *ngFor="let permissionKey of getGroupPermissionKeys(groupName)">
+            <ng-container *ngIf="isSelectRemoveAllButtonAvailable(permissionKey, groupName)">
+                <button
+                class="btn"
+                id="select-all-profile-columns"
+                style="padding: 4px 7px"
+                (click)="selectAllCheckBox(); $event.stopPropagation()"
+                >
+                Select All
+                </button>
+                <button
+                class="btn"
+                id="unselect-all-profile-columns"
+                style="padding: 4px 7px"
+                (click)="unSelectAllCheckBox(); $event.stopPropagation()"
+                >
+                Clear All
+                </button>
+            </ng-container>
             <ng-container [ngSwitch]="inPagePermissionMappedByKey[permissionKey].inputType"
                 style="margin-bottom: 12px;">
 
                 <mat-form-field *ngSwitchCase="'number'" style="margin: 12px 0;">
                     <mat-label>{{inPagePermissionMappedByKey[permissionKey].displayName}}
                     </mat-label>
-                    <input matInput type="number" [(ngModel)]="employeePermissionConfigJson[permissionKey]" />
+                    <input matInput type="number" [(ngModel)]="employeePermissionConfigJsonCopy[permissionKey]" />
                 </mat-form-field>
 
                 <mat-form-field *ngSwitchCase="'select'" style="margin: 0 12px;">
                     <mat-label>{{inPagePermissionMappedByKey[permissionKey].displayName}}
                     </mat-label>
-                    <mat-select [(ngModel)]="employeePermissionConfigJson[permissionKey]">
+                    <mat-select [(ngModel)]="employeePermissionConfigJsonCopy[permissionKey]">
                         <mat-option *ngFor="let option of inPagePermissionMappedByKey[permissionKey].allowedValues"
                             [value]="option[0]">
                             {{option[1]}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
+
+                <!-- Group of CheckBox type STARTS-->
+                <ng-container *ngSwitchCase="'groupOfCheckBox'" style="margin: 0 12px;">
+                    <ng-container  *ngIf="intialize(permissionKey)">
+                        <div class="col-xs-12" style="margin-left: 8px">
+                            <div class="row" style="margin-bottom: 5px">
+                                <span style="font-size: large; font-weight: 800">{{ inPagePermissionMappedByKey[permissionKey].displayName }}</span>
+                            </div>
+                            <div class="row" style="margin-bottom: 8px">
+                                <ng-container *ngFor="let option of inPagePermissionMappedByKey[permissionKey].checkBoxValues">
+                                    <div class="col-md-3">
+                                        <mat-checkbox  [(ngModel)]="employeePermissionConfigJsonCopy[permissionKey][option[0]]" (click)="$event.stopPropagation()">{{option[1]}}</mat-checkbox>
+                                    </div>
+                                </ng-container>
+                                <br />
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+                <!-- Group of CheckBox type ENDS-->
 
             </ng-container>
         </ng-container>

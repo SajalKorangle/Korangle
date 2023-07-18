@@ -1,3 +1,4 @@
+from employee_app.models import EmployeePermission
 from payment_app.cashfree.cashfree import initiateRefund
 from payment_app.models import SchoolMerchantAccount
 from django.db import models
@@ -6,7 +7,7 @@ from school_app.model.models import School, Session, BusStop
 
 from class_app.models import Class, Division
 
-from student_app.models import Student
+from student_app.models import Student, StudentParameter
 
 from employee_app.models import Employee
 
@@ -33,6 +34,9 @@ class FeeType(models.Model):
     name = models.TextField(verbose_name='name')
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, verbose_name='parentSchool')
     orderNumber = models.BigIntegerField(verbose_name='orderNumber', default=0)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
 
     class Meta:
         db_table = 'fee_type_new'
@@ -125,6 +129,9 @@ class SchoolFeeRule(models.Model):
     marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
     marchMaximumLateFee = models.IntegerField(null=True, verbose_name='marchMaximumLateFee')
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentFeeType__parentSchool__id']
+
     class Meta:
         db_table = 'school_fee_rule'
         unique_together = [('ruleNumber', 'parentFeeType', 'parentSession'), ('name', 'parentFeeType', 'parentSession')]
@@ -136,8 +143,29 @@ class ClassFilterFee(models.Model):
     parentClass = models.ForeignKey(Class, on_delete=models.PROTECT, default=0, verbose_name='parentClass')
     parentDivision = models.ForeignKey(Division, on_delete=models.PROTECT, default=0, verbose_name='parentDivision')
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchoolFeeRule__parentFeeType__parentSchool__id']
+
     class Meta:
         db_table = 'class_filter_fee'
+
+
+class ViewDefaulterPermissions(models.Model):
+    USER_TYPE = (
+        ('Admin', 'Admin'),
+        ('Teacher', 'Teacher')
+    )
+
+    parentEmployeePermission = models.ForeignKey(EmployeePermission, on_delete=models.CASCADE, verbose_name='parentEmployeePermission', unique=True)
+    userType = models.CharField(max_length=10, choices=USER_TYPE, default='Admin')
+    viewSummary = models.BooleanField(null=False, default=True)
+    viewStudent = models.BooleanField(null=False, default=True)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentEmployeePermission__parentEmployee__parentSchool__id']
+
+    class Meta:
+        db_table = 'view_defaulter_permissions'
 
 
 class BusStopFilterFee(models.Model):
@@ -145,9 +173,24 @@ class BusStopFilterFee(models.Model):
     parentSchoolFeeRule = models.ForeignKey(SchoolFeeRule, on_delete=models.CASCADE, default=0, verbose_name='parentSchoolFeeRule')
     parentBusStop = models.ForeignKey(BusStop, on_delete=models.CASCADE, default=0, verbose_name='parentBusStop')
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchoolFeeRule__parentFeeType__parentSchool__id']
+
     class Meta:
         db_table = 'bus_stop_filter_fee'
 
+
+class CustomFilterFee(models.Model):
+    parentSchoolFeeRule = models.ForeignKey(SchoolFeeRule, on_delete=models.CASCADE, default=0, verbose_name='parentSchoolFeeRule')
+    parentStudentParameter = models.ForeignKey(StudentParameter, on_delete=models.CASCADE, default=0, verbose_name='parentStudentParameter')
+    selectedFilterValues = models.TextField(null=True, blank=True)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchoolFeeRule__parentFeeType__parentSchool__id']
+
+    class Meta:
+        db_table = 'custom_filter_fee'
+        
 
 class StudentFee(models.Model):
 
@@ -592,7 +635,7 @@ def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
     studentFee.save()
 
 
-class FeeSettings(models.Model):
+class FeeSchoolSessionSettings(models.Model):
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE)
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT)
     sessionLocked = models.BooleanField(default=False)
@@ -600,6 +643,14 @@ class FeeSettings(models.Model):
 
     class Meta:
         unique_together = ('parentSchool', 'parentSession')
+
+
+class FeeSchoolSettings(models.Model):
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, unique = True)
+    printSingleReceipt = models.BooleanField(default=False)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
 
 
 class FeeReceiptOrder(models.Model):
@@ -630,7 +681,7 @@ def FeeReceiptOrderCompletionHandler(sender, instance, **kwargs):
             debitAccount = None
             creditAccount = None
             try:
-                feeSettings = FeeSettings.objects.get(parentSchool=activeSchoolId, parentSession=currentSession)
+                feeSettings = FeeSchoolSessionSettings.objects.get(parentSchool=activeSchoolId, parentSession=currentSession)
                 if(feeSettings.accountingSettingsJSON):
                     accountingSettings = json.loads(feeSettings.accountingSettingsJSON)
                     debitAccount = AccountSession.objects.get(id=accountingSettings['parentAccountFrom']).parentAccount

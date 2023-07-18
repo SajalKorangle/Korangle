@@ -1,5 +1,6 @@
 import { UpdateAllComponent } from './update-all.component';
 import { CommonFunctions } from '@classes/common-functions';
+import { CommonFunctions as CommonFunctionsRecordActivity } from '@modules/common/common-functions';
 
 export class UpdateAllServiceAdapter {
     vm: UpdateAllComponent;
@@ -160,6 +161,13 @@ export class UpdateAllServiceAdapter {
                             (<HTMLInputElement>document.getElementById(student.dbId + key)).disabled = false;
                         } else if (inputType === 'list') {
                         }
+
+                        let parentEmployee = this.vm.user.activeSchool.employeeId;
+                        let moduleName = this.vm.user.section.title;
+                        let taskName = this.vm.user.section.subTitle;
+                        let moduleList = this.vm.user.activeSchool.moduleList;
+                        let actionString = " updated " + key + " of " + student.name;
+                        CommonFunctionsRecordActivity.createRecord(parentEmployee, moduleName, taskName, moduleList, actionString);
                     } else {
                         alert('Not able to update ' + key + ' for value: ' + newValue);
                     }

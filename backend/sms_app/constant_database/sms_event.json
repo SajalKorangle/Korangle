@@ -15,5 +15,7 @@
   {"id":14, "eventName":"Tutorial Deletion", "defaultSMSTemplateId": 10, "defaultNotificationContent":"The following tutorial has been deleted -\n Topic {#tutorialTopic#};"},
   {"id":15, "eventName":"Event Gallery Creation", "defaultSMSTemplateId": 11, "defaultNotificationContent":"A New Event {#eventTitle#} has been posted, view the event details in Event Gallery page"},
   {"id":16, "eventName":"Event Gallery Updation", "defaultSMSTemplateId": 12, "defaultNotificationContent":"The Event {#eventTitle#} has been updated/edited, view the event details in Event Gallery page"},
-  {"id":17, "eventName":"Event Gallery Deletion", "defaultSMSTemplateId": 13, "defaultNotificationContent":"The Event {#eventTitle#} has been removed from the event list"}
+  {"id":17, "eventName":"Event Gallery Deletion", "defaultSMSTemplateId": 13, "defaultNotificationContent":"The Event {#eventTitle#} has been removed from the event list"},
+  {"id":18, "eventName":"Discount Notification", "defaultSMSTemplateId": 14, "defaultNotificationContent":"Discount of Rs. {#discountAmount#} has been given to {#studentName#} by {#schoolName#} for the Academic {#session#}.\n\nKorangle"},
+  {"id":19, "eventName":"Fee Receipt Notification", "defaultSMSTemplateId": 15, "defaultNotificationContent":"Rs. {#feeAmount#} deposited in the fee account of {#studentName#}, scholar no {#studentScholarId#} vide receipt no {#feeReceiptNumber#}, dated {#date#}.\n\n{#schoolName#}\nKorangle"}
 ]

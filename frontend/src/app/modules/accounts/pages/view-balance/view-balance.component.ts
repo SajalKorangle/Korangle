@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "../../../../classes/data-storage";
 import { MatDialog } from '@angular/material';
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
-import { SchoolService } from './../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { ViewBalanceServiceAdapter } from './view-balance.service.adapter';
-import { EmployeeService } from './../../../../services/modules/employee/employee.service';
 import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_LEDGER } from './../../../../print/print-routes.constants';
 import { HEADS_LIST } from '@services/modules/accounts/models/head';
 import { customAccount, customGroupStructure } from './../../classes/constants';
+import { CommonFunctions } from './../../../../classes/common-functions';
 import xlsx = require('xlsx');
 
 @Component({
@@ -19,8 +19,7 @@ import xlsx = require('xlsx');
   styleUrls: ['./view-balance.component.css'],
   providers: [
     AccountsService,
-    SchoolService,
-    EmployeeService,
+    GenericService,
   ]
 })
 
@@ -161,8 +160,7 @@ export class ViewBalanceComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     public accountsService: AccountsService,
-    public schoolService: SchoolService,
-    public employeeService: EmployeeService,
+    public genericService: GenericService,
     public printService: PrintService,
   ) { }
 
@@ -365,6 +363,10 @@ export class ViewBalanceComponent implements OnInit {
     let wb = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
     xlsx.writeFile(wb, this.ledgerAccount.title + '.xlsx');
+  }
+
+  isMobile(): boolean {
+    return CommonFunctions.getInstance().isMobileMenu();
   }
 
 }

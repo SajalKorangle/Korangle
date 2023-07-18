@@ -13,6 +13,7 @@ import { PrintStudentListComponent } from './print/print-student-list/print-stud
 import { ExcelService } from '../../excel/excel-service';
 import { PrintStudentProfileComponent } from './print/print-student-profile/print-student-profile.component';
 import { ImagePdfPreviewDialogComponent } from "../../components/image-pdf-preview-dialog/image-pdf-preview-dialog.component";
+import { PrintCountAllTableComponent } from './print/print-count-all-table/print-count-all-table.component';
 
 @NgModule({
     declarations: [
@@ -23,6 +24,7 @@ import { ImagePdfPreviewDialogComponent } from "../../components/image-pdf-previ
         PrintTransferCertificateSecondFormatComponent,
         PrintStudentListComponent,
         PrintStudentProfileComponent,
+        PrintCountAllTableComponent,
     ],
 
     imports: [ComponentsModule, StudentRoutingModule, NgxDatatableModule],

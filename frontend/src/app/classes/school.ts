@@ -174,6 +174,19 @@ export class School {
                     },
                 ],
             });
+
+            this.parentModuleList.push({
+                name: 'Parent Support',
+                studentList: this.studentList,
+                id: this.studentList[0].id,
+                taskList: [
+                    {
+                        title: 'Raise complaint',
+                        path: 'raise_complaint',
+                        icon: 'question_answer',
+                    },
+                ],
+            });
         }
     }
 }

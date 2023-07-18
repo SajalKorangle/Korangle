@@ -10,7 +10,14 @@ export class SettingsBackendData {
     accountsList: Array<Account>;
     accountSessionList: Array<AccountSession>;
 
-    schoolMerchantAccount: {id: number, isEnabled: boolean, percentageOfPlatformFeeOnSchool: number};
+    schoolMerchantAccount: {
+        id: number,
+        isEnabled: boolean,
+        easebuzzBankLabel: string,
+        platformFeeOnSchoolType: string,
+        percentageOfPlatformFeeOnSchool: number,
+        maxPlatformFeeOnSchool: number
+    };
 
     constructor(vm: SettingsComponent) {
         this.vm = vm;

@@ -3,14 +3,14 @@
         <mat-form-field class="example-full-width">
             <input
                 type="text"
-                placeholder="Type eqnuirer name here...."
+                placeholder="Type enquirer name here...."
                 aria-label="Student"
                 matInput
                 [formControl]="myControl"
                 [matAutocomplete]="auto"
                 [ngModel]="selectedEnquiry"
             />
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="getEnquiry($event.option.value)" [displayWith]="displayFn">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="serviceAdapter.getEnquiry($event.option.value)" [displayWith]="displayFn">
                 <mat-option *ngFor="let enquiry of filteredEnquiryList | async" [value]="enquiry">
                     {{ displayFn(enquiry) }}
                 </mat-option>
@@ -101,7 +101,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="updateEnquiry()">Update</button>
+        <button type="submit" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" (click)="serviceAdapter.updateEnquiry()">Update</button>
 
         <div class="clearfix"></div>
     </ng-container>

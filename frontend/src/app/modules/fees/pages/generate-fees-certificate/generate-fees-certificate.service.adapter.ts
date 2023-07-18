@@ -29,7 +29,7 @@ export class GenerateFeesCertificateServiceAdapter {
     getStudentProfile(selectedStudentList): void {
         this.vm.isLoading = true;
 
-        let studentListId = selectedStudentList.map((a) => a.id).join();
+        let studentListId = selectedStudentList.map((a) => a.id);
 
         let request_student_data = {
             id__in: studentListId,
@@ -41,23 +41,23 @@ export class GenerateFeesCertificateServiceAdapter {
 
         let fee_receipt_list = {
             parentStudent__in: studentListId,
-            cancelled: 'false__boolean',
-            parentFeeReceipt__generationDateTime__date__gte: this.vm.selectedSession.startDate,
-            parentFeeReceipt__generationDateTime__date__lte: this.vm.selectedSession.endDate,
+            cancelled: false,
+            generationDateTime__date__gte: this.vm.selectedSession.startDate,
+            generationDateTime__date__lte: this.vm.selectedSession.endDate,
         };
 
         let sub_fee_receipt_list = {
             parentStudentFee__parentStudent__in: studentListId,
-            parentFeeReceipt__cancelled: 'false__boolean',
+            parentFeeReceipt__cancelled: false,
             parentFeeReceipt__generationDateTime__date__gte: this.vm.selectedSession.startDate,
             parentFeeReceipt__generationDateTime__date__lte: this.vm.selectedSession.endDate,
         };
 
         Promise.all([
-            this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data),
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fees_type_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
+            this.vm.genericService.getObjectList({student_app: 'Student'}, {filter: request_student_data}), // 0
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fees_type_list), // 1
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceipt'}, {filter: fee_receipt_list}), // 2
+            this.vm.genericService.getObjectList({fees_third_app: 'SubFeeReceipt'}, {filter: sub_fee_receipt_list}), // 3
         ]).then(
             (value) => {
                 this.vm.selectedStudentList = value[0];

@@ -1,0 +1,65 @@
+/* Starts: Modal Container */
+.show-student-list-modal-container {
+    height: 70vh;
+    width: 60vw;
+}
+/* Ends: Modal Container */
+
+/* Starts: header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #C4C4C4;   /* Light Gray */
+}
+
+.title {
+    font-weight: 500;
+}
+
+.close-btn {
+    color: red;
+    cursor: pointer;
+}
+/* Ends: header */
+
+.column-detail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.serial-number {
+    flex-basis: 10%;
+    font-weight: 400;
+}
+
+.student-name {
+    flex-basis: 30%;
+    font-weight: 400;
+}
+
+.student-class {
+    flex-basis: 25%;
+    font-weight: 400;
+}
+
+.student-section {
+    flex-basis: 25%;
+    font-weight: 400;
+}
+
+/* Starts: Media Query */
+@media only screen and (max-width: 992px) {
+    /* Starts: Modal Container */
+    .show-student-list-modal-container {
+        height: 70vh;
+        width: 100vw;
+        font-size: 10px;
+        margin: 0;
+        padding: 0;
+    }
+    /* Ends: Modal Container */
+}
+/* Ends: Media Query */

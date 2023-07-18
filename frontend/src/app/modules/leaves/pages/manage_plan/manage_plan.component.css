@@ -1,0 +1,114 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined");
+.navBar {
+    width: 100%;
+    padding: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+.Row {
+    width: 100%;
+    padding: 8px;
+}
+.matCardContentModifiedFlex {
+    font-size: medium;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.title {
+    color: #fc9701;
+    font-size: large;
+}
+.navBtn {
+    text-decoration: underline;
+    font-size: medium;
+    cursor: pointer;
+}
+.matCardContentAddNew {
+    font-size: medium;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+}
+.contentInput {
+    height: 100%;
+    width: 100%;
+    padding: 5px;
+    background: none;
+    outline: none;
+    box-shadow: none;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+.contentButton {
+    border-radius: 5px;
+    padding: 12px 24px 12px 24px;
+    font-size: medium;
+    color: #ffffff;
+    background: #fd9700;
+    box-shadow: none;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 2px;
+}
+.contentButtonHollow {
+    border-radius: 5px;
+    padding: 12px 24px 12px 24px;
+    font-size: medium;
+    color: #000000;
+    background: none;
+    box-shadow: none;
+    border: 1px solid #fd9700;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 2px;
+}
+.contentRow {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    min-height: 30px;
+    height: fit-content;
+    padding: 8px;
+}
+.contentColItem {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5px;
+}
+.contentRowItem {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+.contentTitle {
+    padding: 5px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.5);
+    width: fit-content;
+}
+.flexContainer {
+    height: 100vh;
+    overflow-y: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+.cardContainer {
+    height: 81vh;
+}
+.responsiveText {
+    display: block;
+}
+@media (max-width: 650px) {
+    .responsiveText {
+        display: none;
+    }
+}

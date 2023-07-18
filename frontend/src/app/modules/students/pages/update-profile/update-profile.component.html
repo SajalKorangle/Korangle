@@ -29,7 +29,7 @@
 
         <div class="row visible-md visible-lg visible-xl">
             <div class="col-md-12">
-                <b>{{ getClassName() }}, {{ getSectionName() }}</b>
+                <b>{{ htmlRenderer.getClassName() }}, {{ htmlRenderer.getSectionName() }}</b>
             </div>
         </div>
 
@@ -53,19 +53,19 @@
             <div class="col-md-9">
                 <div class="row hidden-md hidden-lg hidden-sm" style="margin-top: 10px">
                     <div class="col-md-12">
-                        <b>{{ getClassName() }}, {{ getSectionName() }}</b>
+                        <b>{{ htmlRenderer.getClassName() }}, {{ htmlRenderer.getSectionName() }}</b>
                     </div>
                 </div>
 
                 <!-- Name, Father's Name, Mother's Name -->
                 <div class="row">
-                    <div class="col-md-4" [class.fieldChanged]="checkFieldChanged(selectedStudent.name, currentStudent.name)">
+                    <div class="col-md-4" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.name, currentStudent.name)">
                         <mat-form-field style="width: 100%">
                             <mat-label>Name</mat-label>
                             <input matInput type="text" (ngModelChange)="currentStudent.name = $event" [ngModel]="selectedStudent.name" />
                         </mat-form-field>
                     </div>
-                    <div class="col-md-4" [class.fieldChanged]="checkFieldChanged(selectedStudent.fathersName, currentStudent.fathersName)">
+                    <div class="col-md-4" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.fathersName, currentStudent.fathersName)">
                         <mat-form-field style="width: 100%">
                             <mat-label>Father's Name</mat-label>
                             <input
@@ -76,7 +76,7 @@
                             />
                         </mat-form-field>
                     </div>
-                    <div class="col-md-4" [class.fieldChanged]="checkFieldChanged(selectedStudent.motherName, currentStudent.motherName)">
+                    <div class="col-md-4" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.motherName, currentStudent.motherName)">
                         <mat-form-field style="width: 100%">
                             <mat-label>Mother's Name</mat-label>
                             <input
@@ -93,7 +93,7 @@
                 <div class="row">
                     <div
                         class="col-md-4"
-                        [class.fieldChanged]="checkFieldChanged(selectedStudentSection.rollNumber, currentStudentSection.rollNumber)"
+                        [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudentSection.rollNumber, currentStudentSection.rollNumber)"
                     >
                         <mat-form-field style="width: 100%">
                             <mat-label>Roll No.</mat-label>
@@ -108,7 +108,7 @@
 
                     <div
                         class="col-md-4"
-                        [class.fieldChanged]="checkFieldChanged(selectedStudent.scholarNumber, currentStudent.scholarNumber)"
+                        [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.scholarNumber, currentStudent.scholarNumber)"
                     >
                         <mat-form-field style="width: 100%">
                             <mat-label>Scholar No.</mat-label>
@@ -120,7 +120,7 @@
                             />
                         </mat-form-field>
                     </div>
-                    <div class="col-md-4" [class.fieldChanged]="checkFieldChanged(selectedStudent.dateOfBirth, currentStudent.dateOfBirth)">
+                    <div class="col-md-4" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.dateOfBirth, currentStudent.dateOfBirth)">
                         <mat-form-field style="width: 100%">
                             <mat-label>Date of Birth</mat-label>
                             <input
@@ -160,15 +160,15 @@
 
         <!-- Mobile Number, Admission Session, Bus Stop, RTE -->
         <div class="row">
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.mobileNumber, currentStudent.mobileNumber)">
+            <div class="col-md-3" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.mobileNumber, currentStudent.mobileNumber)">
                 <mat-form-field style="width: 100%">
                     <mat-label
                         >Mobile Number
                         <span
-                            *ngIf="checkLength(selectedStudent.mobileNumber)"
-                            [class.fieldRight]="checkRight(selectedStudent.mobileNumber, 10)"
+                            *ngIf="htmlRenderer.checkLength(currentStudent.mobileNumber)"
+                            [class.fieldRight]="htmlRenderer.checkRight(currentStudent.mobileNumber, 10)"
                         >
-                            - {{ selectedStudent.mobileNumber.toString().length }}</span
+                            - {{ currentStudent.mobileNumber.toString().length }}</span
                         >
                     </mat-label>
                     <input
@@ -181,7 +181,7 @@
             </div>
             <div
                 class="col-md-3"
-                [class.fieldChanged]="checkFieldChanged(selectedStudent.admissionSession, currentStudent.admissionSession)"
+                [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.admissionSession, currentStudent.admissionSession)"
             >
                 <mat-form-field style="width: 100%">
                     <mat-select
@@ -190,14 +190,14 @@
                         (ngModelChange)="currentStudent.admissionSession = $event"
                     >
                         <mat-option [value]="0">None</mat-option>
-                        <mat-option [value]="user.activeSchool.currentSessionDbId">{{ user.getSchoolCurrentSessionName() }}</mat-option>
+                        <mat-option [value]="user.activeSchool.currentSessionDbId">{{ htmlRenderer.getSchoolCurrentSessionName() }}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
             <div
                 *ngIf="busStopList.length > 0"
                 class="col-md-3"
-                [class.fieldChanged]="checkFieldChanged(selectedStudent.currentBusStop, currentStudent.currentBusStop)"
+                [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.currentBusStop, currentStudent.currentBusStop)"
             >
                 <mat-form-field style="width: 100%">
                     <mat-select
@@ -212,7 +212,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.rte, currentStudent.rte)">
+            <div class="col-md-3" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.rte, currentStudent.rte)">
                 <mat-form-field style="width: 100%">
                     <mat-select placeholder="RTE" [ngModel]="selectedStudent.rte" (ngModelChange)="currentStudent.rte = $event">
                         <mat-option value="YES">Yes</mat-option>
@@ -224,7 +224,7 @@
 
         <!-- Gender, Category, Religion, Blood Group -->
         <div class="row">
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.gender, currentStudent.gender)">
+            <div class="col-md-3" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.gender, currentStudent.gender)">
                 <mat-form-field style="width: 100%">
                     <mat-select placeholder="Gender" [ngModel]="selectedStudent.gender" (ngModelChange)="currentStudent.gender = $event">
                         <mat-option>None</mat-option>
@@ -236,7 +236,7 @@
             </div>
             <div
                 class="col-md-3"
-                [class.fieldChanged]="checkFieldChanged(selectedStudent.newCategoryField, currentStudent.newCategoryField)"
+                [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.newCategoryField, currentStudent.newCategoryField)"
             >
                 <mat-form-field style="width: 100%">
                     <mat-select
@@ -254,7 +254,7 @@
             </div>
             <div
                 class="col-md-3"
-                [class.fieldChanged]="checkFieldChanged(selectedStudent.newReligionField, currentStudent.newReligionField)"
+                [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.newReligionField, currentStudent.newReligionField)"
             >
                 <mat-form-field style="width: 100%">
                     <mat-select
@@ -270,7 +270,7 @@
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.bloodGroup, currentStudent.bloodGroup)">
+            <div class="col-md-3" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.bloodGroup, currentStudent.bloodGroup)">
                 <mat-form-field style="width: 100%">
                     <mat-select
                         placeholder="Blood Group"
@@ -293,13 +293,13 @@
 
         <!-- Child SSMID, Family SSMID, Aadhar Number, Caste -->
         <div class="row">
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.familySSMID, currentStudent.familySSMID)">
+            <div class="col-md-3" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.familySSMID, currentStudent.familySSMID)">
                 <mat-form-field style="width: 100%">
                     <mat-label
                         >Family SSMID
                         <span
-                            *ngIf="checkLength(currentStudent.familySSMID)"
-                            [class.fieldRight]="checkRight(currentStudent.familySSMID, 8)"
+                            *ngIf="htmlRenderer.checkLength(currentStudent.familySSMID)"
+                            [class.fieldRight]="htmlRenderer.checkRight(currentStudent.familySSMID, 8)"
                         >
                             - {{ currentStudent.familySSMID.toString().length }}</span
                         >
@@ -312,11 +312,11 @@
                     />
                 </mat-form-field>
             </div>
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.childSSMID, currentStudent.childSSMID)">
+            <div class="col-md-3" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.childSSMID, currentStudent.childSSMID)">
                 <mat-form-field style="width: 100%">
                     <mat-label
                         >Child SSMID
-                        <span *ngIf="checkLength(currentStudent.childSSMID)" [class.fieldRight]="checkRight(currentStudent.childSSMID, 9)">
+                        <span *ngIf="htmlRenderer.checkLength(currentStudent.childSSMID)" [class.fieldRight]="htmlRenderer.checkRight(currentStudent.childSSMID, 9)">
                             - {{ currentStudent.childSSMID.toString().length }}</span
                         >
                     </mat-label>
@@ -328,11 +328,11 @@
                     />
                 </mat-form-field>
             </div>
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.aadharNum, currentStudent.aadharNum)">
+            <div class="col-md-3" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.aadharNum, currentStudent.aadharNum)">
                 <mat-form-field style="width: 100%">
                     <mat-label
                         >Aadhar Number
-                        <span *ngIf="checkLength(currentStudent.aadharNum)" [class.fieldRight]="checkRight(currentStudent.aadharNum, 12)">
+                        <span *ngIf="htmlRenderer.checkLength(currentStudent.aadharNum)" [class.fieldRight]="htmlRenderer.checkRight(currentStudent.aadharNum, 12)">
                             - {{ currentStudent.aadharNum.toString().length }}</span
                         >
                     </mat-label>
@@ -344,7 +344,7 @@
                     />
                 </mat-form-field>
             </div>
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.caste, currentStudent.caste)">
+            <div class="col-md-3" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.caste, currentStudent.caste)">
                 <mat-form-field style="width: 100%">
                     <mat-label>Caste</mat-label>
                     <input matInput type="text" (ngModelChange)="currentStudent.caste = $event" [ngModel]="selectedStudent.caste" />
@@ -354,13 +354,13 @@
 
         <!-- Bank Name, Bank Account Number, Bank Ifsc Code -->
         <div class="row">
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.bankName, currentStudent.bankName)">
+            <div class="col-md-3" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.bankName, currentStudent.bankName)">
                 <mat-form-field style="width: 100%">
                     <mat-label>Bank Name</mat-label>
                     <input matInput type="text" (ngModelChange)="currentStudent.bankName = $event" [ngModel]="selectedStudent.bankName" />
                 </mat-form-field>
             </div>
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.bankAccountNum, currentStudent.bankAccountNum)">
+            <div class="col-md-3" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.bankAccountNum, currentStudent.bankAccountNum)">
                 <mat-form-field style="width: 100%">
                     <mat-label>Account Number</mat-label>
                     <input
@@ -371,12 +371,13 @@
                     />
                 </mat-form-field>
             </div>
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.bankIfscCode, currentStudent.bankIfscCode)">
+            <div class="col-md-3" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.bankIfscCode, currentStudent.bankIfscCode)">
                 <mat-form-field style="width: 100%">
                     <mat-label>Bank IFSC Code</mat-label>
                     <input
                         matInput
                         type="text"
+                        style="text-transform:uppercase"
                         (ngModelChange)="currentStudent.bankIfscCode = $event"
                         [ngModel]="selectedStudent.bankIfscCode"
                     />
@@ -388,7 +389,7 @@
         <div class="row">
             <div
                 class="col-md-3"
-                [class.fieldChanged]="checkFieldChanged(selectedStudent.fatherOccupation, currentStudent.fatherOccupation)"
+                [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.fatherOccupation, currentStudent.fatherOccupation)"
             >
                 <mat-form-field style="width: 100%">
                     <mat-label>Father's Occupation</mat-label>
@@ -402,7 +403,7 @@
             </div>
             <div
                 class="col-md-3"
-                [class.fieldChanged]="checkFieldChanged(selectedStudent.fatherAnnualIncome, currentStudent.fatherAnnualIncome)"
+                [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.fatherAnnualIncome, currentStudent.fatherAnnualIncome)"
             >
                 <mat-form-field style="width: 100%">
                     <mat-label>Father's Annual Income</mat-label>
@@ -417,14 +418,14 @@
 
             <div
                 class="col-md-3"
-                [class.fieldChanged]="checkFieldChanged(selectedStudent.secondMobileNumber, currentStudent.secondMobileNumber)"
+                [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.secondMobileNumber, currentStudent.secondMobileNumber)"
             >
                 <mat-form-field style="width: 100%">
                     <mat-label
                         >Alternate Mobile Number
                         <span
-                            *ngIf="checkLength(currentStudent.secondMobileNumber)"
-                            [class.fieldRight]="checkRight(currentStudent.secondMobileNumber, 10)"
+                            *ngIf="htmlRenderer.checkLength(currentStudent.secondMobileNumber)"
+                            [class.fieldRight]="htmlRenderer.checkRight(currentStudent.secondMobileNumber, 10)"
                         >
                             - {{ currentStudent.secondMobileNumber.toString().length }}</span
                         >
@@ -441,7 +442,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-3" [class.fieldChanged]="checkFieldChanged(selectedStudent.dateOfAdmission, currentStudent.dateOfAdmission)">
+            <div class="col-md-3" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.dateOfAdmission, currentStudent.dateOfAdmission)">
                 <mat-form-field style="width: 100%">
                     <mat-label>Date of Admission</mat-label>
                     <input
@@ -465,7 +466,7 @@
 
         <!-- Address, Remark -->
         <div class="row">
-            <div class="col-md-6" [class.fieldChanged]="checkFieldChanged(selectedStudent.address, currentStudent.address)">
+            <div class="col-md-6" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.address, currentStudent.address)">
                 <mat-form-field style="width: 100%">
                     <mat-label>Address</mat-label>
                     <textarea
@@ -478,7 +479,7 @@
                     </textarea>
                 </mat-form-field>
             </div>
-            <div class="col-md-6" [class.fieldChanged]="checkFieldChanged(selectedStudent.remark, currentStudent.remark)">
+            <div class="col-md-6" [class.fieldChanged]="htmlRenderer.checkFieldChanged(selectedStudent.remark, currentStudent.remark)">
                 <mat-form-field style="width: 100%">
                     <mat-label>Remark</mat-label>
                     <textarea
@@ -499,7 +500,7 @@
                 <div
                     *ngIf="parameter.parameterType !== 'DOCUMENT'"
                     class="col-md-3"
-                    [class.fieldChanged]="checkCustomFieldChanged(parameter)"
+                    [class.fieldChanged]="htmlRenderer.checkCustomFieldChanged(parameter)"
                 >
                     <mat-form-field style="width: 100%">
                         <mat-label *ngIf="parameter.parameterType === 'TEXT'">{{ parameter.name }}</mat-label>
@@ -508,12 +509,12 @@
                             *ngIf="parameter.parameterType === 'TEXT'"
                             type="text"
                             (ngModelChange)="updateParameterValue(parameter, $event)"
-                            [ngModel]="getParameterValue(parameter)"
+                            [ngModel]="htmlRenderer.getParameterValue(parameter)"
                         />
                         <ng-container *ngIf="parameter.parameterType === 'FILTER'">
                             <mat-select
                                 placeholder="{{ parameter.name }}"
-                                [ngModel]="getParameterValue(parameter)"
+                                [ngModel]="htmlRenderer.getParameterValue(parameter)"
                                 (ngModelChange)="updateParameterValue(parameter, $event)"
                             >
                                 <mat-option [value]="NULL_CONSTANT">None</mat-option>
@@ -532,7 +533,7 @@
                     *ngIf="parameter.parameterType == 'DOCUMENT'"
                     class="col-md-5"
                     style="margin-top: 10px; margin-right: 10px"
-                    [class.fieldChanged]="checkCustomFieldChanged(parameter)"
+                    [class.fieldChanged]="htmlRenderer.checkCustomFieldChanged(parameter)"
                 >
                     <div (dragenter)="dragEnter($event)" (dragleave)="dragLeave($event)" (drop)="onDrop($event)" class="drop">
                         <input
@@ -544,32 +545,32 @@
                             #imageInput
                         />
                         <div class="documentIcon">
-                            <img [src]="getIcon(parameter)" (click)="openFilePreviewDialog(parameter)" alt="icon" />
+                            <img [src]="htmlRenderer.getIcon(parameter)" (click)="openFilePreviewDialog(parameter)" alt="icon" />
                         </div>
                         <div class="documentText">
                             <label class="documentLabel" #docLabel>{{ parameter.name }}{{ resizeContainer(docLabel) }}</label>
                             <button
-                                *ngIf="getParameterDocumentType(parameter) == 'none'"
+                                *ngIf="htmlRenderer.getParameterDocumentType(parameter) == 'none'"
                                 (click)="imageInput.click()"
                                 class="documentButton"
                             >
                                 Upload
                             </button>
                             <button
-                                *ngIf="getParameterDocumentType(parameter) != 'none'"
+                                *ngIf="htmlRenderer.getParameterDocumentType(parameter) != 'none'"
                                 (click)="imageInput.click()"
                                 class="documentButton"
                             >
                                 Replace
                             </button>
                             <button
-                                *ngIf="getParameterDocumentType(parameter) != 'none'"
+                                *ngIf="htmlRenderer.getParameterDocumentType(parameter) != 'none'"
                                 (click)="deleteDocument(parameter)"
                                 class="documentButton"
                             >
                                 Delete
                             </button>
-                            <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">
+                            <button *ngIf="htmlRenderer.checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)" class="documentButton">
                                 Reset
                             </button>
                         </div>
@@ -580,7 +581,7 @@
 
         <div style="padding-top: 25px">
             <button
-                *ngIf="!isMobile()"
+                *ngIf="!htmlRenderer.isMobile()"
                 id="update"
                 type="submit"
                 class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
@@ -592,7 +593,7 @@
         <button
             [ngClass]="'sticky mobileButton-' + user.activeSchool.secondaryThemeColor"
             mat-fab
-            *ngIf="isMobile()"
+            *ngIf="htmlRenderer.isMobile()"
             (click)="serviceAdapter.updateProfile()"
         >
             <mat-icon>check</mat-icon>

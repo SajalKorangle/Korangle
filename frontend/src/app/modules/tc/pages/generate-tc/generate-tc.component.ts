@@ -5,12 +5,10 @@ import { GenerateTCServiceAdapter } from './generate-tc.service.adapter';
 import { StudentFee } from './../../../../services/modules/fees/models/student-fee';
 
 import { TCService } from '@services/modules/tc/tc.service';
-import { StudentService } from '@services/modules/student/student.service';
-import { ClassService } from '@services/modules/class/class.service';
 import { SubjectService } from '@services/modules/subject/subject.service';
-import { SchoolService } from '@services/modules/school/school.service';
 import { AttendanceService } from '@services/modules/attendance/attendance.service';
 import { FeeService } from './../../../../services/modules/fees/fee.service';
+import { GenericService } from '@services/generic/generic-service';
 import { TransferCertificateSettings } from './../../../../services/modules/tc/models/transfer-certificate-settings';
 import { SchoolFeeRule } from './../../../../services/modules/fees/models/school-fee-rule';
 
@@ -23,7 +21,13 @@ import * as jsPDF from 'jspdf';
     selector: 'app-generate-tc',
     templateUrl: './generate-tc.component.html',
     styleUrls: ['./generate-tc.component.css'],
-    providers: [TCService, StudentService, ClassService, SubjectService, SchoolService, AttendanceService, FeeService],
+    providers: [
+        TCService,
+        SubjectService,
+        AttendanceService,
+        FeeService,
+        GenericService
+    ],
 })
 export class GenerateTCComponent implements OnInit {
     user: any;
@@ -120,12 +124,10 @@ export class GenerateTCComponent implements OnInit {
 
     constructor(
         public tcService: TCService,
-        public studentService: StudentService,
-        public classService: ClassService,
         public subjectService: SubjectService,
-        public schoolService: SchoolService,
         public attendanceService: AttendanceService,
-        public feeService: FeeService
+        public feeService: FeeService,
+        public genericService: GenericService,
     ) {}
 
     ngOnInit() {
@@ -190,10 +192,6 @@ export class GenerateTCComponent implements OnInit {
         });
     }
 
-    // selectAllClasses(): void {
-    //     this.classSectionList.forEach((classSection) => (classSection.selected = true));
-    // }
-
     unselectAllClasses(): void {
         this.classSectionList.forEach((classSection) => (classSection.selected = false));
     }
@@ -240,10 +238,27 @@ export class GenerateTCComponent implements OnInit {
         return true;
     }
 
+    getSessionNameByCurrentSession(sessionId): string {
+        const sessionList = this.DATA.data.sessionList;
+        for (let session of sessionList) {
+            if (session.id == sessionId) {
+                return session.name;
+            }
+        }
+        return '';
+    }
+
     async generateTC() {
         if (!this.sanityCheck()) {
             return;
         }
+
+        let leavingSession = this.getSessionNameByCurrentSession(this.DATA.currentSession);
+
+        if (!confirm("Are you sure you want to generate T.C. in " + leavingSession + " ?")) {
+            return;
+        }
+
         this.isLoading = true;
         const serviceList = [];
 

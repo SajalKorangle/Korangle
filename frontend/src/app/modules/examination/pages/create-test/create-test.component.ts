@@ -60,6 +60,7 @@ export class CreateTestComponent implements OnInit {
     }>;
 
     isUpdated = false;
+    isLocked = false;
 
     user;
 
@@ -227,8 +228,6 @@ export class CreateTestComponent implements OnInit {
 
     //It handles which test type can be selected
     handleTestTypeSelection(value: any, ngModelControl: NgModel, test: any) {
-        console.log(test);
-        console.dir(this.newTestList, { depth: null });
         if (this.findAnyDuplicate(test, value)) {
             alert('Test already exists!!');
             ngModelControl.control.setValue(test.testType);
@@ -315,11 +314,12 @@ export class CreateTestComponent implements OnInit {
             };
 
             if (subIdx === -1) {
-                this.newTestList.push(tempSubject);
+                this.newTestList = [...this.newTestList, tempSubject];
             } else if (classIdx === -1) {
-                this.newTestList[subIdx].classList.push(tempClass);
+                this.newTestList[subIdx].classList = [...this.newTestList[subIdx].classList, tempClass];
             } else if (sectionIdx === -1) {
-                this.newTestList[subIdx].classList[classIdx].sectionList.push(tempSection);
+                this.newTestList[subIdx].classList[classIdx].sectionList
+                    = [...this.newTestList[subIdx].classList[classIdx].sectionList, tempSection];
             } else {
                 alert('Test already exists!!');
                 this.selectedTestType = null;

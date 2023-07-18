@@ -49,6 +49,11 @@ const routes: Routes = [
         data: { moduleName: 'parent' },
     },
     {
+        path: 'raise_complaint',
+        loadChildren: 'app/modules/parent/pages/raise-complaint/raise-complaint.module#RaiseComplaintModule',
+        data: { moduleName: 'parent' },
+    },
+    {
         path: '',
         component: ParentComponent,
     },

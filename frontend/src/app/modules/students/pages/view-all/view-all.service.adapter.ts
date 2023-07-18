@@ -10,14 +10,10 @@ export class ViewAllServiceAdapter {
         this.vm = vm;
     }
 
-    initializeData(): void {
+    async initializeData(): Promise<void> {
         this.vm.isLoading = true;
         const student_full_profile_request_data = {
             schoolDbId: this.vm.user.activeSchool.dbId,
-            sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
-        };
-
-        const class_section_request_data = {
             sessionDbId: this.vm.user.activeSchool.currentSessionDbId,
         };
 
@@ -37,45 +33,45 @@ export class ViewAllServiceAdapter {
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             status__in: ['Generated', 'Issued'],
-            fields__korangle: ['parentStudent'],
+            // fields__korangle: ['parentStudent'],
         };
 
-        Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),    // 0
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),  // 1
+        let temp_classSectionList_1, temp_classSectionList_2, temp_studentFullProfileList, temp_studentParameterList,
+        temp_studentParameterValueList, temp_busStopList, temp_session_list, temp_backendDataTcList;
+
+        [temp_classSectionList_1, temp_classSectionList_2, temp_studentFullProfileList, temp_studentParameterList, temp_studentParameterValueList,
+        temp_busStopList, temp_session_list, temp_backendDataTcList] = await Promise.all([
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 0
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 1
             this.vm.studentOldService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),   // 2
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, student_parameter_data), // 3
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, student_parameter_value_data), // 4
-            this.vm.schoolService.getObjectList(this.vm.schoolService.bus_stop, bus_stop_data), // 5
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 6
-            this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, tc_data),   // 7
-        ]).then(
-            (value) => {
-                value[0].forEach((classs) => {
-                    classs.sectionList = [];
-                    value[1].forEach((section) => {
-                        classs.sectionList.push(CommonFunctions.getInstance().copyObject(section));
-                    });
-                });
-                this.vm.initializeClassSectionList(value[0]);
-                this.vm.backendData.tcList = value[7];
-                this.vm.initializeStudentFullProfileList(value[2]);
-                this.vm.studentParameterList = value[3].map((x) => ({
-                    ...x,
-                    filterValues: JSON.parse(x.filterValues).map((x2) => ({ name: x2, show: false })),
-                    showNone: false,
-                    filterFilterValues: '',
-                }));
-                this.vm.studentParameterValueList = value[4];
-                this.vm.studentParameterDocumentList = this.vm.studentParameterList.filter((x) => x.parameterType == 'DOCUMENT');
-                this.vm.studentParameterOtherList = this.vm.studentParameterList.filter((x) => x.parameterType !== 'DOCUMENT');
-                this.vm.busStopList = value[5];
-                this.vm.session_list = value[6];
-                this.vm.isLoading = false;
-            },
-            (error) => {
-                this.vm.isLoading = false;
-            }
-        );
+            this.vm.genericService.getObjectList({student_app: 'StudentParameter'}, {filter: student_parameter_data}), // 3
+            this.vm.genericService.getObjectList({student_app: 'StudentParameterValue'}, {filter: student_parameter_value_data}), // 4
+            this.vm.genericService.getObjectList({school_app: 'BusStop'}, {filter: bus_stop_data}), // 5
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 6
+            this.vm.genericService.getObjectList({tc_app: 'TransferCertificateNew'}, {filter: tc_data, fields_list:  ['parentStudent']}), // 7
+        ]);
+
+        temp_classSectionList_1.forEach((classs) => {
+            classs.sectionList = [];
+            temp_classSectionList_2.forEach((section) => {
+                classs.sectionList.push(CommonFunctions.getInstance().copyObject(section));
+            });
+        });
+        this.vm.initializeClassSectionList(temp_classSectionList_1);
+        this.vm.backendData.tcList = temp_backendDataTcList;
+        this.vm.initializeStudentFullProfileList(temp_studentFullProfileList);
+        await this.vm.messageService.fetchGCMDevicesNew(this.vm.studentFullProfileList, true);
+        this.vm.studentParameterList = temp_studentParameterList.map((x) => ({
+            ...x,
+            filterValues: JSON.parse(x.filterValues).map((x2) => ({ name: x2, show: false })),
+            showNone: false,
+            filterFilterValues: '',
+        }));
+        this.vm.studentParameterValueList = temp_studentParameterValueList;
+        this.vm.studentParameterDocumentList = this.vm.studentParameterList.filter((x) => x.parameterType == 'DOCUMENT');
+        this.vm.studentParameterOtherList = this.vm.studentParameterList.filter((x) => x.parameterType !== 'DOCUMENT');
+        this.vm.busStopList = temp_busStopList;
+        this.vm.session_list = temp_session_list;
+        this.vm.isLoading = false;
     }
 }

@@ -1,0 +1,150 @@
+<div class="card-content table-responsive" *ngIf="!htmlAdapter.isInitialLoading && !htmlAdapter.isLoading">
+
+    <!--- Header and SMS Balance Starts --->
+    <div class="row" style="margin-top:20px">
+        <div class="col-sm-12 col-md-6">
+            <span><strong>Choose Your Custom Plan</strong></span>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <strong style="float: right;font-size: 18px;">SMS balance is {{htmlAdapter.smsBalance}}</strong>
+        </div>
+    </div>
+    <!--- Header and SMS Balance Ends --->
+
+    <!--- Selected SMS Plans Starts --->
+    <div class="row" style="margin-top: 30px;">
+        <div class="col-xs-12 col-sm-6">
+            <div
+                style="padding: 12px; width: 200px; height: 32px; background: #4CA750; border-radius: 4px; color: white;font-weight: bold;text-align: center; display: table-cell;">
+                {{htmlAdapter.noOfSMS}} SMS for ₹{{htmlAdapter.getPrice(htmlAdapter.noOfSMS)}}
+            </div>
+        </div>
+    </div>
+    <!--- Selected SMS Plans Ends --->
+
+    <!-- Custom Plan Selector Starts -->
+    <div class="row" style="margin-top: 30px;margin-left: 25px;">
+        <div class="range-wrap" style="width: 30vw; min-width: 280px;
+            height: auto;
+            padding: 10px;
+            position: relative;">
+            <input type="range" testId="slider" min="100" max="30000" step="100" class="range"
+                [(ngModel)]="htmlAdapter.noOfSMS" (ngModelChange)="htmlAdapter.callSetBubble($event);">
+            <output class="bubble">100</output>
+        </div>
+        <div style="width: 30vw;min-width: 280px;
+            padding: 10px;
+            position: relative;">
+            <span class="text-small" style="float: left;">100</span>
+            <span class="text-small" style="float: right;">30000</span>
+        </div>
+    </div>
+    <!-- Custom Plan Selector Ends -->
+
+    <div class="row" style="margin-top: 24px; margin-bottom: 30px;">
+    </div>
+
+    <!-- Standard Plan Starts-->
+    <div class="row">
+        <div class="col-md-12">
+            <span><strong>Select from our best selling plans</strong> </span>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 30px;">
+        <div *ngFor="let plan of htmlAdapter.smsPlanList" style="display: inline-block; margin-left: 20px;">
+            <div (click)="htmlAdapter.noOfSMS = plan.noOfSms; htmlAdapter.callSetBubble(htmlAdapter.noOfSMS)"
+                [ngClass]="plan.selected ? 'selectedMobile' : 'unselectedMobile'">
+                <span style="font-weight: 400;">{{plan.noOfSms}} SMS for
+                    ₹{{htmlAdapter.getPrice(plan.noOfSms)}}</span>
+            </div>
+        </div>
+    </div>
+    <!--Standard Plan Ends-->
+
+    <div class="row" style="margin-top: 30px; border-bottom: 1px solid#BFBFBF;">
+    </div>
+
+    <!-- Payment Mode Starts -->
+    <div style="margin-top: 30px; margin-left: 20px;">
+        <span><strong>Payment Mode</strong> </span>
+        <mat-form-field style="margin-left:10px">
+            <mat-select [(value)]="htmlAdapter.selectedModeOfPayment">
+                <mat-option *ngFor="let modeOfPayment of htmlAdapter.modeOfPaymentList" [value]="modeOfPayment">
+                    {{modeOfPayment.parentPaymentGatewayInstance.name}} - {{modeOfPayment.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <!-- Payment Mode Ends -->
+
+    <!-- Payment Details Starts -->
+    <div style="background-color:#FAFAFA; padding-top: 20px;">
+
+        <!-- No. of SMS and Price Starts -->
+        <div class="flex-row" style="font-size:15px;font-weight: 900;margin:1vh 1vw;">
+            <p>{{htmlAdapter.noOfSMS}} SMS</p>
+            <p>₹{{htmlAdapter.getPrice(htmlAdapter.noOfSMS)}}</p>
+        </div>
+        <!-- No. of SMS and Price Ends -->
+
+        <!-- Platform Charges Starts -->
+        <div class="flex-row" style="margin:1vh 1vw;">
+            <p>Platform Charges</p>
+            <p>₹{{htmlAdapter.getPlatformCharges(htmlAdapter.selectedModeOfPayment)}}</p>
+        </div>
+        <!-- Platform Charges Ends -->
+
+        <div style="border-bottom: 1px solid#BFBFBF;">
+        </div>
+
+        <!-- Total Amount Starts -->
+        <div class="flex-row" style="color: #4CA750;font-size:15px;font-weight: 900;margin:1vh 1vw;">
+            <p>Total Amount</p>
+            <p>₹{{htmlAdapter.getTotalAmount(htmlAdapter.selectedModeOfPayment)}}</p>
+        </div>
+        <!-- Total Amount Ends -->
+
+        <!-- Payment Details Ends -->
+
+        <!-- Email Input and Pay Button Starts -->
+        <div
+            style="display: flex; justify-content: flex-end; flex-direction: row; gap: 5rem; padding: 1vh 1vw; align-items: center;">
+            <!-- User Email Input Starts -->
+            <div>
+                <mat-form-field style="float: right; margin-right: 1vw; margin-top: 12px;">
+                    <mat-label>Email</mat-label>
+                    <input required matInput [(ngModel)]="htmlAdapter.email" [pattern]="validatorRegex.email"
+                        [value]="user.email">
+                </mat-form-field>
+            </div>
+            <!-- User Email Input Ends -->
+
+            <!-- Pay Button Starts  -->
+            <div style="display: block; padding-bottom: 1rem;">
+                <button class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+                    (click)="makeSmsPurchase()">Pay</button>
+            </div>
+            <!-- Pay Button Ends -->
+        </div>
+        <!-- Email Input and Pay Button Ends -->
+
+
+    </div>
+
+</div>
+
+<!-- Loader to show before redirecting to the EaseBuzz Site Starts -->
+<ng-container *ngIf="htmlAdapter.isLoading">
+    <app-loading-spinner [user]="user">
+    </app-loading-spinner>
+    <div style="padding: 60px;">
+        <h2 style="text-align: center;">Please Wait...</h2>
+        <p style="text-align: center;">You will be redirected to payment site.</p>
+    </div>
+</ng-container>
+<!-- Loader to show before redirecting to the EaseBuzz Site Ends -->
+
+<ng-container *ngIf="htmlAdapter.isInitialLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PricingComponent } from 'app/frontpage/pricing/pricing.component';
 import { CommonFunctions } from './../../../../classes/common-functions';
 
 @Component({
@@ -280,6 +279,7 @@ export class UpdateTransactionDialogComponent implements OnInit {
         amount: this.transaction.debitAccounts[index].amount,
         dbId: account.id,
         balance: account.balance,
+        parentHead: account.parentHead,
       };
     }
     else {
@@ -289,6 +289,7 @@ export class UpdateTransactionDialogComponent implements OnInit {
         amount: this.transaction.creditAccounts[index].amount,
         dbId: account.id,
         balance: account.balance,
+        parentHead: account.parentHead,
       };
     }
 
@@ -298,6 +299,9 @@ export class UpdateTransactionDialogComponent implements OnInit {
 
 
   addTransaction() {
+    if (this.vm.isLoading) {
+      return;
+    }
     this.vm.isLoading = true;
     let transaction_data = {
       id: this.transaction.dbId,
@@ -462,6 +466,9 @@ export class UpdateTransactionDialogComponent implements OnInit {
       Promise.all(service).then(data => {
         this.populateOriginalTransaction();
         alert('Transaction Updated Successfully');
+        this.vm.isLoading = false;
+      }).catch((err) => {
+        alert('Updating Transaction Failed');
         this.vm.isLoading = false;
       });
     });

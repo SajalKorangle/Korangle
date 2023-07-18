@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FeeService } from "../../../../services/modules/fees/fee.service";
 import { DataStorage } from "../../../../classes/data-storage";
-import { SchoolService } from '../../../../services/modules/school/school.service';
 import { AccountsService } from '@services/modules/accounts/accounts.service';
 import { MODE_OF_PAYMENT_LIST } from './../../classes/constants';
 import { AccountSession } from '@services/modules/accounts/models/account-session';
@@ -11,13 +10,17 @@ import { SettingsBackendData } from './settings.backend.data';
 import { SettingsHtmlRenderer } from './settings.html.renderer';
 
 import {CommonFunctions} from '@classes/common-functions';
-
+import { GenericService } from '@services/generic/generic-service';
 
 @Component({
     selector: 'lock-fees',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.css'],
-    providers: [FeeService, SchoolService, AccountsService],
+    providers: [
+        GenericService,
+        FeeService,
+        AccountsService
+    ],
 })
 
 export class SettingsComponent implements OnInit {
@@ -36,11 +39,14 @@ export class SettingsComponent implements OnInit {
 
     commonFunctions = CommonFunctions.getInstance();
 
+    printSingleReceipt: boolean;
+
     isActiveSession: boolean;
     isLoading = false;
+    isLoadingPrintSingleReceiptSetting = false;
 
     constructor(
-        public schoolService: SchoolService,
+        public genericService: GenericService,
         public feeService: FeeService,
         public accountsService: AccountsService,
         private cdRef: ChangeDetectorRef
@@ -54,7 +60,6 @@ export class SettingsComponent implements OnInit {
         this.serviceAdapter = new SettingsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-        console.log('this: ', this);
     }
 
     detectChanges(): void { // what is this?

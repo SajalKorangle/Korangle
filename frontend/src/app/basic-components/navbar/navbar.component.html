@@ -12,7 +12,13 @@
                 <span class="icon-bar" style="border-color: white"></span>
                 <span class="icon-bar" style="border-color: white"></span>
             </button>
-            <a *ngIf="user.section" class="navbar-brand" style="color: white">{{ user.section.subTitle }}</a>
+            <a *ngIf="user.section" class="navbar-brand" title={{user.section.subTitle}}
+            style="color: white;
+                display:inline-block;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 18ch;">{{ user.section.subTitle }}</a>
         </div>
     </div>
 </nav>
@@ -26,7 +32,13 @@
                 <span class="icon-bar" style="border-color: white"></span>
                 <span class="icon-bar" style="border-color: white"></span>
             </button>
-            <a *ngIf="user.section" class="navbar-brand" style="color: white">{{ user.section.subTitle }}</a>
+            <a *ngIf="user.section" class="navbar-brand" title={{user.section.subTitle}} 
+            style="color: white;
+                display:inline-block;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 18ch;">{{ user.section.subTitle }}</a>
         </div>
     </div>
 </nav>

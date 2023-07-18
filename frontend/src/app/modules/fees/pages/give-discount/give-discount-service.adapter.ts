@@ -13,7 +13,10 @@ export class GiveDiscountServiceAdapter {
     }
 
     //initialize data
-    initializeData(): void {
+    async initializeData() {
+
+        // ------------------- Initial Data Fetching Starts ---------------------
+
         this.vm.isLoading = true;
 
         let schoolId = this.vm.user.activeSchool.dbId;
@@ -32,10 +35,10 @@ export class GiveDiscountServiceAdapter {
         };
 
         Promise.all([
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),
-            this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list), // 0
+            this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
+            this.vm.genericService.getObjectList({employee_app: 'Employee'}, {filter: employee_list}), // 2
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 3
         ]).then(
             (value) => {
                 this.vm.feeTypeList = value[0];
@@ -49,11 +52,42 @@ export class GiveDiscountServiceAdapter {
                 this.vm.isLoading = false;
             }
         );
-    }
+
+        const sms_count_request_data = {
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
+        const value = await Promise.all([
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 0
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 1
+            this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //2
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event,
+                { id__in: this.vm.GIVE_DISCOUNT_EVENT_DBID}), //3
+        ]);
+
+        this.vm.smsBalance = value[3].count;
+        this.vm.backendData.discountSMSEventList = value[3];
+
+        this.vm.dataForMapping['classList'] = value[0];
+        this.vm.dataForMapping['divisionList'] = value[1];
+        this.vm.dataForMapping['school'] = this.vm.user.activeSchool;
+
+        let fetch_event_settings_list = {
+            SMSEventId__in: this.vm.backendData.discountSMSEventList.map(a => a.id).join(),
+            parentSchool: this.vm.user.activeSchool.dbId,
+        };
+
+        if (this.vm.backendData.discountSMSEventList.length > 0) {
+            this.vm.backendData.eventSettingsList = await this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, fetch_event_settings_list);
+        }
+
+        // ------------------- Initial Data Fetching Ends ---------------------
+
+}
 
     // Get Student Fee Profile
     getStudentFeeProfile(): void {
-        let studentListId = this.vm.selectedStudentList.map((a) => a.id).join();
+        let studentListId = this.vm.selectedStudentList.map((a) => a.id);
 
         let student_fee_list = {
             parentStudent__in: studentListId,
@@ -61,22 +95,22 @@ export class GiveDiscountServiceAdapter {
 
         let fee_receipt_list = {
             parentStudent__in: studentListId,
-            cancelled: 'false__boolean',
+            cancelled: false,
         };
 
         let sub_fee_receipt_list = {
             parentStudentFee__parentStudent__in: studentListId,
-            parentFeeReceipt__cancelled: 'false__boolean',
+            parentFeeReceipt__cancelled: false,
         };
 
         let discount_list = {
             parentStudent__in: studentListId,
-            cancelled: 'false__boolean',
+            cancelled: false,
         };
 
         let sub_discount_list = {
             parentStudentFee__parentStudent__in: studentListId,
-            parentDiscount__cancelled: 'false__boolean',
+            parentDiscount__cancelled: false,
         };
 
         let student_section_list = {
@@ -86,12 +120,12 @@ export class GiveDiscountServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.discounts, discount_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list),
+            this.vm.genericService.getObjectList({fees_third_app: 'StudentFee'}, {filter: student_fee_list}), // 0
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceipt'}, {filter: fee_receipt_list}), // 1
+            this.vm.genericService.getObjectList({fees_third_app: 'SubFeeReceipt'}, {filter: sub_fee_receipt_list}), // 2
+            this.vm.genericService.getObjectList({fees_third_app: 'Discount'}, {filter: discount_list}), // 3
+            this.vm.genericService.getObjectList({fees_third_app: 'SubDiscount'}, {filter: sub_discount_list}), // 4
+            this.vm.genericService.getObjectList({student_app: 'StudentSection'}, {filter: student_section_list}), // 5
         ]).then(
             (value) => {
                 this.populateStudentFeeList(value[0]);
@@ -100,7 +134,6 @@ export class GiveDiscountServiceAdapter {
                 this.populateDiscountList(value[3]);
                 this.vm.subDiscountList = value[4];
                 this.vm.selectedStudentSectionList = value[5];
-                // this.populateSelectedStudentSectionList(value[5]);
 
                 this.vm.handleStudentFeeProfile();
 
@@ -114,8 +147,6 @@ export class GiveDiscountServiceAdapter {
 
     populateStudentFeeList(studentFeeList: any): void {
         this.vm.studentFeeList = studentFeeList.sort((a, b) => {
-            let first = this.vm.getFeeTypeByStudentFee(a);
-            let second = this.vm.getFeeTypeByStudentFee(b);
             return a.orderNumber - b.orderNumber;
         });
     }
@@ -141,7 +172,6 @@ export class GiveDiscountServiceAdapter {
         });
 
         let discount_list = this.vm.newDiscountList.map((discount) => {
-            // return CommonFunctions.getInstance().copyObject(feeReceipt);
             discount = CommonFunctions.getInstance().deepCopy(discount);
             if (discount['remark'] == '') {
                 discount['remark'] = null;
@@ -168,9 +198,61 @@ export class GiveDiscountServiceAdapter {
         this.vm.subDiscountList = this.vm.subDiscountList.concat(subDiscountList);
 
         alert('Discount given successfully');
+        this.notifyParents();
+
         this.vm.handleStudentFeeProfile();
         this.vm.isLoading = false;
+    }
 
+    // Notify parents about Discount Details
+    async notifyParents() {
+        let tempStudentList = this.vm.getStudentList();
+        let studentList = [];
+
+        // Calculating and storing neccessary variables for SMS/Notification template
+        if (tempStudentList.length > 0) {
+
+            tempStudentList.forEach((student) => {
+
+                if (this.checkMobileNumber(student.mobileNumber) == false) {
+                    return;
+                }
+
+                let sessionList = this.vm.getFilteredSessionListByStudent(student);
+
+                sessionList.forEach((session) => {
+
+                    let discountAmount = this.vm.getSessionPayment(student, session) + this.vm.getSessionLateFeePayment(student, session);
+
+                    let tempStudent =  CommonFunctions.getInstance().copyObject(student);
+
+                    if (discountAmount > 0) {
+                        tempStudent['discountAmount'] = discountAmount;
+                        tempStudent['session'] = session;
+                        studentList.push(tempStudent);
+                    }
+
+                });
+            });
+        }
+
+        this.vm.messageService.fetchGCMDevicesNew(studentList);
+
+        this.vm.dataForMapping['studentList'] =  studentList;
+        this.vm.dataForMapping['studentSectionList'] = this.vm.selectedStudentSectionList;
+
+        await this.vm.messageService.fetchEventDataAndSendEventSMSNotification(
+            this.vm.dataForMapping,
+            ['student'],
+            this.vm.GIVE_DISCOUNT_EVENT_DBID,
+            this.vm.user.activeSchool.dbId,
+            this.vm.smsBalance
+        );
+
+    }
+
+    checkMobileNumber(mobileNumber: number): boolean {
+        return mobileNumber && mobileNumber.toString().length == 10;
     }
 
     addToDiscountList(discount_list: any): void {

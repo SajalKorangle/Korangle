@@ -29,24 +29,26 @@
             <b style="font-size:16px;margin-left:12px">{{userInput.selectedPage.name}}</b>
         </div>
 
-
-        <ng-container *ngIf="htmlRenderer.isGeneralOrDefaulters()">
-
-            <ng-container *ngIf="!userInput.selectedEvent">
-                <mat-nav-list *ngFor="let eventId of userInput.selectedPage.orderedSMSEventIdList" style="width: 100%">
-                    <a mat-list-item class="list-item" (click)="htmlRenderer.selectEvent(eventId)">
-                        <div style="width: 100%">
-                            <strong>{{ htmlRenderer.getEventName(eventId) }}</strong>
-                            <div style="float: right">
-                        <span class="material-icons"
-                              style="font-size: 25px; margin-left: 15px">keyboard_arrow_right</span>
-                            </div>
+        <!-- If event is not selected STARTS  -->
+        <ng-container *ngIf="!userInput.selectedEvent">
+            <mat-nav-list *ngFor="let smsEvent of userInput.populatedSelectedPageEventsData" style="width: 100%">
+                <a mat-list-item class="list-item" (click)="htmlRenderer.selectEvent(smsEvent.id)">
+                    <div style="width: 100%">
+                        <strong>{{ smsEvent.eventName }}</strong>
+                        <div style="float: right">
+                    <span class="material-icons"
+                          style="font-size: 25px; margin-left: 15px">keyboard_arrow_right</span>
                         </div>
-                    </a>
-                </mat-nav-list>
-            </ng-container>
+                    </div>
+                </a>
+            </mat-nav-list>
+        </ng-container>
+        <!-- If event is not selected ENDS  -->
 
-            <ng-container *ngIf="userInput.selectedEvent">
+        <!-- If event is selected STARTS  -->
+        <ng-container *ngIf="userInput.selectedEvent">
+            <!-- User Chosen Template STARTS  -->
+            <ng-container *ngIf="userInput.selectedEventSettings.isUserChosenTemplateForEvent">
                 <div class="row" style="padding-left:5px">
                     <b style="font-size:16px;margin-left:12px">{{userInput.selectedEvent.eventName}}</b>
                 </div>
@@ -251,28 +253,21 @@
                     </ng-container>
                 </ng-container>
             </ng-container>
-        </ng-container>
+            <!-- User Chosen Template ENDS  -->
 
-        <ng-container *ngIf="!htmlRenderer.isGeneralOrDefaulters()">
+            <!-- Default Template STARTS  -->
+            <ng-container *ngIf="!userInput.selectedEventSettings.isUserChosenTemplateForEvent">
 
-
-            <mat-expansion-panel *ngFor="let smsEvent of userInput.populatedSMSEventSettingsList"
-                                 [expanded]="htmlRenderer.getExpandedState(panelsList[0],smsEvent)"
-                                 (expandedChange)="htmlRenderer.setExpandedState(panelsList[0],smsEvent,$event)"
-                                 style="margin-top: 15px; margin-bottom: 5px">
-
-                <mat-expansion-panel-header>
-                    <mat-panel-title style="font-size:18px">
-                        {{smsEvent.eventName}}
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
+                <div class="row" style="padding-left:5px">
+                    <b style="font-size:16px;margin-left:12px">{{userInput.selectedEvent.eventName}}</b>
+                </div>
 
                 <div class="row">
                     <div class="col-md-4">
                         <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
                             <mat-select placeholder="Send via"
-                                        [ngModel]="htmlRenderer.getUpdateType(smsEvent)"
-                                        (ngModelChange)="htmlRenderer.setUpdateType(smsEvent,$event)">
+                                        [ngModel]="htmlRenderer.getUpdateType(userInput.selectedEventSettings)"
+                                        (ngModelChange)="htmlRenderer.setUpdateType(userInput.selectedEventSettings,$event)">
                                 <mat-option *ngFor="let sendType of backendData.sendUpdateTypeList" [value]="sendType">
                                     {{ sendType.name }}
                                 </mat-option>
@@ -282,7 +277,7 @@
                     <div class="col-md-4" *ngIf="userInput.selectedPage.name == 'Attendance'">
                         <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
                             <mat-select placeholder="Send Update To"
-                                        [(ngModel)]="smsEvent.eventSettings.receiverType">
+                                        [(ngModel)]="userInput.selectedEventSettings.eventSettings.receiverType">
                                 <mat-option *ngFor="let sendTo of sendUpdateToList" [value]="sendTo">
                                     {{ sendTo }}
                                 </mat-option>
@@ -291,8 +286,8 @@
                     </div>
                 </div>
 
-                <mat-expansion-panel [expanded]="htmlRenderer.getExpandedState(panelsList[1],smsEvent)"
-                                     (expandedChange)="htmlRenderer.setExpandedState(panelsList[1],smsEvent,$event)"
+                <mat-expansion-panel [expanded]="htmlRenderer.getExpandedState(panelsList[1],userInput.selectedEventSettings)"
+                                     (expandedChange)="htmlRenderer.setExpandedState(panelsList[1],userInput.selectedEventSettings,$event)"
                                      style="margin-top: 5px; margin-bottom: 5px">
                     <mat-expansion-panel-header>
                         <mat-panel-title style="font-size:16px">
@@ -305,23 +300,23 @@
 
                     <div class="row">
                         <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px">Type {{"{#varialbeName#}"}}
-                            to add variables - {{htmlRenderer.getVariableList(smsEvent)}}</span>
+                            to add variables - {{htmlRenderer.getVariableList(userInput.selectedEventSettings)}}</span>
                         <br>
                         <mat-form-field [style.width]="htmlRenderer.isMobile()?'90%':'40%'"
                                         style="margin-left: 13px;" appearance="none">
                   <textarea matInput
                             id="notificationContent"
                             placeholder="Enter {#variableName#} and start typing..."
-                            [ngModel]="htmlRenderer.getNotificationContent(smsEvent)"
-                            (ngModelChange)="htmlRenderer.setNotificationContent(smsEvent,$event)"
+                            [ngModel]="htmlRenderer.getNotificationContent(userInput.selectedEventSettings)"
+                            (ngModelChange)="htmlRenderer.setNotificationContent(userInput.selectedEventSettings,$event)"
                             style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px;padding: 12px 12px 20px;max-height:300px;"
                   ></textarea>
                         </mat-form-field>
                     </div>
                 </mat-expansion-panel>
 
-                <mat-expansion-panel [expanded]="htmlRenderer.getExpandedState(panelsList[2],smsEvent)"
-                                     (expandedChange)="htmlRenderer.setExpandedState(panelsList[2],smsEvent,$event)"
+                <mat-expansion-panel [expanded]="htmlRenderer.getExpandedState(panelsList[2],userInput.selectedEventSettings)"
+                                     (expandedChange)="htmlRenderer.setExpandedState(panelsList[2],userInput.selectedEventSettings,$event)"
                                      style="margin-top: 10px; margin-bottom: 5px">
                     <mat-expansion-panel-header>
                         <mat-panel-title style="font-size:16px">
@@ -331,9 +326,9 @@
                     <div class="row">
                         <div class="col-md-4">
                             <mat-form-field style="margin-right: 15px; margin-bottom: 5px">
-                                <mat-select placeholder="Select SMS ID" [ngModel]="smsEvent.selectedSMSId"
-                                            (ngModelChange)="htmlRenderer.setSMSIdSelection(smsEvent, $event)">
-                                    <mat-option *ngFor="let smsId of populatedSMSIdList" [value]="smsId">
+                                <mat-select placeholder="Select SMS ID" [ngModel]="userInput.selectedEventSettings.selectedSMSId"
+                                            (ngModelChange)="htmlRenderer.setSMSIdSelection(userInput.selectedEventSettings, $event)">
+                                    <mat-option *ngFor="let smsId of smsIdListFilteredBySchoolId" [value]="smsId">
                                         {{ smsId.smsId }}
                                     </mat-option>
                                 </mat-select>
@@ -342,7 +337,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-5" *ngIf="!isDefaultSelected(smsEvent)">
+                        <div class="col-md-5" *ngIf="!isDefaultSelected(userInput.selectedEventSettings)">
                             <div class="row">
                                 <b style="font-size: 15px;margin-left: 13px;float:left">Template Content</b>
                             </div>
@@ -355,8 +350,8 @@
                             matInput
                             type="text"
                             id="smsTemplate"
-                            [ngModel]="smsEvent.customEventTemplate.rawContent"
-                            (ngModelChange)="htmlRenderer.rawContentChanged(smsEvent,$event)"
+                            [ngModel]="userInput.selectedEventSettings.customEventTemplate.rawContent"
+                            (ngModelChange)="htmlRenderer.rawContentChanged(userInput.selectedEventSettings,$event)"
                             style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px"
                     ></textarea><br>
 
@@ -364,40 +359,40 @@
                             </div>
 
                         </div>
-                        <div class="col-md-5" [style.marginLeft.px]="isDefaultSelected(smsEvent)?13:0">
+                        <div class="col-md-5" [style.marginLeft.px]="isDefaultSelected(userInput.selectedEventSettings)?13:0">
                             <div class="row">
-                                <b *ngIf="!isDefaultSelected(smsEvent)" style="font-size: 15px;float:left">Template
+                                <b *ngIf="!isDefaultSelected(userInput.selectedEventSettings)" style="font-size: 15px;float:left">Template
                                     Used As</b>
-                                <b *ngIf="isDefaultSelected(smsEvent)" style="font-size: 15px;float:left">Default
+                                <b *ngIf="isDefaultSelected(userInput.selectedEventSettings)" style="font-size: 15px;float:left">Default
                                     Content</b>
                             </div>
-                            <div class="row" *ngIf="!isDefaultSelected(smsEvent)">
+                            <div class="row" *ngIf="!isDefaultSelected(userInput.selectedEventSettings)">
                                 <span style="font-size: 10px;color:rebeccapurple;word-break: break-all">Change {{"{#varialbeName#}"}}
-                                    with - {{htmlRenderer.getVariableList(smsEvent)}}</span>
+                                    with - {{htmlRenderer.getVariableList(userInput.selectedEventSettings)}}</span>
                             </div>
                             <div class="row">
                                 <mat-form-field style="width: 100%;" appearance="none">
                             <textarea matInput
                                       type="text"
                                       id="mappedContent"
-                                      [ngModel]="htmlRenderer.getMappedContent(smsEvent)"
-                                      (ngModelChange)="htmlRenderer.setMappedContent(smsEvent,$event)"
-                                      [readonly]="isDefaultSelected(smsEvent)"
+                                      [ngModel]="htmlRenderer.getMappedContent(userInput.selectedEventSettings)"
+                                      (ngModelChange)="htmlRenderer.setMappedContent(userInput.selectedEventSettings,$event)"
+                                      [readonly]="isDefaultSelected(userInput.selectedEventSettings)"
                                       style="background-color: #c4c4c4;border-radius: 25px; min-height: 120px; padding: 12px;max-height: 300px"></textarea>
                                 </mat-form-field>
                             </div>
                         </div>
                     </div>
-                    <div class="row" *ngIf="!isDefaultSelected(smsEvent)">
+                    <div class="row" *ngIf="!isDefaultSelected(userInput.selectedEventSettings)">
                         <div class="col-md-4">
                             <mat-form-field style="width: 100%;">
-                                <input type="text" matInput [(ngModel)]="smsEvent.customEventTemplate.templateId"
+                                <input type="text" matInput [(ngModel)]="userInput.selectedEventSettings.customEventTemplate.templateId"
                                        placeholder="Template ID">
                             </mat-form-field>
                         </div>
                         <div class="col-md-4">
                             <mat-form-field style="width: 100%;">
-                                <input type="text" matInput [(ngModel)]="smsEvent.customEventTemplate.templateName"
+                                <input type="text" matInput [(ngModel)]="userInput.selectedEventSettings.customEventTemplate.templateName"
                                        placeholder="Template Name">
                             </mat-form-field>
                         </div>
@@ -408,18 +403,18 @@
                         type="submit"
                         style="border-radius: 10px"
                         class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                        [disabled]="htmlRenderer.isUpdateDisabled(smsEvent)"
-                        (click)="serviceAdapter.updateSettings(smsEvent)">
-                    {{smsEvent.eventSettings.id ? 'Update' : 'Create'}}
+                        [disabled]="htmlRenderer.isUpdateDisabled(userInput.selectedEventSettings)"
+                        (click)="serviceAdapter.updateSettings(userInput.selectedEventSettings)">
+                    {{userInput.selectedEventSettings.eventSettings.id ? 'Update' : 'Create'}}
                 </button>
-                <span *ngIf="htmlRenderer.isTemplateModified(smsEvent)"
+                <span *ngIf="htmlRenderer.isTemplateModified(userInput.selectedEventSettings)"
                       style="font-size: 15px;color:rgba(255,0,0,0.91)">
                    You can Modify only the variables inside <b>{{"{# #}"}}</b> in the SMS Template. (Max <b>20</b> Characters)
                 <br/></span>
-
-            </mat-expansion-panel>
-
+            </ng-container>
+            <!-- Default Template ENDS  -->
         </ng-container>
+        <!-- If event is selected ENDS  -->
     </ng-container>
 </div>
 <ng-container *ngIf="stateKeeper.isLoading">

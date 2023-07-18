@@ -15,7 +15,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCardModule } from '@angular/material/card';
-import { MatTabsModule } from '@angular/material';
+import { MatProgressSpinnerModule, MatTabsModule } from '@angular/material';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material';
@@ -24,6 +24,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 import 'hammerjs';
 
@@ -98,6 +100,9 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
         MatSlideToggleModule,
 
         BasicComponentsModule,
+
+        DragDropModule,
+        MatProgressSpinnerModule,
     ],
     exports: [
         BasicComponentsModule,
@@ -141,6 +146,9 @@ import { NumberAndStringPipe } from '../pipes/number-and-string.pipe';
         MatDialogModule,
         MatListModule,
         MatSlideToggleModule,
+
+        DragDropModule,
+        MatProgressSpinnerModule,
     ],
 })
 export class ComponentsModule { }

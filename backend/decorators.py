@@ -171,7 +171,7 @@ def user_permission_4(function):
                 return Response({'fail': 'User not permitted for this action'})
 
         else:
-            data = {'success': function(*args, **kwargs, activeSchoolID=None, activeStudentID=None)}
+            data = {'success': function(*args, **kwargs, activeSchoolId=None, activeStudentIdList=None)}
             return Response(data)
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__

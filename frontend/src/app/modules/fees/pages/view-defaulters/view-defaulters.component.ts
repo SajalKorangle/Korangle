@@ -21,12 +21,24 @@ import { FeeType } from '@services/modules/fees/models/fee-type';
 import { MatTableDataSource } from '@angular/material';
 import { MatPaginator } from '@angular/material';
 import {InformationService} from '@services/modules/information/information.service';
+import { GenericService } from '@services/generic/generic-service';
 
 @Component({
     selector: 'view-defaulters',
     templateUrl: './view-defaulters.component.html',
     styleUrls: ['./view-defaulters.component.css'],
-    providers: [FeeService, StudentService, ClassService, NotificationService, UserService, SmsService, SmsOldService, SchoolService, InformationService],
+    providers: [
+        FeeService,
+        StudentService,
+        ClassService,
+        NotificationService,
+        UserService,
+        SmsService,
+        SmsOldService,
+        SchoolService,
+        InformationService,
+        GenericService
+    ],
     //animation for row expansion on clicking row on mat table
     animations: [
         trigger('detailExpand', [
@@ -75,7 +87,7 @@ export class ViewDefaultersComponent implements OnInit {
     subFeeReceiptList: any;
     subDiscountList: any;
     studentFeeList: any;
-    studentSectionList: any;
+    studentSectionList = <any>[];
     studentList: any;
     classList: any;
     sectionList: any;
@@ -96,7 +108,7 @@ export class ViewDefaultersComponent implements OnInit {
     maximumNumber = null;
     minimumNumber = null;
 
-    selectedClassSection = null;
+    selectedClassSectionList = [];
     filteredClassSectionList = [];
     dataForMapping =  {} as any;
 
@@ -137,11 +149,22 @@ export class ViewDefaultersComponent implements OnInit {
 
     feesDueBySession = [];
 
+    userNotifyDefaulterPermissionList: {
+        id?: number,
+        parentEmployeePermission: number,
+        userType: string,
+        viewStudent: boolean,
+        viewSummary: boolean
+    } = null;
+
+    attendancePermissionList = <any>[];      // same as backend
+
     constructor(
         public schoolService: SchoolService,
         public feeService: FeeService,
         public studentService: StudentService,
         public classService: ClassService,
+        public genericService: GenericService,
         private excelService: ExcelService,
         public notificationService: NotificationService,
         public userService: UserService,
@@ -175,6 +198,11 @@ export class ViewDefaultersComponent implements OnInit {
         this.cdRef.detectChanges();
     }
 
+    isPermissionToShow() {
+        if (this.userNotifyDefaulterPermissionList.viewStudent || this.userNotifyDefaulterPermissionList.viewSummary)
+            return true;
+        return false;
+    }
     checkMobileNumber(mobileNumber: number): boolean {
         if (mobileNumber && mobileNumber.toString().length == 10) {
             return true;
@@ -214,7 +242,9 @@ export class ViewDefaultersComponent implements OnInit {
                     }
                     return (
                         total +
-                        filteredInstallmentList.reduce((installmentAmount, installment) => {
+                        filteredInstallmentList.filter((installment) => {
+                            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+                        }).reduce((installmentAmount, installment) => {
                             let lateFeeAmount = 0;
                             if (
                                 studentFee[installment + 'LastDate'] &&
@@ -288,7 +318,9 @@ export class ViewDefaultersComponent implements OnInit {
                 filteredStudentFeeList.reduce((total, studentFee) => {
                     return (
                         total +
-                        this.installmentList.reduce((installmentAmount, installment) => {
+                        this.installmentList.filter((installment) => {
+                            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+                        }).reduce((installmentAmount, installment) => {
                             let lateFeeAmount = 0;
                             if (
                                 studentFee[installment + 'LastDate'] &&
@@ -386,7 +418,9 @@ export class ViewDefaultersComponent implements OnInit {
                 .reduce((total, studentFee) => {
                     return (
                         total +
-                        this.installmentList.reduce((installmentAmount, installment) => {
+                        this.installmentList.filter((installment) => {
+                            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+                        }).reduce((installmentAmount, installment) => {
                             let lateFeeAmount = 0;
                             if (
                                 studentFee[installment + 'LastDate'] &&
@@ -424,6 +458,8 @@ export class ViewDefaultersComponent implements OnInit {
                     studentSection.parentStudent == student.id && studentSection.parentSession == this.user.activeSchool.currentSessionDbId
                 );
             });
+
+            student['rollNumber'] = studentSection.rollNumber;
 
             student['class'] = this.classList.find((classs) => {
                 return studentSection.parentClass == classs.id;
@@ -516,6 +552,16 @@ export class ViewDefaultersComponent implements OnInit {
         }
     }
 
+    selectAllClassSectionHandler() {
+        this.selectedClassSectionList = this.filteredClassSectionList;
+        this.applyFilters();
+    }
+
+    clearAllClassSectionHandler() {
+        this.selectedClassSectionList = [];
+        this.applyFilters();
+    }
+
     hasUnicode(message): boolean {
         for (let i = 0; i < message.length; ++i) {
             if (message.charCodeAt(i) > 127) {
@@ -564,10 +610,18 @@ export class ViewDefaultersComponent implements OnInit {
             }
             return true;
         });
-        if (this.selectedClassSection) {
+        if (this.selectedClassSectionList) {
+
             tempList = tempList.filter((student) => {
-                return student.class.id == this.selectedClassSection.class.id && student.section.id == this.selectedClassSection.section.id;
+                return this.selectedClassSectionList.find((classSection) => {
+                    return (
+                        student.class.id == classSection.class.id &&
+                        student.section.id == classSection.section.id
+                    );
+                }
+                );
             });
+
         }
         if ((this.maximumNumber && this.maximumNumber != '') || (this.minimumNumber && this.minimumNumber != '')) {
             tempList = tempList.filter((student) => {
@@ -642,7 +696,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     printStudentFeesReport(): void {
-        let tempArray = ['S No.', 'Name', "Father's Name", 'Class and Sections', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)', 'Fees Due (overall)'];
+        let tempArray = ['S No.', 'Name', 'Scholar Number', 'Roll Number', "Father's Name", 'Class and Sections', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)', 'Fees Due (overall)'];
         this.sessionListWithDues.forEach(session => {
             tempArray.push("Fees Due (" + session.name + ")");
         });
@@ -654,6 +708,8 @@ export class ViewDefaultersComponent implements OnInit {
             let row = [];
             row.push(++count);
             row.push(student.name);
+            row.push(student.scholarNumber);
+            row.push(student.rollNumber);
             row.push(student.fathersName);
             row.push(student.class.name + ', ' + student.section.name);
             row.push(this.checkMobileNumber(student.mobileNumber) ? student.mobileNumber : '');
@@ -673,7 +729,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     printParentFeesReport(): void {
-        let tempArray = ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)', 'Fees Due (overall)'];
+        let tempArray = ['S No.', 'Parent', 'Student', 'Scholar Number', 'Roll Number', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Fees Due (till month)', 'Fees Due (overall)'];
         this.sessionListWithDues.forEach(session => {
             tempArray.push("Fees Due (" + session.name + ")");
         });
@@ -688,10 +744,14 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(parent.name);
             if (parent.studentList.length == 1) {
                 row.push(parent.studentList[0].name);
+                row.push(parent.studentList[0].scholarNumber);
+                row.push(parent.studentList[0].rollNumber);
                 row.push(parent.studentList[0].class.name + ', ' + parent.studentList[0].section.name);
                 row.push(this.checkMobileNumber(parent.studentList[0].mobileNumber) ? parent.studentList[0].mobileNumber : '');
                 row.push(this.checkMobileNumber(parent.studentList[0].secondMobileNumber) ? parent.studentList[0].secondMobileNumber : '');
             } else {
+                row.push('');
+                row.push('');
                 row.push('');
                 row.push('');
                 row.push(this.checkMobileNumber(parent.studentList[0].mobileNumber) ? parent.studentList[0].mobileNumber : '');
@@ -712,6 +772,8 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push('');
                     newRow.push('');
                     newRow.push(student.name);
+                    newRow.push(student.scholarNumber);
+                    newRow.push(student.rollNumber);
                     newRow.push(student.class.name + ', ' + student.section.name);
                     newRow.push('');
                     newRow.push(this.checkMobileNumber(student.secondMobileNumber) ? student.secondMobileNumber : '');
@@ -732,7 +794,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     downloadStudentFeesReport(): void {
-        let tempArray = ['S No.', 'Name', "Father's Name", 'Class and Section', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)', 'Fees Due (overall)'];
+        let tempArray = ['S No.', 'Name', 'Scholar Number', 'Roll Number', "Father's Name", 'Class and Section', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)', 'Fees Due (overall)'];
         this.sessionListWithDues.forEach(session => {
             tempArray.push("Fees Due (" + session.name + ")");
         });
@@ -745,6 +807,8 @@ export class ViewDefaultersComponent implements OnInit {
             let row = [];
             row.push(++count);
             row.push(student.name);
+            row.push(student.scholarNumber);
+            row.push(student.rollNumber);
             row.push(student.fathersName);
             row.push(student.class.name + ', ' + student.section.name);
             row.push(student.mobileNumber);
@@ -765,7 +829,7 @@ export class ViewDefaultersComponent implements OnInit {
     }
 
     downloadParentFeesReport(): void {
-        let tempArray = ['S No.', 'Parent', 'Student', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)', 'Fees Due (overall)'];
+        let tempArray = ['S No.', 'Parent', 'Student', 'Scholar Number', 'Roll Number', 'Class', 'Mobile No.', 'Mobile No. (2)', 'Address', 'Fees Due (till month)', 'Fees Due (overall)'];
         this.sessionListWithDues.forEach(session => {
             tempArray.push("Fees Due (" + session.name + ")");
         });
@@ -782,11 +846,15 @@ export class ViewDefaultersComponent implements OnInit {
             row.push(parent.name);
             if (parent.studentList.length == 1) {
                 row.push(parent.studentList[0].name);
+                row.push(parent.studentList[0].scholarNumber);
+                row.push(parent.studentList[0].rollNumber);
                 row.push(parent.studentList[0].class.name + ', ' + parent.studentList[0].section.name);
                 row.push(parent.studentList[0].mobileNumber);
                 row.push(parent.studentList[0].secondMobileNumber);
                 row.push(parent.studentList[0].address);
             } else {
+                row.push('');
+                row.push('');
                 row.push('');
                 row.push('');
                 row.push(parent.studentList[0].mobileNumber);
@@ -808,6 +876,8 @@ export class ViewDefaultersComponent implements OnInit {
                     newRow.push('');
                     newRow.push('');
                     newRow.push(student.name);
+                    newRow.push(student.scholarNumber);
+                    newRow.push(student.rollNumber);
                     newRow.push(student.class.name + ', ' + student.section.name);
                     newRow.push('');
                     newRow.push(student.secondMobileNumber);
@@ -920,6 +990,8 @@ export class ViewDefaultersComponent implements OnInit {
     getFilteredInstallmentListByStudentFee(studentFee: any): any {
         return this.installmentList.filter((installment) => {
             return studentFee[installment + 'Amount'] ? studentFee[installment + 'Amount'] > 0 : false;
+        }).filter((installment) => {
+            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
         });
     }
     studentFeeDetailsVisible(studentFee: any): boolean {
@@ -973,7 +1045,9 @@ export class ViewDefaultersComponent implements OnInit {
         let studentFeeList = this.getStudentFeeByStudentId(id);
         let amount = 0;
         studentFeeList.forEach((studentFee) => {
-            this.installmentList.forEach((installment) => {
+            this.installmentList.filter((installment) => {
+                return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+            }).forEach((installment) => {
                 amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
             });
         });
@@ -983,7 +1057,9 @@ export class ViewDefaultersComponent implements OnInit {
         let studentFeeList = this.getStudentFeeByStudentId(id);
         let amount = 0;
         studentFeeList.forEach((studentFee) => {
-            this.installmentList.forEach((installment) => {
+            this.installmentList.filter((installment) => {
+                return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+            }).forEach((installment) => {
                 amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment);
             });
         });
@@ -1010,7 +1086,9 @@ export class ViewDefaultersComponent implements OnInit {
         });
         let amount = 0;
         filteredStudentFeeList.forEach((studentFee) => {
-            this.installmentList.forEach((installment) => {
+            this.installmentList.filter((installment) => {
+                return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+            }).forEach((installment) => {
                 amount += this.getStudentFeeInstallmentFeesDue(studentFee, installment);
             });
         });
@@ -1023,7 +1101,9 @@ export class ViewDefaultersComponent implements OnInit {
         });
         let amount = 0;
         filteredStudentFeeList.forEach((studentFee) => {
-            this.installmentList.forEach((installment) => {
+            this.installmentList.filter((installment) => {
+                return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+            }).forEach((installment) => {
                 amount += studentFee[installment + "Amount"];
             });
         });
@@ -1036,7 +1116,9 @@ export class ViewDefaultersComponent implements OnInit {
         });
         let amount = 0;
         filteredStudentFeeList.forEach((studentFee) => {
-            this.installmentList.forEach((installment) => {
+            this.installmentList.filter((installment) => {
+                return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+            }).forEach((installment) => {
                 amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment);
             });
         });
@@ -1049,7 +1131,9 @@ export class ViewDefaultersComponent implements OnInit {
         });
         let amount = 0;
         filteredStudentFeeList.forEach((studentFee) => {
-            this.installmentList.forEach((installment) => {
+            this.installmentList.filter((installment) => {
+                return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+            }).forEach((installment) => {
                 amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
             });
         });
@@ -1057,7 +1141,9 @@ export class ViewDefaultersComponent implements OnInit {
     }
     getStudentFeeFeesDue(studentFee: any): number {
         let amount = 0;
-        this.installmentList.forEach((installment) => {
+        this.installmentList.filter((installment) => {
+            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+        }).forEach((installment) => {
             amount += this.getStudentFeeInstallmentFeesDue(studentFee, installment);
         });
         return amount;
@@ -1066,21 +1152,27 @@ export class ViewDefaultersComponent implements OnInit {
     }
     getStudentFeeLateFeesDue(studentFee: any): number {
         let amount = 0;
-        this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
+        this.getFilteredInstallmentListByStudentFee(studentFee).filter((installment) => {
+            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+        }).forEach((installment) => {
             amount += this.getStudentFeeInstallmentLateFeesDue(studentFee, installment);
         });
         return amount;
     }
     getStudentFeeLateFeeTotal(studentFee: any): number {
         let amount = 0;
-        this.getFilteredInstallmentListByStudentFee(studentFee).forEach((installment) => {
+        this.getFilteredInstallmentListByStudentFee(studentFee).filter((installment) => {
+            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+        }).forEach((installment) => {
             amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
         });
         return amount;
     }
     getStudentFeeTotalFees(studentFee: any): number {
         let amount = 0;
-        this.installmentList.forEach((installment) => {
+        this.installmentList.filter((installment) => {
+            return !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april');
+        }).forEach((installment) => {
             amount += this.getStudentFeeInstallmentTotalFees(studentFee, installment);
         });
         return amount;
@@ -1159,5 +1251,9 @@ export class ViewDefaultersComponent implements OnInit {
             );
         });
         return filteredSubDiscountList;
+    }
+
+    hasAdminPermission(): boolean {
+        return this.userNotifyDefaulterPermissionList.userType == 'Admin';
     }
 }

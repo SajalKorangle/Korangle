@@ -103,6 +103,10 @@
                 <mat-checkbox [(ngModel)]="columnFilter.showRemark" (click)="$event.stopPropagation()"> Remark
                 </mat-checkbox>
             </mat-option>
+            <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showIsNonSalariedEmployee" (click)="$event.stopPropagation()"> Is Non-Salaried Employee
+                </mat-checkbox>
+            </mat-option>
 
             <mat-option *ngFor="let parameter of employeeParameterOtherList">
                 <mat-checkbox [(ngModel)]="parameter.show" (click)="$event.stopPropagation();">
@@ -165,12 +169,12 @@
         </mat-select>
     </mat-form-field>
 
-    <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}} hidden-sm hidden-xs"
+    <button *ngIf="!isMobile()" type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
         style="padding: 12px 15px; margin-right: 17px;" matTooltip="Print the following list" tooltip-position="left"
         (click)="printEmployeeList();">
         Print<i class="material-icons" style="margin-left: 15px;">print</i></button>
 
-    <button type="button" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+    <button *ngIf="!isMobile()" type="button" class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
         style="padding: 12px 15px; margin-right: 17px" matTooltip="Download the following list" tooltip-position="left"
         (click)="downloadList()">
         Download<i class="material-icons" style="margin-left: 15px">save_alt</i>
@@ -243,6 +247,7 @@
                     <th [class.hidden]="!columnFilter.showMonthlySalary">Monthly Salary</th>
                     <th [class.hidden]="!columnFilter.showPranNumber">PRAN Number</th>
                     <th [class.hidden]="!columnFilter.showRemark">Remark</th>
+                    <th [class.hidden]="!columnFilter.showIsNonSalariedEmployee">Is Non-Salaried Employee</th>
                     <th style="min-width: 150px;" *ngFor="let parameter of employeeParameterOtherList"
                         [class.hidden]="!parameter.show">{{parameter.name}}</th>
                 </tr>
@@ -287,6 +292,7 @@
                             <td [class.hidden]="!columnFilter.showMonthlySalary">{{employee.monthlySalary}}</td>
                             <td [class.hidden]="!columnFilter.showPranNumber">{{employee.pranNumber}}</td>
                             <td [class.hidden]="!columnFilter.showRemark">{{employee.remark}}</td>
+                            <td [class.hidden]="!columnFilter.showIsNonSalariedEmployee">{{employee.isNonSalariedEmployee}}</td>
                             <td *ngFor="let parameter of employeeParameterOtherList" [class.hidden]="!parameter.show">
                                 {{getParameterValue(employee, parameter)}}</td>
                         </ng-container>

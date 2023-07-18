@@ -7,6 +7,7 @@ import { ViewAllServiceAdapter } from './view-all.service.adapter';
 import { EmployeeService } from 'app/services/modules/employee/employee.service';
 import { ImagePdfPreviewDialogComponent } from 'app/components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 import { MatDialog } from '@angular/material';
+import { isMobile } from '../../../../classes/common.js';
 
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver';
@@ -36,6 +37,7 @@ class ColumnFilter {
     showMonthlySalary = false;
     showPranNumber = false;
     showRemark = false;
+    showIsNonSalariedEmployee = false;
 }
 
 @Component({
@@ -195,6 +197,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showMonthlySalary ? headerValues.push('Monthly Salary') : '';
         this.columnFilter.showPranNumber ? headerValues.push('PRAN Number') : '';
         this.columnFilter.showRemark ? headerValues.push('Remark') : '';
+        this.columnFilter.showIsNonSalariedEmployee ? headerValues.push('Is Non-Salaried Employee') : '';
 
         return headerValues;
     }
@@ -225,6 +228,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showMonthlySalary ? employeeDisplay.push(employee.monthlySalary) : '';
         this.columnFilter.showPranNumber ? employeeDisplay.push(employee.pranNumber) : '';
         this.columnFilter.showRemark ? employeeDisplay.push(employee.remark) : '';
+        this.columnFilter.showIsNonSalariedEmployee ? employeeDisplay.push(employee.isNonSalariedEmployee) : '';
 
         return employeeDisplay;
     }
@@ -514,4 +518,7 @@ export class ViewAllComponent implements OnInit {
         console.log(event);
     }
 
+    isMobile(): boolean {
+        return isMobile();
+    }
 }

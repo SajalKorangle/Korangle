@@ -32,7 +32,7 @@
             <div class="col-md-3" align="left">
                 <button
                     type="button"
-                    *ngIf="getFilteredFeeReceiptList()"
+                    *ngIf="getFilteredFeeReceiptList() && !htmlRenderer.isMobileApplication() && !htmlRenderer.isMobileBrowser()"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                     style="padding: 12px 15px"
                     matTooltip="Print the following list"
@@ -46,45 +46,97 @@
 
         <ng-container *ngIf="!isLoading && feeReceiptList">
             <ng-container *ngIf="feeReceiptList.length > 0">
+
+
+                <!-- Collected By -->
                 <mat-form-field style="margin-right: 15px">
-                    <mat-select placeholder="Collected By" [(ngModel)]="selectedEmployee">
-                        <mat-option *ngFor="let employee of filteredEmployeeList" [value]="employee">
-                            {{ employee.name }}
+                    <mat-select placeholder="Collected By">
+                        <mat-option>
+                            <button class="btn" style="padding: 4px 7px"
+                                (click)="selectAllEmployees(); $event.stopPropagation();">Select All</button>
+                            <button class="btn" style="padding: 4px 7px"
+                                (click)="unselectAllEmployees(); $event.stopPropagation();">Clear All</button>
                         </mat-option>
-                        <mat-option [value]="nullValue"> All </mat-option>
+                        <mat-option *ngFor="let employee of filteredEmployeeList">
+                            <mat-checkbox [(ngModel)]="employee.selectedEmployee"
+                            (click)="$event.stopPropagation();">
+                                {{ employee.name }}
+                            </mat-checkbox>
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
 
+
+                <!-- payment mode -->
                 <mat-form-field style="margin-right: 15px">
-                    <mat-select placeholder="Select Payment Mode" [(ngModel)]="selectedModeOfPayment">
-                        <mat-option *ngFor="let modeOfPayment of filteredModeOfPaymentList" [value]="modeOfPayment">
-                            {{ modeOfPayment }}
+                    <mat-select placeholder="Select Payment Mode">
+                        <mat-option>
+                            <button class="btn" style="padding: 4px 7px"
+                                (click)="selectAllPaymentModes(); $event.stopPropagation()">Select All</button>
+                            <button class="btn" style="padding: 4px 7px"
+                                (click)="unselectAllPaymentModes(); $event.stopPropagation()">Clear All</button>
                         </mat-option>
-                        <mat-option [value]="nullValue"> All </mat-option>
+                        <mat-option *ngFor="let modeOfPayment of filteredModeOfPaymentList">
+                            <mat-checkbox [(ngModel)]="modeOfPayment.selectedModeOfPayment"
+                            (click)="$event.stopPropagation();">
+                                {{ modeOfPayment.mode }}
+                            </mat-checkbox>
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
 
+
+
+                <!-- Collection of Classes -->
                 <mat-form-field style="margin-right: 15px">
-                    <mat-select placeholder="Collection of Classes" [(ngModel)]="selectedClassSection">
-                        <mat-option *ngFor="let classSection of filteredClassSectionList" [value]="classSection">
-                            {{ classSection.classs.name }}, {{ classSection.section.name }}
+                    <mat-select placeholder="Collection of Classes">
+                        <mat-option>
+                            <button class="btn" style="padding: 4px 7px"
+                                (click)="selectAllClassSection(); $event.stopPropagation()">
+                                Select All
+                            </button>
+                            <button class="btn" style="padding: 4px 7px"
+                                (click)="unselectAllClassSection(); $event.stopPropagation()">
+                                Clear All
+                            </button>
                         </mat-option>
-                        <mat-option [value]="nullValue"> All </mat-option>
+                        <mat-option *ngFor="let classSection of filteredClassSectionList">
+                            <mat-checkbox [(ngModel)]="classSection.selectedClassSection"
+                            (click)="$event.stopPropagation();">
+                                {{ classSection.classs.name }}, {{ classSection.section.name }}
+                            </mat-checkbox>
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
 
+
+                <!-- Fee Type -->
                 <mat-form-field style="margin-right: 15px">
-                    <mat-select placeholder="Select Fee Type" [(ngModel)]="selectedFeeType">
-                        <mat-option *ngFor="let feeType of filteredFeeTypeList" [value]="feeType">
-                            {{ feeType.name }}
+                    <mat-select placeholder="Select Fee Type">
+                        <mat-option>
+                            <button class="btn" style="padding: 4px 7px"
+                                (click)="selectAllFeeType(); $event.stopPropagation()">
+                                Select All
+                            </button>
+                            <button class="btn" style="padding: 4px 7px"
+                                (click)="unselectAllFeeType(); $event.stopPropagation()">
+                                Clear All
+                            </button>
                         </mat-option>
-                        <mat-option [value]="nullValue"> All </mat-option>
+                        <mat-option *ngFor="let feeType of feeTypeList">
+                            <mat-checkbox [(ngModel)]="feeType.selectedFeeType"
+                            (click)="$event.stopPropagation();">
+                                {{ feeType.name }}
+                            </mat-checkbox>
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
 
+
+                <!-- Fee Receipt Type -->
                 <mat-form-field style="margin-right: 15px">
                     <mat-select
-                        placeholder="Select Fee receipt type"
+                        placeholder="Select Fee Receipt Type"
                         [(ngModel)]="selectedFeeReceiptType"
                         (ngModelChange)="checkCancelledRemark()"
                     >
@@ -95,15 +147,32 @@
                     </mat-select>
                 </mat-form-field>
 
+
+
+                <!-- Session -->
                 <mat-form-field style="margin-right: 15px">
-                    <mat-select placeholder="Select Session" [(ngModel)]="selectedSession">
-                        <mat-option *ngFor="let session of filteredSessionList" [value]="session">
-                            {{ session.name }}
+                    <mat-select placeholder="Select Session">
+                        <mat-option>
+                            <button class="btn" style="padding: 4px 7px"
+                                (click)="selectAllSession(); $event.stopPropagation()">
+                                Select All
+                            </button>
+                            <button class="btn" style="padding: 4px 7px"
+                                (click)="unselectAllSession(); $event.stopPropagation()">
+                                Clear All
+                            </button>
                         </mat-option>
-                        <mat-option [value]="nullValue"> All </mat-option>
+                        <mat-option *ngFor="let session of filteredSessionList">
+                            <mat-checkbox [(ngModel)]="session.selectedSession"
+                            (click)="$event.stopPropagation();">
+                                {{ session.name }}
+                            </mat-checkbox>
+                        </mat-option>
                     </mat-select>
                 </mat-form-field>
 
+
+                <!-- Columns -->
                 <mat-form-field style="margin-right: 15px">
                     <mat-select placeholder="Select Columns">
                         <ng-container *ngFor="let key of getReceiptColumnFilterKeys()">
@@ -119,7 +188,7 @@
                 <br />
 
                 <span style="font-size: 16px"> Total Fees: {{ getFilteredFeeReceiptListTotalAmount() | indianCurrency: true }} </span>
-
+            <cdk-virtual-scroll-viewport itemSize="12" class="example-viewport">
                 <app-fee-receipt-list
                     [user]="user"
                     [number]="50"
@@ -132,14 +201,14 @@
                     [employeeList]="filteredEmployeeList"
                     [classList]="classList"
                     [sectionList]="sectionList"
-                    [selectedFeeType]="selectedFeeType"
                     [sessionList]="filteredSessionList"
                     [boardList]="boardList"
                 ></app-fee-receipt-list>
+            </cdk-virtual-scroll-viewport>
             </ng-container>
 
             <ng-container *ngIf="getFilteredFeeReceiptList().length == 0">
-                <span style="font-size: 16px">No Fee Receipts found</span>
+                <span style="font-size: 16px">No Fee Receipts Found</span>
             </ng-container>
         </ng-container>
     </ng-container>

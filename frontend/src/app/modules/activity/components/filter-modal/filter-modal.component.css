@@ -1,0 +1,231 @@
+/* Starts: Modal Container */
+.modal-container {
+    height: 70vh;
+    width: 60vw;
+}
+/* Ends: Modal Container */
+
+/* Starts: Modal Header */
+.modal-header {
+    border-right: 2px solid #000000;   /* Black */
+    padding-right: 10rem;
+    padding-bottom: 0rem;
+    border-bottom: 0px;
+}
+/* Ends: Modal Header */
+
+/* Starts: Page Names  &&  Employee Names Section */
+.names {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 2rem;
+    padding-right: 5rem;
+}
+
+.page-name-section {
+    flex-basis: 40%;
+}
+
+.mat-option-page-name {
+    width: 100%;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.employee-name-section {
+    flex-basis: 40%;
+}
+
+.mat-option-employee-name {
+     width: 100%;
+     padding-top: 1rem;
+     padding-bottom: 1rem;
+}
+
+.example-viewport {
+    height: 30vh;
+    width: 100%;
+}
+/* Ends: Page Names  &&  Employee Names Section */
+
+/* Starts: Time Span Section */
+.time-span-sub-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.time-span-sub-section .title {
+    flex-basis: 10%;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 14px;
+    opacity: 0.6;
+}
+
+.time-span-sub-section .radio-btns {
+    flex-basis: 88%;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+}
+
+.radio-btn-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.radio-button {
+    flex-basis: 30%;
+}
+
+.customInput {
+    border: none;
+    border-bottom: 2px solid lightgrey;
+    width: 100%;
+}
+
+.temp-btn {
+    opacity: 0;
+}
+/* Ends: Time Span Section */
+
+/* Starts: FIlters Description */
+.filters-list {
+    font-size: 12px;
+    line-height: 14px;
+}
+/* Ends: FIlters Description */
+
+/* Starts: Bottom Buttons */
+.bottom-btns {
+    float: right;
+}
+
+.clear-btn {
+    font-style: normal;
+    color: #FF1717;   /* Red */
+    background-color: white;
+    box-shadow: none;
+    text-decoration: underline;
+    text-transform: capitalize;
+    padding: 7px 25px;
+}
+/* Ends: Bottom Buttons */
+
+/* Media Query - Mobile Phones */
+@media only screen and (max-width: 992px) {
+    /* Starts: Modal Container */
+    .modal-container {
+        height: 85vh;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    /* Ends: Modal Header */
+
+    /* Starts: Page Names  &&  Employee Names Section */
+    .modal-header {
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+        padding-right: 3rem;
+    }
+    /* Ends: Modal Header */
+
+    /* Starts: Page Names  &&  Employee Names Section */
+    .names {
+        padding: 0;
+        margin: 0;
+        flex-direction: column;
+        justify-content: flex-start;
+        font-size: 12px;
+    }
+
+    .example-viewport {
+        height: 40vh;
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .page-name-section {
+        flex-basis: 100%;
+        font-size: 14px;
+        padding: 0;
+        margin: 0;
+        margin-bottom: 2rem;
+    }
+
+    .mat-option-page-name {
+        width: 100%;
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+
+    .employee-name-section {
+        flex-basis: 100%;
+        font-size: 14px;
+        padding: 0;
+        margin: 0;
+    }
+    /* Ends: Page Names  &&  Employee Names Section */
+
+    /* Starts: Time Span Section */
+    .time-span-sub-section {
+        justify-content: flex-start;
+        flex-direction: column;
+        align-items: flex-start;
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+        margin-top: 2rem;
+    }
+
+    .time-span-sub-section .title {
+        flex-basis: 100%;
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+        margin-bottom: 2rem;
+    }
+
+    .time-span-sub-section .radio-btns {
+        flex-basis: 100%;
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .radio-btn-group {
+        justify-content: flex-start;
+        flex-direction: column;
+        align-items: flex-start;
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .radio-button {
+        flex-basis: 100%;
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+
+    .radio-button:last-child {
+        margin-bottom: 0;
+    }
+    /* Ends: Time Span Section */
+
+    /* Starts: FIlters Description */
+    .filters-list {
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+    }
+    /* Ends: FIlters Description */
+}
+/* End of Media Query */

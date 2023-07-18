@@ -2,7 +2,8 @@ from django.db import models
 
 from class_app.models import Class
 from school_app.model.models import School
-from employee_app.models import Employee
+from employee_app.models import Employee, EmployeePermission
+from common.common import BasePermission
 
 
 class Enquiry(models.Model):
@@ -34,5 +35,25 @@ class Enquiry(models.Model):
     # Employee Id
     parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True)
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id', 'parentEmployee__parentSchool__id']
+
     class Meta:
         db_table = 'enquiry'
+
+
+class ViewEnquiryInPagePermissions(models.Model):
+    USER_TYPE = (
+        ('Admin', 'Admin'),
+        ('Surveyor', 'Surveyor')
+    )
+
+    parentEmployeePermission = models.ForeignKey(EmployeePermission, on_delete=models.CASCADE, verbose_name='parentEmployeePermission', unique=True)
+    userType = models.CharField(max_length=10, choices=USER_TYPE, default='Admin')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentEmployeePermission__parentEmployee__parentSchool__id']
+
+    class Meta:
+        db_table = 'view_enquiry_in_page_permissions'
+

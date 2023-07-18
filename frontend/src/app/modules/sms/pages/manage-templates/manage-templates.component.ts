@@ -28,10 +28,8 @@ export class ManageTemplatesComponent implements OnInit {
 
     panelsList = ['eventPanel', 'notificationPanel', 'smsPanel'];
 
-    populatedSMSIdList = [];
-    populatedSMSEventSettingsList = [];
-
-    NOTIFY_DEFAULTERS_SMS_EVENT_ID = 4;
+    smsIdListFilteredBySchoolId = [];
+    populatedSelectedPageEventsData = [];
 
     userInput = {
         selectedPage: null,
@@ -39,8 +37,9 @@ export class ManageTemplatesComponent implements OnInit {
         selectedSMSId: {} as any,
         startDate: null,
         endDate: null,
-        populatedSMSEventSettingsList: [],
+        populatedSelectedPageEventsData: [],
         selectedEvent: null,
+        selectedEventSettings: null,
     };
 
     columnFilter = {
@@ -58,7 +57,7 @@ export class ManageTemplatesComponent implements OnInit {
         selectedPageDefaultTemplateList: [],
         selectedPageEventSettingsList: [],
         sendUpdateTypeList: [],
-        SMSEventList: [],
+        eventList: [],
     };
 
     stateKeeper = { isLoading: false };
@@ -76,6 +75,16 @@ export class ManageTemplatesComponent implements OnInit {
         this.serviceAdapter.initialize(this);
         this.serviceAdapter.initializeData();
 
+    }
+
+    initializeNewTemplate() {
+        this.userInput.newTemplate = {
+            parentSMSId: null,
+            templateId: null,
+            templateName: null,
+            rawContent: null,
+            mappedContent: null,
+        };
     }
 
     isDefaultSelected(smsEvent: any): boolean {

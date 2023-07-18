@@ -1,3 +1,5 @@
+import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
+import { PurchaseSmsDialogEasebuzzComponent } from './components/purchase-sms-dialog-easebuzz/purchase-sms-dialog-easebuzz.component';
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 
 import {ClassService} from '../../../../services/modules/class/class.service';
@@ -16,7 +18,6 @@ import {InformationService} from '@services/modules/information/information.serv
 
 import { MatDialog } from '@angular/material';
 
-import { PurchaseSmsDialogComponent } from './components/purchase-sms-dialog/purchase-sms-dialog.component';
 
 import { CommonFunctions } from '@classes/common-functions';
 @Component({
@@ -185,13 +186,14 @@ export class SendSmsComponent implements OnInit {
                 person[personType] = true; // to identify which person in list eg: x['student'] = true
                 tempList.push(person);
             }
-            if (this.userInput.selectedSendTo.id == 1) {
+            if (this.userInput.selectedSendTo.id == 1 ||  this.userInput.selectedSendTo.id == 3) {
                 if (this.includeSecondMobileNumber && this.isMobileNumberValid(person.secondMobileNumber)) {
                     if (!this.messageService.checkForDuplicate(variableList, tempList, this.dataForMapping,
                         person, this.message, person, true)) {
                         person[personType] = true;
                         let personWithoutReference = JSON.parse(JSON.stringify(person));
                         personWithoutReference.mobileNumber = person.secondMobileNumber;
+                        personWithoutReference['isSecondNumber'] = true; // mentioning the element is secondNumber entry
                         tempList.push(personWithoutReference);
                     }
                 }
@@ -203,9 +205,13 @@ export class SendSmsComponent implements OnInit {
             this.notificationPersonList = [];
         } else if (this.userInput.selectedSendUpdateType.id == this.NOTIFICATION_TYPE_ID) {
             this.smsPersonList = [];
-            this.notificationPersonList = tempList.filter((temp) => temp.notification);
+            this.notificationPersonList = tempList.filter((temp) => {
+                return (!temp.isSecondNumber && temp.notification) || (this.includeSecondMobileNumber && temp.isSecondNumber && temp.secondNumberNotification);
+            });
         } else if (this.userInput.selectedSendUpdateType.id == this.SMS_AND_NOTIFICATION_TYPE_ID) {
-            this.notificationPersonList = tempList.filter((temp) => temp.notification);
+            this.notificationPersonList = tempList.filter((temp) => {
+                return (!temp.isSecondNumber && temp.notification) || (this.includeSecondMobileNumber && temp.isSecondNumber && temp.secondNumberNotification);
+            });
             this.smsPersonList = tempList.filter((temp1) => {
                 return (
                     this.notificationPersonList.find((temp2) => {
@@ -399,11 +405,19 @@ export class SendSmsComponent implements OnInit {
     }
 
     openPurchaseSMSDialog(): void {
-        this.dialog.open(PurchaseSmsDialogComponent, {
-            data: {
-                vm: this,
-            }
-        });
+        if (DataStorage.getInstance().isFeatureEnabled("Easebuzz Online Payment Gateway Feature Flag")) {
+            this.dialog.open(PurchaseSmsDialogEasebuzzComponent, {
+                data: {
+                    vm: this,
+                }
+            });
+        } else {
+            this.dialog.open(PurchaseSmsDialogComponent, {
+                data: {
+                    vm: this,
+                }
+            });
+        }
     }
 
 }

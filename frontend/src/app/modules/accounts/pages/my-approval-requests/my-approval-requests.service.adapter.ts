@@ -35,8 +35,8 @@ export class MyApprovalRequestsServiceAdapter {
 
         Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data),   // 0
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data),    // 1
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 2
+            this.vm.genericService.getObjectList({employee_app: 'Employee'}, {filter: employee_data}), // 2
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 2
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_title_data),    // 3
             this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_account_request), // 4
         ]).then(value => {

@@ -196,14 +196,16 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput type="number" placeholder="Monthly Salary" (keypress)="policeNumberInput($event)"
+                    <input matInput type="number" placeholder="Monthly Salary" oninput="this.value=this.value.slice(0,this.maxLength)" (keypress)="policeNumberInput($event)"
+                        maxlength="8"
                         (ngModelChange)="currentEmployeeProfile.monthlySalary = $event"
                         [ngModel]="selectedEmployeeProfile.monthlySalary" />
                 </mat-form-field>
             </div>
             <div class="col-md-3">
                 <mat-form-field>
-                    <input matInput type="number" placeholder="Paid Leaves" (keypress)="policeNumberInput($event)"
+                    <input matInput type="number" placeholder="Paid Leaves" oninput="this.value=this.value.slice(0,this.maxLength)" (keypress)="policeNumberInput($event)"
+                           maxlength="5"
                         (ngModelChange)="currentEmployeeSessionProfile.paidLeaveNumber = $event"
                         [ngModel]="selectedEmployeeSessionProfile.paidLeaveNumber" />
                 </mat-form-field>
@@ -231,6 +233,14 @@
                     <input matInput type="text" placeholder="PRAN Number"
                         (ngModelChange)="currentEmployeeProfile.pranNumber = $event"
                         [ngModel]="selectedEmployeeProfile.pranNumber" />
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <mat-select placeholder="Is Non-Salaried Employee" [(ngModel)]="currentEmployeeProfile.isNonSalariedEmployee">
+                        <mat-option [value]="true">True</mat-option>
+                        <mat-option [value]="false">False</mat-option>
+                    </mat-select>
                 </mat-form-field>
             </div>
         </div>
@@ -277,10 +287,10 @@
         </div>
 
         <!-- Custom Documents Parameter -->
-        <div class="row">
+        <div class="row document-parameter">
             <div *ngFor="let parameter of employeeParameterList">
-                <div *ngIf="parameter.parameterType=='DOCUMENT'" class="col-md-5"
-                    style="margin-top: 10px;margin-right:10px"
+                <div *ngIf="parameter.parameterType=='DOCUMENT'" id="documentElement" class="col-md-5"
+                    [ngStyle]="{'margin-top': '10px', 'margin-right': '10px', 'height': getHeight(parameter) + 'px'}"
                     [class.fieldChanged]="checkCustomFieldChanged(parameter)">
                     <div (dragenter)="dragEnter($event)" (dragleave)="dragLeave($event)" (drop)="onDrop($event)"
                         class="drop">
@@ -302,11 +312,18 @@
                             <div class="documentIcon">
                                 <img src="/assets/img/img.png" (click)="openFilePreviewDialog(parameter)">
                             </div>
-                            <div class="documentText">
-                                <p class="documentName">{{getDocumentName(parameter)}}</p>
-                                <button (click)="imageInput.click()" class="documentButton">Replace</button>
-                                <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
-                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)"
+                            <div class="documentText" [ngStyle]="{'width': getWidth()+'px'}">
+                                <div *ngIf="isMobile()" id="fileNameElement">
+                                    <p *ngIf="!checkToolTip(parameter)" (click)="toolTipClicked(parameter)" class="documentName tooltip-btn">{{getDocumentName(parameter)}}</p>
+                                    <p id="fullName" *ngIf="checkToolTip(parameter)" (click)="toolTipClicked(parameter)"
+                                        class="tooltip-btn">{{getFullDocumentName(parameter)}}</p>
+                                </div>
+                                <div *ngIf="!isMobile()">
+                                    <p data-toggle="tooltip" data-placement="bottom" title="{{getFullDocumentName(parameter)}}" class="documentName tooltip-btn">{{getDocumentName(parameter)}}</p>
+                                </div>
+                                <button (click)="imageInput.click(); closeToolTip(parameter)" class="documentButton">Replace</button>
+                                <button (click)="deleteDocument(parameter); closeToolTip(parameter)" class="documentButton">Delete</button>
+                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter); closeToolTip(parameter)"
                                     class="documentButton">Reset</button>
                             </div>
                         </div>
@@ -314,11 +331,18 @@
                             <div class="documentIcon">
                                 <img src="/assets/img/pdf.png" (click)="openFilePreviewDialog(parameter)">
                             </div>
-                            <div class="documentText">
-                                <p class="documentName">{{getDocumentName(parameter)}}</p>
-                                <button (click)="imageInput.click()" class="documentButton">Replace</button>
-                                <button (click)="deleteDocument(parameter)" class="documentButton">Delete</button>
-                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter)"
+                            <div class="documentText" [ngStyle]="{'width': getWidth()+'px'}">
+                                <div *ngIf="isMobile()" id="fileNameElement">
+                                    <p *ngIf="!checkToolTip(parameter)" (click)="toolTipClicked(parameter)" class="documentName tooltip-btn">{{getDocumentName(parameter)}}</p>
+                                    <p id="fullName" *ngIf="checkToolTip(parameter)" (click)="toolTipClicked(parameter)"
+                                        class="tooltip-btn">{{getFullDocumentName(parameter)}}</p>
+                                </div>
+                                <div *ngIf="!isMobile()">
+                                    <p data-toggle="tooltip" data-placement="bottom" title="{{getFullDocumentName(parameter)}}" class="documentName tooltip-btn">{{getDocumentName(parameter)}}</p>
+                                </div>
+                                <button (click)="imageInput.click(); closeToolTip(parameter)" class="documentButton">Replace</button>
+                                <button (click)="deleteDocument(parameter); closeToolTip(parameter)" class="documentButton">Delete</button>
+                                <button *ngIf="checkCustomFieldChanged(parameter)" (click)="resetDocument(parameter); closeToolTip(parameter)"
                                     class="documentButton">Reset</button>
                             </div>
                         </div>

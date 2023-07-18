@@ -19,27 +19,51 @@
         <div *ngIf="isMobile()" style="margin-left: 10px"><a href="tel:6261627172">6261627172</a><br /></div>
     </mat-card>
 
-    <mat-card style="margin-bottom: 15px">
+    <!-- mat-card style="margin-bottom: 15px">
         <mat-card-title> Designer Support </mat-card-title>
 
         <div *ngIf="!isMobile()" style="margin-left: 10px">9399038431<br /></div>
 
         <div *ngIf="isMobile()" style="margin-left: 10px"><a href="tel:9399038431">9399038431</a><br /></div>
-    </mat-card>
+    </mat-card -->
 
-    <mat-card>
+    <mat-card style="margin-bottom: 15px">
         <mat-card-title> Bank Account Details </mat-card-title>
 
-        <div style="margin-left: 10px">
+        <div class="row">
+            <div class="col-md-6">
+                Account Name: Korangle Softwares Private Limited<br />
+                Bank Name: ICICI<br />
+                Branch Name: Shujalpur<br />
+                Account Type: Current<br />
+                Account No. : 171605006175<br />
+                IFSC Code: ICIC0001716
+            </div>
+            <div class="col-md-6">
+                QR Code <br/>
+                <img src="assets/img/qrcode.jpeg" style="margin-left: 10px; height:140px; width: 140px;"/>
+            </div>
+        </div>
+        
+        <!-- div style="margin-left: 10px">
             Account Name: Korangle Softwares<br />
             Bank Name: Central Bank Of India<br />
             Branch Name: Shujalpur Mandi<br />
             Account Type: Current<br />
             Account No. : 3899954010<br />
             Micr Code: 465016051<br />
-            IFSC Code: CBIN0283366
-        </div>
+            IFSC Code: CBIN0283366<br/>
+            QR Code: <img src="assets/img/qrcode.png" style="margin-left: 10px; height:100px; width: 100px;"/>
+        </div -->
     </mat-card>
+
+    <!-- mat-card>
+        <mat-card-title> QR Code </mat-card-title>
+
+        <img src="assets/img/qrcode.png" style="margin-left: 10px; height:80px; width: 80px;"/>
+        
+    </mat-card -->
+
 </div>
 
 <ng-container *ngIf="isLoading">

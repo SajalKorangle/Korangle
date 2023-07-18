@@ -14,10 +14,14 @@ export class PrintSalarySheetServiceAdapter {
     public getEmployeeList(): void {
         let data = {
             parentSchool: this.vm.user.activeSchool.dbId,
+            isNonSalariedEmployee: false,
         };
         this.vm.employeeService.getEmployeeProfileList(data, this.vm.user.jwt).then(
             (employeeList) => {
-                this.vm.employeeList = employeeList;
+                console.log(employeeList);
+                this.vm.employeeList = employeeList.filter(item => {
+                    return item.isNonSalariedEmployee === false;
+                });
                 if (this.vm.selectedMonth) {
                     this.getInfoForSalary();
                 }

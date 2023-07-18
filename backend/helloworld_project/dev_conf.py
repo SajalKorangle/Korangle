@@ -41,11 +41,14 @@ DATABASES = {
 # DATABASE_ROUTERS =['postgresql_migration.db_router.MainDbRouter']
 
 # S3 Bucket config
-AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
-AWS_SECRET_ACCESS_KEY = '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'
+#AWS_ACCESS_KEY_ID = 'AKIAIPISPZZVD4IAFVDA'
+AWS_ACCESS_KEY_ID = 'AKIATTKSYDLKSRYDWSWJ'
+#AWS_SECRET_ACCESS_KEY = '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'
+AWS_SECRET_ACCESS_KEY = 'BadudGexRCR0Y426nsUHsMDjwcNYrwaJH511AUfj'
 AWS_STORAGE_BUCKET_NAME = 'korangletesting'
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_SECURE_URLS = False # to use http instead of https
+AWS_S3_BASE_URL = 'https://korangletesting.s3.amazonaws.com/'
 
 
 ################## PAYMENT_GATEWAY ##################
@@ -63,6 +66,12 @@ CASHFREE_VERIFICATION_SUITE_ENDPOINT = 'https://payout-gamma.cashfree.com'
 # CASHFREE_SECRET_KEY = 'f413afe54518d72141e192c5c5ea4bb303fe9192'
 # CASHFREE_CLIENT_ID = 'CF77110C5JD3NNHBJS43OTETEN0'
 # CASHFREE_CLIENT_SECRET = 'a125f1d589609adbed0f5b2890653c0fdc77cf35'
+
+## EASEBUZZ TEST CREDENTIALS ##
+EASEBUZZ_MERCHANT_KEY = "2PBP7IABZ2"
+EASEBUZZ_SALT = "DAH88E3UWQ"
+EASEBUZZ_ENV = "test" # `test` for test enviornment and `prod` for production
+
 ######################################################
 
 # Query Debug Info (for dev/testing)
@@ -82,3 +91,5 @@ QUERYCOUNT = {
 QUERYCOUNT = {
     'IGNORE_REQUEST_PATTERNS': [r'^/admin/']
 }
+
+TECHSUPPORT_EMAIL = "anurag@korangle.com"

@@ -5,6 +5,7 @@ from rest_framework_jwt.views import JSONWebTokenAPIView
 from rest_framework_jwt.serializers import JSONWebTokenSerializer
 
 from django.contrib.auth import get_user_model
+from authentication_app.models import DeviceList
 
 from tc_app.models import TransferCertificateNew
 
@@ -19,6 +20,8 @@ from team_app.models import Module
 from student_app.models import StudentSection
 from employee_app.models import Employee, EmployeePermission
 from online_classes_app.models import RestrictedStudent
+from school_app.model.models import Session
+
 
 
 def get_data_from_school_list(schoolList, schoolDbId):
@@ -112,6 +115,7 @@ def get_employee_school_module_list(employee_object):
 
     for module_object in \
             Module.objects.filter(Q(parentBoard=None) | Q(parentBoard=school_object.parentBoard))\
+                    .exclude(parentFeatureFlag__enabled=False)\
                     .order_by('orderNumber'):
         tempModule = {}
         tempModule['dbId'] = module_object.id
@@ -122,6 +126,8 @@ def get_employee_school_module_list(employee_object):
         for permission_object in \
                 EmployeePermission.objects.filter(parentEmployee=employee_object,
                                                   parentTask__parentModule=module_object)\
+                    .exclude(parentTask__parentFeatureFlag__enabled=False)\
+                    .exclude(parentTask__parentModule__parentFeatureFlag__enabled=False)\
                     .order_by('parentTask__orderNumber') \
                     .select_related('parentTask'):
             tempTask = {}
@@ -185,9 +191,14 @@ def get_school_data_by_object(school_object):
 
 
 class AuthenticationHandler():
-    def authenticate_and_login(username, response):
+    def authenticate_and_login(username, device_name, response):
         if 'token' in response.data:
             user = User.objects.filter(username=username)
+
+            # Saving device login 
+            newJWTEntry = DeviceList(token = response.data['token'], parentUser = user[0], device_name = device_name, mobile=int(user[0].username))
+            newJWTEntry.save()
+
             response.data.update(get_user_details(user[0]))
         else:
             response.data['username'] = 'invalidUsername'
@@ -205,10 +216,13 @@ class LoginUserView(JSONWebTokenAPIView):
             request.data['username'] = username
         response = super().post(request)
 
+        device_name = request.data['device_name']
+
         print(response)
 
         response_data = AuthenticationHandler.authenticate_and_login(
                 username=username,
+                device_name=device_name,
                 response=response
         )
         return Response({"data": response_data})
@@ -232,6 +246,7 @@ def get_user_details(user_object):
         'email': user_object.email,
         'id': user_object.id,
         'schoolList': get_school_list(user_object),
+        'session_list': Session.objects.values()
     }
 
     return response

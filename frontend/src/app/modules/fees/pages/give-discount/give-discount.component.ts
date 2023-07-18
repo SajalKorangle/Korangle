@@ -9,13 +9,14 @@ import { FeeReceipt } from '../../../../services/modules/fees/models/fee-receipt
 import { SubFeeReceipt } from '../../../../services/modules/fees/models/sub-fee-receipt';
 import { Discount } from '../../../../services/modules/fees/models/discount';
 import { SubDiscount } from '../../../../services/modules/fees/models/sub-discount';
-import { StudentService } from '../../../../services/modules/student/student.service';
 import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-old.service';
-import { ClassService } from '../../../../services/modules/class/class.service';
-import { EmployeeService } from '../../../../services/modules/employee/employee.service';
 import { CommonFunctions } from '../../../../classes/common-functions';
 import { DataStorage } from '../../../../classes/data-storage';
-import { SchoolService } from '../../../../services/modules/school/school.service';
+import { SmsService } from '../../../../services/modules/sms/sms.service';
+import { NotificationService } from '../../../../services/modules/notification/notification.service';
+import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
+import { UserService } from '@services/modules/user/user.service';
+import { MessageService } from '@services/message-service';
 import { GenericService } from '@services/generic/generic-service';
 
 declare const $: any;
@@ -24,7 +25,15 @@ declare const $: any;
     selector: 'give-discount',
     templateUrl: './give-discount.component.html',
     styleUrls: ['./give-discount.component.css'],
-    providers: [GenericService, FeeService, StudentService, VehicleOldService, ClassService, EmployeeService, SchoolService],
+    providers: [
+        GenericService,
+        FeeService,
+        VehicleOldService,
+        SmsService,
+        NotificationService,
+        SmsOldService,
+        UserService,
+    ],
 })
 export class GiveDiscountComponent implements OnInit {
     user;
@@ -69,16 +78,30 @@ export class GiveDiscountComponent implements OnInit {
 
     isStudentListLoading = false;
 
+    // Data needed to send a SMS
+    GIVE_DISCOUNT_EVENT_DBID = 18;
+
+    backendData = {
+        eventSettingsList: [],
+        discountSMSEventList: []
+    };
+
+    smsBalance = 0;
+
+    dataForMapping =  {} as any;
+
+    messageService: any;
+
     constructor(
         public genericService: GenericService,
-        public schoolService: SchoolService,
         public feeService: FeeService,
-        public studentService: StudentService,
         public vehicleService: VehicleOldService,
-        public classService: ClassService,
-        public employeeService: EmployeeService,
-        private cdRef: ChangeDetectorRef
-    ) { }
+        private cdRef: ChangeDetectorRef,
+        public smsService: SmsService,
+        public notificationService: NotificationService,
+        public smsOldService: SmsOldService,
+        public userService: UserService,
+    ) {}
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -105,6 +128,8 @@ export class GiveDiscountComponent implements OnInit {
             this.discountColumnFilter.class = false;
             this.discountColumnFilter.employee = false;
         }
+
+        this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
     }
 
     detectChanges(): void {
@@ -507,7 +532,7 @@ export class GiveDiscountComponent implements OnInit {
                 return this.getSessionFeesDue(student, session, false) + this.getSessionLateFeesDue(student, session, false) > 0;
             })
             .sort((a, b) => {
-                return a.id - b.id;
+                return a.orderNumber - b.orderNumber;
             });
     }
 
@@ -1010,33 +1035,6 @@ export class GiveDiscountComponent implements OnInit {
         });
         return filteredSubFeeReceiptList;
     }
-
-    /*createNewSubFeeReceipt(studentFee: any, installment: any, payment: any): void {
-
-        let subFeeReceipt = new SubFeeReceipt();
-        subFeeReceipt.parentStudentFee = studentFee.id;
-        subFeeReceipt.parentFeeType = studentFee.parentFeeType;
-        subFeeReceipt.parentSession = studentFee.parentSession;
-        subFeeReceipt.isAnnually = studentFee.isAnnually;
-        subFeeReceipt[installment] = payment;
-        this.newSubFeeReceiptList.push(subFeeReceipt);
-
-        this.checkAndCreateNewFeeReceipt(studentFee);
-
-    }*/
-
-    /*checkAndDeleteNewSubFeeReceipt(subFeeReceipt: any, studentFee: any): void {
-        if (this.installmentList.reduce((total, installment) => {
-            return total
-                + (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0)
-                + (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
-        }, 0) == 0) {
-            this.newSubFeeReceiptList = this.newSubFeeReceiptList.filter(subFeeReceipt => {
-                return subFeeReceipt.parentStudentFee != studentFee.id;
-            });
-            this.checkAndDeleteNewFeeReceipt(studentFee);
-        }
-    }*/
 
     // Sub Discount
     getFilteredSubDiscountListByStudentFee(studentFee: any, includeNewSubDiscount = true): any {

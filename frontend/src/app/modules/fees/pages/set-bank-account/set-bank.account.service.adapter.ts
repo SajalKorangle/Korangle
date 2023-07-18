@@ -117,12 +117,18 @@ export class SetBankAccountServiceAdapter {
         if (this.vm.schoolMerchantAccount.id) {
             this.vm.schoolMerchantAccount =
                 await this.vm.paymentService.updateObject(this.vm.paymentService.school_merchant_account, newOnlinePaymentAccount);
-            this.vm.snackBar.open('Payment Account Updated Successfully', undefined, { duration: 5000 });
+            this.vm.snackBar.open(
+                'Successfully requested for your updating Payment Account, please give us some time to approve these changes.',
+                undefined, { duration: 5000 }
+            );
         }
         else {
             this.vm.schoolMerchantAccount =
                 await this.vm.paymentService.createObject(this.vm.paymentService.school_merchant_account, newOnlinePaymentAccount);
-            this.vm.snackBar.open('Payment Account Created Successfully', undefined, { duration: 5000 });
+            this.vm.snackBar.open(
+                'Successfully requested for creating your Payment Account, please give us some time to approve your account.',
+                undefined, { duration: 5000 }
+            );
         }
         this.vm.resetIntermediateUpdateState();
     }

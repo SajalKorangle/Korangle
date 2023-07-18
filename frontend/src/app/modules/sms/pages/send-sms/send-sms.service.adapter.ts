@@ -141,7 +141,7 @@ export class SendSmsServiceAdapter {
             employee['selected'] = true;
             employee['validMobileNumber'] = this.vm.isMobileNumberValid(employee.mobileNumber);
         });
-        this.vm.messageService.fetchGCMDevicesNew(this.vm.backendData.studentList.concat(this.vm.employeeList));
+        this.vm.messageService.fetchGCMDevicesNew(this.vm.backendData.studentList.concat(this.vm.employeeList), true);
     }
 
     populateStudentSectionList(): void {

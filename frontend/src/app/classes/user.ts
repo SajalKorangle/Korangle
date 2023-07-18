@@ -19,6 +19,14 @@ export class User {
 
     schoolList: School[] = [];
 
+    session_list: {
+        id: number,
+        startDate: string,
+        endDate: string,
+        orderNumber: number,
+        name: string
+    }[] = [];
+
     isLazyLoading: boolean = false;
 
     notification = {
@@ -33,6 +41,9 @@ export class User {
             },
         ],
     };
+
+    // unobserved route change events are stored here
+    newRoute: any = null;
 
     settings = {
         path: 'user-settings',
@@ -59,6 +70,10 @@ export class User {
             {
                 path: 'create_school',
                 title: 'Create School',
+            },
+            {
+                path: 'view_devices',
+                title: 'View Devices',
             },
         ],
     };
@@ -103,24 +118,10 @@ export class User {
         this.first_name = data.first_name;
         this.last_name = data.last_name;
         this.email = data.email;
+        this.session_list = data.session_list;
         this.initializeSchoolList(data.schoolList);
         this.activeSchool = this.schoolList[0];
         this.initializeTask();
-    }
-
-    getSchoolCurrentSessionName(): string {
-        if (this.activeSchool.currentSessionDbId == 1) {
-            return 'Session 2017-18';
-        } else if (this.activeSchool.currentSessionDbId == 2) {
-            return 'Session 2018-19';
-        } else if (this.activeSchool.currentSessionDbId == 3) {
-            return 'Session 2019-20';
-        } else if (this.activeSchool.currentSessionDbId == 4) {
-            return 'Session 2020-21';
-        } else if (this.activeSchool.currentSessionDbId == 5) {
-            return 'Session 2021-22';
-        }
-        return '';
     }
 
     // This function will be called after
@@ -131,11 +132,10 @@ export class User {
     // 5. when role has changes
     initializeTask(): void {
         let urlPath = window.location.pathname;
-        const [, modulePath, taskPath] = urlPath.split('/');
+        const [, , modulePath, taskPath] = urlPath.split('/');
         let urlParams = new URLSearchParams(window.location.search);
         let module: any;
         let task: any;
-
         if (!this.activeSchool) {
             switch (modulePath) {
                 case '/':
@@ -163,9 +163,13 @@ export class User {
                     module = undefined;
                     break;
                 case 'user-settings':
+                    // Open the page with the role user opened last time
+                    this.activeSchool.role = urlParams.get('role') || this.activeSchool.role;
                     module = this.settings;
                     break;
                 case 'notification':
+                    // Open the page with the role user opened last time
+                    this.activeSchool.role = urlParams.get('role') || this.activeSchool.role;
                     module = this.notification;
                     break;
 
@@ -177,8 +181,9 @@ export class User {
                         if (urlParams.get('student_id') != undefined) {
                             module = this.activeSchool.studentList.find((s) => s.id == Number(urlParams.get('student_id')));
                         } else {
-                            module = this.activeSchool.parentModuleList[0].taskList.some((t) => t.path == taskPath)
-                                ? this.activeSchool.parentModuleList[0]
+                            // now searches for path in every parent module
+                            module = this.activeSchool.parentModuleList.some((parentModule) => parentModule.taskList.some((t) => t.path == taskPath))
+                                ? this.activeSchool.parentModuleList.find((parentModule) => parentModule.taskList.some((t) => t.path == taskPath))
                                 : undefined;
                         }
                     }
@@ -211,7 +216,13 @@ export class User {
 
     checkUserSchoolSessionPermission(urlParams: any): boolean {
         const school = this.schoolList.find((s) => s.dbId == Number(urlParams.get('school_id')));
-        if (school != undefined && Number(urlParams.get('session')) > 0 && Number(urlParams.get('session')) <= 5) {
+
+        // The current session ID should be less than the max session ID, so calculating max Session ID among all sessions
+        let maxSessionID = 0;
+        this.session_list.forEach((session) => {
+            maxSessionID = Math.max(maxSessionID, session.id);
+        });
+        if (school != undefined && Number(urlParams.get('session')) > 0 && Number(urlParams.get('session')) <= maxSessionID) {
             this.activeSchool = school;
             if (this.activeSchool.currentSessionDbId != Number(urlParams.get('session')) && this.checkChangeSession()) {
                 this.activeSchool.currentSessionDbId = Number(urlParams.get('session'));
@@ -249,6 +260,8 @@ export class User {
                 title: module.title,
                 subTitle: task.title,
             };
+            if (this.activeSchool)
+                queryParams['role'] = this.activeSchool.role;
         } else if (this.activeSchool.role === 'Parent') {
             this.section = {
                 route: 'parent',
@@ -257,7 +270,7 @@ export class User {
                 subTitle: task.title,
                 student: module,
             };
-            if (!this.activeSchool.parentModuleList[0].taskList.some((t) => t.path == task.path)) {
+            if (!this.activeSchool.parentModuleList.some((parentModule) => parentModule.taskList.some((t) => t.path == task.path))) {
                 queryParams['student_id'] = module.id;
             }
         } else if (this.activeSchool.role === 'Employee') {
@@ -277,8 +290,19 @@ export class User {
                 return;
             queryParams[key] = value;
         });
+
+        /* Sometimes the sidebar initializes after the route initialize-router event is emitted
+           so the route is not changed and user sees a loading screen forever. To prevent this, we are using
+           this hack that if there are no observers for the event than we are storing the event in a variable
+           so whenever the sidebar is initialized it will check if there is any old event pending to be observed
+           and if present, it will act accordingly.
+        */
+        if (EmitterService.get('initialize-router').observers.length === 0) {
+            this.newRoute = {queryParams};
+        }
         EmitterService.get('initialize-router').emit({ queryParams: queryParams });
     }
+
 }
 
 /*

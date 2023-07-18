@@ -84,13 +84,13 @@ export class ICardsComponent implements OnInit {
         return selectedEmployee;
     }
 
-    selectAllStudents() {
+    selectAllEmployees() {
         this.employeeProfileList.forEach((row) => {
             row.selected = true;
         });
     }
 
-    unSelectAllStudents() {
+    unSelectAllEmployees() {
         this.employeeProfileList.forEach((row) => {
             row.selected = false;
         });
@@ -102,5 +102,17 @@ export class ICardsComponent implements OnInit {
         });
         console.log(employeeProfileList);
         this.printService.navigateToPrintRoute(PRINT_EMPLOYEE_I_CARD, { user: this.user, value: employeeProfileList });
+    }
+
+    selectAllColumns() {
+        for (let key in this.columnFilter) {
+            this.columnFilter[key] = true;
+        }
+    }
+
+    unSelectAllColumns() {
+        for (let key in this.columnFilter) {
+            this.columnFilter[key] = false;
+        }
     }
 }

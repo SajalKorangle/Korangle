@@ -1,0 +1,162 @@
+<div class="card-content">
+    <ng-container *ngIf="isMobileMenu()">This page is not supported in mobile version yet.</ng-container>
+
+    <ng-container *ngIf="!isLoading && !isMobileMenu()">
+        <ng-container *ngIf="user.activeSchool.currentSessionDbId != sessionList[sessionList.length - 1].id; else noNextSession">
+            <!-- Session -->
+            <div class="row" style="margin-top: 5px">
+                <div class="col-xs-6">
+                    From:
+                    <span style="font-weight: 800; font-size: 16px">
+                        {{ fromSessionName }}
+                    </span>
+                </div>
+                <div class="col-xs-6">
+                    To:
+                    <span style="font-weight: 800; font-size: 16px">
+                        {{ toSessionName }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Class -->
+            <div class="row" style="margin-top: 15px">
+                <div class="col-xs-6">
+                    <mat-form-field>
+                        <mat-select
+                            placeholder="Select Class"
+                            #selectClassSectionOne
+                            [ngModel]="fromSelectedClass"
+                            (ngModelChange)="handleFromSelectedClassChange($event)"
+                        >
+                            <mat-option *ngFor="let classs of classList" [value]="classs">
+                                {{ classs.name }}, {{ fromSelectedSection.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button
+                        class="btn"
+                        style="padding: 2px 11px; background-color: transparent"
+                        mat-icon-button
+                        [matMenuTriggerFor]="classSectionMenuOne"
+                    >
+                        <i class="material-icons" style="color: black">expand_more</i>
+                    </button>
+                    <mat-menu #classSectionMenuOne="matMenu">
+                        <button
+                            *ngFor="let section of sectionList"
+                            mat-menu-item
+                            (click)="selectClassSectionOne.open(); selectClassSectionOne.close(); handleFromSelectedSectionChange(section)"
+                        >
+                            {{ section.name }}
+                        </button>
+                    </mat-menu>
+                </div>
+
+                <div class="col-xs-6">
+                    <mat-form-field>
+                        <mat-select
+                            placeholder="Select Class"
+                            #selectClassSectionTwo
+                            [ngModel]="toSelectedClass"
+                            (ngModelChange)="handleToSelectedClassChange($event)"
+                        >
+                            <mat-option *ngFor="let classs of getToClassList()" [value]="classs">
+                                {{ classs.name }}, {{ toSelectedSection.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button
+                        class="btn"
+                        style="padding: 2px 11px; background-color: transparent"
+                        mat-icon-button
+                        [matMenuTriggerFor]="classSectionMenuTwo"
+                    >
+                        <i class="material-icons" style="color: black">expand_more</i>
+                    </button>
+                    <mat-menu #classSectionMenuTwo="matMenu">
+                        <button
+                            *ngFor="let section of sectionList"
+                            mat-menu-item
+                            (click)="selectClassSectionTwo.open(); selectClassSectionTwo.close(); handleToSelectedSectionChange(section)"
+                        >
+                            {{ section.name }}
+                        </button>
+                    </mat-menu>
+                </div>
+            </div>
+
+            <!-- Select All, Clear All -->
+            <div class="row" style="margin-top: 15px">
+                <div class="col-xs-6">
+                    <button class="btn hidden-xs" style="padding: 4px 7px" (click)="selectAllStudentsFromList(); $event.stopPropagation()">
+                        Select All
+                    </button>
+                    <button class="btn hidden-xs" style="padding: 4px 7px" (click)="clearAllStudentsFromList(); $event.stopPropagation()">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Student List -->
+            <div class="row" style="margint-top: 15px">
+                <div class="col-xs-6" style="border-right: 1px solid black">
+                    <ng-container *ngFor="let studentSection of getFilteredStudentSectionListOne()">
+                        <div [class.highlightBackground]="!inUnPromotedStudentList(studentSection)" style="width: 100%">
+                            <mat-checkbox
+                                [ngModel]="inNewPromotionList(studentSection)"
+                                (ngModelChange)="handlePromotionChange(studentSection, $event)"
+                                [disabled]="!inUnPromotedStudentList(studentSection)"
+                            >
+                                {{ getStudent(studentSection.parentStudent).name }},
+                                {{ getStudent(studentSection.parentStudent).scholarNumber }} </mat-checkbox
+                            ><br />
+                        </div>
+                    </ng-container>
+                </div>
+
+                <div class="col-xs-6" style="border-left: 1px solid black">
+                    <ng-container *ngFor="let studentSection of getFilteredStudentSectionListTwo()">
+                        <span>
+                            {{ getStudent(studentSection.parentStudent).name }},
+                            {{ getStudent(studentSection.parentStudent).scholarNumber }} </span
+                        ><br />
+                    </ng-container>
+                </div>
+            </div>
+
+            <!-- Session -->
+            <div class="row" style="margin-top: 5px">
+                <div class="col-xs-6">
+                    From:
+                    <span style="font-weight: 800; font-size: 16px">
+                        {{ fromSessionName }}
+                    </span>, {{ fromSelectedClass.name }}, {{ fromSelectedSection.name }}
+                </div>
+                <div class="col-xs-6">
+                    To:
+                    <span style="font-weight: 800; font-size: 16px">
+                        {{ toSessionName }}
+                    </span>, {{ toSelectedClass.name }}, {{ toSelectedSection.name }}
+                </div>
+            </div>
+
+            <div class="row" align="center">
+                <button
+                    type="submit"
+                    *ngIf="newPromotedList.length > 0"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    (click)="serviceAdapter.promoteStudents()"
+                >
+                    Promote
+                </button>
+            </div>
+        </ng-container>
+
+        <ng-template #noNextSession> You can promote students after next session has been created! </ng-template>
+    </ng-container>
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

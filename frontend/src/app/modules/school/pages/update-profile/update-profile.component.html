@@ -172,6 +172,8 @@
                             <label class="control-label">Mobile No.</label>
                             <input
                                 type="number"
+                                oninput="this.value=this.value.slice(0,this.maxLength)"
+                                maxlength="10"
                                 class="form-control"
                                 [ngModel]="user.activeSchool.mobileNumber"
                                 (ngModelChange)="currentMobileNumber = $event"

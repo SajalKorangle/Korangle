@@ -1,9 +1,14 @@
 from django.db import models
+from common.common import BasePermission
 
 from school_app.model.models import School, Session
-from team_app.models import Task
+from team_app.models import Task, Module
 import os
 from django.utils.timezone import now
+from common.common import BasePermission
+
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 
 def upload_avatar_to(instance, filename):
@@ -88,11 +93,21 @@ class Employee(models.Model):
     dateOfLeaving = models.DateField(null=True)
 
     # School Id
-    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0)
+    parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, default=0, related_name="employeeList")
+
+    # Is Employee a third party vendor
+    isNonSalariedEmployee = models.BooleanField(null=False, default=False)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
 
     class Meta:
         db_table = 'employee'
         unique_together = ('parentSchool', 'mobileNumber')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
 
 
 class EmployeeSessionDetail(models.Model):
@@ -106,11 +121,21 @@ class EmployeeSessionDetail(models.Model):
         unique_together = ('parentEmployee', 'parentSession')
 
 
+class EmployeePermissionManager(models.Manager):
+
+    def get_queryset(self):
+        return super().get_queryset()\
+            .exclude(parentTask__parentFeatureFlag__enabled=False)\
+            .exclude(parentTask__parentModule__parentFeatureFlag__enabled=False)
+
+
 class EmployeePermission(models.Model):
 
     parentTask = models.ForeignKey(Task, on_delete=models.PROTECT, null=False, verbose_name='parentTask', default=0)
     parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=False, verbose_name='parentEmployee', default=0)
     configJSON = models.TextField(default="{}")
+
+    objects = EmployeePermissionManager()
 
     def __str__(self):
         return self.parentEmployee.parentSchool.name + ' -- ' + self.parentEmployee.name + ' -- ' + str(self.parentTask)
@@ -118,6 +143,20 @@ class EmployeePermission(models.Model):
     class Meta:
         db_table = 'employee_permission'
         unique_together = ('parentTask', 'parentEmployee')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentEmployee__parentSchool__id']
+        RelationsToStudent = []
+
+
+@receiver(pre_save, sender = EmployeePermission)
+def admin_user_permission_manage_complaints_page(sender, instance, **kwargs):
+    module_object = Module.objects.get(path = 'complaints')
+    task_object = Task.objects.get(path = 'manage_complaints', parentModule = module_object)
+
+    if instance.parentTask == task_object and len(instance.configJSON) == 2:
+        instance.configJSON = '{"userType":"admin"}'
+
 
 class EmployeeParameter(models.Model):
 
@@ -137,6 +176,10 @@ class EmployeeParameter(models.Model):
     class Meta:
         db_table = 'employee_parameter'
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
+
 
 class EmployeeParameterValue(models.Model):
 
@@ -150,4 +193,3 @@ class EmployeeParameterValue(models.Model):
     class Meta:
         db_table = 'employee_parameter_value'
         unique_together = ('parentEmployee', 'parentEmployeeParameter')
-

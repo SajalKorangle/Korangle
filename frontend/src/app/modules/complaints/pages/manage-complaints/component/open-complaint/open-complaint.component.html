@@ -1,0 +1,205 @@
+<div class="card-content">
+    <!-- Starts: Back Button -->
+    <div
+        (click)="triggerOpenComplaintPage()"
+        style="display: flex; align-items: center; justify-content: center; cursor: pointer; width: 20px; height: 20px; background-color: #C4C4C4; border-radius: 5px;"
+    >
+        <span class="material-icons" style="font-size: 12px; text-align: center;">arrow_back_ios</span>
+    </div>
+    <br />
+    <!-- Ends: Back Button -->
+
+    <!-- Starts: Parent Name  &&  Status(desktop) -->
+    <div class="common-section">
+        <!-- Starts: Parent Name -->
+        <div class="information">
+            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Father's Name:</div>
+            <div class="min-width">{{ openedComplaint.parentStudent.fathersName }}</div>
+        </div>
+        <!-- Ends: Parent Name -->
+
+        <!-- Starts: Status -->
+        <div *ngIf="!htmlRenderer.isMobileBrowser() && !htmlRenderer.isMobileApplication()" class="status-section">
+            <div class="status">
+                <span class="text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-right: 2rem">Status: </span>
+                <mat-form-field>
+                    <mat-select placeholder="{{ defaultStatusTitle }}" style="width: 100%">
+                        <ng-container *ngFor="let status of openedComplaint.applicableStatusList">
+                            <mat-option (click)="triggerUpdateStatus(status);">
+                                {{ status.name }}
+                            </mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <i class="material-icons delete-icon" (click)="triggerDeleteComplaint(openedComplaint);">delete_forever</i>
+        </div>
+        <!-- Ends: Status -->
+    </div>
+    <br *ngIf="htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()"/>
+    <!-- Ends: Parent Name  &&  Status(desktop) -->
+
+    <!-- Starts: Date Sent -->
+    <div class="common-section">
+        <div class="information">
+            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Date Sent :</div>
+            <div class="min-width">{{ htmlRenderer.getDateInfo(openedComplaint.dateSent) }}</div>
+        </div>
+    </div>
+    <br />
+    <!-- Ends: Date Sent -->
+
+    <!-- Starts: Complaint Type -->
+    <div class="common-section">
+        <div class="information">
+            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Complaint Type :</div>
+            <div class="min-width">{{ openedComplaint.parentSchoolComplaintType["name"] ? openedComplaint.parentSchoolComplaintType.name : "None" }}</div>
+        </div>
+    </div>
+    <br />
+    <!-- Ends: Complaint Type -->
+
+    <!-- Starts: Student Name -->
+    <div class="common-section">
+        <div class="information">
+            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Student Name :</div>
+            <div class="min-width">{{ openedComplaint.parentStudent.name }}</div>
+        </div>
+    </div>
+    <br />
+    <!-- Ends: Student Name -->
+
+    <!-- Starts: Contact Number -->
+    <div class="common-section">
+        <div class="information">
+            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Parent Contact :</div>
+            <div class="min-width">{{ openedComplaint.parentStudent.mobileNumber }}</div>
+        </div>
+    </div>
+    <br />
+    <!-- Ends: Contact Number -->
+
+    <!-- Starts: Complaint Title -->
+    <div class="common-section">
+        <div class="information">
+            <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Title :</div>
+            <div class="min-width">{{ openedComplaint.title }}</div>
+        </div>
+    </div>
+    <br />
+    <!-- Ends: Complaint Title -->
+
+    <!-- Starts: Status(Mobile) -->
+    <ng-container *ngIf="htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()">
+        <div class="common-section">
+            <div class="information">
+                <div class="header text-{{ user.activeSchool.secondaryThemeColor }}">Status: </div>
+                <div class="status-option-section">
+                    <mat-form-field style="flex-basis: 80%">
+                        <mat-select placeholder="{{ defaultStatusTitle }}" style="width: 100%">
+                            <ng-container *ngFor="let status of openedComplaint.applicableStatusList">
+                                <mat-option (click)="triggerUpdateStatus(status);">
+                                    {{ status.name }}
+                                </mat-option>
+                            </ng-container>
+                        </mat-select>
+                    </mat-form-field>
+                    <i style="flex-basis: 20%" class="material-icons delete-icon" (click)="triggerDeleteComplaint(openedComplaint);">delete_forever</i>
+                </div>
+            </div>
+        </div>
+        <br />
+    </ng-container>
+    <!-- Ends: Status(Mobile) -->
+
+    <!-- Starts: Comment Section -->
+    <div class="comment-section">
+
+        <!-- Starts: Default Text -->
+        <div class="default-text comment">
+            {{ openedComplaint.parentSchoolComplaintType.defaultText }}
+        </div>
+        <!-- Ends: Default Text -->
+
+        <!-- Starts: (Desktop) - List of Comments  &&  Send Query Section -->
+        <ng-container *ngIf="!htmlRenderer.isMobileBrowser() && !htmlRenderer.isMobileApplication()">
+
+            <!-- Starts: List of Comments -->
+            <ng-container *ngFor="let commentObject of commentList">
+                <div class="comment">
+                    <div class="name" [ngStyle]=" {'opacity': commentObject.parentEmployee['id'] != user.activeSchool.employeeId ? '1' : '0.7'} ">
+                        {{ htmlRenderer.getAuthorComment(commentObject) }}
+                    </div>
+                    <div class="information">
+                        <div class="comment-description" [ngStyle]=" {'opacity': commentObject.parentEmployee['id'] != user.activeSchool.employeeId ? '1' : '0.7'} ">{{ commentObject.message }}</div>
+                        <div class="time" [ngStyle]=" {'opacity': commentObject.parentEmployee['id'] != user.activeSchool.employeeId ? '1' : '0.5'} ">{{ htmlRenderer.getDateTimeInfo(commentObject.createdAt) }}</div>
+                    </div>
+                </div>
+            </ng-container>
+            <!-- Ends: List of Comments -->
+
+            <!-- Starts: Send Query Section -->
+            <div class="bottom-section">
+                <input class="bottom-search-field" type="search" placeholder="Type Response/ Updates here" [(ngModel)]="commentMessage">
+                <button
+                    type="button"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-search-btn"
+                    style="padding: 12px 15px"
+                    matTooltip="Send Comment"
+                    tooltip-position="left"
+                    (click)="triggerSendCommentClicked()"
+                >
+                    Send
+                </button>
+            </div>
+            <!-- Ends: Send Query Section -->
+        </ng-container>
+        <!-- Ends: (Desktop) - List of Comments  &&  Send Query Section -->
+
+        <!-- Starts: (Mobile) - List of Comments  &&  Send Query Section -->
+        <ng-container *ngIf="htmlRenderer.isMobileBrowser() || htmlRenderer.isMobileApplication()">
+
+            <!-- Starts: List of Comments -->
+            <ng-container *ngFor="let commentObject of commentList">
+                <div class="comment">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="name" [ngStyle]=" {'opacity': commentObject.parentEmployee['id'] != user.activeSchool.employeeId ? '1' : '0.7'} ">
+                            {{ htmlRenderer.getAuthorComment(commentObject) }}
+                        </div>
+                        <div class="time" [ngStyle]=" {'opacity': commentObject.parentEmployee['id'] != user.activeSchool.employeeId ? '1' : '0.5'} ">{{ htmlRenderer.getDateTimeInfo(commentObject.createdAt) }}</div>
+                    </div>
+                    <div class="information">
+                        <div class="comment-description" [ngStyle]=" {'opacity': commentObject.parentEmployee['id'] != user.activeSchool.employeeId ? '1' : '0.7'} ">{{ commentObject.message }}</div>
+                    </div>
+                </div>
+            </ng-container>
+            <!-- Ends: List of Comments -->
+
+            <!-- Starts: Send Query Section -->
+            <div class="bottom-section">
+                <textarea
+                    placeholder="Type Response/ Updates here"
+                    class="bottom-text-field"
+                    [(ngModel)]="commentMessage"
+                ></textarea>
+                <br />
+
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <button
+                        type="button"
+                        class="btn btn-{{ user.activeSchool.secondaryThemeColor }} bottom-search-btn"
+                        style="padding: 10px 25px"
+                        matTooltip="Send Comment"
+                        tooltip-position="left"
+                        (click)="triggerSendCommentClicked()"
+                    >
+                        Send
+                    </button>
+                </div>
+            </div>
+            <!-- Ends: Send Query Section -->
+        </ng-container>
+        <!-- Ends: (Mobile) - List of Comments  &&  Send Query Section -->
+    </div>
+    <!-- Ends: Comment Section -->
+</div>

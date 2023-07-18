@@ -4,6 +4,7 @@ from school_app.model.models import School, Session
 from employee_app.models import Employee
 from class_app.models import Class, Division
 from student_app.models import Student
+from common.common import BasePermission
 
 # Create your models here.
 
@@ -28,6 +29,10 @@ class SubjectSecond(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Permissions(BasePermission):
+        RelationsToSchool = []
+        RelationsToStudent = []
 
     class Meta:
         db_table = 'subject_second'
@@ -56,6 +61,10 @@ class StudentSubject(models.Model):
     parentSubject = models.ForeignKey(SubjectSecond, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSubject')
     parentStudent = models.ForeignKey(Student, on_delete=models.CASCADE, null=False, default=0, verbose_name='parentStudent')
     parentSession = models.ForeignKey(Session, on_delete=models.PROTECT, null=False, default=0, verbose_name='parentSession')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
     class Meta:
         db_table = 'student_subject'

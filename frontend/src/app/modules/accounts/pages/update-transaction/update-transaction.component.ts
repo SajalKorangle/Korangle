@@ -2,7 +2,7 @@ import { Component, Input, OnInit, HostListener } from '@angular/core';
 import { DataStorage } from "../../../../classes/data-storage";
 import { UpdateTransactionServiceAdapter } from './update-transaction.service.adapter';
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
-import { SchoolService } from './../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component';
 import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component';
 import { MatDialog } from '@angular/material';
@@ -14,7 +14,7 @@ import { MatDialog } from '@angular/material';
   styleUrls: ['./update-transaction.component.css'],
   providers: [
     AccountsService,
-    SchoolService,
+    GenericService,
   ]
 })
 
@@ -33,6 +33,9 @@ export class UpdateTransactionComponent implements OnInit {
   loadMoreTransaction: boolean;
   loadingCount = 15;
   maximumPermittedAmount: any;
+  shouldTransactionsBeEmpty: boolean;
+
+  isVNumberEmpty = true;
 
   transactionsList: any;
   accountsList: any;
@@ -44,7 +47,7 @@ export class UpdateTransactionComponent implements OnInit {
 
   constructor(
     public accountsService: AccountsService,
-    public schoolService: SchoolService,
+    public genericService: GenericService,
     public dialog: MatDialog,
   ) { }
   // Server Handling - Initial
@@ -55,8 +58,9 @@ export class UpdateTransactionComponent implements OnInit {
     this.serviceAdapter.initializeData();
   }
 
-  handleSelection($event) {
-
+  handleSelection(selectedSearchType: any) {
+    this.searchType = selectedSearchType;
+    this.shouldTransactionsBeEmpty = false;
   }
 
   getDisplayDateFormat(str: any) {
@@ -108,4 +112,17 @@ export class UpdateTransactionComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
     });
   }
+
+  onVnumberChange(vNumber: any): void {
+    if (vNumber == "" || vNumber == null) {
+      this.isVNumberEmpty = true;
+    } else {
+      this.isVNumberEmpty = false;
+    }
+  }
+
+  isNumber(vNumber): boolean {
+    return /[0-9]/.test(vNumber);
+  }
+
 }

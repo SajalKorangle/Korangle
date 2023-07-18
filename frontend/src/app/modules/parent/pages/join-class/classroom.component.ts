@@ -9,6 +9,7 @@ import { ClassroomBackendData } from './classroom.backend.data';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { StudentService } from '@services/modules/student/student.service';
 import { SubjectService } from '@services/modules/subject/subject.service';
+import { GenericService } from '@services/generic/generic-service';
 
 import { ERROR_REPORTING_URL } from '@services/modules/errors/error-reporting.service';
 import { environment } from 'environments/environment';
@@ -23,7 +24,7 @@ import { CommonFunctions } from '@classes/common-functions';
     selector: 'classroom',
     templateUrl: './classroom.component.html',
     styleUrls: ['./classroom.component.css'],
-    providers: [OnlineClassService, StudentService, SubjectService],
+    providers: [OnlineClassService, StudentService, SubjectService, GenericService],
 })
 
 export class ClassroomComponent implements OnInit, OnDestroy {
@@ -57,6 +58,7 @@ export class ClassroomComponent implements OnInit, OnDestroy {
         public onlineClassService: OnlineClassService,
         public studentService: StudentService,
         public subjectService: SubjectService,
+        public genericService: GenericService,
     ) { }
 
     ngOnInit(): void {

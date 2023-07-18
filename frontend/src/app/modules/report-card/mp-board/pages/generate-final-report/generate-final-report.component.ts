@@ -23,6 +23,7 @@ import {
 import { PrintService } from '../../../../../print/print-service';
 import { DataStorage } from '../../../../../classes/data-storage';
 import { SchoolService } from '../../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { ReportCardMpBoardService } from '../../../../../services/modules/report-card/mp-board/report-card-mp-board.service';
 
 @Component({
@@ -35,6 +36,7 @@ import { ReportCardMpBoardService } from '../../../../../services/modules/report
         SubjectOldService,
         AttendanceOldService,
         SchoolService,
+        GenericService,
         ReportCardMpBoardService,
         ClassService,
         ExaminationService,
@@ -76,6 +78,7 @@ export class GenerateFinalReportComponent implements OnInit {
         public subjectService: SubjectOldService,
         public attendanceService: AttendanceOldService,
         public schoolService: SchoolService,
+        public genericService: GenericService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService,
         public reportCardMpBoardService: ReportCardMpBoardService
@@ -101,12 +104,13 @@ export class GenerateFinalReportComponent implements OnInit {
             showPrincipalSignature: this.showPrinicipalSignature,
             classTeacherSignature: this.currentClassTeacherSignature,
             boardList: this.boardList,
+            sessionList: this.sessionList,
         };
         let selectedClassSection = this.getSelectedClassSection();
         let printRoute: string;
 
         if (selectedClassSection.className == 'Class - 9') {
-            if (this.getSession(this.user.activeSchool.currentSessionDbId).orderNumber >= 3) {
+            if (this.getSession(this.user.activeSchool.currentSessionDbId).orderNumber >= 119) {
                 printRoute = PRINT_STUDENT_NINTH_FINAL_REPORT_2019;
             } else {
                 printRoute = PRINT_STUDENT_NINTH_FINAL_REPORT;

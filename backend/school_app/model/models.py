@@ -12,6 +12,9 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from django.core.files.storage import default_storage as storage
 
+from common.common import BasePermission
+
+
 
 def upload_avatar_to(instance, filename):
     filename_base, filename_ext = os.path.splitext(filename)
@@ -32,6 +35,7 @@ class Board(models.Model):
 
     class Meta:
         db_table = 'board'
+        ordering = ['id']
 
 
 class Session(models.Model):
@@ -44,8 +48,13 @@ class Session(models.Model):
     def __str__(self):
         return str(self.startDate) + ' --- ' + str(self.endDate)
 
+    class Permissions(BasePermission):
+        RelationsToSchool = []
+        RelationsToStudent = []
+
     class Meta:
         db_table = 'session'
+        ordering = ['orderNumber']
 
 
 def get_user():
@@ -122,6 +131,10 @@ class School(models.Model):
     def __str__(self):
         return str(self.pk) + ' - ' + self.printName
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['id']
+        RelationsToStudent = []
+
     class Meta:
         db_table = 'school'
 
@@ -158,6 +171,22 @@ class BusStop(models.Model):
     def __str__(self):
         return self.parentSchool.name + ' --- ' + self.stopName + ' --- ' + str(self.kmDistance)
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+        RelationsToStudent = []
+
     class Meta:
         db_table = 'bus_stop'
         unique_together = ( 'parentSchool', 'stopName' )
+
+class SchoolExpiryInformationJobsReport(models.Model):
+    STATUS_CHOICES = (
+        ('INITIATED', 'INITIATED'),
+        ('SENT', 'SENT'),
+    )
+
+    date = models.DateField(auto_now_add=True, unique=True)
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='INITIATED', blank=True)
+
+    def __str__(self):
+        return '{0} : {1}'.format(self.date.strftime("%d-%m-%Y"), self.status)

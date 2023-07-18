@@ -222,7 +222,7 @@
     </mat-form-field>
 
     <button
-        *ngIf="currentProfileDocumentFilter === 'Profile'"
+        *ngIf="currentProfileDocumentFilter === 'Profile' && !htmlRenderer.isMobileApplication() && !htmlRenderer.isMobileBrowser()"
         id="print-list"
         type="button"
         class="btn btn-{{ user.activeSchool.secondaryThemeColor }} hidden-sm hidden-xs"
@@ -235,6 +235,7 @@
     </button>
 
     <button
+        *ngIf="!htmlRenderer.isMobileApplication()"
         type="button"
         id="download"
         class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
@@ -378,6 +379,23 @@
                 (click)="$event.stopPropagation()"
                 >Generated
             </mat-checkbox>
+
+            <br /><br /><b>Is Logged In?</b><br />
+            <mat-checkbox
+                [(ngModel)]="isLogged"
+                style="margin-right: 5px"
+                (ngModelChange)="handleStudentDisplay()"
+                (click)="$event.stopPropagation()"
+                >Logged In
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="isNotLogged"
+                style="margin-right: 5px"
+                (ngModelChange)="handleStudentDisplay()"
+                (click)="$event.stopPropagation()"
+                >Logged Out
+            </mat-checkbox>
+
             <br />
             <hr />
             <h5>Custom Filters</h5>

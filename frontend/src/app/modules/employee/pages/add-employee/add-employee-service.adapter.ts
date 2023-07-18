@@ -1,5 +1,6 @@
-
+import { Query } from '@services/generic/query';
 import { AddEmployeeComponent } from './add-employee.component';
+import { TASK_PERMISSION_LIST, GroupOfCheckBoxPermission } from '@modules/common/in-page-permission';
 
 export class AddEmployeeServiceAdapter {
 
@@ -12,45 +13,145 @@ export class AddEmployeeServiceAdapter {
     }
 
     //initialize data
-    initializeData(): void {
+    async initializeData(): Promise<any> {
 
         this.vm.isLoading = true;
         this.vm.newEmployee = {};
         this.vm.newEmployeeSessionDetail = {};
-        let data = {
+
+        // Extracting Employess List
+        const employeesQuery = new Query()
+        .filter({
             parentSchool: this.vm.user.activeSchool.dbId,
-            'fields__korangle': 'id,name,mobileNumber,employeeNumber,dataOfLeaving',
-        };
+        })
+        .setFields(...['id', 'name', 'mobileNumber', 'employeeNumber', 'dateOfLeaving'])
+        .getObjectList({ employee_app: 'Employee' });
+
+        // Extracting Module List
+        const moduleQuery = new Query()
+        .filter({
+            __or__: [
+                { parentBoard: this.vm.user.activeSchool.parentBoard},
+                { parentBoard: null}
+            ],
+        })
+        .getObjectList({ team_app: 'Module' });
+
+        // Extracting Task List for each Module
+        const taskQuery = new Query()
+        .filter({
+                __or__1: [
+                    { parentBoard: this.vm.user.activeSchool.parentBoard},
+                    { parentBoard: null}
+                ],
+                __or__2: [
+                    { parentModule__parentBoard: this.vm.user.activeSchool.parentBoard},
+                    { parentModule__parentBoard: null}
+                ],
+            })
+        .getObjectList({ team_app: 'Task' });
+
+        // Extracting Employee Parameter List
+        const employeeParameterQuery = new Query()
+        .filter({
+            parentSchool: this.vm.user.activeSchool.dbId
+        })
+        .getObjectList({ employee_app: 'EmployeeParameter' });
+
+        let moduleList, taskList;
+
+        [
+            this.vm.employeeList,
+            moduleList,
+            taskList,
+            this.vm.employeeParameterList
+
+        ] = await Promise.all([
+            employeesQuery,
+            moduleQuery,
+            taskQuery,
+            employeeParameterQuery
+        ]);
+
+        this.vm.employeeParameterList = this.vm.employeeParameterList.map(x => ({...x, filterValues: JSON.parse(x.filterValues)}));
+        this.vm.initializeModuleList(moduleList, taskList);
+
+        // Extracting Delegation Permission Dict for Logged in Employee STARTS
+        let loggedInEmployeePermission = await new Query()
+        .filter({
+            parentEmployee__parentSchool: this.vm.user.activeSchool.dbId,
+            parentEmployee__mobileNumber: this.vm.user.username,
+            parentTask: 42
+        })
+        .getObject({ employee_app: 'EmployeePermission' });
 
 
-        let module_data = {
-            'parentBoard__or': this.vm.user.activeSchool.parentBoard,
-            'parentBoard': 'null__korangle',
-        };
+        if (loggedInEmployeePermission) {
+            // Extracting Delegation Permission Dict for Logged in Employee ENDS
+            let loggedInEmployeePermissionPermissionDict = JSON.parse(loggedInEmployeePermission.configJSON);
 
-        let task_data = {
-            'parentBoard__or': this.vm.user.activeSchool.parentBoard,
-            'parentBoard': 'null__korangle',
-            'parentModule__parentBoard__or': this.vm.user.activeSchool.parentBoard,
-            'parentModule__parentBoard': 'null__korangle',
-        };
+            // If loggedInEmployeePermissionPermissionDict is empty means employee has delegation permission for each task
+            if (Object.keys(loggedInEmployeePermissionPermissionDict).length !== 0) {
+                let tempModuleList = [];
+                this.vm.moduleList.forEach(module => {
+                    let tempTaskList = [];
+                    let tempModule = module;
 
-        Promise.all([
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, data),
-            this.vm.teamService.getObjectList(this.vm.teamService.module, module_data),
-            this.vm.teamService.getObjectList(this.vm.teamService.task, task_data),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter, {parentSchool: this.vm.user.activeSchool.dbId}),
-        ]).then(value => {
-            console.log(value[0]);
-            this.vm.employeeList = value[0];
-            this.vm.employeeParameterList = value[3].map(x => ({...x, filterValues: JSON.parse(x.filterValues)}));
-            this.vm.initializeModuleList(value[1], value[2]);
-            this.vm.isLoading = false;
+                    module.taskList.forEach(task => {
 
-        }, error => {
-            this.vm.isLoading = false;
+                        if (loggedInEmployeePermissionPermissionDict[module.id] == undefined) {
+                            loggedInEmployeePermissionPermissionDict[module.id] = {};
+                            if (loggedInEmployeePermissionPermissionDict[module.id][task.id] == undefined) {
+                                loggedInEmployeePermissionPermissionDict[module.id][task.id] = true;
+                            }
+                        }
+
+                        if (loggedInEmployeePermissionPermissionDict[module.id][task.id] === true) {
+                            tempTaskList.push(task);
+                        }
+
+                    });
+
+                    if (tempTaskList.length) {
+                        tempModule.taskList = tempTaskList;
+                        tempModuleList.push(tempModule);
+                    }
+                });
+
+                this.vm.moduleList = tempModuleList;
+                this.intializeAssignTaskPermission();
+            }
+        } else {
+            this.vm.assignTaskPermission = false;
+        }
+
+        this.vm.isLoading = false;
+    }
+
+    intializeAssignTaskPermission(): any {
+
+        // Finding Assign Task Permission from TASK_PERMISSION_LIST
+        let assign_task_permission = TASK_PERMISSION_LIST.find(task_permission => {
+            return task_permission.modulePath === 'employees' && task_permission.taskPath === 'assign_task';
         });
 
+        // Making groups based on Modules
+        this.vm.moduleList.forEach(module => {
+            // Tasks corresponding to the module will act as checkBoxValues
+            let checkBoxValues = [];
+            module.taskList.forEach(task => {
+                checkBoxValues.push([task.id, task.title]);
+            });
+
+            // Updating inPagePermissionMappedByKey dict with key as module id and value as InPagePermission
+            assign_task_permission.inPagePermissionMappedByKey[module.id]
+                = new GroupOfCheckBoxPermission(
+                    module.title,
+                    'groupOfCheckBox',
+                    checkBoxValues,
+                    {},
+                );
+        });
     }
 
     isSelected(task: any) {
@@ -71,6 +172,7 @@ export class AddEmployeeServiceAdapter {
     createNewEmployee(): void {
 
         console.log("CREATE NEW EMPLOYEE CALLED");
+
 
         if (this.vm.newEmployee.name === undefined || this.vm.newEmployee.name === '') {
             alert('Name should be populated');
@@ -118,6 +220,10 @@ export class AddEmployeeServiceAdapter {
             && this.vm.newEmployee.aadharNumber.toString().length != 12) {
             alert("Aadhar No. should be 12 digits");
             return;
+        }
+
+        if (this.vm.newEmployee.isNonSalariedEmployee === undefined) {
+            this.vm.newEmployee.isNonSalariedEmployee = false;
         }
 
         this.vm.newEmployee.parentSchool = this.vm.user.activeSchool.dbId;

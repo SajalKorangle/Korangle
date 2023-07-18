@@ -1,0 +1,65 @@
+.card-content {
+    padding: 3rem;
+    min-height: 82vh;
+}
+
+/* Starts: Search Bar */
+.flex-box {
+    display: flex;
+    align-items: center;
+}
+
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.example-full-width {
+    width: 100%;
+}
+/* Ends: Search Bar */
+
+/* Starts: Table */
+.table-container {
+    margin-left: 1rem;
+}
+
+.example-viewport {
+    height: 70vh;
+    width: 100%;
+}
+
+thead tr th {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.delete-icon {
+    color: red;
+    cursor: pointer;
+}
+
+.min-width {
+    min-width: 150px;
+    max-width: 200px;
+    word-wrap: break-word;
+    text-align: center;
+}
+/* Ends: Table */
+
+
+/* Starts: Media Query - Mobile Phone */
+@media only screen and (max-width: 992px) {
+    .card-content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    /* Starts: Search Bar */
+    .material-icons {
+        font-size: 15px;
+    }
+    /* Ends: Search Bar */
+}
+/* Ends: Media Query - Mobile Phone */

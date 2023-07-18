@@ -18,6 +18,13 @@ export class UpdateProfileServiceAdapter {
             this.vm.employeeParameterList = value[0].map(x => ({ ...x, filterValues: JSON.parse(x.filterValues) }));
             console.log('different custom parameter');
             console.dir(this.vm.employeeParameterList);
+
+            for (let i = 0; i < this.vm.employeeParameterList.length; i++) {
+                if (this.vm.employeeParameterList[i].parameterType == "DOCUMENT") {
+                    this.vm.showToolTip.push(false);
+                    this.vm.height.push(120);
+                }
+            }
             this.vm.isLoading = false;
         }, error => {
             this.vm.isLoading = false;
@@ -110,6 +117,8 @@ export class UpdateProfileServiceAdapter {
 
     updateEmployeeProfile(): void {
 
+        console.log(this.vm.currentEmployeeProfile);
+
         if (this.vm.currentEmployeeProfile.name === undefined || this.vm.currentEmployeeProfile.name === '') {
             alert('Name should be populated');
             return;
@@ -163,7 +172,7 @@ export class UpdateProfileServiceAdapter {
 
         const employee_form_data = new FormData();
         const data = { ...this.vm.currentEmployeeProfile, content: JSON.stringify(this.vm.currentEmployeeProfile) };
-        // console.log(data);
+        console.log(data);
         Object.keys(data).forEach(key => {
             if (key === 'profileImage') {
                 if (this.vm.profileImage !== null) {
@@ -182,7 +191,11 @@ export class UpdateProfileServiceAdapter {
         service_list.push(this.vm.employeeService.updateObject(this.vm.employeeService.employees, employee_form_data));
 
         if (this.vm.selectedEmployeeSessionProfile.paidLeaveNumber != this.vm.currentEmployeeSessionProfile.paidLeaveNumber) {
-            service_list.push(this.vm.employeeService.updateObject(this.vm.employeeService.employee_session_detail, this.vm.currentEmployeeSessionProfile));
+            if (this.vm.selectedEmployeeSessionProfile.id == null) {
+                service_list.push(this.vm.employeeService.createObject(this.vm.employeeService.employee_session_detail, this.vm.currentEmployeeSessionProfile));
+            } else {
+                service_list.push(this.vm.employeeService.updateObject(this.vm.employeeService.employee_session_detail, this.vm.currentEmployeeSessionProfile));
+            }
         } else {
             service_list.push(Promise.resolve(null));
         }
@@ -286,17 +299,6 @@ export class UpdateProfileServiceAdapter {
             this.vm.profileImage = null;
             this.vm.isLoading = false;
         });
-
-
-
-
-
-
-
-
-
-
-
 
 
     }

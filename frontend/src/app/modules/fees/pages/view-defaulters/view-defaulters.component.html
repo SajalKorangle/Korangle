@@ -1,5 +1,5 @@
 <div class="card-content table-responsive">
-    <ng-container *ngIf="!isLoading">
+    <ng-container *ngIf="!isLoading && studentSectionList.length > 0 && isPermissionToShow()">
         <div class="row">
             <div class="col-sm-3">
                 <div class="form-group form-black label-floating">
@@ -41,12 +41,16 @@
             <div class="col-sm-3" *ngIf="selectedFilterType == filterTypeList[0]">
                 <div>
                     <mat-form-field>
-                        <mat-select
+                        <mat-select multiple
                             placeholder="Select Class"
-                            [ngModel]="selectedClassSection"
-                            (ngModelChange)="selectedClassSection = $event;applyFilters();"
+                            [(ngModel)]="selectedClassSectionList"
+                            (ngModelChange)="applyFilters();"
                         >
-                            <mat-option [value]="nullValue">All</mat-option>
+                            <div class="select-all">
+                                <button class="btn" style="padding: 4px 7px" (click)="selectAllClassSectionHandler(); $event.stopPropagation()">Select All</button>
+                                <button class="btn" style="padding: 4px 7px" (click)="clearAllClassSectionHandler(); $event.stopPropagation()">Clear All</button>
+                            </div>
+                            
                             <mat-option *ngFor="let classSection of filteredClassSectionList" [value]="classSection">
                                 {{ classSection.class.name }}, {{ classSection.section.name }}
                             </mat-option>
@@ -77,7 +81,7 @@
                             style="margin-right: 5px"
                             (click)="$event.stopPropagation()"
                             (ngModelChange)="applyFilters()">
-                        {{ filter.name }} 
+                        {{ filter.name }}
                     </mat-checkbox>
                     <br/>
                 </ng-container>
@@ -91,121 +95,8 @@
         <!-- Parent -->
 
         <ng-container *ngIf="selectedFilterType == filterTypeList[1]">
-            <mat-tab-group dynamicHeight>
-                <mat-tab label="Summary">
-                    <div class="mat-tab-element">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div *ngIf="!htmlRenderer.isMobile()" class="col-sm-6">
-                                    <div style="float: right; width: 392px">
-                                        <div>
-                                            <div class="row" style="display: flex; margin-bottom: 4px">
-                                                <div style="width: 59%">Total Fees Due (Till Month)</div>
-                                                <div style="width: 7%">
-                                                    <b>:Rs.</b>
-                                                </div>
-                                                <div style="width: 34%; width: 104px; text-align: right">
-                                                    <b>{{ htmlRenderer.getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
-                                                </div>
-                                            </div>
-                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
-                                                <div style="width: 59%; background: #ededed">Total Fees Due (overall)</div>
-                                                <div style="width: 7%; background: #ededed">
-                                                    <b>:Rs.</b>
-                                                </div>
-                                                <div style="width: 34%; background: #ededed; width: 104px; text-align: right">
-                                                    <b>{{ htmlRenderer.getFilteredParentFeesDueOverall() | indianCurrency }}</b>
-                                                </div>
-                                            </div>
-                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
-                                                <div style="width: 59%">Total Fees Demand ({{ getCurrentSessionName() }})</div>
-                                                <div style="width: 7%">
-                                                    <b>:Rs.</b>
-                                                </div>
-                                                <div style="width: 34%; width: 104px; text-align: right">
-                                                    <b>{{ htmlRenderer.getFilteredParentTotalFees() | indianCurrency }}</b>
-                                                </div>
-                                            </div>
-            
-                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
-                                                <div style="width: 59%; background: #ededed">Total Fees Paid ({{ getCurrentSessionName() }})</div>
-                                                <div style="width: 7%; background: #ededed">
-                                                    <b>:Rs.</b>
-                                                </div>
-                                                <div style="width: 34%; background: #ededed; width: 104px; text-align: right">
-                                                    <b>{{ htmlRenderer.getFilteredParentTotalFeesPaid() | indianCurrency }}</b>
-                                                </div>
-                                            </div>
-            
-                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
-                                                <div style="width: 59%">Total Discount ({{ getCurrentSessionName() }})</div>
-                                                <div style="width: 7%">
-                                                    <b>:Rs.</b>
-                                                </div>
-                                                <div style="width: 34%; width: 104px; text-align: right">
-                                                    <b>{{ htmlRenderer.getFilteredParentTotalDiscount() | indianCurrency }}</b>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-            
-                        <div *ngIf="htmlRenderer.isMobile()" class="container-fluid">
-                            <div class="row">
-                                <div class="col-xs-7">Total Fees Due (Till Month)</div>
-                                <div class="col-xs-2" style="padding-top: 10px">
-                                    <b>:Rs.</b>
-                                </div>
-                                <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ htmlRenderer.getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
-                                </div>
-                            </div>
-            
-                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
-                                <div class="col-xs-7" style="padding-top: 10px">Total Fees Due (overall)</div>
-                                <div class="col-xs-2" style="padding-top: 10px">
-                                    <b>:Rs.</b>
-                                </div>
-                                <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
-                                </div>
-                            </div>
-            
-                            <div *ngIf="htmlRenderer.hasPermission()" class="row">
-                                <div class="col-xs-7">Total Fees Demand ({{ getCurrentSessionName() }})</div>
-                                <div class="col-xs-2" style="padding-top: 10px">
-                                    <b>:Rs.</b>
-                                </div>
-                                <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
-                                </div>
-                            </div>
-            
-                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
-                                <div class="col-xs-7">Total Fees Paid ({{ getCurrentSessionName() }})</div>
-                                <div class="col-xs-2" style="padding-top: 10px">
-                                    <b>:Rs.</b>
-                                </div>
-                                <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
-                                </div>
-                            </div>
-            
-                            <div *ngIf="htmlRenderer.hasPermission()" class="row">
-                                <div class="col-xs-7">Total Discount ({{ getCurrentSessionName() }})</div>
-                                <div class="col-xs-2" style="padding-top: 10px">
-                                    <b>:Rs.</b>
-                                </div>
-                                <div style="text-align: right; padding-top: 10px">
-                                    <b>{{ htmlRenderer.getFilteredStudentListTotalDiscount() | indianCurrency }}</b>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </mat-tab>
-                <mat-tab label="Parent Fees Table">
+            <mat-tab-group dynamicHeight>            
+                <mat-tab label="Parent Fees Table" *ngIf="userNotifyDefaulterPermissionList.viewStudent">
                     <div class="mat-tab-element">
                         <div class="row">
                             <div class="col-sm-6">
@@ -320,7 +211,7 @@
                             </table>
                         </div>
                         <!-- print , download buttons -->
-                        <div class=" print-download-buttons">
+                        <div *ngIf="!htmlRenderer.isMobile()" class=" print-download-buttons">
 
                             <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                 style="padding: 12px 15px; margin-right: 17px;" matTooltip="Download the following list"
@@ -338,29 +229,20 @@
                         </div>
                     </div>
                 </mat-tab>
-            </mat-tab-group>
-
-        </ng-container>
-
-        <!-- Student -->
-
-        <ng-container *ngIf="selectedFilterType == filterTypeList[0]">
-
-            <mat-tab-group dynamicHeight>
-                <mat-tab label="Summary">
+                <mat-tab label="Summary" *ngIf="userNotifyDefaulterPermissionList.viewSummary">
                     <div class="mat-tab-element">
                         <div class="container-fluid">
                             <div class="row">
                                 <div *ngIf="!htmlRenderer.isMobile()" class="col-sm-6">
                                     <div style="float: right; width: 392px">
                                         <div>
-                                            <div class="row" style="display: flex">
+                                            <div class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%">Total Fees Due (Till Month)</div>
                                                 <div style="width: 7%">
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; width: 104px; text-align: right">
-                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDueTillMonth() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
                                                 </div>
                                             </div>
                                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
@@ -369,7 +251,7 @@
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; background: #ededed; width: 104px; text-align: right">
-                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredParentFeesDueOverall() | indianCurrency }}</b>
                                                 </div>
                                             </div>
                                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
@@ -378,27 +260,27 @@
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; width: 104px; text-align: right">
-                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredParentTotalFees() | indianCurrency }}</b>
                                                 </div>
                                             </div>
-            
+
                                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%; background: #ededed">Total Fees Paid ({{ getCurrentSessionName() }})</div>
                                                 <div style="width: 7%; background: #ededed">
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; background: #ededed; width: 104px; text-align: right">
-                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredParentTotalFeesPaid() | indianCurrency }}</b>
                                                 </div>
                                             </div>
-            
+
                                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
                                                 <div style="width: 59%">Total Discount ({{ getCurrentSessionName() }})</div>
                                                 <div style="width: 7%">
                                                     <b>:Rs.</b>
                                                 </div>
                                                 <div style="width: 34%; width: 104px; text-align: right">
-                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalDiscount() | indianCurrency }}</b>
+                                                    <b>{{ htmlRenderer.getFilteredParentTotalDiscount() | indianCurrency }}</b>
                                                 </div>
                                             </div>
                                         </div>
@@ -406,7 +288,7 @@
                                 </div>
                             </div>
                         </div>
-            
+
                         <div *ngIf="htmlRenderer.isMobile()" class="container-fluid">
                             <div class="row">
                                 <div class="col-xs-7">Total Fees Due (Till Month)</div>
@@ -417,7 +299,7 @@
                                     <b>{{ htmlRenderer.getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
                                 </div>
                             </div>
-            
+
                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
                                 <div class="col-xs-7" style="padding-top: 10px">Total Fees Due (overall)</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
@@ -427,7 +309,7 @@
                                     <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
                                 </div>
                             </div>
-            
+
                             <div *ngIf="htmlRenderer.hasPermission()" class="row">
                                 <div class="col-xs-7">Total Fees Demand ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
@@ -437,7 +319,7 @@
                                     <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
                                 </div>
                             </div>
-            
+
                             <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
                                 <div class="col-xs-7">Total Fees Paid ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
@@ -447,7 +329,7 @@
                                     <b>{{ htmlRenderer.getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
                                 </div>
                             </div>
-            
+
                             <div *ngIf="htmlRenderer.hasPermission()" class="row">
                                 <div class="col-xs-7">Total Discount ({{ getCurrentSessionName() }})</div>
                                 <div class="col-xs-2" style="padding-top: 10px">
@@ -460,8 +342,16 @@
                         </div>
                     </div>
                 </mat-tab>
+            </mat-tab-group>
 
-                <mat-tab label="Student Fees Table">
+        </ng-container>
+
+        <!-- Student -->
+
+        <ng-container *ngIf="selectedFilterType == filterTypeList[0]">
+
+            <mat-tab-group dynamicHeight>                
+                <mat-tab label="Student Fees Table" *ngIf="userNotifyDefaulterPermissionList.viewStudent">
                     <div class="mat-tab-element">
                         <div class="row">
                             <div class="col-sm-6">
@@ -492,7 +382,9 @@
                                         *matHeaderCellDef>
                                         <b>S.No</b>
                                     </th>
-                                    <td align="center" mat-cell *matCellDef="let element"> {{element.position}}. </td>
+                                    <td align="center" mat-cell *matCellDef="let element; let i = dataIndex;">
+                                        {{ (paginatorRef.pageIndex * paginatorRef.pageSize) + (i + 1) }}. 
+                                    </td>
                                 </ng-container>
                                 <ng-container matColumnDef="name">
                                     <th class="mat-table-header text-{{user.activeSchool.secondaryThemeColor}}" mat-header-cell
@@ -771,9 +663,9 @@
                                 </tr>
                             </table>
                         </div>
-                        <mat-paginator [pageSizeOptions]="[5,10,20,50,100]" showFirstLastButtons></mat-paginator>
+                        <mat-paginator #paginatorRef [pageSizeOptions]="[5,10,20,50,100]" showFirstLastButtons></mat-paginator>
                         <!-- print , download buttons -->
-                        <div class=" print-download-buttons">
+                        <div *ngIf="!htmlRenderer.isMobile()" class=" print-download-buttons">
 
                             <button type="button" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
                                 style="padding: 12px 15px; margin-right: 17px;" matTooltip="Download the following list"
@@ -791,137 +683,260 @@
                         </div>
                     </div>
                 </mat-tab>
+
+                <mat-tab label="Summary" *ngIf="userNotifyDefaulterPermissionList.viewSummary">
+                    <div class="mat-tab-element">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div *ngIf="!htmlRenderer.isMobile()" class="col-sm-6">
+                                    <div style="float: right; width: 392px">
+                                        <div>
+                                            <div class="row" style="display: flex">
+                                                <div style="width: 59%">Total Fees Due (Till Month)</div>
+                                                <div style="width: 7%">
+                                                    <b>:Rs.</b>
+                                                </div>
+                                                <div style="width: 34%; width: 104px; text-align: right">
+                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDueTillMonth() | indianCurrency }}</b>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                                <div style="width: 59%; background: #ededed">Total Fees Due (overall)</div>
+                                                <div style="width: 7%; background: #ededed">
+                                                    <b>:Rs.</b>
+                                                </div>
+                                                <div style="width: 34%; background: #ededed; width: 104px; text-align: right">
+                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                                <div style="width: 59%">Total Fees Demand ({{ getCurrentSessionName() }})</div>
+                                                <div style="width: 7%">
+                                                    <b>:Rs.</b>
+                                                </div>
+                                                <div style="width: 34%; width: 104px; text-align: right">
+                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
+                                                </div>
+                                            </div>
+
+                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                                <div style="width: 59%; background: #ededed">Total Fees Paid ({{ getCurrentSessionName() }})</div>
+                                                <div style="width: 7%; background: #ededed">
+                                                    <b>:Rs.</b>
+                                                </div>
+                                                <div style="width: 34%; background: #ededed; width: 104px; text-align: right">
+                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
+                                                </div>
+                                            </div>
+
+                                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="display: flex; margin-bottom: 4px">
+                                                <div style="width: 59%">Total Discount ({{ getCurrentSessionName() }})</div>
+                                                <div style="width: 7%">
+                                                    <b>:Rs.</b>
+                                                </div>
+                                                <div style="width: 34%; width: 104px; text-align: right">
+                                                    <b>{{ htmlRenderer.getFilteredStudentListTotalDiscount() | indianCurrency }}</b>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="htmlRenderer.isMobile()" class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-7">Total Fees Due (Till Month)</div>
+                                <div class="col-xs-2" style="padding-top: 10px">
+                                    <b>:Rs.</b>
+                                </div>
+                                <div style="text-align: right; padding-top: 10px">
+                                    <b>{{ htmlRenderer.getFilteredParentListFeesDueTillMonth() | indianCurrency }}</b>
+                                </div>
+                            </div>
+
+                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
+                                <div class="col-xs-7" style="padding-top: 10px">Total Fees Due (overall)</div>
+                                <div class="col-xs-2" style="padding-top: 10px">
+                                    <b>:Rs.</b>
+                                </div>
+                                <div style="text-align: right; padding-top: 10px">
+                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDue() | indianCurrency }}</b>
+                                </div>
+                            </div>
+
+                            <div *ngIf="htmlRenderer.hasPermission()" class="row">
+                                <div class="col-xs-7">Total Fees Demand ({{ getCurrentSessionName() }})</div>
+                                <div class="col-xs-2" style="padding-top: 10px">
+                                    <b>:Rs.</b>
+                                </div>
+                                <div style="text-align: right; padding-top: 10px">
+                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesDemand() | indianCurrency }}</b>
+                                </div>
+                            </div>
+
+                            <div *ngIf="htmlRenderer.hasPermission()" class="row" style="background: #ededed">
+                                <div class="col-xs-7">Total Fees Paid ({{ getCurrentSessionName() }})</div>
+                                <div class="col-xs-2" style="padding-top: 10px">
+                                    <b>:Rs.</b>
+                                </div>
+                                <div style="text-align: right; padding-top: 10px">
+                                    <b>{{ htmlRenderer.getFilteredStudentListTotalFeesPaid() | indianCurrency }}</b>
+                                </div>
+                            </div>
+
+                            <div *ngIf="htmlRenderer.hasPermission()" class="row">
+                                <div class="col-xs-7">Total Discount ({{ getCurrentSessionName() }})</div>
+                                <div class="col-xs-2" style="padding-top: 10px">
+                                    <b>:Rs.</b>
+                                </div>
+                                <div style="text-align: right; padding-top: 10px">
+                                    <b>{{ htmlRenderer.getFilteredStudentListTotalDiscount() | indianCurrency }}</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-tab>
             </mat-tab-group>
         </ng-container>
         <div class="row" style="margin-bottom: 15px; margin-top: 15px;">
             <div class="col-md-12" style="border-bottom: 1px solid lightgrey;"></div>
         </div>
-        <button class="btn" style="padding: 4px 7px" (click)="showSMSSection = !showSMSSection">
-            <ng-container *ngIf="!showSMSSection">Show SMS Section</ng-container>
-            <ng-container *ngIf="showSMSSection">Hide SMS Section</ng-container>
-        </button>
-        <ng-container *ngIf="showSMSSection">
-            <div class="row">
-                <div class="col-md-6">
-                    <mat-form-field style="margin: 20px 5px 5px;">
-                        <mat-select placeholder="Send via" [(ngModel)]="userInput.selectedSendUpdateType"
-                                    (ngModelChange)="htmlRenderer.sendUpdateTypeChanged()">
-                            <mat-option *ngFor="let sendType of backendData.sendUpdateTypeList" [value]="sendType">
-                                {{ sendType.name }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <span style="margin-left:5px;font-size: 16px"
-                          *ngIf="userInput.selectedSendUpdateType.id != SEND_UPDATE_NOTIFICATION_TYPE_DBID">
-                        SMS Balance:
-                <b><i>{{ smsBalance }}</i></b><br/></span>
-                </div>
-                <div class="col-md-6" align="end">
-                    <a href="https://chrome.google.com/webstore/detail/google-input-tools/mclkkofklkfljcocdinagocijmpgbhab"
-                       target="_blank">
-                        Hindi Typing Extension
-                    </a>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px;
-                 word-wrap: break-word;">Use {{"{#variables#}"}} with - {{htmlRenderer.getVariables()}}</span>
-                    <mat-form-field appearance="none" class="rowTextArea" style="width: 100%">
-                <textarea
-                        matInput
-                        id="messageBox"
-                        style="border-radius:10px;background-color:#c4c4c4;min-height: 130px;padding: 12px;max-height: 300px"
-                        [readonly]="htmlRenderer.getPlaceHolder().includes('Select')"
-                        [placeholder]="htmlRenderer.getPlaceHolder()"
-                        [(ngModel)]="message"
-                ></textarea>
-                    </mat-form-field>
-                    <br/>
-                    <span style="font-size: 14px;float:left"># of Mobile devices: {{ htmlRenderer.getNumberOfMobileDevice()}}</span>
-                    <span *ngIf="userInput.selectedSendUpdateType.id != SEND_UPDATE_NOTIFICATION_TYPE_DBID"
-                          style="font-size: 14px;float:right">Estimated SMS Count: {{ getEstimatedSMSCount() }}</span>
-                    <span *ngIf="userInput.selectedSendUpdateType.id == SEND_UPDATE_NOTIFICATION_TYPE_DBID" style="font-size: 14px;float:right">Estimated Notification Count: {{ getEstimatedNotificationCount() }}</span>
-                    <br/>
-                    <span *ngIf="userInput.selectedSendUpdateType.id != SEND_UPDATE_NOTIFICATION_TYPE_DBID" style="font-size: 14px;float:left">Estimated SMS Count Per Student: {{ htmlRenderer.getPerStudentSMSCount() }}
-                        (Approx) </span>
-                    <span *ngIf="userInput.selectedSendUpdateType.id == SEND_UPDATE_SMS_AND_NOTIFICATION_TYPE_DBID" style="font-size: 14px;float:right">Estimated Notification Count: {{ getEstimatedNotificationCount() }}</span>
-                    <br/>
-                    <ng-container
-                            *ngIf="getEstimatedNotificationCount() + getEstimatedSMSCount() !== 0 && message.length > 0">
-           
-            <span *ngIf="htmlRenderer.isTemplateModified()" style="font-size: 15px;color:rgba(255,0,0,0.91)">
-                    You can Modify only the variables inside <b>{{"{# #}"}}</b> in the SMS Template. (Max <b>20</b> Characters)
-                <br/></span>
-                        <span *ngIf="getEstimatedSMSCount() > smsBalance"
-                              style="font-size: 15px;color:rgba(255,0,0,0.91)">
-                    You are short by <b>{{ getEstimatedSMSCount() - smsBalance }}</b> SMS.
-                </span>
-
-                    </ng-container>
-                    <mat-checkbox *ngIf="userInput.selectedSendUpdateType.id == SEND_UPDATE_SMS_TYPE_DBID" [(ngModel)]="userInput.scheduleSMS">Schedule
-                        SMS
-                    </mat-checkbox>
-                    <br/>
-                    <ng-container *ngIf="userInput.selectedSendUpdateType.id == SEND_UPDATE_SMS_TYPE_DBID && userInput.scheduleSMS">
-                        <mat-form-field style="margin-top: 5px; margin-right: 15px; margin-bottom: 5px; width: 150px">
-                            <input
-                                    type="date"
-                                    matInput
-                                    onkeydown="return false"
-                                    [(ngModel)]="userInput.scheduledDate"
-                                    placeholder="Choose Date"
-                            />
+        <ng-container *ngIf="userNotifyDefaulterPermissionList.viewStudent">
+            <button class="btn" style="padding: 4px 7px" (click)="showSMSSection = !showSMSSection">
+                <ng-container *ngIf="!showSMSSection">Show SMS Section</ng-container>
+                <ng-container *ngIf="showSMSSection">Hide SMS Section</ng-container>
+            </button>
+            <ng-container *ngIf="showSMSSection">
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field style="margin: 20px 5px 5px;">
+                            <mat-select placeholder="Send via" [(ngModel)]="userInput.selectedSendUpdateType"
+                                        (ngModelChange)="htmlRenderer.sendUpdateTypeChanged()">
+                                <mat-option *ngFor="let sendType of backendData.sendUpdateTypeList" [value]="sendType">
+                                    {{ sendType.name }}
+                                </mat-option>
+                            </mat-select>
                         </mat-form-field>
-
-                        <mat-form-field style="margin-top: 5px; margin-right: 15px; margin-bottom: 5px; width: 140px">
-                            <input
-                                    type="time"
-                                    matInput
-                                    onkeydown="return false"
-                                    [(ngModel)]="userInput.scheduledTime"
-                                    placeholder="Choose Time"
-                            />
+                        <span style="margin-left:5px;font-size: 16px"
+                              *ngIf="userInput.selectedSendUpdateType.id != SEND_UPDATE_NOTIFICATION_TYPE_DBID">
+                            SMS Balance:
+                    <b><i>{{ smsBalance }}</i></b><br/></span>
+                    </div>
+                    <div class="col-md-6" align="end">
+                        <a href="https://chrome.google.com/webstore/detail/google-input-tools/mclkkofklkfljcocdinagocijmpgbhab"
+                           target="_blank">
+                            Hindi Typing Extension
+                        </a>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div class="col-md-6">
+                    <span style="font-size: 10px;color:rebeccapurple;margin-left: 13px;
+                     word-wrap: break-word;">Use {{"{#variables#}"}} with - {{htmlRenderer.getVariables()}}</span>
+                        <mat-form-field appearance="none" class="rowTextArea" style="width: 100%">
+                    <textarea
+                            matInput
+                            id="messageBox"
+                            style="border-radius:10px;background-color:#c4c4c4;min-height: 130px;padding: 12px;max-height: 300px"
+                            [readonly]="htmlRenderer.getPlaceHolder().includes('Select')"
+                            [placeholder]="htmlRenderer.getPlaceHolder()"
+                            [(ngModel)]="message"
+                    ></textarea>
                         </mat-form-field>
-                        <span style="color:red" *ngIf="htmlRenderer.checkDateTimeInvalid()">Invalid Date/Time</span>
                         <br/>
-                    </ng-container>
-                    <button
-                            type="submit"
-                            [disabled]="htmlRenderer.isSendDisabled()"
-                            style="border-radius: 15px"
-                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                            [class.disabledButton]="htmlRenderer.isSendDisabled()"
-                            (click)="serviceAdapter.sendSMSNotificationDefaulter()">
-                        {{htmlRenderer.getButtonText()}}
-                    </button>
-                </div>
-                <div class="col-md-4">
-                    <div style="border: 1px solid black;height: 200px;width:100%;overflow: auto">
-                        <div style="background: #c4c4c4;color:black;width:100%;font-weight: 600;padding:10px"
-                             class="text-center">Templates
-                        </div>
-                        <div class="text-center" style="margin-top: 5px">
-                            <span *ngIf="populatedTemplateList.length == 0">You Have No APPROVED Templates</span>
-                        </div>
-                        <div *ngFor="let template of populatedTemplateList;let i = index;"
-                             style="padding:10px;cursor:pointer" (click)="htmlRenderer.selectTemplate(template)"
-                             class="text-center">
-                            <span style="margin-right:5px;">{{i + 1}}
-                                .</span><span>{{htmlRenderer.getSMSIdName(template)}}
-                            - {{template.templateName}}</span>
-                            <mat-icon style="color:green;font-size: 16px;position: relative;top: 2px;margin-left: 6px;"
-                                      *ngIf="htmlRenderer.isTemplateSelected(template)">check
-                            </mat-icon>
-                            <div class="row" style="border-bottom: 1px solid black;margin-left:0;margin-right:0">
-                                <div class="col-xs-12"></div>
+                        <span style="font-size: 14px;float:left"># of Mobile devices: {{ htmlRenderer.getNumberOfMobileDevice()}}</span>
+                        <span *ngIf="userInput.selectedSendUpdateType.id != SEND_UPDATE_NOTIFICATION_TYPE_DBID"
+                              style="font-size: 14px;float:right">Estimated SMS Count: {{ getEstimatedSMSCount() }}</span>
+                        <span *ngIf="userInput.selectedSendUpdateType.id == SEND_UPDATE_NOTIFICATION_TYPE_DBID" style="font-size: 14px;float:right">Estimated Notification Count: {{ getEstimatedNotificationCount() }}</span>
+                        <br/>
+                        <span *ngIf="userInput.selectedSendUpdateType.id != SEND_UPDATE_NOTIFICATION_TYPE_DBID" style="font-size: 14px;float:left">Estimated SMS Count Per Student: {{ htmlRenderer.getPerStudentSMSCount() }}
+                            (Approx) </span>
+                        <span *ngIf="userInput.selectedSendUpdateType.id == SEND_UPDATE_SMS_AND_NOTIFICATION_TYPE_DBID" style="font-size: 14px;float:right">Estimated Notification Count: {{ getEstimatedNotificationCount() }}</span>
+                        <br/>
+                        <ng-container
+                                *ngIf="getEstimatedNotificationCount() + getEstimatedSMSCount() !== 0 && message.length > 0">
+    
+                <span *ngIf="htmlRenderer.isTemplateModified()" style="font-size: 15px;color:rgba(255,0,0,0.91)">
+                        You can Modify only the variables inside <b>{{"{# #}"}}</b> in the SMS Template. (Max <b>20</b> Characters)
+                    <br/></span>
+                            <span *ngIf="getEstimatedSMSCount() > smsBalance"
+                                  style="font-size: 15px;color:rgba(255,0,0,0.91)">
+                        You are short by <b>{{ getEstimatedSMSCount() - smsBalance }}</b> SMS.
+                    </span>
+    
+                        </ng-container>
+                        <mat-checkbox *ngIf="userInput.selectedSendUpdateType.id == SEND_UPDATE_SMS_TYPE_DBID" [(ngModel)]="userInput.scheduleSMS">Schedule
+                            SMS
+                        </mat-checkbox>
+                        <br/>
+                        <ng-container *ngIf="userInput.selectedSendUpdateType.id == SEND_UPDATE_SMS_TYPE_DBID && userInput.scheduleSMS">
+                            <mat-form-field style="margin-top: 5px; margin-right: 15px; margin-bottom: 5px; width: 150px">
+                                <input
+                                        type="date"
+                                        matInput
+                                        onkeydown="return false"
+                                        [(ngModel)]="userInput.scheduledDate"
+                                        placeholder="Choose Date"
+                                />
+                            </mat-form-field>
+    
+                            <mat-form-field style="margin-top: 5px; margin-right: 15px; margin-bottom: 5px; width: 140px">
+                                <input
+                                        type="time"
+                                        matInput
+                                        onkeydown="return false"
+                                        [(ngModel)]="userInput.scheduledTime"
+                                        placeholder="Choose Time"
+                                />
+                            </mat-form-field>
+                            <span style="color:red" *ngIf="htmlRenderer.checkDateTimeInvalid()">Invalid Date/Time</span>
+                            <br/>
+                        </ng-container>
+                        <button
+                                type="submit"
+                                [disabled]="htmlRenderer.isSendDisabled()"
+                                style="border-radius: 15px"
+                                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                                [class.disabledButton]="htmlRenderer.isSendDisabled()"
+                                (click)="serviceAdapter.sendSMSNotificationDefaulter()">
+                            {{htmlRenderer.getButtonText()}}
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <div style="border: 1px solid black;height: 200px;width:100%;overflow: auto">
+                            <div style="background: #c4c4c4;color:black;width:100%;font-weight: 600;padding:10px"
+                                 class="text-center">Templates
+                            </div>
+                            <div class="text-center" style="margin-top: 5px">
+                                <span *ngIf="populatedTemplateList.length == 0">You Have No APPROVED Templates</span>
+                            </div>
+                            <div *ngFor="let template of populatedTemplateList;let i = index;"
+                                 style="padding:10px;cursor:pointer" (click)="htmlRenderer.selectTemplate(template)"
+                                 class="text-center">
+                                <span style="margin-right:5px;">{{i + 1}}
+                                    .</span><span>{{htmlRenderer.getSMSIdName(template)}}
+                                - {{template.templateName}}</span>
+                                <mat-icon style="color:green;font-size: 16px;position: relative;top: 2px;margin-left: 6px;"
+                                          *ngIf="htmlRenderer.isTemplateSelected(template)">check
+                                </mat-icon>
+                                <div class="row" style="border-bottom: 1px solid black;margin-left:0;margin-right:0">
+                                    <div class="col-xs-12"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </ng-container>
         </ng-container>
+
+    </ng-container>
+
+    <ng-container *ngIf="!isLoading && (studentSectionList.length == 0 || !isPermissionToShow())">
+        You do not have permission to view the list of any class. Either get admin permission from Employee -> Assign Task page for all classes or get permission of specific classes from Class -> Assign Class page.
+        <br>
+        Or, there might not be any students in your permitted class/es.
     </ng-container>
 
     <ng-container *ngIf="isLoading">

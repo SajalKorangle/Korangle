@@ -1,3 +1,4 @@
+import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit, OnDestroy, AfterViewChecked, Input } from '@angular/core';
 
 import { ChangeDetectorRef } from '@angular/core';
@@ -21,6 +22,7 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
     showPrincipalSignature: any;
     classTeacherSignature: any;
     boardList: any;
+    sessionList: any;
 
     marksDecimalPoint: any;
 
@@ -36,6 +38,7 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
         this.showPrincipalSignature = value['showPrincipalSignature'];
         this.classTeacherSignature = value['classTeacherSignature'];
         this.boardList = value['boardList'];
+        this.sessionList = value['sessionList'];
 
         this.marksDecimalPoint =
             '1.' + this.reportCardMapping.minimumDecimalPoints.toString() + '-' + this.reportCardMapping.maximumDecimalPoints;
@@ -250,19 +253,9 @@ export class PrintStudentElegantFinalReportListComponent implements OnInit, OnDe
     }
 
     getSessionName(sessionId: any): any {
-        let result = '';
-        switch (sessionId) {
-            case 1:
-                result = 'Session 2017-18';
-                break;
-            case 2:
-                result = 'Session 2018-19';
-                break;
-            case 3:
-                result = 'Session 2019-20';
-                break;
-        }
-        return result;
+        return this.sessionList.find(session => {
+            return session.id == sessionId;
+        }).name;
     }
 
     getNextStep(student: any): any {

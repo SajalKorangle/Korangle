@@ -4,7 +4,7 @@ import { AttendanceOldService } from '../../../../services/modules/attendance/at
 import { EmployeeOldService } from '../../../../services/modules/employee/employee-old.service';
 
 import { ApproveLeaveServiceAdapter } from './approve-leave.service.adapter';
-import { SchoolService } from './../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { LEAVE_OPTION_LIST, LEAVE_STATUS_LIST } from '../../classes/constants';
 import { DataStorage } from '../../../../classes/data-storage';
 
@@ -12,7 +12,7 @@ import { DataStorage } from '../../../../classes/data-storage';
     selector: 'approve-leave',
     templateUrl: './approve-leave.component.html',
     styleUrls: ['./approve-leave.component.css'],
-    providers: [AttendanceOldService, EmployeeOldService, SchoolService],
+    providers: [AttendanceOldService, EmployeeOldService, GenericService],
 })
 export class ApproveLeaveComponent implements OnInit {
     user;
@@ -42,7 +42,7 @@ export class ApproveLeaveComponent implements OnInit {
     constructor(
         public attenendanceService: AttendanceOldService,
         public employeeService: EmployeeOldService,
-        public schoolService: SchoolService
+        public genericService: GenericService
     ) {}
 
     ngOnInit(): void {

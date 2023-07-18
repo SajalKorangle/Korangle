@@ -102,5 +102,37 @@
     "templateId": "1007969381016948761",
     "rawContent": "The Event {#var#} has been removed from the event list KORANGLE",
     "mappedContent": "The Event {#eventTitle#} has been removed from the event list KORANGLE"
+  },
+  {
+    "id":14,
+    "parentSMSId": 1,
+    "templateName": "discount_notification",
+    "templateId": "1007784599332550985",
+    "rawContent": "Discount of Rs. {#var#} has been given to {#var#} by {#var#} for the Academic {#var#}.\n\nKorangle",
+    "mappedContent": "Discount of Rs. {#discountAmount#} has been given to {#studentName#} by {#schoolName#} for the Academic {#session#}.\n\nKorangle"
+  },
+  {
+    "id":15,
+    "parentSMSId": 1,
+    "templateName": "fee_receipt_notification",
+    "templateId": "1007896151647629076",
+    "rawContent": "Rs. {#var#} deposited in the fee account of {#var#}, scholar no {#var#} vide receipt no {#var#}, dated {#var#}.\n\n{#var#}\nKorangle",
+    "mappedContent": "Rs. {#feeAmount#} deposited in the fee account of {#studentName#}, scholar no {#studentScholarId#} vide receipt no {#feeReceiptNumber#}, dated {#date#}.\n\n{#schoolName#}\nKorangle"
+  },
+  {
+    "id":16,
+    "parentSMSId": 1,
+    "templateName": "subscription_expiry_notification",
+    "templateId": "1007154477438045392",
+    "rawContent": "Your school KID - {#var#} will expire {#var#}. To continue using our software, please pay your due amount or contact sales support.\n\nRegards,\nKorangle softwares",
+    "mappedContent": "Your school KID - {#schoolId#} will expire {#days#}. To continue using our software, please pay your due amount or contact sales support.\n\nRegards,\nKorangle softwares"
+  },
+  {
+    "id":17,
+    "parentSMSId": 1,
+    "templateName": "subscription_expiry_notification_2",
+    "templateId": "1007024986529587747",
+    "rawContent": "Hi {#var#},\n\nKID - {#var#} of your school is about to suspend {#var#}.\nKindly make the payment to continue Korangle services.\nIn case of any help please contact sales support on {#var#}\n\nRegards,\nKorangle softwares",
+    "mappedContent": "Hi {#employeeName#},\n\nKID - {#schoolId#} of your school is about to suspend {#days#}.\nKindly make the payment to continue Korangle services.\nIn case of any help please contact sales support on {#salesSupportMobileNumber#}\n\nRegards,\nKorangle softwares"
   }
 ]

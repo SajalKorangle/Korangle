@@ -2,23 +2,16 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { AddStudentServiceAdapter } from './add-student-service.adapter';
 
-import { ClassService } from '../../../../services/modules/class/class.service';
-import { BusStopService } from '../../../../services/modules/school/bus-stop.service';
 import { StudentService } from "../../../../services/modules/student/student.service";
 import { Student } from "../../../../services/modules/student/models/student";
 import { StudentSection } from "../../../../services/modules/student/models/student-section";
-import { VehicleOldService } from "../../../../services/modules/vehicle/vehicle-old.service";
-import { ExaminationService } from "../../../../services/modules/examination/examination.service";
-import { SubjectService } from "../../../../services/modules/subject/subject.service";
-import { FeeService } from "../../../../services/modules/fees/fee.service";
-import { INSTALLMENT_LIST } from "../../../fees/classes/constants";
 import { DataStorage } from "../../../../classes/data-storage";
-import { SchoolService } from "../../../../services/modules/school/school.service";
 import { BankService } from '../../../../services/bank.service';
 
 import { MultipleFileDialogComponent } from '../../../../components/multiple-file-dialog/multiple-file-dialog.component';
 import { ImagePdfPreviewDialogComponent } from '../../../../components/image-pdf-preview-dialog/image-pdf-preview-dialog.component';
 import { MatDialog } from '@angular/material';
+import { GenericService } from '@services/generic/generic-service';
 
 declare const $: any;
 
@@ -27,33 +20,25 @@ declare const $: any;
     templateUrl: './add-student.component.html',
     styleUrls: ['./add-student.component.css'],
     providers: [
-        SchoolService,
-        ClassService,
-        BusStopService,
         StudentService,
-        SubjectService,
-        ExaminationService,
-        VehicleOldService,
-        FeeService,
-        BankService,
+        GenericService,
+        BankService
     ],
 })
 export class AddStudentComponent implements OnInit {
-    installmentList = INSTALLMENT_LIST;
     sessionList = [];
     nullValue = null;
 
     user: any;
 
+    height = [];
+    showToolTip = [];
+
     // From Service Adapter
     classList = [];
     sectionList = [];
     busStopList = [];
-    classSubjectList = [];
     testSecondList = []; // represents Class Test
-    schoolFeeRuleList = [];
-    classFilterFeeList = [];
-    busStopFilterFeeList = [];
 
     newStudent: Student;
     newStudentSection: StudentSection;
@@ -68,14 +53,8 @@ export class AddStudentComponent implements OnInit {
     isLoading = false;
 
     constructor(
-        public schoolService: SchoolService,
-        public classService: ClassService,
-        public busStopService: BusStopService,
         public studentService: StudentService,
-        public subjectService: SubjectService,
-        public vehicleService: VehicleOldService,
-        public examinationService: ExaminationService,
-        public feeService: FeeService,
+        public genericService: GenericService,
         public bankService: BankService,
         public dialog: MatDialog
     ) { }
@@ -85,6 +64,58 @@ export class AddStudentComponent implements OnInit {
         this.serviceAdapter = new AddStudentServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+    }
+
+    getTextHeight(textContent: string) {
+        let text = document.createElement("p");
+        let fileNameElement = document.getElementById('fileNameElement');
+        fileNameElement.appendChild(text);
+
+        text.innerHTML = textContent;
+        text.style.font = "roboto";
+        text.style.fontSize = 12 + "px";
+        text.style.width = this.getWidth() + 'px';
+        text.style.wordWrap = 'break-word';
+        text.style.color = "#959393";
+        text.style.fontWeight = "400";
+        text.style.lineHeight = "18px";
+        let height = Math.ceil(text.offsetHeight) + 100;
+        fileNameElement.removeChild(text);
+        return height;
+    }
+
+    checkToolTip(parameter) {
+        let index = this.studentParameterList.indexOf(parameter);
+        return this.showToolTip[index];
+    }
+
+    closeToolTip(parameter) {
+        let index = this.studentParameterList.indexOf(parameter);
+        this.showToolTip[index] = false;
+        this.height[index] = 120;
+    }
+
+    toolTipClicked(parameter) {
+        let index = this.studentParameterList.indexOf(parameter);
+        if (this.showToolTip[index]) {
+            this.showToolTip[index] = false;
+            this.height[index] = 120;
+        } else {
+            this.showToolTip[index] = true;
+            let fullName = this.getFullDocumentName(parameter);
+            this.height[index] = this.getTextHeight(fullName);
+        }
+    }
+
+    getHeight(parameter) {
+        let index = this.studentParameterList.indexOf(parameter);
+        return this.height[index];
+    }
+
+    getWidth() {
+        let width = document.getElementById('documentElement').offsetWidth;
+        width -= 145;
+        return width;
     }
 
     initializeVariable(): void {
@@ -232,11 +263,36 @@ export class AddStudentComponent implements OnInit {
         }
     }
 
-    getDocumentName(parameter) {
+    getShortenName(document_name) {
+        let nameList = document_name.split(".");
+        let name = "";
+        for (let i = 0; i < nameList.length - 1; i++) {
+            name += nameList[i];
+        }
+
+        if (name.length > 20) {
+            name = name.substr(0, 20);
+            name += "...";
+        }
+        name += ('.' + nameList[nameList.length - 1]);
+        return name;
+    }
+
+    getFullDocumentName(parameter) {
         let item = this.currentStudentParameterValueList.find((x) => x.parentStudentParameter === parameter.id);
         if (item) {
             if (item.document_name) {
                 return item.document_name;
+            }
+        }
+    }
+
+    getDocumentName(parameter) {
+        let item = this.currentStudentParameterValueList.find(x => x.parentStudentParameter === parameter.id);
+        if (item) {
+            if (item.document_name) {
+                let document_name = this.getShortenName(item.document_name);
+                return document_name;
             }
         }
     }
