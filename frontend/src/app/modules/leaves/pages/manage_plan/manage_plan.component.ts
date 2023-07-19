@@ -162,6 +162,12 @@ export class ManagePlanComponent implements OnInit {
     }
     // ends :- add employee to list of selected employees.
 
+    // starts :- function to check if any employee satisfies the filter
+    isSearchEmpty(): boolean {
+        return this.currentEmployeeChoiceList.filter(employee => employee.name.toLowerCase().startsWith(this.filter.toLowerCase())).length == 0;
+    }
+    // ends :- function to check if any employee satisfies the filter
+
     // starts :- function to check if employee belongs to other leave plan.
     doesEmployeeBelongToOtherLeavePlan(employee, leavePlanId): boolean {
         return this.leavePlanToEmployeeList.find(

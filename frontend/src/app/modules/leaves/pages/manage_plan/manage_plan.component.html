@@ -189,7 +189,7 @@
                                             {{ employee.name }}
                                         </mat-option>
                                         <mat-option value="null" style="display: none;" aria-disabled="true"></mat-option>
-                                        <div *ngIf="filteredEmployeeChoiceList.length === 0 && availableEmployeeChoiceList.length != 0" style="text-align: center; width: 100%; padding: 10px" id="noEmployeeMessage"> No Employee found. </div>
+                                        <div *ngIf="isSearchEmpty() && availableEmployeeChoiceList.length != 0" style="text-align: center; width: 100%; padding: 10px" id="noEmployeeMessage"> No Employee found. </div>
                                         <div *ngIf="availableEmployeeChoiceList.length == 0" style="text-align: center; width: 100%; padding: 10px" id="noEmployeeMessage"> All Employees are assigned with a Leave Plan. </div>
                                     </mat-select>
                                 </mat-form-field>
