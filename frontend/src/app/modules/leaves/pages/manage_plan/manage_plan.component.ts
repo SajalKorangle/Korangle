@@ -176,8 +176,4 @@ export class ManagePlanComponent implements OnInit {
             : false;
     }
     // ends :- function to check if employee belongs to other leave plan.
-// 2. When we initially select employees and after that at same time if we search and select some employees than
-// previously selected employees gets deselected and only the searched employees get selected and added in that list.
-// 5. When we select employees and add to the list, after this if we search by any random name (not present in list) and
-// select or deselect any employee and click on green tick then double entry is added to the employees which are selected.
 }
