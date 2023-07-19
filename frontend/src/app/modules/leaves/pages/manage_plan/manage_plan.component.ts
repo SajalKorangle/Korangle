@@ -135,7 +135,7 @@ export class ManagePlanComponent implements OnInit {
         });
     }
     // ends :- update employee choices
-    
+
     // starts :- function to get mode of employee visibility as per filter
     getEmployeeOptionVisibility(employee): string {
         return employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) ? "flex" : "none";
