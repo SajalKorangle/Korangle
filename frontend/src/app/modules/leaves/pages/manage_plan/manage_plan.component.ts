@@ -25,6 +25,7 @@ export class ManagePlanComponent implements OnInit {
     currentEmployeeChoiceList: Array<any> = [];
     appliedEmployeeChoiceList: Array<any> = [];
     filteredEmployeeChoiceList: Array<any> = [];
+    availableEmployeeChoiceList: Array<any> = [];
     filter: string = "";
     // employee to leave Plan
     leavePlanToEmployeeList: Array<LeavePlanToEmployee> = [];
@@ -70,6 +71,7 @@ export class ManagePlanComponent implements OnInit {
         this.filteredEmployeeChoiceList = this.employeeChoiceList.filter(
             (employee) => !this.doesEmployeeBelongToOtherLeavePlan(employee, this.currentLeavePlan.id)
         );
+        this.availableEmployeeChoiceList = [...this.filteredEmployeeChoiceList];
         this.appliedEmployeeChoiceList = [];
         this.leavePlanToEmployeeList.forEach((leavePlanToEmployee) => {
             leavePlanToEmployee.parentSchoolLeavePlan == this.currentLeavePlan.id
@@ -124,24 +126,21 @@ export class ManagePlanComponent implements OnInit {
     // starts :- update employee choices
     updateEmployeeChoiceList(): void {
         this.currentEmployeeChoiceList.sort((employee1, employee2) => employee1.name.localeCompare(employee2.name));
-        this.filteredEmployeeChoiceList = [];
-        let temporaryEmployeeChoiceList = [];
-        this.currentEmployeeChoiceList.forEach((employee) => {
-            employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) ? this.filteredEmployeeChoiceList.push(employee) : null;
-            temporaryEmployeeChoiceList.push(employee);
-        });
+        this.filteredEmployeeChoiceList = [...this.currentEmployeeChoiceList];
         this.employeeChoiceList.forEach((employee) => {
-            employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) &&
             !this.currentEmployeeChoiceList.includes(employee) &&
             !this.doesEmployeeBelongToOtherLeavePlan(employee, this.currentLeavePlan.id)
                 ? this.filteredEmployeeChoiceList.push(employee)
                 : null;
-            !this.currentEmployeeChoiceList.includes(employee) && !this.doesEmployeeBelongToOtherLeavePlan(employee, this.currentLeavePlan.id)
-                ? temporaryEmployeeChoiceList.push(employee)
-                : null;
         });
     }
     // ends :- update employee choices
+    
+    // starts :- function to get mode of employee visibility as per filter
+    getEmployeeOptionVisibility(employee): string {
+        return employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) ? "flex" : "none";
+    }
+    // ends :- function to get mode of employee visibility as per filter
 
     // starts :- remove employee from list of selected employees.
     removeEmployee(selectedEmployee): void {
@@ -177,4 +176,8 @@ export class ManagePlanComponent implements OnInit {
             : false;
     }
     // ends :- function to check if employee belongs to other leave plan.
+// 2. When we initially select employees and after that at same time if we search and select some employees than
+// previously selected employees gets deselected and only the searched employees get selected and added in that list.
+// 5. When we select employees and add to the list, after this if we search by any random name (not present in list) and
+// select or deselect any employee and click on green tick then double entry is added to the employees which are selected.
 }
