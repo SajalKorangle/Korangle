@@ -45,7 +45,9 @@ export class ManageTemplatesHtmlRenderer {
     }
 
     getTemplateSMSId(template: any) {
-        return this.vm.backendData.SMSIdList.find(smsId => smsId.id == template.parentSMSId).smsId;
+        let backendTemplate = this.vm.backendData.SMSIdList.find(smsId => smsId.id == template.parentSMSId);
+        if (backendTemplate) return backendTemplate.smsId;
+        return null;
     }
 
     isUserChosenTemplateForEvent(smsEventId: any): boolean {
