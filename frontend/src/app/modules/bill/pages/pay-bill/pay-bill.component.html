@@ -4,7 +4,7 @@
     <ng-container *ngIf='!isInitialLoading'>
 
         <!-- No Unpaid Bill Message Starts -->
-        <span>No Pending Bills !!!</span>
+        <span *ngIf="unpaidBillList.length==0">No Pending Bills !!!</span>
         <!-- No Unpaid Bill Message Ends -->
 
         <!-- Showing List of Unpaid Bills in table format Starts -->
@@ -12,66 +12,34 @@
             <thead style="color: rgba(255, 152, 0, 1);">
                 <tr>
                     <th>S No.</th>
+                    <th>Name</th>
                     <th>Amount</th>
                     <th>Due Date</th>
-                    <th>Remark</th>
-                    <th>Document</th>
+                    <!-- th>Remark</th -->
+                    <!-- th>Document</th -->
                     <th></th>
-                    <!-- th *ngIf="columnFilter.voucherNumber.value"><span>V. No.</span></th>
-                    <th *ngIf="columnFilter.date.value" class="text-left"><span>Date</span></th>
-                    <th *ngIf="columnFilter.debitAccount.value" class="text-left"><span>Paid To</span></th>
-                    <th *ngIf="columnFilter.creditAccount.value" class="text-left"><span>Paid From</span></th>
-                    <th *ngIf="columnFilter.remark.value" class="text-left"><span>Remark</span></th>
-                    <th *ngIf="columnFilter.approvalId.value" class="text-left"><span>Approval ID</span></th>
-                    <th *ngIf="columnFilter.addedBy.value" class="text-left"><span>Added By</span></th>
-                    <th *ngIf="columnFilter.quotation.value" class="text-center"><span>Quotation</span></th>
-                    <th *ngIf="columnFilter.bill.value" class="text-center"><span>Bill</span></th -->
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let bill of unpaidBillList; let i = index;">
 
                     <td>{{i+1}}.</td>
+                    <td>{{bill.name}}</td> <!-- TODO: Implement Long to Short text pipe -->
                     <td>Rs. {{bill.amount}}/-</td>
                     <td>{{bill.dueDate | date: 'd MMM y'}}</td>
-                    <td>{{bill.remark}}</td> <!-- TODO: Implement Long to Short text pipe -->
-                    <td>Document Path</td>
-                    <td>Pay Bill Button</td>
-                    
-                    <!-- td *ngIf="columnFilter.voucherNumber.value" class="text-left" style="vertical-align: top;"><span>{{transaction.voucherNumber}}</span></td>
-                    <td *ngIf="columnFilter.date.value" class="text-left" style="vertical-align: top;"><span>{{getDisplayDateFormat(transaction.transactionDate)}}</span></td>
-                    <td *ngIf="columnFilter.debitAccount.value" class="text-left" style="vertical-align: top;" >
-                        <div *ngFor="let account of transaction.debitAccounts;" style="margin-bottom: 10px;">
-                            <span>{{account.account}}&nbsp;A/c</span><br>
-                            <span style="color: rgba(76, 175, 80, 1);">{{account.amount}}</span>
-                        </div>
+                    <!-- td>{{bill.remark}}</td --> <!-- TODO: Implement Long to Short text pipe -->
+                    <!-- td>Document Path</td -->
+                    <td>
+                        <button
+                            type="submit"
+                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                            style="padding: 3px 8px"
+                            (click)="openPaymentDialog(bill)"
+                        >
+                            Pay
+                        </button>
                     </td>
-                    <td *ngIf="columnFilter.creditAccount.value" class="text-left" style="vertical-align: top;">
-                        <div *ngFor="let account of transaction.creditAccounts" style="margin-bottom: 10px;">
-                            <span>{{account.account}}&nbsp;A/c</span><br>
-                            <span style="color:rgba(86, 142, 174, 1)">{{account.amount}}</span>
-                        </div>
-                    </td>
-                    <td *ngIf="columnFilter.remark.value" class="text-left" style="vertical-align: top;"><span>{{transaction.remark}}</span></td>
-                    <td *ngIf="columnFilter.approvalId.value" class="text-left" style="vertical-align: top;"><span>{{transaction.approvalId}}</span></td>
-                    <td *ngIf="columnFilter.addedBy.value" class="text-left" style="vertical-align: top;"><span>{{transaction.parentEmployeeName}}</span></td>
-                    <td *ngIf="columnFilter.quotation.value" class="text-center">
-                        <i *ngIf="transaction.quotationImages.length > 0" class="material-icons" style="cursor: pointer;" (click)="openImagePreviewDialog(transaction.quotationImages, 0, 0);">
-                            insert_photo
-                        </i>
-                        <i *ngIf="transaction.quotationImages.length == 0">
-                            No Image
-                        </i>
-                    </td>
-                    <td *ngIf="columnFilter.bill.value" class="text-center">  
-                        <i *ngIf="transaction.billImages.length > 0" class="material-icons" style="cursor: pointer;" (click)="openImagePreviewDialog(transaction.billImages, 0, 0)">
-                            insert_photo
-                        </i>
-                        <i *ngIf="transaction.billImages.length == 0">
-                            No Image
-                        </i>
-                    </td>
-                     <td *ngIf="canUserUpdate() && !isAccountLocked()" style="color: rgba(255, 152, 0, 1); cursor: pointer" class="text-center" (click)="openUpdateTransactionDialog(transaction)"><u>Update</u></td -->
+                
                 </tr>
                 
             </tbody>
@@ -80,9 +48,10 @@
         <!-- Showing List of Unpaid Bills in table format Starts -->
     
     
-        <ng-container *ngFor="let bill of unpaidBillList">
+        <!-- ng-container *ngFor="let bill of unpaidBillList">
 
-        </ng-container>
+        </ng-container -->
+
     </ng-container>
     <!-- Showing List of Bills after Loading ends -->
 

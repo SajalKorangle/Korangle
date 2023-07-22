@@ -160,16 +160,16 @@ const routes: Routes = [
             {
                 path: 'website',
                 loadChildren: 'app/modules/website/website.module#WebsiteModule',
-            }
+            },
+            {
+                path: 'bill',
+                loadChildren: 'app/modules/bill/bill.module#BillModule',
+            },
         ]
     },
     // ----- Routes For inside User DashBoard Ends -------
 
     // ----- Routes For Print Pages Starts -------
-    {
-        path: 'bill',
-        loadChildren: 'app/modules/bill/bill.module#BillModule',
-    },
     {
         path: 'print',
         outlet: 'print',

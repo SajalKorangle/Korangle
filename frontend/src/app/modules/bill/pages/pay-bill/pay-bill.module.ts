@@ -4,12 +4,12 @@ import { PayBillComponent } from "./pay-bill.component";
 
 import {PayBillRoutingModule } from './pay-bill.routing';
 import {ComponentsModule} from "../../../../components/components.module";
-
-
+import { PaymentModalComponent } from './payment-modal/payment-modal.component';
 
 @NgModule({
     declarations: [
         PayBillComponent,
+        PaymentModalComponent
     ],
 
     imports: [
@@ -17,6 +17,7 @@ import {ComponentsModule} from "../../../../components/components.module";
         ComponentsModule,
 
     ],
+    entryComponents: [ PaymentModalComponent ],
     exports: [
     ],
     providers: [],

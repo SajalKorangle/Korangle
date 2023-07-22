@@ -28,7 +28,19 @@ export class PayBillServiceAdapter {
             )
             .getObjectList({bill_app: 'Bill'});
 
-        [this.vm.unpaidBillList] = await Promise.all([unpaidBillListQuery]);
+        [
+            this.vm.unpaidBillList,
+            this.vm.modeOfPaymentList
+        ] = await Promise.all([
+            unpaidBillListQuery,
+            new Query().addChildQuery(
+                'modeofpaymentcharges',
+                new Query()
+            ).addParentQuery(
+                'parentPaymentGateway',
+                new Query()
+            ).getObjectList({payment_app: 'ModeOfPayment'})
+        ]);
         // Getting list of unpaid bills and corresponding orders from backend ends
 
         this.vm.isInitialLoading = false;
@@ -40,7 +52,7 @@ export class PayBillServiceAdapter {
         
         // Generating Order
 
-        // Calling Cashfree
+        // Calling Easebuzz
 
     }
 

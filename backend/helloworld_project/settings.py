@@ -92,6 +92,7 @@ INSTALLED_APPS = [
     'feature_flag_app',
     'library_app',
     'leaves_app',
+    'bill_app',
 
     'corsheaders',
 

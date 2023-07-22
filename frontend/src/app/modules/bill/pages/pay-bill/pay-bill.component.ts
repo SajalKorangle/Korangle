@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { GenericService } from '@services/generic/generic-service';
 import { DataStorage } from "../../../../classes/data-storage";
 import { PayBillServiceAdapter } from './pay-bill.service.adapter';
+import { PaymentModalComponent } from './payment-modal/payment-modal.component';
 
 @Component({
     selector: 'pay-bill',
@@ -20,8 +22,11 @@ export class PayBillComponent implements OnInit {
     isInitialLoading: boolean;
 
     unpaidBillList = [];
+    modeOfPaymentList = [];
 
-    constructor(genericService: GenericService) { }
+    constructor(
+        public dialog: MatDialog,
+    ) { }
 
     // Server Handling - Initial
     ngOnInit(): void {
@@ -32,6 +37,15 @@ export class PayBillComponent implements OnInit {
         this.serviceAdapter.initialiseAdapter(this);
         this.serviceAdapter.initialiseData();
 
+    }
+
+    openPaymentDialog(bill: any): any {
+        const dialogRef = this.dialog.open(PaymentModalComponent, {
+            data: {
+                bill: bill,
+                modeOfPaymentList: this.modeOfPaymentList,
+            }
+        });
     }
 
 }
