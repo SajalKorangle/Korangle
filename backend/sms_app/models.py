@@ -64,6 +64,12 @@ def sms_id_delete_check(sender, instance, **kwargs):
     try:
         sms_id = SMSId.objects.get(id=instance_dict['parentSMSId_id'])
         sms_id_school_sibling_list_length = SMSIdSchool.objects.filter(parentSMSId=sms_id).count()
+        
+        SMSEventSettings.objects.filter(
+            parentSchool=instance_dict['parentSchool_id'],
+            parentSMSTemplate__parentSMSId=sms_id
+        ).delete()
+
         if sms_id_school_sibling_list_length == 0:
             print('Parent SMS ID Deleted')
             sms_id.delete()
