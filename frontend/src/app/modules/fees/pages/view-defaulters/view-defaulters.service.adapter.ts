@@ -18,7 +18,10 @@ export class ViewDefaultersServiceAdapter {
         // Starts:- Getting initial data
         const firstValue = await Promise.all([this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school,
             {parentSchool: this.vm.user.activeSchool.dbId}), //0
-            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {SMSEventId: this.vm.NOTIFY_DEFAULTERS_EVENT_DBID}), //1
+            this.vm.smsService.getObjectList(this.vm.smsService.sms_event_settings, {
+                SMSEventId: this.vm.NOTIFY_DEFAULTERS_EVENT_DBID,
+                parentSMSTemplate__isnull: "false__boolean"
+            }), //1
             this.vm.smsService.getObject(this.vm.smsService.sms_event, {id: this.vm.NOTIFY_DEFAULTERS_EVENT_DBID}), //2
             this.vm.informationService.getObjectList(this.vm.informationService.send_update_type, {}),      // 3
             this.vm.genericService.getObject({fees_third_app: 'ViewDefaulterPermissions'}, {        // 4
