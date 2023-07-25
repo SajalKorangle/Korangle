@@ -311,6 +311,12 @@ class FeeReceiptBook(models.Model):
         db_table = 'fee_receipt_book'
         unique_together=('parentSchool', 'name')
 
+@receiver(post_save, sender=School)
+def SchoolCreationHandler(sender, instance, created, **kwargs):
+    if created:
+        FeeReceiptBook.objects.create(name='Default', parentSchool=instance)
+
+
 class FeeReceipt(models.Model):
 
     parentFeeReceiptBook = models.ForeignKey(FeeReceiptBook, on_delete=models.CASCADE, null=True, related_name='feeReceiptList')

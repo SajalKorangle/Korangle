@@ -205,6 +205,7 @@ export class PayFeesServiceAdapter {
                         parentStudent: studentId,
                         feeReceiptData: {
                             receiptNumber: 0,
+                            parentFeeReceiptBook: this.vm.selectedFeeReceiptBook.id,
                             parentSchool: this.vm.user.activeSchool.dbId,
                             parentStudent: studentId,
                             parentSession: session.id,
@@ -302,6 +303,7 @@ export class PayFeesServiceAdapter {
                         parentStudent: studentId,
                         feeReceiptData: {
                             receiptNumber: 0,
+                            parentFeeReceiptBook: this.vm.selectedFeeReceiptBook.id,
                             parentSchool: this.vm.user.activeSchool.dbId,
                             parentStudent: studentId,
                             parentSession: session.id,
