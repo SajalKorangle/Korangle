@@ -203,7 +203,7 @@ export class AddViaExcelComponent implements OnInit {
             filter: (numPages) => {
                 // if the number of pages is present, it should be a number
                 if (!numPages) return null;
-                if (isNaN(numPages) || isNaN(parseFloat(numPages)) || numPages<0) return "Invalid Number";
+                if (isNaN(numPages) || isNaN(parseFloat(numPages)) || numPages < 0) return "Invalid Number";
                 return null;
             },
             parse: (numPages) => {
