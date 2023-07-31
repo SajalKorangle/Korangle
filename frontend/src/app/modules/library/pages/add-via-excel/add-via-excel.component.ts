@@ -203,7 +203,7 @@ export class AddViaExcelComponent implements OnInit {
             filter: (numPages) => {
                 // if the number of pages is present, it should be a number
                 if (!numPages) return null;
-                if (isNaN(numPages) || isNaN(parseFloat(numPages))) return "Invalid Number";
+                if (isNaN(numPages) || isNaN(parseFloat(numPages)) || numPages<0) return "Invalid Number";
                 return null;
             },
             parse: (numPages) => {
@@ -217,7 +217,7 @@ export class AddViaExcelComponent implements OnInit {
             filter: (cost) => {
                 // if the cost is present, it should be a number
                 if (!cost) return null;
-                if (isNaN(cost) || isNaN(parseFloat(cost))) return "Invalid cost";
+                if (isNaN(cost) || isNaN(parseFloat(cost)) || cost < 0) return "Invalid cost";
                 return null;
             },
         },
