@@ -250,7 +250,7 @@ export class AddViaExcelComponent implements OnInit {
             this.isLoading = true;
             // read workbook
             const bstr: string = e.target.result;
-            const wb: xlsx.WorkBook = xlsx.read(bstr, { type: "binary" });
+            const wb: xlsx.WorkBook = xlsx.read(bstr, { type: "binary", dateNF: 'dd"-"mm"-"yyyy' });
 
             // grab first sheet
             const wsname: string = wb.SheetNames[0];
