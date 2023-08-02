@@ -38,6 +38,43 @@ def handle_sms_delivery_report(data_from_vendor):
                                                                          "%d-%m-%Y %H:%M:%S").strftime("%Y-%m-%d %H:%M:%S"),
                                      statusCode=delivery_report.find('ErrorCode').text)
 
+
+def handle_msg_club_delivery_report(data):
+
+    for status in data:
+
+        report = {
+            'requestId': status['requestId'],
+            'mobileNumber': int(status['mobileNumber'][2:]),
+            'status': status['status'],
+            'statusCode': status['statusCode'],
+            'deliveredDateTime': status['deliveredDateTime'] + "+05:30",
+            'senderId': status['senderId'],
+        }
+
+        try:
+
+            report_object = SMSDeliveryReport.objects.get(requestId=report['requestId'],
+                mobileNumber=report['mobileNumber'])
+
+            report_object.status = report['status']
+            report_object.statusCode = report['statusCode']
+            report_object.deliveredDateTime = report['deliveredDateTime']
+            report_object.senderId = report['senderId']
+            report_object.save()
+
+        except:
+
+            SMSDeliveryReport.objects.create(
+                requestId=report['requestId'],
+                mobileNumber=report['mobileNumber'],
+                status=report['status'],
+                statusCode=report['statusCode'],
+                deliveredDateTime=report['deliveredDateTime'],
+                senderId=report['senderId']
+            )
+        
+
 ### MESG CLUB VENDOR FUNCTIONS ###
 # def get_msg_club_delivery_report_list(data):
 #

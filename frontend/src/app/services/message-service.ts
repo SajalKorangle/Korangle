@@ -169,7 +169,12 @@ export class MessageService {
         let sms_list = [];
         let personVariablesMappedObjList = [];
 
-        let parentSMSId = smsTemplate ? smsTemplate.parentSMSId : null;
+        let parentSMSId = null;
+        let parentSMSTemplate = null;
+        if (smsTemplate) {
+            parentSMSId = smsTemplate.parentSMSId;
+            parentSMSTemplate = smsTemplate.id;
+        }
 
         // finding the corresponding eventSettingsPage to know the variablesList
         let variableMappedEvent = VARIABLE_MAPPED_EVENT_LIST.find(e => e.eventId == smsEvent.id);
@@ -273,6 +278,9 @@ export class MessageService {
             parentSchool: schoolId,
             scheduledDateTime: scheduledDateTime,
             parentSMSId: parentSMSId,
+            parentSMSTemplate: parentSMSTemplate,
+            payload: null,
+            response: null
         };
 
         const notification_data = notificationMappedDataList.map((item) => {
