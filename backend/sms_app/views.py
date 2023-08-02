@@ -5,6 +5,8 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 
+import json
+
 
 ############## SMS Old ##############
 from sms_app.models import SMS, SMSId, SMSTemplate, SMSEventSettings, SMSIdSchool, SMSPurchase
