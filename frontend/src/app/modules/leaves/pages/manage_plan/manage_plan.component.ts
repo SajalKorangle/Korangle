@@ -19,12 +19,13 @@ export class ManagePlanComponent implements OnInit {
     isLeavePlanOpen: boolean = false;
     leavePlanName: string = "";
     isAddNewOpen: boolean = false;
-    currentLeavePlan: any = {};
+    currentLeavePlan: LeavePlan | null = null;
     // employee choices
     employeeChoiceList: Array<any> = [];
     currentEmployeeChoiceList: Array<any> = [];
     appliedEmployeeChoiceList: Array<any> = [];
     filteredEmployeeChoiceList: Array<any> = [];
+    availableEmployeeChoiceList: Array<any> = [];
     filter: string = "";
     // employee to leave Plan
     leavePlanToEmployeeList: Array<LeavePlanToEmployee> = [];
@@ -49,7 +50,7 @@ export class ManagePlanComponent implements OnInit {
     // starts :- Function to reset the component
     // It is used when user clicks on go back or cancel.
     resetComponent(): void {
-        this.currentLeavePlan = {};
+        this.currentLeavePlan = null;
         this.leavePlanName = "";
         this.isLeavePlanOpen = this.isSelectLeavePlanToLeaveTypeVisible = this.isAddNewOpen = false;
         this.leaveTypeChoiceList = this.currentLeaveTypeChoiceList = this.appliedLeaveTypeChoiceList = [];
@@ -67,7 +68,10 @@ export class ManagePlanComponent implements OnInit {
                 ? this.appliedLeaveTypeChoiceList.push(this.leaveTypeList.find((leaveType) => leaveType.id === leavePlanToLeaveTypeItem.parentSchoolLeaveType))
                 : null;
         });
-        this.filteredEmployeeChoiceList = this.employeeChoiceList;
+        this.filteredEmployeeChoiceList = this.employeeChoiceList.filter(
+            (employee) => !this.doesEmployeeBelongToOtherLeavePlan(employee, this.currentLeavePlan.id)
+        );
+        this.availableEmployeeChoiceList = [...this.filteredEmployeeChoiceList];
         this.appliedEmployeeChoiceList = [];
         this.leavePlanToEmployeeList.forEach((leavePlanToEmployee) => {
             leavePlanToEmployee.parentSchoolLeavePlan == this.currentLeavePlan.id
@@ -122,23 +126,21 @@ export class ManagePlanComponent implements OnInit {
     // starts :- update employee choices
     updateEmployeeChoiceList(): void {
         this.currentEmployeeChoiceList.sort((employee1, employee2) => employee1.name.localeCompare(employee2.name));
-        this.filteredEmployeeChoiceList = [];
-        let temporaryEmployeeChoiceList = [];
-        this.currentEmployeeChoiceList.forEach((employee) => {
-            employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) ? this.filteredEmployeeChoiceList.push(employee) : null;
-            temporaryEmployeeChoiceList.push(employee);
-        });
+        this.filteredEmployeeChoiceList = [...this.currentEmployeeChoiceList];
         this.employeeChoiceList.forEach((employee) => {
-            employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) && !this.currentEmployeeChoiceList.includes(employee)
+            !this.currentEmployeeChoiceList.includes(employee) &&
+            !this.doesEmployeeBelongToOtherLeavePlan(employee, this.currentLeavePlan.id)
                 ? this.filteredEmployeeChoiceList.push(employee)
                 : null;
-            !this.currentEmployeeChoiceList.includes(employee) ? temporaryEmployeeChoiceList.push(employee) : null;
         });
-        if (this.filteredEmployeeChoiceList.length == 0) {
-            this.filteredEmployeeChoiceList = temporaryEmployeeChoiceList;
-        }
     }
     // ends :- update employee choices
+
+    // starts :- function to get mode of employee visibility as per filter
+    getEmployeeOptionVisibility(employee): string {
+        return employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) ? "flex" : "none";
+    }
+    // ends :- function to get mode of employee visibility as per filter
 
     // starts :- remove employee from list of selected employees.
     removeEmployee(selectedEmployee): void {
@@ -153,15 +155,26 @@ export class ManagePlanComponent implements OnInit {
 
     // starts :- add employee to list of selected employees.
     addEmployee(): void {
-        let temporaryEmployeeChoiceList = [];
-        this.appliedEmployeeChoiceList.forEach((employee) => {
-            employee.name.toLowerCase().startsWith(this.filter.toLowerCase()) ? null : temporaryEmployeeChoiceList.push(employee);
-        });
-        this.currentEmployeeChoiceList.forEach((employee) => temporaryEmployeeChoiceList.push(employee));
-        temporaryEmployeeChoiceList.sort((employee1, employee2) => employee1.name.localeCompare(employee2.name));
+        this.currentEmployeeChoiceList.sort((employee1, employee2) => employee1.name.localeCompare(employee2.name));
         this.filter = "";
-        this.appliedEmployeeChoiceList = this.currentEmployeeChoiceList = temporaryEmployeeChoiceList;
+        this.appliedEmployeeChoiceList = [...this.currentEmployeeChoiceList];
         this.updateEmployeeChoiceList();
     }
     // ends :- add employee to list of selected employees.
+
+    // starts :- function to check if any employee satisfies the filter
+    isSearchEmpty(): boolean {
+        return this.currentEmployeeChoiceList.filter(employee => employee.name.toLowerCase().startsWith(this.filter.toLowerCase())).length == 0;
+    }
+    // ends :- function to check if any employee satisfies the filter
+
+    // starts :- function to check if employee belongs to other leave plan.
+    doesEmployeeBelongToOtherLeavePlan(employee, leavePlanId): boolean {
+        return this.leavePlanToEmployeeList.find(
+            (leavePlanToEmployee) => leavePlanToEmployee.parentEmployee === employee.id && leavePlanToEmployee.parentSchoolLeavePlan !== leavePlanId
+        )
+            ? true
+            : false;
+    }
+    // ends :- function to check if employee belongs to other leave plan.
 }

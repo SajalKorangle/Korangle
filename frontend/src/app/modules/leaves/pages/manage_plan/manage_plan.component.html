@@ -182,15 +182,17 @@
                                         <div style="width: 100%; padding: 5px; position: sticky; top: 0; z-index: 1; background: white">
                                             <mat-form-field appearance="outline" style="width: 100%">
                                                 <mat-label>Search Employee</mat-label>
-                                                <input [(ngModel)]="filter" (keyup)="updateEmployeeChoiceList()" matInput placeholder="Enter Employee Name" />
+                                                <input [(ngModel)]="filter" (keydown)="$event.stopPropagation()" (keyup)="updateEmployeeChoiceList()" matInput placeholder="Enter Employee Name" />
                                             </mat-form-field>
                                         </div>
-                                        <mat-option *ngFor="let employee of filteredEmployeeChoiceList" [value]="employee">
+                                        <mat-option *ngFor="let employee of filteredEmployeeChoiceList" [value]="employee" [ngStyle]="{'display': getEmployeeOptionVisibility(employee)}">
                                             {{ employee.name }}
                                         </mat-option>
+                                        <mat-option value="null" style="display: none;" aria-disabled="true"></mat-option>
+                                        <div *ngIf="isSearchEmpty() && availableEmployeeChoiceList.length != 0" style="text-align: center; width: 100%; padding: 10px" id="noEmployeeMessage"> No Employee found. </div>
+                                        <div *ngIf="availableEmployeeChoiceList.length == 0" style="text-align: center; width: 100%; padding: 10px" id="noEmployeeMessage"> All Employees are assigned with a Leave Plan. </div>
                                     </mat-select>
                                 </mat-form-field>
-
                                 <!-- starts :- accept or reject the changes for employees. -->
                                 <span *ngIf="employeeChoiceList.length !== 0 && currentEmployeeChoiceList !== appliedEmployeeChoiceList"
                                     class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: green"
