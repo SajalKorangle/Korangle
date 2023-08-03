@@ -145,7 +145,6 @@ export class ManageTemplatesServiceAdapter {
         if (confirm('Are you sure want to delete this Template?')) {
             this.vm.stateKeeper.isLoading = true;
             let setting = this.vm.backendData.selectedPageEventSettingsList.find(a => a.parentSMSTemplate == template.id);
-            const value = await new Query().filter({ id: setting.id }).deleteObjectList({ sms_app: 'SMSEventSettings' });
             this.vm.backendData.selectedPageEventSettingsList = this.vm.backendData.selectedPageEventSettingsList.filter(a => a.id != setting.id);
             const secondValue = await new Query().filter({ id: template.id }).deleteObjectList({ sms_app: 'SMSTemplate' });
             this.vm.backendData.selectedPageTemplateList = this.vm.backendData.selectedPageTemplateList.filter(a => a.id != template.id);
