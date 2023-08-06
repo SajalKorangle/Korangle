@@ -26,10 +26,6 @@
     border-left: none;
 }
 
-redBackground {
-    background-color: red;
-}
-
 .nowShow {
     background-color: red;
 }
@@ -69,4 +65,14 @@ input {
     height: 18px;
     -webkit-animation: spin 2s linear infinite; /* Safari */
     animation: spin 2s linear infinite;
+}
+
+.example-viewport {
+    height: 80vh;
+    width: 100%;
+    border: none;
+}
+
+td {
+    position: relative;
 }

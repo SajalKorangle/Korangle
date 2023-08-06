@@ -1,10 +1,10 @@
-<div class="card-content" *ngIf="!selectedFeeReceiptBook">
-    <div class="col-sm-12">
+<div class="card-content">
+
+    <div class="col-sm-12" *ngIf="!selectedFeeReceiptBook && !isInitialLoading">
         Please activate at least one receipt book from 'Add Receipt Book' page!!!
     </div>
-</div>
-<div class="card-content" *ngIf="selectedFeeReceiptBook">
-    <div class="row main-row">
+
+    <div class="row main-row" *ngIf="selectedFeeReceiptBook && !isInitialLoading">
         <div [hidden]="searchBy == searchFilterList[0]" class="col-md-7">
             <parent-student-filter
                 [user]="user"
@@ -18,7 +18,7 @@
         <div *ngIf="searchBy == searchFilterList[0]" class="col-md-2">
             <mat-form-field style="width: 100%">
                 <mat-select placeholder="Select Receipt Book" [(ngModel)]="selectedFeeReceiptBook">
-                    <mat-option *ngFor="let feeReceiptBook of feeReceiptBookList" [value]="feeReceiptBook">
+                    <mat-option *ngFor="let feeReceiptBook of activeFeeReceiptBookList" [value]="feeReceiptBook">
                         {{ feeReceiptBook.name }} ({{ feeReceiptBook.receiptNumberPrefix }})
                     </mat-option>
                 </mat-select>
@@ -61,6 +61,7 @@
             </div>
         </ng-container>
     </div>
+
     <ng-container *ngIf="!isLoading && showReceipts">
         <ng-container *ngIf="feeReceiptList">
             <div class="row" style="margin-bottom: 30px">
@@ -146,7 +147,7 @@
                                 <button
                                     type="button"
                                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                                    *ngIf="!feeReceipt.cancelled"
+                                    *ngIf="!feeReceipt.cancelled && isFeeReceiptBookActiveForThisFeeReceipt(feeReceipt)"
                                     style="float: right; margin-right: 20px"
                                     matTooltip="Cancel the receipt"
                                     tooltip-position="right"
@@ -161,6 +162,10 @@
                                 <span *ngIf="feeReceipt.cancelledRemark">
                                     Due to <strong>{{ feeReceipt.cancelledRemark }}</strong></span
                                 >
+                            </span>
+                            <span style="color: grey" *ngIf="!isFeeReceiptBookActiveForThisFeeReceipt(feeReceipt)">
+                                If you want to cancel this fee receipt then,
+                                please activate it's fee receipt book from "Add Receipt Book" page.
                             </span>
                         </mat-card>
                     </ng-container>
@@ -181,7 +186,8 @@
         </ng-container>
     </ng-container>
 
-    <ng-container *ngIf="isLoading">
+    <ng-container *ngIf="isInitialLoading || isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>
     </ng-container>
+
 </div>

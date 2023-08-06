@@ -14,7 +14,7 @@ export class CancelFeeReceiptServiceAdapter {
 
     //initialize data
     initializeData(): void {
-        this.vm.isLoading = true;
+        this.vm.isInitialLoading = true;
 
         let employee_list = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -24,20 +24,21 @@ export class CancelFeeReceiptServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 0
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 1
             this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list), // 2
-            new Query().filter({parentSchool: this.vm.user.activeSchool.dbId}).getObjectList({fees_third_app: 'FeeReceiptBook'}), // 3
+            new Query().filter({parentSchool: this.vm.user.activeSchool.dbId}).orderBy('id').getObjectList({fees_third_app: 'FeeReceiptBook'}), // 3
         ]).then(
             (value) => {
                 this.vm.classList = value[0];
                 this.vm.sectionList = value[1];
                 this.vm.employeeList = value[2];
                 this.vm.feeReceiptBookList = value[3];
+                this.vm.activeFeeReceiptBookList = this.vm.feeReceiptBookList.filter(feeReceiptBook => feeReceiptBook.active);
                 this.vm.selectedFeeReceiptBook = this.vm.feeReceiptBookList.find(feeReceiptBook => feeReceiptBook.active);
                 this.vm.searchBy = this.vm.searchFilterList[0];
 
-                this.vm.isLoading = false;
+                this.vm.isInitialLoading = false;
             },
             (error) => {
-                this.vm.isLoading = false;
+                this.vm.isInitialLoading = false;
             }
         );
     }
@@ -96,7 +97,6 @@ export class CancelFeeReceiptServiceAdapter {
             let studentListId = this.vm.selectedStudentList.map((a) => a.id).join();
             fee_receipt_list = {
                 parentSchool: this.vm.user.activeSchool.dbId,
-                parentFeeReceiptBook__active: 'true__boolean',
                 parentStudent__in: studentListId,
                 korangle__order: '-generationDateTime',
                 korangle__count: this.vm.receiptCount.toString() + ',' + (this.vm.receiptCount + this.vm.loadingCount).toString(),

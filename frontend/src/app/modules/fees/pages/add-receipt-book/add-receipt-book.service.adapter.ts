@@ -19,7 +19,13 @@ export class AddReceiptBookServiceAdapter {
 
         this.vm.isLoading = true;
 
-        let value = await this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: request_fee_type_data});
+        let value = await this.vm.genericService.getObjectList(
+            {fees_third_app: 'FeeReceiptBook'},
+            {
+                filter: request_fee_type_data,
+                order_by: ['-id']
+            }
+        );
         this.populateFeeReceiptBookList(value);
         this.vm.isLoading = false;
     }
@@ -35,23 +41,21 @@ export class AddReceiptBookServiceAdapter {
     }
 
     async createFeeReceiptBook() {
+        
         this.vm.feeReceiptBookNameToBeAdded = this.vm.feeReceiptBookNameToBeAdded.trim();
+        
         if (this.vm.feeReceiptBookNameToBeAdded === null || this.vm.feeReceiptBookNameToBeAdded == '') {
             alert('Name should be populated');
             return;
         }
 
-        let nameAlreadyExists = false;
-        this.vm.feeReceiptBookList.every((feeReceiptBook) => {
-            if (feeReceiptBook.name === this.vm.feeReceiptBookNameToBeAdded) {
-                nameAlreadyExists = true;
-                return false;
-            }
-            return true;
-        });
-
-        if (nameAlreadyExists) {
+        if(this.vm.htmlRenderer.doesNameAlreadyExists()) {
             alert('Name already Exists');
+            return;
+        }
+
+        if(this.vm.htmlRenderer.doesReceiptNumberPrefixAlreadyExists()) {
+            alert('Receipt Number Prefix already Exists');
             return;
         }
 
@@ -66,8 +70,8 @@ export class AddReceiptBookServiceAdapter {
         let value = await this.vm.genericService.createObject({fees_third_app: 'FeeReceiptBook'}, data);
 
         this.addToFeeReceiptBookList(value);
-        this.vm.feeReceiptBookNameToBeAdded = null;
-        this.vm.feeReceiptBookReceiptNumberPrefixToBeAdded = null;
+        this.vm.feeReceiptBookNameToBeAdded = '';
+        this.vm.feeReceiptBookReceiptNumberPrefixToBeAdded = '';
         this.vm.isLoading = false;
     }
 
@@ -76,7 +80,7 @@ export class AddReceiptBookServiceAdapter {
         feeReceiptBook['newReceiptNumberPrefix'] = feeReceiptBook['receiptNumberPrefix'];
         feeReceiptBook['newActive'] = feeReceiptBook['active'];
         feeReceiptBook['updating'] = false;
-        this.vm.feeReceiptBookList.push(feeReceiptBook);
+        this.vm.feeReceiptBookList.splice(0,0,feeReceiptBook);
     }
 
     // Update fee receipt book
@@ -89,17 +93,13 @@ export class AddReceiptBookServiceAdapter {
             return;
         }
 
-        let nameAlreadyExists = false;
-        this.vm.feeReceiptBookList.every((item) => {
-            if (item.name === feeReceiptBook.newName && item.id !== feeReceiptBook.id) {
-                nameAlreadyExists = true;
-                return false;
-            }
-            return true;
-        });
-
-        if (nameAlreadyExists) {
+        if (this.vm.htmlRenderer.doesNameAlreadyExists(feeReceiptBook)) {
             alert('Name already Exists');
+            return;
+        }
+
+        if (this.vm.htmlRenderer.doesReceiptNumberPrefixAlreadyExists(feeReceiptBook)) {
+            alert('Receipt number prefix already Exists');
             return;
         }
 

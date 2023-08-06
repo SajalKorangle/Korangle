@@ -85,7 +85,7 @@ export class PayFeesServiceAdapter {
             this.vm.paymentService.getObject(this.vm.paymentService.school_merchant_account, {parentSchool: schoolId}), // 13
             this.vm.genericService.getObjectList({ fees_third_app: 'FeeReceiptOrder' }, { filter: { parentSchool: schoolId } }), // 14
             modeOfPaymentQuery, //15
-            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: schoolId}}), // 16
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: schoolId}, order_by: ['id']}), // 16
         ]).then(
             (value) => {
 

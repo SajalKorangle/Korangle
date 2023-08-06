@@ -1,55 +1,5 @@
 <div class="card-content">
     <ng-container *ngIf="!isLoading">
-        <table class="table table-hover" *ngIf="feeReceiptBookList.length > 0">
-            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                <tr>
-                    <th>S No.</th>
-                    <th>Name</th>
-                    <th>Receipt Number Prefix</th>
-                    <th>Active</th>
-                    <th>-</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let feeReceiptBook of feeReceiptBookList; let i = index">
-                    <td>{{ i + 1 }}.</td>
-                    <td>
-                        <input type="text" [(ngModel)]="feeReceiptBook.newName" [disabled]="feeReceiptBook.updating" />
-                    </td>
-                    <td>
-                        <input type="text" [(ngModel)]="feeReceiptBook.newReceiptNumberPrefix" [disabled]="feeReceiptBook.updating" />
-                    </td>
-                    <td>
-                        <mat-form-field>
-                            <mat-select
-                                placeholder="Active"
-                                [(ngModel)]="feeReceiptBook.newActive"
-                                [disabled]="feeReceiptBook.updating"
-                            >
-                                <mat-option [value]="true">Yes</mat-option>
-                                <mat-option [value]="false">No</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </td>
-                    <td>
-                        <button
-                            type="submit"
-                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                            [disabled]="htmlRenderer.isFeeReceiptBookUpdateDisabled(feeReceiptBook)"
-                            style="padding: 3px 8px"
-                            (click)="serviceAdapter.updateFeeReceiptBook(feeReceiptBook)"
-                        >
-                            Update
-                        </button>
-                        <div *ngIf="feeReceiptBook.updating" class="loader-custom"></div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <br /><br /><br />
-
-        <b>Add New Receipt Book Below :- </b><br />
 
         <table class="table table-hover">
             <tbody>
@@ -74,6 +24,58 @@
                 </tr>
             </tbody>
         </table>
+
+        <cdk-virtual-scroll-viewport itemSize="12" class="example-viewport">
+            <table class="table table-hover" *ngIf="feeReceiptBookList.length > 0">
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th>S No.</th>
+                        <th>Name</th>
+                        <th>Receipt Number Prefix</th>
+                        <th>Active</th>
+                        <th>-</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *cdkVirtualFor="let feeReceiptBook of feeReceiptBookList; let i = index">
+                        <tr>
+                            <td>{{ i + 1 }}.</td>
+                            <td>
+                                <input type="text" [(ngModel)]="feeReceiptBook.newName" [disabled]="feeReceiptBook.updating" />
+                            </td>
+                            <td>
+                                <input type="text" [(ngModel)]="feeReceiptBook.newReceiptNumberPrefix" [disabled]="feeReceiptBook.updating" />
+                            </td>
+                            <td>
+                                <mat-form-field>
+                                    <mat-select
+                                        placeholder="Active"
+                                        [(ngModel)]="feeReceiptBook.newActive"
+                                        [disabled]="feeReceiptBook.updating"
+                                    >
+                                        <mat-option [value]="true">Yes</mat-option>
+                                        <mat-option [value]="false">No</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <button
+                                    type="submit"
+                                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                                    [disabled]="htmlRenderer.isFeeReceiptBookUpdateDisabled(feeReceiptBook)"
+                                    style="padding: 3px 8px"
+                                    (click)="serviceAdapter.updateFeeReceiptBook(feeReceiptBook)"
+                                >
+                                    Update
+                                </button>
+                                <div *ngIf="feeReceiptBook.updating" class="loader-custom"></div>
+                            </td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </cdk-virtual-scroll-viewport>
+
     </ng-container>
 
     <ng-container *ngIf="isLoading">

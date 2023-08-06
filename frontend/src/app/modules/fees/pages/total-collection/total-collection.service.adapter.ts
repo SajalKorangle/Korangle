@@ -37,7 +37,7 @@ export class TotalCollectionServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}), // 4
             this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 5
             this.vm.genericService.getObject({employee_app: 'EmployeePermission'}, {filter: employee_permission_data}), // 6
-            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: this.vm.user.activeSchool.dbId}}), // 7
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: this.vm.user.activeSchool.dbId}, order_by: ['id']}), // 7
         ]).then(
             (value) => {
                 this.feeTypeList = value[0];

@@ -300,7 +300,7 @@ class FeeReceiptBook(models.Model):
 
     parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, related_name='feeReceiptBookList')
     name = models.TextField()
-    receiptNumberPrefix = models.TextField(blank=True, default='')
+    receiptNumberPrefix = models.TextField(default='')
     active = models.BooleanField(default=True) # whether to use in collect fees while generating receipt
 
     class Permissions(BasePermission):
@@ -309,7 +309,7 @@ class FeeReceiptBook(models.Model):
 
     class Meta:
         db_table = 'fee_receipt_book'
-        unique_together=('parentSchool', 'name')
+        unique_together=(('parentSchool', 'name'), ('parentSchool', 'receiptNumberPrefix'))
 
 @receiver(post_save, sender=School)
 def SchoolCreationHandler(sender, instance, created, **kwargs):

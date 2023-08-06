@@ -66,7 +66,7 @@ export class CollectFeeServiceAdapter {
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request), // 5
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), // 6
             this.vm.genericService.getObjectList({ fees_third_app: 'FeeSchoolSettings' }, {filter: {parentSchool: this.vm.user.activeSchool.dbId}}), // 7
-            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: schoolId}}), // 8
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: schoolId}, order_by: ['id']}), // 8
         ]);
         this.vm.feeTypeList = value[0];
         this.vm.busStopList = value[1];

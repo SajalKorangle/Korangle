@@ -13,7 +13,15 @@ export class AddReceiptBookHtmlRenderer {
 
     isAddButtonDisabled(): boolean {
         let feeReceiptBookNameToBeAdded = this.vm.feeReceiptBookNameToBeAdded.trim();
-        if (feeReceiptBookNameToBeAdded === null || feeReceiptBookNameToBeAdded == '') {
+        if (
+            feeReceiptBookNameToBeAdded === null ||
+            feeReceiptBookNameToBeAdded == '' ||
+            this.doesNameAlreadyExists() ||
+            this.doesReceiptNumberPrefixAlreadyExists()
+        ) {
+            return true;
+        }
+        if (this.doesNameAlreadyExists() || this.doesReceiptNumberPrefixAlreadyExists()) {
             return true;
         }
         return false;
@@ -28,11 +36,51 @@ export class AddReceiptBookHtmlRenderer {
             ) ||
             feeReceiptBook.updating ||
             feeReceiptBook.newName === null ||
-            feeReceiptBook.newName == ''
+            feeReceiptBook.newName == '' ||
+            this.doesNameAlreadyExists(feeReceiptBook) ||
+            this.doesReceiptNumberPrefixAlreadyExists(feeReceiptBook)
         ) {
             return true;
         }
         return false;
+    }
+
+    doesNameAlreadyExists(feeReceiptBook: any = null): boolean {
+
+        let nameAlreadyExists = false;
+
+        let id  = feeReceiptBook ? feeReceiptBook.id : null;
+        let name = feeReceiptBook ? feeReceiptBook.name : this.vm.feeReceiptBookNameToBeAdded;
+
+        this.vm.feeReceiptBookList.every((feeReceiptBook) => {
+            if (feeReceiptBook.name === name && feeReceiptBook.id != id) {
+                nameAlreadyExists = true;
+                return false;
+            }
+            return true;
+        });
+
+        return nameAlreadyExists;
+
+    }
+
+    doesReceiptNumberPrefixAlreadyExists(feeReceiptBook: any = null): boolean {
+
+        let receiptNumberPrefixAlreadyExists = false;
+
+        let id  = feeReceiptBook ? feeReceiptBook.id : null;
+        let receiptNumberPrefix = feeReceiptBook ? feeReceiptBook.receiptNumberPrefix : this.vm.feeReceiptBookReceiptNumberPrefixToBeAdded;
+
+        this.vm.feeReceiptBookList.every((feeReceiptBook) => {
+            if (feeReceiptBook.receiptNumberPrefix === receiptNumberPrefix && feeReceiptBook.id != id) {
+                receiptNumberPrefixAlreadyExists = true;
+                return false;
+            }
+            return true;
+        });
+
+        return receiptNumberPrefixAlreadyExists;
+
     }
 
 }

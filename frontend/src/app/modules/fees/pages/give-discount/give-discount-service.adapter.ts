@@ -39,7 +39,7 @@ export class GiveDiscountServiceAdapter {
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
             this.vm.genericService.getObjectList({employee_app: 'Employee'}, {filter: employee_list}), // 2
             this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 3
-            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: schoolId}}), // 4
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: schoolId}, order_by: ['id']}), // 4
         ]).then(
             (value) => {
                 this.vm.feeTypeList = value[0];

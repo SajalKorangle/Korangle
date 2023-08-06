@@ -28,6 +28,7 @@ export class CancelFeeReceiptComponent implements OnInit {
 
     feeReceiptList: any;
     feeReceiptBookList: any;
+    activeFeeReceiptBookList: any;
     subFeeReceiptList = [];
     studentList = [];
     studentSectionList = [];
@@ -46,6 +47,7 @@ export class CancelFeeReceiptComponent implements OnInit {
     selectedFeeReceiptBook: any;
     receiptCount = 0;
     loadingCount = 6;
+    isInitialLoading = false;
     isLoading = false;
     searchBy: any;
     isStudentListLoading = false;
@@ -200,5 +202,11 @@ export class CancelFeeReceiptComponent implements OnInit {
 
     isMobile(): boolean {
         return isMobile();
+    }
+
+    isFeeReceiptBookActiveForThisFeeReceipt(feeReceipt: any): boolean {
+        return this.feeReceiptBookList.find(feeReceiptBook => {
+            return feeReceiptBook.id == feeReceipt.parentFeeReceiptBook;
+        }).active;
     }
 }
