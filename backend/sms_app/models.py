@@ -64,11 +64,34 @@ def sms_id_delete_check(sender, instance, **kwargs):
     try:
         sms_id = SMSId.objects.get(id=instance_dict['parentSMSId_id'])
         sms_id_school_sibling_list_length = SMSIdSchool.objects.filter(parentSMSId=sms_id).count()
+        
+        SMSEventSettings.objects.filter(
+            parentSchool=instance_dict['parentSchool_id'],
+            parentSMSTemplate__parentSMSId=sms_id
+        ).delete()
+
         if sms_id_school_sibling_list_length == 0:
             print('Parent SMS ID Deleted')
             sms_id.delete()
     except SMSIdSchool.DoesNotExist:
         print('SMS ID not deleted because another school is using it')
+
+
+class SMSTemplate(models.Model):
+    parentSMSId = models.ForeignKey(SMSId, on_delete=models.CASCADE, null=False, verbose_name='parentSenderId')
+    createdDate = models.DateField(null=False, auto_now_add=True, verbose_name='createdDate')
+
+    templateId = models.TextField(null=False, verbose_name='templateId')
+    templateName = models.TextField(null=False, verbose_name='templateName')
+    rawContent = models.TextField(null=False, verbose_name='rawContent')
+    mappedContent = models.TextField(null=True, verbose_name='mappedContent', blank=True)
+
+    class Permissions(BasePermission):
+        RelationsToSchool = []
+        RelationsToStudent = []
+
+    class Meta:
+        db_table = 'sms_template'
 
 
 class SMS(models.Model):
@@ -127,10 +150,21 @@ class SMS(models.Model):
     # SMSId
     parentSMSId = models.ForeignKey(SMSId, on_delete=models.SET_NULL, null=True, verbose_name='smsId')
 
+    # SMSTemplate
+    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.SET_NULL, null=True, verbose_name='smsTemplate')
+
     # scheduledSMS
     scheduledDateTime = models.DateTimeField(null=True)
 
     smsGateWayHubVendor = models.BooleanField(null=False, default=False)
+
+    msgClubVendor = models.BooleanField(null=False, default=False)
+
+    # payload
+    payload = models.TextField(null=True, verbose_name='payload')
+
+    # response
+    response = models.TextField(null=True, verbose_name='payload')
 
     def __str__(self):
         return str(self.parentSchool.pk) + ' - ' + self.parentSchool.name + ' --- ' + str(self.count)
@@ -143,11 +177,14 @@ class SMS(models.Model):
 def sms_sender(sender, created, instance, **kwargs):
     if created:
         response = {'remark': 'ONLY NOTIFICATION', 'requestId': None,
-                    'mobileNumberContentJson': instance.mobileNumberContentJson}
-        from sms_app.business.send_sms import send_sms
+                    'mobileNumberContentJson': instance.mobileNumberContentJson, 'payload': None, 'response': None}
+        from sms_app.business.send_sms import send_sms_via_smsgatewayhub, send_sms_via_msgclub
         try:
             if instance.count > 0:
-                response = send_sms(instance.__dict__)
+                #response = send_sms_via_smsgatewayhub(instance.__dict__)
+                #instance.smsGateWayHubVendor = True
+                response = send_sms_via_msgclub(instance.__dict__)
+                instance.msgClubVendor = True
                 # RequestId will become -1 if the sms balance is low
                 instance.sentStatus = 'FAILED' if response['requestId'] == -1 else 'SUCCESS'
         except Exception as e:
@@ -155,12 +192,13 @@ def sms_sender(sender, created, instance, **kwargs):
             # Whenever exception occurs in the function we are saving the remark
             # The sent status is by default PENDING so it will remain the same, support team can confirm the sent
             response = {'remark': 'EXCEPTION OCCURRED', 'requestId': -1,
-                        'mobileNumberContentJson': instance.mobileNumberContentJson}
+                        'mobileNumberContentJson': instance.mobileNumberContentJson, 'payload': None, 'response': None}
 
         instance.requestId = response['requestId']
         instance.remark = response['remark']
         instance.mobileNumberContentJson = response['mobileNumberContentJson']
-        instance.smsGateWayHubVendor = True
+        instance.payload = response['payload']
+        instance.response = response['response']
         instance.save()
 
 
@@ -262,27 +300,10 @@ def SMSRefundHandler(sender, instance, **kwargs):
             instance.status = 'Refund Initiated'
 
 
-class SMSTemplate(models.Model):
-    parentSMSId = models.ForeignKey(SMSId, on_delete=models.CASCADE, null=False, verbose_name='parentSenderId')
-    createdDate = models.DateField(null=False, auto_now_add=True, verbose_name='createdDate')
-
-    templateId = models.TextField(null=False, verbose_name='templateId')
-    templateName = models.TextField(null=False, verbose_name='templateName')
-    rawContent = models.TextField(null=False, verbose_name='rawContent')
-    mappedContent = models.TextField(null=True, verbose_name='mappedContent', blank=True)
-
-    class Permissions(BasePermission):
-        RelationsToSchool = []
-        RelationsToStudent = []
-
-    class Meta:
-        db_table = 'sms_template'
-
-
 class SMSEventSettings(models.Model):
     SMSEventId = models.IntegerField(null=False, default=0)
     parentSchool = models.ForeignKey(School, on_delete=models.PROTECT, null=False, verbose_name='parentSchool')
-    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.SET_NULL, null=True,
+    parentSMSTemplate = models.ForeignKey(SMSTemplate, on_delete=models.CASCADE, null=True,
                                           verbose_name='parentSMSTemplate')
     sendUpdateTypeId = models.IntegerField(null=False, default=0)
     customNotificationContent = models.TextField(null=True, verbose_name='customNotificationContent')

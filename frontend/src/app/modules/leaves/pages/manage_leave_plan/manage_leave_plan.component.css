@@ -11,3 +11,7 @@
     flex-direction: row;
     flex-wrap: wrap;
 }
+.flexCol {
+    display: flex;
+    flex-direction: column;
+}

@@ -5,7 +5,7 @@
         <input
             type="file"
             multiple="false"
-            accept=".csv"
+            accept=".xlsx"
             (change)="handleExcelFile($event)"
             (click)="clearData($event)"
             style="display: block; font-size: 1.6rem"
@@ -84,7 +84,11 @@
             <tbody>
                 <ng-container *ngFor="let row of bookList; index as rc">
                     <tr *ngIf="isRowVisible(rc)">
-                        <td *ngFor="let header of columnHeader; index as i" [class.bgDanger]="errorCells[rc + ' ' + i]">
+                        <td
+                            *ngFor="let header of columnHeader; index as i"
+                            [class.bgDanger]="errorCells[rc + ' ' + i]"
+                            [matTooltip]="errorCells[rc + ' ' + i]"
+                        >
                             {{ row[i] }}
                         </td>
                     </tr>

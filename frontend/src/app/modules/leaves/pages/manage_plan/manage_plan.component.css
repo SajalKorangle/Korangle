@@ -107,6 +107,10 @@
 .responsiveText {
     display: block;
 }
+#noEmployeeMessage:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.05);
+}
 @media (max-width: 650px) {
     .responsiveText {
         display: none;
