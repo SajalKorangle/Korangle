@@ -5,6 +5,8 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 
+import json
+
 
 ############## SMS Old ##############
 from sms_app.models import SMS, SMSId, SMSTemplate, SMSEventSettings, SMSIdSchool, SMSPurchase
@@ -23,12 +25,18 @@ class SMSOldListView(APIView):
         return get_sms_list(data)
 
 
-from .business.sms_delivery_report import handle_sms_delivery_report
+from .business.sms_delivery_report import handle_sms_delivery_report, handle_msg_club_delivery_report
 
 
 def handle_sms_delivery_report_view(request):
     data_from_vendor = request.body.decode('utf-8')
     handle_sms_delivery_report(data_from_vendor)
+    return HttpResponse(status=201)
+
+
+def handle_msg_club_delivery_report_view(request):
+    data = json.loads(request.body.decode('utf-8'))
+    handle_msg_club_delivery_report(data)
     return HttpResponse(status=201)
 
 

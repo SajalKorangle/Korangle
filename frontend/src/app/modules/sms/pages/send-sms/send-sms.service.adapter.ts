@@ -54,7 +54,7 @@ export class SendSmsServiceAdapter {
             }),
             this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, { //7
                 parentStudentParameter__parentSchool: this.vm.user.activeSchool.dbId,
-                parentStudentParamter__parameterType: 'FILTER',
+                parentStudentParameter__parameterType: 'FILTER',
             }),
             this.vm.smsService.getObjectList(this.vm.smsService.sms_id_school, { parentSchool: this.vm.user.activeSchool.dbId }), //8
             this.vm.smsService.getObjectList(this.vm.smsService.sms_event, {
