@@ -28,7 +28,10 @@ export class MyCollectionServiceAdapter {
             this.vm.employeeService.getObject(this.vm.employeeService.employees, employee_data), // 1
             this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 2
             this.vm.classService.getObjectList(this.vm.classService.division, {}), // 3
-            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: { parentSchool: this.vm.user.activeSchool.dbId}, order_by: ['id']}), // 4
+            this.vm.genericService.getObjectList(
+                {fees_third_app: 'FeeReceiptBook'},
+                {filter: { parentSchool: this.vm.user.activeSchool.dbId}, order_by: ['id']}
+            ), // 4
         ]).then(
             (value) => {
                 this.vm.feeTypeList = value[0];

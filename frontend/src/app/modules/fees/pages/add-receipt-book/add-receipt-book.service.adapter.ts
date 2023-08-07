@@ -41,20 +41,20 @@ export class AddReceiptBookServiceAdapter {
     }
 
     async createFeeReceiptBook() {
-        
+
         this.vm.feeReceiptBookNameToBeAdded = this.vm.feeReceiptBookNameToBeAdded.trim();
-        
+
         if (this.vm.feeReceiptBookNameToBeAdded === null || this.vm.feeReceiptBookNameToBeAdded == '') {
             alert('Name should be populated');
             return;
         }
 
-        if(this.vm.htmlRenderer.doesNameAlreadyExists()) {
+        if (this.vm.htmlRenderer.doesNameAlreadyExists()) {
             alert('Name already Exists');
             return;
         }
 
-        if(this.vm.htmlRenderer.doesReceiptNumberPrefixAlreadyExists()) {
+        if (this.vm.htmlRenderer.doesReceiptNumberPrefixAlreadyExists()) {
             alert('Receipt Number Prefix already Exists');
             return;
         }
@@ -80,7 +80,7 @@ export class AddReceiptBookServiceAdapter {
         feeReceiptBook['newReceiptNumberPrefix'] = feeReceiptBook['receiptNumberPrefix'];
         feeReceiptBook['newActive'] = feeReceiptBook['active'];
         feeReceiptBook['updating'] = false;
-        this.vm.feeReceiptBookList.splice(0,0,feeReceiptBook);
+        this.vm.feeReceiptBookList.splice(0, 0, feeReceiptBook);
     }
 
     // Update fee receipt book
