@@ -13,7 +13,11 @@
 
     <div class="main-content">
         <div class="container-fluid">
+
+            <!-- Starts :-  When user is connected to school using school colors -->
             <div class="card" *ngIf="user.section && user.activeSchool" style="min-height: 100%; margin: 25px 0 0 0">
+
+                <!-- Starts :- Page Header -->
                 <div
                     class="card-header hidden-xs hidden-sm"
                     [attr.data-background-color]="user.activeSchool.primaryThemeColor"
@@ -21,35 +25,59 @@
                     <div class="card-header-part1">
                         <h4 class="title">{{ user.section.title }} - {{ user.section.subTitle }}</h4>
                         <div style="display: flex">
-                            <span style="font-size: 16px">{{ getExpiryStatement() }}</span>
-                            <a
+                            <span style="font-size: 16px">{{ getWarningStatement() }}</span>
+                            <!-- a
                                 *ngIf="user.section.videoUrl"
                                 style="text-decoration: none; cursor: pointer"
                                 (click)="showTutorial(user.section.videoUrl)"
                             >
                                 <i class="material-icons playButtonShadow">play_circle_outline</i>
-                            </a>
+                            </a -->
                         </div>
                     </div>
                 </div>
-                <router-outlet></router-outlet>
-            </div>
+                <!-- Ends :- Page Header -->
 
+                <!-- Starts :- Showing Blocked Message for selected pages if school bill is past over due -->
+                <ng-container *ngIf="user.section.blockWhenSuspended && user.activeSchool.isSuspended; else gowithrouter">
+                    <div class='card-content'>
+                        This page is blocked due to pending bill/s.
+                    </div>                    
+                </ng-container>
+                <!-- Ends :- Showing Blocked Message for selected pages if school bill is past over due -->
+
+                <!-- Starts :- Router -->
+                <ng-template #gowithrouter>
+                    <router-outlet></router-outlet>
+                </ng-template>
+                <!-- Ends :- Router -->
+
+            </div>
+            <!-- Ends :-  When user is connected to school using school colors -->
+
+            <!-- Starts :-  When user is not connected to school using default colors -->
             <div class="card" *ngIf="user.section && !user.activeSchool" style="min-height: 100%">
+
+                <!-- Starts :- Page Header -->
                 <div class="card-header hidden-xs hidden-sm" [attr.data-background-color]="'green'">
                     <div class="card-header-part1">
                         <h4 class="title">{{ user.section.title }} - {{ user.section.subTitle }}</h4>
-                        <a
+                        <!-- a
                             *ngIf="user.section.videoUrl"
                             style="text-decoration: none; cursor: pointer"
                             (click)="showTutorial(user.section.videoUrl)"
                         >
                             <i class="material-icons playButtonShadow">play_circle_outline</i>
-                        </a>
+                        </a -->
                     </div>
                 </div>
+                <!-- Ends :- Page Header -->
+
                 <router-outlet></router-outlet>
+
             </div>
+            <!-- Ends :-  When user is not connected to school using default colors -->
+
         </div>
     </div>
 </div>

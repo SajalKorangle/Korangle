@@ -1,0 +1,44 @@
+<!-- Starts:- Modal Header -->
+<h2 *ngIf="!isMobile() else MobileHeader" mat-dialog-title style="margin: 0px">
+    <span>Pending Bill ></span>
+</h2>
+<ng-template #MobileHeader>
+    <h4 mat-dialog-title style="margin: 0px">
+        <span>Pending Bill ></span><br />
+    </h4>
+</ng-template>
+<!-- Ends:- Modal Header -->
+
+<!-- Starts:- Modal Content -->
+<mat-dialog-content>
+
+    <hr style="background-color: black;" />
+
+    <h3 *ngIf="!isMobile() else MobileEmployee" style="color: red">Your Bill is due</h3>
+
+    <ng-template #MobileEmployee>
+        <h5 style="color: red">Your Bill is due</h5>
+    </ng-template>
+
+    <span>
+        Hello,<br/><br/>
+        This is to inform you that we have yet to receive payment from yourselves for your pending bill.
+        We apologize for inconveniencing you, but it looks like we’re going to need your help to resolve this,
+        so you can continue using Korangle with uninterrupted services.
+        You can get the details and pay the bill from <i>Bill > Pay Bill page</i>.
+        We hope you understand.<br/><br/>
+        Thanks,<br/>
+        Team Korangle
+    </span>
+
+    <hr style="background-color: black;" />
+
+</mat-dialog-content>
+<!-- Ends:- Modal Content -->
+
+<!-- Starts:- Okay Button -->
+<div mat-dialog-actions style="color: white">
+    <button mat-button (click)="closeDialog()" class="btn" style="background-color: blue; margin-left: auto;"
+        cdkFocusInitial>Okay</button>
+</div>
+<!-- Ends:- Okay Button -->

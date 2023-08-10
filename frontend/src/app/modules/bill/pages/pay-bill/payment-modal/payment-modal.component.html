@@ -7,6 +7,8 @@
     </h4>
     <!-- Ends :- Displaying Dialog Header -->
 
+    <hr style="background-color: black;" />
+
     <!-- Starts :- User will select mode of payment from below -->
     <div>
         <mat-form-field>
@@ -56,7 +58,7 @@
     <!-- Ends :- Displaying Final Amount that needs to be paid by School -->
 
     <!-- Starts :- User will put down his email address here -->
-    <div>
+    <div style="margin-top: 22px;">
         <mat-form-field>
             <mat-label>Email</mat-label>
             <input required matInput [(ngModel)]="email" [pattern]="validatorRegex.email"
@@ -64,6 +66,8 @@
         </mat-form-field>
     </div>
     <!-- User Email Input Ends -->
+
+    <hr style="background-color: black;" />
 
     <!-- Starts :- User will click on this button for initiating payment -->
     <div  mat-dialog-actions>

@@ -16,10 +16,11 @@ import { MatDialogModule } from '@angular/material';
 import { SafePipe } from '../pipes/safe.pipe';
 import {YouTubePlayerModule} from '@angular/youtube-player';
 import { PaymentResponseDialogComponent } from './payment-response-dialog/payment-response-dialog.component';
+import { BillDueWarningModalComponent } from './bill-due-warning-modal/bill-due-warning-modal.component';
 
 @NgModule({
-    declarations: [NavbarComponent, SidebarComponent, LoadingSpinnerComponent, ModalVideoComponent, SafePipe, PaymentResponseDialogComponent, ],
-    entryComponents: [ModalVideoComponent],
+    declarations: [NavbarComponent, SidebarComponent, LoadingSpinnerComponent, ModalVideoComponent, BillDueWarningModalComponent, SafePipe, PaymentResponseDialogComponent, ],
+    entryComponents: [ModalVideoComponent, BillDueWarningModalComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -37,6 +38,7 @@ import { PaymentResponseDialogComponent } from './payment-response-dialog/paymen
         SidebarComponent,
         LoadingSpinnerComponent,
         ModalVideoComponent,
+        BillDueWarningModalComponent,
 
         CommonModule,
         FormsModule,

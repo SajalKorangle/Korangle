@@ -12,6 +12,8 @@ import { CommonFunctions } from './../../classes/common-functions';
 import { NotificationService } from '../../services/modules/notification/notification.service';
 import { unregisterForNotification } from '../../classes/common.js';
 import { Query } from '@services/generic/query';
+import { MatDialog } from '@angular/material/dialog';
+import { BillDueWarningModalComponent } from '@basic-components/bill-due-warning-modal/bill-due-warning-modal.component';
 
 declare const $: any;
 
@@ -47,6 +49,7 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
     constructor(
         private router: Router,
         private notificationService: NotificationService,
+        private dialog: MatDialog,
     ) {
         // We are using this routeReuseStrategy because the DashBoard Component should not re-render when changing pages.
         this.router.routeReuseStrategy.shouldReuseRoute = function (future: any, curr: any) {
@@ -82,6 +85,9 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
 
         // Change route if any unobserved event exist
         if (this.user.newRoute !== null) {
+
+            this.openBillDueWarningModal();
+
             this.router.navigateByUrl('/', { skipLocationChange: false }).then(() => {
                 this.router.navigateByUrl(
                     this.router.createUrlTree([Constants.dashBoardRoute + '/' + this.user.section.route + '/' + this.user.section.subRoute],
@@ -90,6 +96,9 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
             }).then(() => this.user.newRoute = null);
         }
         EmitterService.get('initialize-router').subscribe((value) => {
+
+            this.openBillDueWarningModal();
+
             // Navigating To '/' before any other route - because :
             // We have used routeReuseStrategy so if the url is same the page won't reload,
             // To overcome that case we are navigating to '/' first and then the corresponding route.
@@ -180,6 +189,19 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
         return this.user.session_list.find(session => {
             return session.id == this.user.activeSchool.currentSessionDbId;
         });
+    }
+
+    openBillDueWarningModal(): any {
+        if (this.user.activeSchool && this.user.activeSchool.showModalWarning) {
+            this.user.activeSchool.showModalWarning = false;
+            this.dialog.open(BillDueWarningModalComponent, {
+                //height: '80vh',
+                //width: '80vw',
+                data: {
+                    videoUrl: '',
+                },
+            });    
+        }
     }
 
 }

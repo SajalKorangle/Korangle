@@ -41,6 +41,8 @@ export class PayBillComponent implements OnInit {
 
     openPaymentDialog(bill: any): any {
         const dialogRef = this.dialog.open(PaymentModalComponent, {
+            minWidth: '50vw',
+            minHeight: '50vh',
             data: {
                 bill: bill,
                 modeOfPaymentList: this.modeOfPaymentList,

@@ -56,6 +56,9 @@ class Task(models.Model):
 
     parentFeatureFlag = models.ForeignKey(FeatureFlag, on_delete=models.SET_NULL, null=True, verbose_name='parentFeatureFlag')
 
+    # If True, then the page will be blocked when school account is suspended.
+    blockWhenSuspended = models.BooleanField(default=False)
+
     objects = TaskManager()
 
     def __str__(self):

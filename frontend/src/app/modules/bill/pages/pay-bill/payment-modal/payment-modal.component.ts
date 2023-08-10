@@ -88,8 +88,6 @@ export class PaymentModalComponent implements OnInit {
 
     async payBill() {
 
-        alert("Under Construction");
-
         // Data Validation Starts
         if (!this.email) {
             alert("Email is required");

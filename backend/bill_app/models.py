@@ -27,6 +27,32 @@ class Bill(models.Model):
     parentSchool = models.ForeignKey(School, related_name='schoolList', on_delete=models.CASCADE) # Bill will be paid by this school.
     amount = models.PositiveIntegerField(default=1) # Amount which needs to be paid.
 
+    # When was the bill added through django admin panel.
+    generationDateTime = models.DateTimeField(auto_now_add=True)
+
+    # Official Bill Date for clients
+    billDate = models.DateField(default=datetime.now)
+
+    # At what interval (in days) from bill date the page header warning should be shown
+    pageHeaderWarningInterval = models.IntegerField(null=True, default=0)
+
+    # At what interval (in days) from bill date the modal warning should be shown
+    modalWarningInterval = models.IntegerField(null=True, default=15)
+
+    # At What interval (in days) from bill date the software functionalities should be blocked
+    functionalityBlockedInterval = models.IntegerField(null=True, default=30)
+
+    # For some reason a bill is cancelled, but you still want to keep the data.
+    cancelledDate = models.DateField(null=True, blank=True)
+
+    # To keep the record when the bill was paid.
+    # Can be updated by software or manually both.
+    paidDate = models.DateTimeField(null=True, blank=True)
+
+    # To keep the pdf of bill
+    billPDF = models.FileField(null=True, blank=True)
+
+    '''
     # When the bill was added through django admin panel.
     # Will not be shown to school in list, but will be shown in bill PDF.
     generationDateTime = models.DateTimeField(auto_now_add=True)
@@ -63,6 +89,7 @@ class Bill(models.Model):
 
     # To keep the pdf of bill
     billPDF = models.FileField(null=True, blank=True)
+    '''
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool_id']
@@ -99,6 +126,7 @@ def BillOrderCompletionHandler(sender, instance, **kwargs):
                 return
 
 
+''' There is no refund method (through api) given by ease buzz
 @receiver(pre_save, sender=Order)
 def SMSRefundHandler(sender, instance, **kwargs):
     if (not instance._state.adding) and instance.status == 'Refund Pending':
@@ -115,5 +143,5 @@ def SMSRefundHandler(sender, instance, **kwargs):
             response = initiateRefund(instance.orderId, [], instance.amount)
             instance.refundId = response['refundId']
             instance.status = 'Refund Initiated'
-
+'''
 
