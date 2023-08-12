@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AttendanceComponent } from './attendance.component';
 import { PrintEmployeeAttendanceListComponent } from './print/print-employee-attendance-list/print-employee-attendance-list.component';
 import { PrintStudentAttendanceListComponent } from './print/print-student-attendance-list/print-student-attendance-list.component';
-import { PRINT_EMPLOYEE_ATTENDANCE, PRINT_STUDENT_ATTENDANCE } from '../../print/print-routes.constants';
+import { PRINT_EMPLOYEE_ATTENDANCE, PRINT_STUDENT_ATTENDANCE, PRINT_STUDENT_ATTENDANCE_COUNT } from '../../print/print-routes.constants';
 
 const routes: Routes = [
     {
@@ -28,6 +28,11 @@ const routes: Routes = [
         path: 'approve_leave',
         loadChildren: 'app/modules/attendance/pages/approve-leave/approve-leave.module#ApproveLeaveModule',
         data: { moduleName: 'attendance' },
+    },
+    {
+        path: 'count_student_attendance',
+        loadChildren: 'app/modules/attendance/pages/count-all-student-attendance/count-all-student-attendance.module#CountAllStudentAttendanceModule',
+        data: {moduleName: 'attendance' },
     },
     {
         path: '',

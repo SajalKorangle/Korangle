@@ -1,0 +1,59 @@
+<div class="card-content table-responsive">
+    <ng-container *ngIf="studentSectionList && studentSectionList.length > 0">
+        <ng-container *ngIf="!isInitialLoading">
+            <day-date
+                [formattedDateOutput]="true"
+                [initialValue]="initialDate"
+                (onDateSelected)="onDateSelected($event)"
+            ></day-date>&nbsp;&nbsp;
+            <button
+                type="submit"
+                style="padding: 3px 8px"
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                (click)="serviceAdapter.populateAttendanceList()"
+            >
+                GET
+            </button>
+        </ng-container>
+
+        <br class="visible-sm visible-xs" style="margin-bottom: 10px" />
+        <ng-container *ngIf="showStudentList && attendanceList && !isLoading">
+            <table class="table table-hover">
+                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                    <tr>
+                        <th>Class</th>
+                        <th style="text-align: center;">Present</th>
+                        <th style="text-align: center;">Absent</th>
+                        <th style="text-align: center;">Holiday</th>
+                        <th style="text-align: center;">Not Recorded</th>
+                        <th style="text-align: center;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <ng-container *ngFor="let class of attendanceList; let i = index">
+                            <ng-container *ngFor="let section of class | keyvalue;">
+                                <tr *ngIf="section.key !== 'name'">
+                                    <td >{{class.name}} - {{section.key}}</td>
+                                    <td align="center" >{{section.value.PRESENT}}</td>
+                                    <td align="center" >{{section.value.ABSENT}}</td>
+                                    <td align="center" >{{section.value.HOLIDAY}}</td>
+                                    <td align="center" >{{section.value.NOT_RECORDED}}</td>
+                                    <td align="center" >{{section.value.TOTAL}}</td>
+                                </tr>
+                            </ng-container>
+                        </ng-container>
+                </tbody>
+            </table>
+        </ng-container>
+        <ng-container *ngIf="showStudentList && attendanceList && attendanceList.length == 0">
+            No students in this class
+        </ng-container>
+    </ng-container>
+    <ng-container *ngIf="studentSectionList && studentSectionList.length === 0 && !isInitialLoading">
+        Please add students and record attendance to view the contents of this page
+    </ng-container>
+</div>
+
+<ng-container *ngIf="isLoading || isInitialLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
