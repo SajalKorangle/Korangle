@@ -12,11 +12,10 @@
             <thead style="color: rgba(255, 152, 0, 1);">
                 <tr>
                     <th>S No.</th>
-                    <th>Name</th>
+                    <th>Bill Date</th>
                     <th>Amount</th>
-                    <th>Due Date</th>
-                    <!-- th>Remark</th -->
-                    <!-- th>Document</th -->
+                    <th>Towards</th>
+                    <th>Bill</th>
                     <th></th>
                 </tr>
             </thead>
@@ -24,34 +23,36 @@
                 <tr *ngFor="let bill of unpaidBillList; let i = index;">
 
                     <td>{{i+1}}.</td>
-                    <td>{{bill.name}}</td> <!-- TODO: Implement Long to Short text pipe -->
-                    <td>Rs. {{bill.amount}}/-</td>
-                    <td>{{bill.dueDate | date: 'd MMM y'}}</td>
-                    <!-- td>{{bill.remark}}</td --> <!-- TODO: Implement Long to Short text pipe -->
-                    <!-- td>Document Path</td -->
+                    <td>{{bill.billDate | date: 'd MMM y'}}</td>
+                    <td>Rs. {{bill.amount | indianCurrency }}/-</td>
+                    <td matTooltip="{{bill.towards}}" >{{ bill.towards.length > 10 ? bill.towards.substring(0, 10) + '...' : bill.towards }}</td>
                     <td>
-                        <button
-                            type="submit"
-                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
-                            style="padding: 3px 8px"
-                            (click)="openPaymentDialog(bill)"
-                        >
-                            Pay
-                        </button>
+                        <img *ngIf="bill.billPDF"
+                            src="/assets/img/pdfIcon.png"
+                            style="width: 20px; cursor: pointer;"
+                            (click)="downloadFile(bill.billPDF)"/>
                     </td>
-                
+                    <td>
+                        <ng-container *ngIf="isOrderProcessing(bill); else showButton">
+                            Processing
+                        </ng-container>
+                        <ng-template #showButton>
+                            <button
+                                type="submit"
+                                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                                style="padding: 3px 8px"
+                                (click)="openPaymentDialog(bill)"
+                            >
+                                Pay
+                            </button>
+                        </ng-template>
+                    </td>
                 </tr>
-                
             </tbody>
     
         </table>
         <!-- Showing List of Unpaid Bills in table format Starts -->
     
-    
-        <!-- ng-container *ngFor="let bill of unpaidBillList">
-
-        </ng-container -->
-
     </ng-container>
     <!-- Showing List of Bills after Loading ends -->
 

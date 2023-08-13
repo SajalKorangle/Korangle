@@ -50,4 +50,24 @@ export class PayBillComponent implements OnInit {
         });
     }
 
+    isOrderProcessing(bill: any): boolean {
+        return bill.billOrderList.length > 0;
+    }
+
+    leftoverTimeForOrderProcessing(bill: any): any {
+        let currentDate = new Date();
+        let billOrderDate = new Date(bill.billOrderList[0].parentOrderInstance.dateTime);
+        let minutes = Math.floor((currentDate.getTime() - billOrderDate.getTime())%(60*60*1000)/(60*1000));
+        let seconds = Math.floor((currentDate.getTime() - billOrderDate.getTime())%(60*1000)/1000);
+        return minutes + ":" + seconds;
+    }
+
+    downloadFile(billPdfUrl: any) : void {
+        console.log(billPdfUrl);
+        let link = document.createElement('a');
+        link.href = billPdfUrl;
+        link.target = '_blank';
+        link.dispatchEvent(new MouseEvent('click'));
+    }
+
 }

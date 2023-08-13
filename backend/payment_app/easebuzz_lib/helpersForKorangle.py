@@ -47,7 +47,7 @@ def createSelfOrder(orderData, orderId):
     order = defaultdict(str, {
         "txnid": orderId,
         "amount": calculateAmount(orderData),
-        "productinfo": orderData["orderNote"][:45],
+        "productinfo": orderData["orderNote"][:38],
         "firstname": orderData["customerName"],
         "phone": orderData["customerPhone"],
         "email": orderData["customerEmail"],

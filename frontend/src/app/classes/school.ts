@@ -107,7 +107,7 @@ export class School {
                         (todaysDate.getTime() - Math.abs(billDate.getTime())) / (1000 * 60 * 60 * 24) > bill.pageHeaderWarningInterval;
                     this.showModalWarning = this.showModalWarning ||
                         (todaysDate.getTime() - Math.abs(billDate.getTime())) / (1000 * 60 * 60 * 24) > bill.modalWarningInterval;
-                    return !(this.isSuspended && this.showModalWarning);
+                    return !(this.showPageHeaderWarning && this.showModalWarning);
                 })
             }
 

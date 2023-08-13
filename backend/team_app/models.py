@@ -54,7 +54,7 @@ class Task(models.Model):
     parentBoard = models.ForeignKey(Board, on_delete=models.PROTECT, null=True, blank=True, verbose_name='parentBoard')
     videoUrl = models.TextField(null=True, verbose_name='videoUrl')
 
-    parentFeatureFlag = models.ForeignKey(FeatureFlag, on_delete=models.SET_NULL, null=True, verbose_name='parentFeatureFlag')
+    parentFeatureFlag = models.ForeignKey(FeatureFlag, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='parentFeatureFlag')
 
     # If True, then the page will be blocked when school account is suspended.
     blockWhenSuspended = models.BooleanField(default=False)

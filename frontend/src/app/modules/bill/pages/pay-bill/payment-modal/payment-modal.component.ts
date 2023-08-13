@@ -122,7 +122,7 @@ export class PaymentModalComponent implements OnInit {
                 origin: environment.DJANGO_SERVER,  // backend url api which will be hit by easebuzz to verify the completion of payment on their portal
                 searchParams: frontendReturnUrlParams.toString()
             },
-            orderNote: `bill payment of ${this.bill.name} for school with KID ${this.user.activeSchool.dbId}`,
+            orderNote: `bill payment of school with KID ${this.user.activeSchool.dbId}`,
             paymentMode: this.selectedModeOfPayment,
             orderTotalAmount: this.getTotalAmount(),
             billOrderList: [billOrder],
@@ -130,11 +130,10 @@ export class PaymentModalComponent implements OnInit {
 
         const newOrderResponse: any = await this.paymentService.createObject(this.paymentService.easebuzz_order_self, newOrder);
         if (newOrderResponse.success) {
-            this.isLoading = false;
             window.location.href = newOrderResponse.success;
         } else {
-            this.isLoading = false;
             alert("Unable to initiate payment request.");
+            this.isLoading = false;
         }
 
     }
