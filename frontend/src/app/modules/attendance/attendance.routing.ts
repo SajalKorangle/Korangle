@@ -6,6 +6,7 @@ import { AttendanceComponent } from './attendance.component';
 import { PrintEmployeeAttendanceListComponent } from './print/print-employee-attendance-list/print-employee-attendance-list.component';
 import { PrintStudentAttendanceListComponent } from './print/print-student-attendance-list/print-student-attendance-list.component';
 import { PRINT_EMPLOYEE_ATTENDANCE, PRINT_STUDENT_ATTENDANCE, PRINT_STUDENT_ATTENDANCE_COUNT } from '../../print/print-routes.constants';
+import { PrintStudentAttendanceCountComponent } from './print/print-student-attendance-count/print-student-attendance-count.component';
 
 const routes: Routes = [
     {
@@ -46,6 +47,10 @@ const routes: Routes = [
         path: PRINT_STUDENT_ATTENDANCE,
         component: PrintStudentAttendanceListComponent,
     },
+    {
+        path: PRINT_STUDENT_ATTENDANCE_COUNT,
+        component: PrintStudentAttendanceCountComponent,
+    }
 ];
 
 @NgModule({
