@@ -59,12 +59,12 @@ export class CountAllStudentAttendanceComponent implements OnInit {
         return headerValues;
     }
 
-    getDisplayInfo(divisionsAttendanceInfo: any){
+    getDisplayInfo(divisionsAttendanceInfo: any) {
         let result = [];
         Object.keys(divisionsAttendanceInfo).forEach(sections => {
-            if(sections !== 'name') {
+            if (sections !== 'name') {
                 let arr = [];
-                arr.push(divisionsAttendanceInfo['name'] +" "+ sections);
+                arr.push(divisionsAttendanceInfo['name'] + " " + sections);
                 arr.push(divisionsAttendanceInfo[sections]['PRESENT']);
                 arr.push(divisionsAttendanceInfo[sections]['ABSENT']);
                 arr.push(divisionsAttendanceInfo[sections]['HOLIDAY']);
@@ -95,6 +95,6 @@ export class CountAllStudentAttendanceComponent implements OnInit {
             studentAttendanceCountList : this.attendanceList,
             dateSelected : this.selectedDate
         };
-        return this.printService.navigateToPrintRoute(PRINT_STUDENT_ATTENDANCE_COUNT,{ user: this.user, value });
+        return this.printService.navigateToPrintRoute(PRINT_STUDENT_ATTENDANCE_COUNT, { user: this.user, value });
     }
 }

@@ -20,7 +20,7 @@ export class PrintStudentAttendanceCountComponent implements OnInit, AfterViewCh
     ) { }
 
     ngOnInit() {
-        const { user,value } = this.printService.getData();
+        const { user, value } = this.printService.getData();
         this.user = user;
         this.studentAttendanceCountList = value['studentAttendanceCountList'];
         this.viewChecked = false;
@@ -28,7 +28,7 @@ export class PrintStudentAttendanceCountComponent implements OnInit, AfterViewCh
     }
 
     ngAfterViewChecked(): void {
-        if(this.viewChecked === false){
+        if (this.viewChecked === false) {
             this.viewChecked = true;
             this.printService.print();
             this.studentAttendanceCountList = null;
