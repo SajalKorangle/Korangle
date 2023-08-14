@@ -38,6 +38,7 @@ class ColumnFilter {
     showPranNumber = false;
     showRemark = false;
     showIsNonSalariedEmployee = false;
+    showBankIFSCCode = false;
 }
 
 @Component({
@@ -198,6 +199,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showPranNumber ? headerValues.push('PRAN Number') : '';
         this.columnFilter.showRemark ? headerValues.push('Remark') : '';
         this.columnFilter.showIsNonSalariedEmployee ? headerValues.push('Is Non-Salaried Employee') : '';
+        this.columnFilter.showBankIFSCCode ? headerValues.push('Bank IFSC Code') : '';
 
         return headerValues;
     }
@@ -229,6 +231,7 @@ export class ViewAllComponent implements OnInit {
         this.columnFilter.showPranNumber ? employeeDisplay.push(employee.pranNumber) : '';
         this.columnFilter.showRemark ? employeeDisplay.push(employee.remark) : '';
         this.columnFilter.showIsNonSalariedEmployee ? employeeDisplay.push(employee.isNonSalariedEmployee) : '';
+        this.columnFilter.showBankIFSCCode ? employeeDisplay.push(employee.bankIfscCode) : '';
 
         return employeeDisplay;
     }

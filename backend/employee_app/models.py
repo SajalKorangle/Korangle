@@ -78,7 +78,7 @@ class Employee(models.Model):
     epfAccountNumber = models.TextField(null=True)
 
     # Pan No.
-    panNumber = models.TextField(null=True)
+    panNumber = models.TextField(null=True, blank=True)
 
     # Remark
     remark = models.TextField(null=True)

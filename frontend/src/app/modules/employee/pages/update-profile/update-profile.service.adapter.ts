@@ -167,6 +167,13 @@ export class UpdateProfileServiceAdapter {
             alert("Aadhar No. should be 12 digits");
             return;
         }
+
+        if ( this.vm.currentEmployeeProfile.bankIfscCode != null
+            && this.vm.currentEmployeeProfile.bankIfscCode.toString().length != 11) {
+            alert("Bank IFSC Code should be 11 digits");
+            return;
+        }
+
         this.vm.isLoading = true;
         let service_list = [];
 

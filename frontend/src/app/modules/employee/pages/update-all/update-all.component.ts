@@ -4,6 +4,7 @@ import { UpdateAllServiceAdapter } from './update-all.service.adapter';
 import { EmployeeService } from '../../../../services/modules/employee/employee.service';
 import { PARAMETER_TYPE_LIST } from 'app/classes/constants/parameter';
 import {formatDate} from '@angular/common';
+import { BankService } from '@services/bank.service';
 
 class ColumnHandle {
     name: any;
@@ -28,7 +29,7 @@ const BOOLEAN_LIST = ['true', 'false'];
     selector: 'app-update-all',
     templateUrl: './update-all.component.html',
     styleUrls: ['./update-all.component.css'],
-    providers: [EmployeeService],
+    providers: [EmployeeService, BankService],
 })
 export class UpdateAllComponent implements OnInit {
     user;
@@ -54,8 +55,8 @@ export class UpdateAllComponent implements OnInit {
         new ColumnHandle('Address', 'address', 'text', false, ''), // 16
         new ColumnHandle('Bank Name', 'bankName', 'text', false, ''), // 17
         new ColumnHandle('Bank Acc. No.', 'bankAccountNumber', 'text', false, ''), // 18
-        new ColumnHandle('Epf Acc. No.', 'epfAccountNumber', 'number', false, ''), // 19
-        new ColumnHandle('Bank IFSC Code', 'bankIfscCode', 'text', false, ''), // 20
+        new ColumnHandle('Bank IFSC Code', 'bankIfscCode', 'text', false, ''), // 19
+        new ColumnHandle('Epf Acc. No.', 'epfAccountNumber', 'number', false, ''), // 20
         new ColumnHandle('Month Salary', 'monthlySalary', 'number', false, ''), // 21
         new ColumnHandle('Pran No.', 'pranNumber', 'number', false, ''), // 22
         new ColumnHandle('Remark', 'remark', 'text', false, ''), // 23
@@ -75,7 +76,11 @@ export class UpdateAllComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public employeeService: EmployeeService, public cdRef: ChangeDetectorRef) { }
+    constructor(
+        public employeeService: EmployeeService,
+        public cdRef: ChangeDetectorRef,
+        public bankService: BankService,
+    ) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
@@ -90,6 +95,26 @@ export class UpdateAllComponent implements OnInit {
             return this.employeeParameterValueList.find(x => x.parentEmployee === employee.id && x.parentEmployeeParameter === parameter.id).value;
         } catch {
             return this.NULL_CONSTANT;
+        }
+    }
+
+    getBankName(employee, event) {
+        if (event === null || event === '') {
+            this.serviceAdapter.updateEmloyeeField('Bank Name', "bankName", employee, null, 'text');
+        }
+        else if (event.length != 11) {
+            return;
+        } else {
+            this.bankService.getDetailsFromIFSCCode(event.toString())
+            .then((value) => {
+                if (value === null) {
+                    alert('Please enter a valid IFSC code');
+                    return;
+                }
+                this.serviceAdapter.updateEmloyeeField('Bank IFSC Code', "bankIfscCode", employee, event, 'text');
+                this.serviceAdapter.updateEmloyeeField('Bank Name', "bankName", employee, value, 'text');
+            },
+            );
         }
     }
 

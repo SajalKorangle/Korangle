@@ -14,6 +14,7 @@ export const PRINT_EMPLOYEE_LIST = 'print-employee-list';
 //attendance
 export const PRINT_EMPLOYEE_ATTENDANCE = 'print-employee-attendance';
 export const PRINT_STUDENT_ATTENDANCE = 'print-student-attendance';
+export const PRINT_STUDENT_ATTENDANCE_COUNT = 'print-student-attendance-count';
 
 // Report Card
 
