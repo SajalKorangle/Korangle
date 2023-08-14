@@ -176,10 +176,16 @@
                         [ngModel]="selectedEmployeeProfile.bankAccountNumber" />
                 </mat-form-field>
             </div>
-        </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <input matInput type="text" placeholder="Bank IFSC Code"
+                        (ngModelChange)="currentEmployeeProfile.bankIfscCode = $event; getBankName()"
+                        [ngModel]="selectedEmployeeProfile.bankIfscCode" />
+                </mat-form-field>
+            </div>
 
         <!--EPF account no., Pan number, Monthly Salary, Paid Leaves -->
-        <div class="row">
+        
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput type="text" placeholder="EPF Account No."

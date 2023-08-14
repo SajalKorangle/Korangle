@@ -222,6 +222,12 @@ export class AddEmployeeServiceAdapter {
             return;
         }
 
+        if (this.vm.newEmployee.bankIfscCode != null
+            && this.vm.newEmployee.bankIfscCode.toString().length !== 11) {
+                alert("Bank IFSC code should be 11 digits");
+                return;
+            }
+
         if (this.vm.newEmployee.isNonSalariedEmployee === undefined) {
             this.vm.newEmployee.isNonSalariedEmployee = false;
         }

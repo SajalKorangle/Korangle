@@ -86,6 +86,11 @@
             </div>
             <div class="col-md-3">
                 <mat-form-field>
+                    <input matInput type="text" placeholder="Bank IFSC Code" disabled [ngModel]="selectedEmployee.bankIfscCode" />
+                </mat-form-field>
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
                     <input matInput type="text" placeholder="EPF Account No." disabled [ngModel]="selectedEmployee.epfAccountNumber" />
                 </mat-form-field>
             </div>
@@ -94,10 +99,8 @@
                     <input matInput type="text" placeholder="Pan Number" disabled [ngModel]="selectedEmployee.panNumber" />
                 </mat-form-field>
             </div>
-        </div>
 
         <!-- Monthly Salary -->
-        <div class="row">
             <div class="col-md-3">
                 <mat-form-field>
                     <input matInput type="number" placeholder="Monthly Salary" disabled [ngModel]="selectedEmployee.monthlySalary" />

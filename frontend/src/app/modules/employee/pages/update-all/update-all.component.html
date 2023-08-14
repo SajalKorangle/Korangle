@@ -39,6 +39,16 @@
                         <tr>
                             <td *ngFor="let column of COLUMNHANDLES" [class.hidden]="!column.show"
                                 [attr.id]="column.key+employee.id">
+                                <ng-container *ngIf="column.key==='bankIfscCode'">
+                                    <input [attr.type]="column.inputType" [attr.id]="employee.id+column.key"
+                                        class="customInput"
+                                        [ngStyle]="{'text-transform':(checkOnlyUppercaseFields(column.key))?'uppercase': 'none'}"
+                                        (keydown)="handleOnKeyDown(column.inputType, $event, column.key)"
+                                        (blur)="serviceAdapter.updateEmloyeeField(column.name,column.key,employee, $event.target.value,column.inputType)"
+                                        [ngModel]="employee[column.key]"
+                                        (ngModelChange)="getBankName(employee,$event)"
+                                    />
+                                </ng-container>
                                 <ng-container *ngIf="column.inputType===null">
                                     {{employee[column.key]}}
                                 </ng-container>
@@ -53,7 +63,7 @@
                                     </mat-form-field>
                                 </ng-container>
                                 <ng-container
-                                    *ngIf="column.inputType==='text' || column.inputType==='number' || column.inputType==='date'">
+                                    *ngIf="(column.inputType==='text' || column.inputType==='number' || column.inputType==='date') && column.key!=='bankIfscCode'">
                                     <input [attr.type]="column.inputType" [attr.id]="employee.id+column.key"
                                         class="customInput"
                                         [min]="column.inputType==='number'?0:''"

@@ -45,6 +45,9 @@ class StudentAttendance(models.Model):
         db_table = 'student_attendance'
         unique_together = ('parentStudent', 'dateOfAttendance')
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
 PENDING_LEAVE_STATUS = 'PENDING'
 APPROVED_LEAVE_STATUS = 'APPROVED'

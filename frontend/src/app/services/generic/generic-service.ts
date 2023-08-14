@@ -164,7 +164,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     authentication_app: 'DeviceList';
     notification_app: 'Notification';
     user_app: 'User';
-    attendance_app: 'AttendancePermission';
+    attendance_app: 'AttendancePermission' | 'StudentAttendance';
     enquiry_app: 'Enquiry' | 'ViewEnquiryInPagePermissions';
 }
 
