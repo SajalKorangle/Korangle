@@ -57,8 +57,8 @@ export class PayBillComponent implements OnInit {
     leftoverTimeForOrderProcessing(bill: any): any {
         let currentDate = new Date();
         let billOrderDate = new Date(bill.billOrderList[0].parentOrderInstance.dateTime);
-        let minutes = Math.floor((currentDate.getTime() - billOrderDate.getTime())%(60*60*1000)/(60*1000));
-        let seconds = Math.floor((currentDate.getTime() - billOrderDate.getTime())%(60*1000)/1000);
+        let minutes = Math.floor((currentDate.getTime() - billOrderDate.getTime()) % (60 * 60 * 1000) / (60 * 1000));
+        let seconds = Math.floor((currentDate.getTime() - billOrderDate.getTime()) % (60 * 1000) / 1000);
         return minutes + ":" + seconds;
     }
 

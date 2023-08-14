@@ -8,7 +8,7 @@ import { CommonFunctions } from '@classes/common-functions';
     styleUrls: ['./bill-due-warning-modal.component.css'],
 })
 export class BillDueWarningModalComponent implements OnInit {
-    
+
     user: any;
 
     constructor(

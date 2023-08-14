@@ -19,7 +19,15 @@ import { PaymentResponseDialogComponent } from './payment-response-dialog/paymen
 import { BillDueWarningModalComponent } from './bill-due-warning-modal/bill-due-warning-modal.component';
 
 @NgModule({
-    declarations: [NavbarComponent, SidebarComponent, LoadingSpinnerComponent, ModalVideoComponent, BillDueWarningModalComponent, SafePipe, PaymentResponseDialogComponent, ],
+    declarations: [
+        NavbarComponent,
+        SidebarComponent,
+        LoadingSpinnerComponent,
+        ModalVideoComponent,
+        BillDueWarningModalComponent,
+        SafePipe,
+        PaymentResponseDialogComponent,
+    ],
     entryComponents: [ModalVideoComponent, BillDueWarningModalComponent],
     imports: [
         CommonModule,

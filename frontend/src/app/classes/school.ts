@@ -39,7 +39,7 @@ export class School {
     moduleList = [];
     studentList = [];
     parentModuleList = [];
-    
+
     pendingBillList = [];
     isSuspended = false;
     showPageHeaderWarning = false;
@@ -93,10 +93,10 @@ export class School {
                     (todaysDate.getTime() - Math.abs(billDate.getTime())) / (1000 * 60 * 60 * 24) > bill.functionalityBlockedInterval;
                 return !this.isSuspended;
             });
-    
+
             this.moduleList = schoolData.moduleList;
-            
-            if(this.moduleList.find(module => {
+
+            if (this.moduleList.find(module => {
                 return module.taskList.find(task => {
                     return task.blockWhenSuspended;
                 }) != undefined;
@@ -108,7 +108,7 @@ export class School {
                     this.showModalWarning = this.showModalWarning ||
                         (todaysDate.getTime() - Math.abs(billDate.getTime())) / (1000 * 60 * 60 * 24) > bill.modalWarningInterval;
                     return !(this.showPageHeaderWarning && this.showModalWarning);
-                })
+                });
             }
 
             this.moduleList.push({

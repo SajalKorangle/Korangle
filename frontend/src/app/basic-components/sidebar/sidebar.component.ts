@@ -200,7 +200,7 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
                 data: {
                     videoUrl: '',
                 },
-            });    
+            });
         }
     }
 
