@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CountAllStudentAttendanceServiceAdapter } from './count-all-student-attendance.service.adapter';
 import { DataStorage } from '@classes/data-storage';
-import { CLASS_CONSTANT } from '@services/modules/class/models/classs';
+import {isMobile} from "../../../../classes/common";
+import { PrintService } from 'app/print/print-service';
+import { ExcelService } from 'app/excel/excel-service';
+import { PRINT_STUDENT_ATTENDANCE_COUNT } from 'app/print/print-routes.constants';
 
 @Component({
     selector: 'count-all-student-attendance',
@@ -22,9 +25,11 @@ export class CountAllStudentAttendanceComponent implements OnInit {
     selectedDate: Date;
     studentsWithTc = [];
     isInitialLoading = true;
-    counter : any;
 
-    constructor( ) { }
+    constructor(
+        private printService: PrintService,
+        private excelService: ExcelService,
+    ) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
@@ -37,5 +42,59 @@ export class CountAllStudentAttendanceComponent implements OnInit {
     onDateSelected(event) {
         this.selectedDate = event;
         this.showStudentList = false;
+    }
+
+    checkMobile() {
+        return isMobile();
+    }
+
+    getHeaderValues() {
+        let headerValues = [];
+        headerValues.push('Class');
+        headerValues.push('Present');
+        headerValues.push('Absent');
+        headerValues.push('Holiday');
+        headerValues.push('Not Recorded');
+        headerValues.push('Total');
+        return headerValues;
+    }
+
+    getDisplayInfo(divisionsAttendanceInfo: any){
+        let result = [];
+        Object.keys(divisionsAttendanceInfo).forEach(sections => {
+            if(sections !== 'name') {
+                let arr = [];
+                arr.push(divisionsAttendanceInfo['name'] +" "+ sections);
+                arr.push(divisionsAttendanceInfo[sections]['PRESENT']);
+                arr.push(divisionsAttendanceInfo[sections]['ABSENT']);
+                arr.push(divisionsAttendanceInfo[sections]['HOLIDAY']);
+                arr.push(divisionsAttendanceInfo[sections]['NOT_RECORDED']);
+                arr.push(divisionsAttendanceInfo[sections]['TOTAL']);
+                result.push(arr);
+            }
+        });
+        return result;
+    }
+
+    //For downloading
+    downloadList(): void {
+        let template: any;
+
+        template = [this.getHeaderValues()];
+
+        this.attendanceList.forEach((attendanceRecord) => {
+            let arr = this.getDisplayInfo(attendanceRecord);
+            arr.forEach(item => template.push(item));
+        });
+
+        this.excelService.downloadFile(template, 'korangle_student_attendance_count.csv');
+    }
+
+    printStudentAttendanceCountList(): void {
+        let value = {
+            studentAttendanceCountList : this.attendanceList,
+            dateSelected : this.selectedDate
+        };
+        return this.printService.navigateToPrintRoute(PRINT_STUDENT_ATTENDANCE_COUNT,{ user: this.user, value });
     }
 }
