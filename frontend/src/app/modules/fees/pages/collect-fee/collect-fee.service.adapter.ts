@@ -328,8 +328,8 @@ export class CollectFeeServiceAdapter {
                         tempStudent['dueFeeAmount'] = dueFeeAmount;
                         tempStudent['session'] = session;
                         tempStudent['feeReceipt'] = feeReceipt;
-                        tempStudent['feeReceiptBook'] = 
-                            this.vm.feeReceiptBookList.find(feeReceiptBook => feeReceiptBook.id==feeReceipt.parentFeeReceiptBook);
+                        tempStudent['feeReceiptBook'] =
+                            this.vm.feeReceiptBookList.find(feeReceiptBook => feeReceiptBook.id == feeReceipt.parentFeeReceiptBook);
                         studentList.push(tempStudent);
                     }
 
