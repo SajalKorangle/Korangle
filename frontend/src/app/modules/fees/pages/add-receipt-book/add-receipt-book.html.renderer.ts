@@ -36,7 +36,7 @@ export class AddReceiptBookHtmlRenderer {
             ) ||
             feeReceiptBook.updating ||
             feeReceiptBook.newName === null ||
-            feeReceiptBook.newName == '' ||
+            feeReceiptBook.newName.trim() == '' ||
             this.doesNameAlreadyExists(feeReceiptBook) ||
             this.doesReceiptNumberPrefixAlreadyExists(feeReceiptBook)
         ) {
@@ -50,7 +50,7 @@ export class AddReceiptBookHtmlRenderer {
         let nameAlreadyExists = false;
 
         let id  = feeReceiptBook ? feeReceiptBook.id : null;
-        let name = feeReceiptBook ? feeReceiptBook.name : this.vm.feeReceiptBookNameToBeAdded;
+        let name = feeReceiptBook ? feeReceiptBook.newName.trim() : this.vm.feeReceiptBookNameToBeAdded.trim();
 
         this.vm.feeReceiptBookList.every((feeReceiptBook) => {
             if (feeReceiptBook.name === name && feeReceiptBook.id != id) {
@@ -69,7 +69,7 @@ export class AddReceiptBookHtmlRenderer {
         let receiptNumberPrefixAlreadyExists = false;
 
         let id  = feeReceiptBook ? feeReceiptBook.id : null;
-        let receiptNumberPrefix = feeReceiptBook ? feeReceiptBook.receiptNumberPrefix : this.vm.feeReceiptBookReceiptNumberPrefixToBeAdded;
+        let receiptNumberPrefix = feeReceiptBook ? feeReceiptBook.newReceiptNumberPrefix.trim() : this.vm.feeReceiptBookReceiptNumberPrefixToBeAdded.trim();
 
         this.vm.feeReceiptBookList.every((feeReceiptBook) => {
             if (feeReceiptBook.receiptNumberPrefix === receiptNumberPrefix && feeReceiptBook.id != id) {

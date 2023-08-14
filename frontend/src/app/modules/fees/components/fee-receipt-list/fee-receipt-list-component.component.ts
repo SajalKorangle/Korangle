@@ -164,6 +164,20 @@ export class FeeReceiptListComponent implements OnInit {
         return module.taskList.some((task) => task.title === 'Cancel Fee Receipt') && !this.isPrinting;
     }
 
+    canCancelReceipt(feeReceipt: any) {
+
+        // can not cancel if list is showing in printing page.
+        if (this.isPrinting) { return false; }
+
+        // can not cancel if user doesn't have Cancel Fee Receipt page permission
+        const module = this.user.activeSchool.moduleList.find((module) => module.title === 'Fees 3.0');
+        if (!module.taskList.some((task) => task.title === 'Cancel Fee Receipt')) { return false; }
+
+        // can not cancel if fee receipt book is inactive
+        return this.feeReceiptBookList.find(feeReceiptBook => feeReceiptBook.id == feeReceipt.parentFeeReceiptBook).active;
+
+    }
+
     getStudentMobileNumber(feeReceipt: any) {
         let student = this.studentList.find((student) => {
             return student.id == feeReceipt.parentStudent;

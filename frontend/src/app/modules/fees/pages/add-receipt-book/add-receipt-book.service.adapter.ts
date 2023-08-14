@@ -54,6 +54,8 @@ export class AddReceiptBookServiceAdapter {
             return;
         }
 
+        this.vm.feeReceiptBookReceiptNumberPrefixToBeAdded = this.vm.feeReceiptBookReceiptNumberPrefixToBeAdded.trim();
+
         if (this.vm.htmlRenderer.doesReceiptNumberPrefixAlreadyExists()) {
             alert('Receipt Number Prefix already Exists');
             return;
@@ -97,6 +99,8 @@ export class AddReceiptBookServiceAdapter {
             alert('Name already Exists');
             return;
         }
+
+        feeReceiptBook.newReceiptNumberPrefix = feeReceiptBook.newReceiptNumberPrefix.trim();
 
         if (this.vm.htmlRenderer.doesReceiptNumberPrefixAlreadyExists(feeReceiptBook)) {
             alert('Receipt number prefix already Exists');
