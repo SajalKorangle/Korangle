@@ -37,6 +37,11 @@ const routes: Routes = [
         data: { moduleName: 'library' },
     },
     {
+        path: 'settings',
+        loadChildren: 'app/modules/library/pages/settings/settings.module#SettingsModule',
+        data: { moduleName: 'library' },
+    },
+    {
         path: '',
         component: LibraryComponent,
     },
