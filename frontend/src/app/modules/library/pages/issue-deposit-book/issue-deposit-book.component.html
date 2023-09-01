@@ -1,1 +1,101 @@
-<p><em>Under Construction!!</em></p>
+<div style="padding: 1rem 2rem;" *ngIf="!isLoading">
+    
+    <!-- Issue to Student/Employee dropdown starts -->
+    <mat-form-field style="max-width: 500px;">
+        <mat-label>Issue to</mat-label>
+        <mat-select [(ngModel)]="issueTo" (selectionChange)="handleIssueToFieldSelect($event)">
+            <mat-option value="student">Student</mat-option>        
+            <mat-option value="employee">Employee</mat-option>        
+        </mat-select>
+    </mat-form-field>
+    <!-- Issue to Student/Employee dropdown ends -->
+
+    <!-- Select student Section Starts -->
+    <ng-container *ngIf="issueTo=='student'">
+        <parent-student-filter
+            [user]="user"
+            (onStudentListSelected)="handleStudentListSelection($event)"
+            (onStudentListLoading)="isStudentListLoading = $event"
+            [selectedFilterType]="'Student'"
+            [studentTcGenerated]="true"
+            [bothFilters]="false"
+        ></parent-student-filter>
+        <mat-spinner *ngIf="isStudentListLoading" diameter="{{32}}"></mat-spinner>
+    </ng-container>
+    <!-- Select student Section Ends -->
+
+    <!-- Select employee Section Starts -->
+    <ng-container *ngIf="issueTo=='employee'">
+        <app-employee-filter 
+            [user]="user" 
+            [showAllEmployees]="false" 
+            (employee)="handleEmployeeListSelection($event)"
+        ></app-employee-filter>
+    </ng-container>
+    <!-- Select employee Section Ends -->
+
+    <div *ngIf="selectedStudent || selectedEmployee" style="margin-top: 1rem;">
+        
+        <div *ngIf="isIssuedBooksLoading" style="width: 100%;">
+            <mat-spinner diameter="{{64}}" style="margin: auto;"></mat-spinner>
+        </div>
+
+        <ng-container *ngIf="!isIssuedBooksLoading">
+
+            <p>Currently Issued Books: <strong>{{issuedBooksList.length}}</strong></p>
+            <ng-container *ngIf="issuedBooksList.length">
+                <hr/>
+                <table class="table table-hover">
+                    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Book No.</th>
+                            <th>Book Name</th>
+                            <th>Author</th>
+                            <th>Date Issued</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let record of issuedBooksList; let i = index">
+                            <tr>
+                                <ng-container>
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ record.parentBook__bookNumber }}</td>
+                                    <td>{{ record.parentBook__name }}</td>
+                                    <td>{{ record.parentBook__author }}</td>
+                                    <td>{{ record.issueTime | date:'MMM d, yyyy - h:m a' }}</td>
+                                    <td> 
+                                        <button 
+                                            class="btn btn-{{ user.activeSchool.secondaryThemeColor }} btn-sm"
+                                            (click)="handleDeposit(record.id)"
+                                        >
+                                            Deposit
+                                        </button> 
+                                    </td>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </ng-container>
+            
+            <hr/>
+            <h5><strong>Issue New Book</strong></h5>
+            <input type="number" [(ngModel)]="issueBookNumber" placeholder="Enter BookNumber"/>
+            <button 
+                class="btn btn-{{ user.activeSchool.secondaryThemeColor }} btn-sm" 
+                style="margin-left: 1rem;"
+                (click)="handleIssue()"
+            >
+                Issue
+            </button>
+        </ng-container>
+    </div>
+
+</div>
+
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
