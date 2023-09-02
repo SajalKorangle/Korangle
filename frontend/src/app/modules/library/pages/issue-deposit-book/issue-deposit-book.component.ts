@@ -32,6 +32,8 @@ export class IssueDepositBookComponent implements OnInit {
 
     issueBookNumber: any = null;
 
+    booksList: any = null;
+
 
     constructor(
         public genericService: GenericService,
@@ -65,8 +67,8 @@ export class IssueDepositBookComponent implements OnInit {
         this.serviceAdapter.getIssuedBooksList();
     }
 
-    handleDeposit(recordId) { 
-        this.serviceAdapter.depositBook(recordId);
+    handleDeposit(record) { 
+        this.serviceAdapter.depositBook(record);
     } 
 
     handleIssue() {    

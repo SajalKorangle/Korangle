@@ -100,7 +100,7 @@ class SchoolLibrarySettings(models.Model):
 class BookIssueRecord(models.Model):
 
     parentBook = models.ForeignKey(
-        Book, default=0, on_delete=models.CASCADE, null=True)
+        Book, default=0, on_delete=models.CASCADE, null=True, related_name="book_issue_record")
 
     parentStudent = models.ForeignKey(
         Student, on_delete=models.CASCADE, null=True, default=None, related_name="book_issue_record")

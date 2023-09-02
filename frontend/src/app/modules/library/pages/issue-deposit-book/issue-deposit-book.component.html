@@ -64,11 +64,11 @@
                                     <td>{{ record.parentBook__bookNumber }}</td>
                                     <td>{{ record.parentBook__name }}</td>
                                     <td>{{ record.parentBook__author }}</td>
-                                    <td>{{ record.issueTime | date:'MMM d, yyyy - h:m a' }}</td>
+                                    <td>{{ record.issueTime | date:'MMM d, yyyy - hh:mm a' }}</td>
                                     <td> 
                                         <button 
                                             class="btn btn-{{ user.activeSchool.secondaryThemeColor }} btn-sm"
-                                            (click)="handleDeposit(record.id)"
+                                            (click)="handleDeposit(record)"
                                         >
                                             Deposit
                                         </button> 

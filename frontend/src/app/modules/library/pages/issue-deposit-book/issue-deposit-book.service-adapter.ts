@@ -1,3 +1,4 @@
+import { error } from "console";
 import { IssueDepositBookComponent } from "./issue-deposit-book.component";
 
 export class IssueDepositBookServiceAdapter {
@@ -6,6 +7,32 @@ export class IssueDepositBookServiceAdapter {
     
     initializeAdapter(vm: IssueDepositBookComponent): void {
         this.vm = vm;
+        this.getBookList();
+    }
+
+
+    getBookList() {
+        this.vm.isLoading = true;
+        const query = {
+            filter: {
+                parentSchool_id: this.vm.user.activeSchool.dbId
+            },
+            annotate: {
+                isIssued: {
+                    function: "Count",
+                    field: "book_issue_record",
+                    filter: {
+                        book_issue_record__depositTime: null
+                    }
+                }
+            },
+            fields_list: ["isIssued", "__all__"]
+        }
+
+        this.vm.genericService.getObjectList({ library_app: "Book" }, query).then((books) => {
+            this.vm.booksList = books;
+            this.vm.isLoading = false;
+        });
     }
 
     getIssuedBooksList() {
@@ -31,16 +58,25 @@ export class IssueDepositBookServiceAdapter {
         })
     }
 
-    depositBook(recordId) {
+    depositBook(record) {
         this.vm.isIssuedBooksLoading = true;
         const data = {
-            id: recordId,
+            id: record.id,
             depositTime: new Date()
         };
         this.vm.genericService.updateObject({ library_app: "BookIssueRecord" }, data).then((response) => {
+            
+            // for successful call mark the book as not issued in frontend
+            if (response) {
+                this.vm.booksList = this.vm.booksList.map((book) => {
+                    if (book.bookNumber === record.parentBook__bookNumber) {
+                        book.isIssued = 0;
+                    }
+                    return book;
+                })
+            }
             this.vm.isIssuedBooksLoading = false;
-            this.getIssuedBooksList();
-        });
+        })
     }
 
     issueBook(bookNumber) {
@@ -65,13 +101,21 @@ export class IssueDepositBookServiceAdapter {
                 }
 
                 this.vm.genericService.createObject({ library_app: "BookIssueRecord" }, data).then((response) => {
+                    
+                    // for successful call mark the book as issued in frontend
+                    if (response) {
+                        this.vm.booksList = this.vm.booksList.map((obj) => {
+                            if (obj.bookNumber === bookNumber) {
+                                obj.isIssued = 1;
+                            }
+                            return obj;
+                        })
+                    }
                     this.vm.isIssuedBooksLoading = false;
-                    this.getIssuedBooksList();
                 });
             } else {
                 this.vm.isIssuedBooksLoading = false;
             }
-        }
-        );
+        });
     }
 }
