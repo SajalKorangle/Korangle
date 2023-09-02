@@ -92,13 +92,6 @@ export class IssueDepositBookComponent implements OnInit {
     }
 
     displayBook(book) {
-        if (book) {
-            if (typeof book == 'string') {
-                return book;
-            } else {
-                return book.name + ' (' + book.bookNumber + ')';
-            }
-        }
-        return '';
+        return book ? (typeof book == 'string' ? book : book.name + ' (' + book.bookNumber + ')') : '';
     }
 }
