@@ -68,6 +68,7 @@ export class IssueDepositBookServiceAdapter {
             
             // for successful call mark the book as not issued in frontend
             if (response) {
+                this.getIssuedBooksList();
                 this.vm.booksList = this.vm.booksList.map((book) => {
                     if (book.bookNumber === record.parentBook__bookNumber) {
                         book.isIssued = 0;
@@ -79,43 +80,33 @@ export class IssueDepositBookServiceAdapter {
         })
     }
 
-    issueBook(bookNumber) {
+    issueBook(book) {
         this.vm.isIssuedBooksLoading = true;
-        const bookQuery = {
-            filter: {
-                bookNumber: bookNumber,
-                parentSchool_id: this.vm.user.activeSchool.dbId
-            },
+
+        const data = {
+            parentBook: book.id,
+            issueTime: new Date()
         };
-        this.vm.genericService.getObject({ library_app: "Book" }, bookQuery).then((book) => {
-            if (book) {
-                const data = {
-                    parentBook: book.id,
-                    issueTime: new Date()
-                };
 
-                if (this.vm.issueTo === 'student') {
-                    data['parentStudent'] = this.vm.selectedStudent.id;
-                } else {
-                    data['parentEmployee'] = this.vm.selectedEmployee.id;
-                }
+        if (this.vm.issueTo === 'student') {
+            data['parentStudent'] = this.vm.selectedStudent.id;
+        } else {
+            data['parentEmployee'] = this.vm.selectedEmployee.id;
+        }
 
-                this.vm.genericService.createObject({ library_app: "BookIssueRecord" }, data).then((response) => {
-                    
-                    // for successful call mark the book as issued in frontend
-                    if (response) {
-                        this.vm.booksList = this.vm.booksList.map((obj) => {
-                            if (obj.bookNumber === bookNumber) {
-                                obj.isIssued = 1;
-                            }
-                            return obj;
-                        })
+        this.vm.genericService.createObject({ library_app: "BookIssueRecord" }, data).then((response) => {
+            
+            // for successful call mark the book as issued in frontend
+            if (response) {
+                this.getIssuedBooksList();
+                this.vm.booksList = this.vm.booksList.map((obj) => {
+                    if (obj.bookNumber === book.bookNumber) {
+                        obj.isIssued = 1;
                     }
-                    this.vm.isIssuedBooksLoading = false;
-                });
-            } else {
-                this.vm.isIssuedBooksLoading = false;
+                    return obj;
+                })
             }
+            this.vm.isIssuedBooksLoading = false;
         });
     }
 }

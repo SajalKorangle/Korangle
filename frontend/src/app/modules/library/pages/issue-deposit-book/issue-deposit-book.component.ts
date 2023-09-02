@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { GenericService } from '@services/generic/generic-service';
 import { DataStorage } from "@classes/data-storage";
 import { IssueDepositBookServiceAdapter } from './issue-deposit-book.service-adapter';
+import { FormControl } from '@angular/forms';
+import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -13,14 +15,13 @@ import { IssueDepositBookServiceAdapter } from './issue-deposit-book.service-ada
 export class IssueDepositBookComponent implements OnInit {
     user: any;
     serviceAdapter: IssueDepositBookServiceAdapter;
-
+    
     isLoading: Boolean = false;
     isStudentListLoading: Boolean = false;
-
+    
     issueTo: 'student' | 'employee' = null;
-
-    classList: any;
-    sectionList: any;
+    
+    booksList: any = null;
 
     selectedStudent: any = null;
     selectedStudentSection: any;
@@ -32,7 +33,10 @@ export class IssueDepositBookComponent implements OnInit {
 
     issueBookNumber: any = null;
 
-    booksList: any = null;
+    filteredBookList: any = [];
+
+    selectedBook: any = null;
+    selectedBookFormControl: FormControl = new FormControl()
 
 
     constructor(
@@ -43,6 +47,11 @@ export class IssueDepositBookComponent implements OnInit {
         this.user = DataStorage.getInstance().getUser();
         this.serviceAdapter = new IssueDepositBookServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
+
+        this.filteredBookList = this.selectedBookFormControl.valueChanges.pipe(
+            map((value) => (typeof value === 'string' ? value : (value as any).bookNumber)),
+            map((bookNumber)=>this.filterBooksList(bookNumber))
+        )
     }
 
     reset() {
@@ -72,6 +81,24 @@ export class IssueDepositBookComponent implements OnInit {
     } 
 
     handleIssue() {    
-        this.serviceAdapter.issueBook(this.issueBookNumber);
-    } 
+        this.serviceAdapter.issueBook(this.selectedBook);
+    }
+
+    filterBooksList(value: string) {
+        return this.booksList.filter((book) => {
+            if (book.bookNumber.toString().startsWith(value)) return true;
+            return false;
+        })
+    }
+
+    displayBook(book) {
+        if (book) {
+            if (typeof book == 'string') {
+                return book;
+            } else {
+                return book.name + ' (' + book.bookNumber + ')';
+            }
+        }
+        return '';
+    }
 }
