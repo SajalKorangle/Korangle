@@ -4,7 +4,7 @@ import { IssueDepositBookComponent } from "./issue-deposit-book.component";
 export class IssueDepositBookServiceAdapter {
     vm: IssueDepositBookComponent;
     constructor() { }
-    
+
     initializeAdapter(vm: IssueDepositBookComponent): void {
         this.vm = vm;
         this.getBookList();
@@ -27,7 +27,7 @@ export class IssueDepositBookServiceAdapter {
                 }
             },
             fields_list: ["isIssued", "__all__"]
-        }
+        };
 
         this.vm.genericService.getObjectList({ library_app: "Book" }, query).then((books) => {
             this.vm.booksList = books;
@@ -55,7 +55,7 @@ export class IssueDepositBookServiceAdapter {
             this.vm.isIssuedBooksLoading = false;
         }).catch((error) => {
             this.vm.isIssuedBooksLoading = false;
-        })
+        });
     }
 
     depositBook(record) {
@@ -65,7 +65,7 @@ export class IssueDepositBookServiceAdapter {
             depositTime: new Date()
         };
         this.vm.genericService.updateObject({ library_app: "BookIssueRecord" }, data).then((response) => {
-            
+
             // for successful call mark the book as not issued in frontend
             if (response) {
                 this.getIssuedBooksList();
@@ -74,10 +74,10 @@ export class IssueDepositBookServiceAdapter {
                         book.isIssued = 0;
                     }
                     return book;
-                })
+                });
             }
             this.vm.isIssuedBooksLoading = false;
-        })
+        });
     }
 
     issueBook(book) {
@@ -95,7 +95,7 @@ export class IssueDepositBookServiceAdapter {
         }
 
         this.vm.genericService.createObject({ library_app: "BookIssueRecord" }, data).then((response) => {
-            
+
             // for successful call mark the book as issued in frontend
             if (response) {
                 this.getIssuedBooksList();
@@ -104,7 +104,7 @@ export class IssueDepositBookServiceAdapter {
                         obj.isIssued = 1;
                     }
                     return obj;
-                })
+                });
             }
             this.vm.isIssuedBooksLoading = false;
         });

@@ -15,12 +15,12 @@ import { map } from 'rxjs/operators';
 export class IssueDepositBookComponent implements OnInit {
     user: any;
     serviceAdapter: IssueDepositBookServiceAdapter;
-    
+
     isLoading: Boolean = false;
     isStudentListLoading: Boolean = false;
-    
+
     issueTo: 'student' | 'employee' = null;
-    
+
     booksList: any = null;
 
     selectedStudent: any = null;
@@ -36,7 +36,7 @@ export class IssueDepositBookComponent implements OnInit {
     filteredBookList: any = [];
 
     selectedBook: any = null;
-    selectedBookFormControl: FormControl = new FormControl()
+    selectedBookFormControl: FormControl = new FormControl();
 
 
     constructor(
@@ -50,8 +50,8 @@ export class IssueDepositBookComponent implements OnInit {
 
         this.filteredBookList = this.selectedBookFormControl.valueChanges.pipe(
             map((value) => (typeof value === 'string' ? value : (value as any).bookNumber)),
-            map((bookNumber)=>this.filterBooksList(bookNumber))
-        )
+            map((bookNumber) => this.filterBooksList(bookNumber))
+        );
     }
 
     reset() {
@@ -76,11 +76,11 @@ export class IssueDepositBookComponent implements OnInit {
         this.serviceAdapter.getIssuedBooksList();
     }
 
-    handleDeposit(record) { 
+    handleDeposit(record) {
         this.serviceAdapter.depositBook(record);
-    } 
+    }
 
-    handleIssue() {    
+    handleIssue() {
         this.serviceAdapter.issueBook(this.selectedBook);
     }
 
@@ -88,7 +88,7 @@ export class IssueDepositBookComponent implements OnInit {
         return this.booksList.filter((book) => {
             if (book.bookNumber.toString().startsWith(value)) return true;
             return false;
-        })
+        });
     }
 
     displayBook(book) {
