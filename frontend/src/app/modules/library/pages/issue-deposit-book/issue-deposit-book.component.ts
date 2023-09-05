@@ -59,6 +59,8 @@ export class IssueDepositBookComponent implements OnInit {
         this.selectedEmployee = null;
         this.issuedBooksList = null;
         this.issueBookNumber = null;
+        this.selectedBook = null;
+        this.selectedBookFormControl.setValue(null);
     }
 
     handleIssueToFieldSelect($event) {

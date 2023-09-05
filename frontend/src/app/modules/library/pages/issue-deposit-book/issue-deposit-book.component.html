@@ -17,7 +17,7 @@
             (onStudentListSelected)="handleStudentListSelection($event)"
             (onStudentListLoading)="isStudentListLoading = $event"
             [selectedFilterType]="'Student'"
-            [studentTcGenerated]="true"
+            [studentTcGenerated]="false"
             [bothFilters]="false"
         ></parent-student-filter>
         <mat-spinner *ngIf="isStudentListLoading" diameter="{{32}}"></mat-spinner>
