@@ -75,8 +75,8 @@ export class IssueDepositBookServiceAdapter {
                     }
                     return book;
                 });
-            }
-            this.vm.isIssuedBooksLoading = false;
+                alert("Book deposited successfully");
+            } else this.vm.isIssuedBooksLoading = false;
         });
     }
 
@@ -105,8 +105,8 @@ export class IssueDepositBookServiceAdapter {
                     }
                     return obj;
                 });
-            }
-            this.vm.isIssuedBooksLoading = false;
+                alert("Book issued successfully");
+            } else this.vm.isIssuedBooksLoading = false;
         });
     }
 }
