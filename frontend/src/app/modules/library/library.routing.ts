@@ -32,6 +32,16 @@ const routes: Routes = [
         data: { moduleName: 'library' },
     },
     {
+        path: 'issue_deposit_book',
+        loadChildren: 'app/modules/library/pages/issue-deposit-book/issue-deposit-book.module#IssueDepositBookModule',
+        data: { moduleName: 'library' },
+    },
+    {
+        path: 'settings',
+        loadChildren: 'app/modules/library/pages/settings/settings.module#SettingsModule',
+        data: { moduleName: 'library' },
+    },
+    {
         path: '',
         component: LibraryComponent,
     },
@@ -45,4 +55,4 @@ const routes: Routes = [
     imports: [CommonModule, RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
-export class LibraryRoutingModule {}
+export class LibraryRoutingModule { }
