@@ -52,7 +52,7 @@ class Task(models.Model):
     title = models.TextField(default='', null=False, verbose_name='title')
     orderNumber = models.IntegerField(default=1, null=False)
     parentBoard = models.ForeignKey(Board, on_delete=models.PROTECT, null=True, blank=True, verbose_name='parentBoard')
-    videoUrl = models.TextField(null=True, verbose_name='videoUrl')
+    videoUrl = models.TextField(null=True, verbose_name='videoUrl', blank=True)
 
     parentFeatureFlag = models.ForeignKey(FeatureFlag, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='parentFeatureFlag')
 

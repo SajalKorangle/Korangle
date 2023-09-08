@@ -17,6 +17,7 @@ export class ViewHistoryServiceAdapter {
         let paidBillListQuery = new Query()
             .filter({
                 'parentSchool': this.vm.user.activeSchool.dbId,
+                'cancelledDate': null,
             })
             .exclude({
                 'paidDate': null,

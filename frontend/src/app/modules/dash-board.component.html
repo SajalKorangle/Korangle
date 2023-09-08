@@ -14,7 +14,7 @@
     <div class="main-content">
         <div class="container-fluid">
 
-            <!-- Starts :-  When user is connected to school using school colors -->
+            <!-- Starts :-  If user is connected to school then using school colors -->
             <div class="card" *ngIf="user.section && user.activeSchool" style="min-height: 100%; margin: 25px 0 0 0">
 
                 <!-- Starts :- Page Header -->
@@ -39,23 +39,23 @@
                 <!-- Ends :- Page Header -->
 
                 <!-- Starts :- Showing Blocked Message for selected pages if school bill is past over due -->
-                <ng-container *ngIf="user.section.blockWhenSuspended && user.activeSchool.isSuspended; else gowithrouter">
+                <div [style.display]="user.section.blockWhenSuspended && user.activeSchool.isSuspended ? 'block' : 'none'">
                     <div class='card-content'>
                         This page is blocked due to pending bill/s.
                     </div>                    
-                </ng-container>
+                </div>
                 <!-- Ends :- Showing Blocked Message for selected pages if school bill is past over due -->
 
                 <!-- Starts :- Router -->
-                <ng-template #gowithrouter>
+                <div [style.display]="!user.section.blockWhenSuspended || !user.activeSchool.isSuspended ? 'block' : 'none'">
                     <router-outlet></router-outlet>
-                </ng-template>
+                </div>
                 <!-- Ends :- Router -->
 
             </div>
-            <!-- Ends :-  When user is connected to school using school colors -->
+            <!-- Ends :-  If user is connected to school then using school colors -->
 
-            <!-- Starts :-  When user is not connected to school using default colors -->
+            <!-- Starts :-  If user is not connected to school then using default colors -->
             <div class="card" *ngIf="user.section && !user.activeSchool" style="min-height: 100%">
 
                 <!-- Starts :- Page Header -->
@@ -76,7 +76,7 @@
                 <router-outlet></router-outlet>
 
             </div>
-            <!-- Ends :-  When user is not connected to school using default colors -->
+            <!-- Ends :-  If user is not connected to school then using default colors -->
 
         </div>
     </div>

@@ -88,7 +88,7 @@ export class School {
 
             let todaysDate = new Date();
             this.pendingBillList.every(bill => {
-                let billDate = new Date(bill.billDate + 'T23:59:59');
+                let billDate = new Date(bill.billDate + 'T00:00:00');
                 this.isSuspended = this.isSuspended ||
                     (todaysDate.getTime() - Math.abs(billDate.getTime())) / (1000 * 60 * 60 * 24) > bill.functionalityBlockedInterval;
                 return !this.isSuspended;
@@ -102,7 +102,7 @@ export class School {
                 }) != undefined;
             })) {
                 this.pendingBillList.every(bill => {
-                    let billDate = new Date(bill.billDate + 'T23:59:59');
+                    let billDate = new Date(bill.billDate + 'T00:00:00');
                     this.showPageHeaderWarning = this.showPageHeaderWarning ||
                         (todaysDate.getTime() - Math.abs(billDate.getTime())) / (1000 * 60 * 60 * 24) > bill.pageHeaderWarningInterval;
                     this.showModalWarning = this.showModalWarning ||

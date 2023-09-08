@@ -9,8 +9,8 @@ from team_app.db_script.adding_bill_module import adding_bill_module
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('feature_flag_app', '0008_auto_20230330_2143'),
-        ('team_app', '0026_auto_20230724_1648'),
+        ('feature_flag_app', '0009_auto_20230901_1425'),
+        ('team_app', '0027_auto_20230901_1426'),
     ]
 
     operations = [

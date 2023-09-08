@@ -27,6 +27,7 @@ export class PayBillServiceAdapter {
             .filter({
                 'parentSchool': this.vm.user.activeSchool.dbId,
                 'paidDate': null,
+                'cancelledDate': null,
                 'billDate__lte': todaysDate.getFullYear() + '-'
                     + ('0' + (halfHourBeforeDate.getMonth() + 1)).slice(-2) + '-'
                     + ('0' + halfHourBeforeDate.getDate()).slice(-2),
