@@ -27,6 +27,12 @@ export class ParentStudentFilterServiceAdapter {
                 'address,currentBusStop,rte,parentTransferCertificate',
         };
 
+        let student_new_tc_issued_list_data = {
+            parentSession: this.vm.user.activeSchool.currentSessionDbId,
+            status: 'Issued',
+            fields__korangle: 'parentStudent',
+        };
+
         if (!this.vm.studentTcGenerated) {
             student_section_data['parentStudent__parentTransferCertificate'] = 'null__korangle';
             student_data['parentTransferCertificate'] = 'null__korangle';
@@ -37,11 +43,13 @@ export class ParentStudentFilterServiceAdapter {
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
             this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
+            this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, student_new_tc_issued_list_data),
         ]).then(
             (value) => {
                 this.vm.classList = value[0];
                 this.vm.sectionList = value[1];
                 this.vm.studentSectionList = value[2];
+                this.vm.student_new_tc_issued_list = value[4].map((obj)=>obj.parentStudent);
 
                 this.populateStudentList(value[3]);
                 this.populateMobileNumberList();
@@ -60,7 +68,11 @@ export class ParentStudentFilterServiceAdapter {
     populateStudentList(studentList: any): void {
         let tempStudentIdList = this.vm.studentSectionList.map((a) => a.parentStudent);
         this.vm.studentList = studentList.filter((student) => {
-            return tempStudentIdList.includes(student.id);
+            let include = tempStudentIdList.includes(student.id);
+            if (!this.vm.studentTcGenerated) {
+                include = include && !this.vm.student_new_tc_issued_list.includes(student.id);
+            }
+            return include;
         });
     }
 
