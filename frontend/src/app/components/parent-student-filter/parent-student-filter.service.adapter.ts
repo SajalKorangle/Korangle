@@ -49,7 +49,7 @@ export class ParentStudentFilterServiceAdapter {
                 this.vm.classList = value[0];
                 this.vm.sectionList = value[1];
                 this.vm.studentSectionList = value[2];
-                this.vm.student_new_tc_issued_list = value[4].map((obj)=>obj.parentStudent);
+                this.vm.student_new_tc_issued_list = value[4].map((obj) => obj.parentStudent);
 
                 this.populateStudentList(value[3]);
                 this.populateMobileNumberList();
