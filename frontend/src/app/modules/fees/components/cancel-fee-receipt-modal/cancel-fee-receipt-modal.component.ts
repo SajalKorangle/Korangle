@@ -15,6 +15,7 @@ export class CancelFeeReceiptModalComponent implements OnInit {
     studentName: string;
     fathersName: string;
     classSection: string;
+    feeReceiptBookList: any;
 
     ngOnInit(): void {
         this.formControl.markAsTouched();
@@ -30,6 +31,13 @@ export class CancelFeeReceiptModalComponent implements OnInit {
         this.classSection = this.data.classSection;
         this.totalAmount = this.data.totalAmount;
         this.collectedBy = this.data.collectedBy;
+        this.feeReceiptBookList = this.data.feeReceiptBookList;
+    }
+
+    getFeeReceiptNo(feeReceipt: any): any {
+        return this.feeReceiptBookList.find(feeReceiptBook => {
+            return feeReceiptBook.id == feeReceipt.parentFeeReceiptBook;
+        }).receiptNumberPrefix + feeReceipt.receiptNumber;
     }
 
     onNoClick(): void {
