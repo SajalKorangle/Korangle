@@ -18,6 +18,8 @@ export class ParentStudentFilterComponent implements OnInit {
 
     @Input() studentTcGenerated = false;
 
+    @Input() studentNewTcGenerated = true;
+
     @Input() bothFilters = true;
 
     @Input() showFilter = true;

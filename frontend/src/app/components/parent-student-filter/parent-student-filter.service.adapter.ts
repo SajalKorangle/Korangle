@@ -69,7 +69,7 @@ export class ParentStudentFilterServiceAdapter {
         let tempStudentIdList = this.vm.studentSectionList.map((a) => a.parentStudent);
         this.vm.studentList = studentList.filter((student) => {
             let include = tempStudentIdList.includes(student.id);
-            if (!this.vm.studentTcGenerated) {
+            if (!this.vm.studentNewTcGenerated) {
                 include = include && !this.vm.student_new_tc_issued_list.includes(student.id);
             }
             return include;
