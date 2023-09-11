@@ -15,6 +15,7 @@ mat-option {
 
 mat-form-field {
     width: 100%;
+    max-width: 500px;
 }
 
 .btn-sm {
