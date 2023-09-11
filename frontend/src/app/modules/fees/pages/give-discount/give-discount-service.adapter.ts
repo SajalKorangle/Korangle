@@ -39,12 +39,14 @@ export class GiveDiscountServiceAdapter {
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
             this.vm.genericService.getObjectList({employee_app: 'Employee'}, {filter: employee_list}), // 2
             this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 3
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: schoolId}, order_by: ['id']}), // 4
         ]).then(
             (value) => {
                 this.vm.feeTypeList = value[0];
                 this.vm.busStopList = value[1];
                 this.vm.employeeList = value[2];
                 this.vm.sessionList = value[3];
+                this.vm.feeReceiptBookList = value[4];
 
                 this.vm.isLoading = false;
             },
@@ -153,7 +155,7 @@ export class GiveDiscountServiceAdapter {
 
     populateFeeReceiptList(feeReceiptList: any): void {
         this.vm.feeReceiptList = feeReceiptList.sort((a, b) => {
-            return b.receiptNumber - a.receiptNumber;
+            return (new Date(b.generationDateTime).getTime()) - (new Date(a.generationDateTime).getTime());
         });
     }
 

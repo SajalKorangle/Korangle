@@ -25,6 +25,10 @@ export class CollectFeeHTMLRenderer {
             };
         });
     }
+
+    getActiveFeeReceiptBookList(): any {
+        return this.vm.feeReceiptBookList.filter(feeReceiptBook => { return feeReceiptBook.active; });
+    }
 }
 
 interface CustomAccountSession extends AccountSession {

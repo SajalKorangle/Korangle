@@ -66,6 +66,7 @@ export class CollectFeeServiceAdapter {
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_request), // 5
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, account_session_request), // 6
             this.vm.genericService.getObjectList({ fees_third_app: 'FeeSchoolSettings' }, {filter: {parentSchool: this.vm.user.activeSchool.dbId}}), // 7
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: schoolId}, order_by: ['id']}), // 8
         ]);
         this.vm.feeTypeList = value[0];
         this.vm.busStopList = value[1];
@@ -78,6 +79,8 @@ export class CollectFeeServiceAdapter {
         if (value[7].length == 1) {
             this.vm.printSingleReceipt = value[7][0]["printSingleReceipt"];
         }
+        this.vm.feeReceiptBookList = value[8];
+        this.vm.selectedFeeReceiptBook = this.vm.feeReceiptBookList.find(feeReceiptBook => feeReceiptBook.active);
 
         this.vm.handlePaymentAccountOnPaymentModeChange();
 
@@ -185,7 +188,7 @@ export class CollectFeeServiceAdapter {
 
     populateFeeReceiptList(feeReceiptList: any): void {
         this.vm.feeReceiptList = feeReceiptList.sort((a, b) => {
-            return b.receiptNumber - a.receiptNumber;
+            return (new Date(b.generationDateTime).getTime()) - (new Date(a.generationDateTime).getTime());
         });
     }
 
@@ -212,6 +215,7 @@ export class CollectFeeServiceAdapter {
             return {
                 ...feeReceipt,
                 receiptNumber: 0,
+                parentFeeReceiptBook: this.vm.selectedFeeReceiptBook.id,
                 subFeeReceiptList: sub_fee_receipt_list.filter(subFeeReceipt => subFeeReceipt.parentSession == feeReceipt.parentSession
                     && this.vm.studentFeeList.find(item => {
                         return item.id == subFeeReceipt.parentStudentFee;
@@ -324,6 +328,8 @@ export class CollectFeeServiceAdapter {
                         tempStudent['dueFeeAmount'] = dueFeeAmount;
                         tempStudent['session'] = session;
                         tempStudent['feeReceipt'] = feeReceipt;
+                        tempStudent['feeReceiptBook'] =
+                            this.vm.feeReceiptBookList.find(feeReceiptBook => feeReceiptBook.id == feeReceipt.parentFeeReceiptBook);
                         studentList.push(tempStudent);
                     }
 
@@ -352,7 +358,7 @@ export class CollectFeeServiceAdapter {
 
     addToFeeReceiptList(fee_receipt_list: any): void {
         this.vm.feeReceiptList = this.vm.feeReceiptList.concat(fee_receipt_list).sort((a, b) => {
-            return b.receiptNumber - a.receiptNumber;
+            return (new Date(b.generationDateTime).getTime()) - (new Date(a.generationDateTime).getTime());
         });
     }
 }
