@@ -46,19 +46,19 @@ export class TotalCollectionComponent implements OnInit {
     boardList;
     sessionList;
 
+    feeReceiptBookList = [];
+
     serviceAdapter: TotalCollectionServiceAdapter;
 
-    selectedEmployee = null;
     filteredEmployeeList = [];
 
-    selectedSession = null;
     filteredSessionList = [];
 
-    selectedModeOfPayment = null;
     filteredModeOfPaymentList = [];
 
-    selectedClassSection = null;
     filteredClassSectionList = [];
+
+    filteredFeeReceiptBookList = [];
 
     selectedFeeReceiptType = null;
     receiptTypeList = ['Valid Receipts', 'Cancelled Receipts'];
@@ -98,11 +98,7 @@ export class TotalCollectionComponent implements OnInit {
     }
 
     initializeSelection(): void {
-        this.selectedEmployee = null;
-        this.selectedClassSection = null;
-        this.selectedModeOfPayment = null;
         this.selectedFeeReceiptType = this.receiptTypeList[0];
-        this.selectedSession = null;
         this.receiptColumnFilter = new ReceiptColumnFilter();
         delete this.receiptColumnFilter['printButton'];
         this.receiptColumnFilter.scholarNumber = false;
@@ -121,9 +117,8 @@ export class TotalCollectionComponent implements OnInit {
             employeeList: this.filteredEmployeeList,
             classList: this.classList,
             sectionList: this.sectionList,
-            selectedEmployee: this.selectedEmployee,
-            selectedModeOfPayment: this.selectedModeOfPayment,
             sessionList: this.filteredSessionList,
+            feeReceiptBookList: this.feeReceiptBookList,
         };
 
         this.printService.navigateToPrintRoute(PRINT_FEE_RECIEPT_LIST, { user: this.user, value: data });
@@ -172,6 +167,7 @@ export class TotalCollectionComponent implements OnInit {
             item.selectedEmployee = false;
         });
     }
+
     selectAllClassSection(): void {
         this.filteredClassSectionList.forEach((item) => {
             item.selectedClassSection = true;
@@ -182,6 +178,7 @@ export class TotalCollectionComponent implements OnInit {
             item.selectedClassSection = false;
         });
     }
+
     selectAllSession(): void {
         this.filteredSessionList.forEach((item) => {
             item.selectedSession = true;
@@ -192,6 +189,18 @@ export class TotalCollectionComponent implements OnInit {
             item.selectedSession = false;
         });
     }
+
+    selectAllFeeReceiptBook(): void {
+        this.filteredFeeReceiptBookList.forEach((item) => {
+            item.selected = true;
+        });
+    }
+    unselectAllFeeReceiptBook(): void {
+        this.filteredFeeReceiptBookList.forEach((item) => {
+            item.selected = false;
+        });
+    }
+
     selectAllPaymentModes(): void {
         this.filteredModeOfPaymentList.forEach((item) => {
             item.selectedModeOfPayment = true;
@@ -202,6 +211,7 @@ export class TotalCollectionComponent implements OnInit {
             item.selectedModeOfPayment = false;
         });
     }
+
     selectAllFeeType(): void {
         this.feeTypeList.forEach((item) => {
             item.selectedFeeType = true;
@@ -212,7 +222,6 @@ export class TotalCollectionComponent implements OnInit {
             item.selectedFeeType = false;
         });
     }
-
 
     detectChanges(): void {
         this.cdRef.detectChanges();
@@ -294,6 +303,15 @@ export class TotalCollectionComponent implements OnInit {
             if (!session.selectedSession) {
                 tempList = tempList.filter((feeReceipt) => {
                     return feeReceipt.parentSession !== session.id;
+                });
+            }
+        });
+
+        // filter by fee receipt book
+        this.filteredFeeReceiptBookList.forEach((feeReceiptBook) => {
+            if (!feeReceiptBook.selected) {
+                tempList = tempList.filter((feeReceipt) => {
+                    return feeReceipt.parentFeeReceiptBook !== feeReceiptBook.id;
                 });
             }
         });

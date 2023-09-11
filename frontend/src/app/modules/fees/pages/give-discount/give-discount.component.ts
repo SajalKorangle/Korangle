@@ -54,6 +54,7 @@ export class GiveDiscountComponent implements OnInit {
     subDiscountList: SubDiscount[];
     busStopList = [];
     employeeList = [];
+    feeReceiptBookList = [];
 
     // Data from Parent Student Filter
     classList = [];

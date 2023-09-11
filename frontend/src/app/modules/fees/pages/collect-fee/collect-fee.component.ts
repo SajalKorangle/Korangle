@@ -66,6 +66,7 @@ export class CollectFeeComponent implements OnInit {
     busStopList = [];
     employeeList = [];
     boardList = [];
+    feeReceiptBookList = [];
 
     //accounting
     feeSettings: FeeSettings;
@@ -86,6 +87,7 @@ export class CollectFeeComponent implements OnInit {
     newRemark = null;
     newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
     newChequeNumber = null;
+    selectedFeeReceiptBook = null;
 
     studentFeeDetailsVisibleList = [];
 
@@ -325,6 +327,7 @@ export class CollectFeeComponent implements OnInit {
             employeeList: this.employeeList,
             boardList: this.boardList,
             sessionList: this.sessionList,
+            feeReceiptBookList: this.feeReceiptBookList,
             printSingleReceipt: this.printSingleReceipt
         };
 

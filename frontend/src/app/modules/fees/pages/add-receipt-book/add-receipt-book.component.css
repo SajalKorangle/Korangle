@@ -1,0 +1,78 @@
+@media only screen and (min-width: 992px) {
+    .main-content {
+        padding: 0px;
+        margin: 0px;
+    }
+
+    .table-content {
+        margin-top: 40px;
+        margin-left: 40px;
+    }
+}
+
+.main-content {
+    height: 95%;
+}
+
+.container-fluid {
+    height: 100%;
+}
+
+.paymentInput {
+    width: 100%;
+    text-align: right;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
+
+.nowShow {
+    background-color: red;
+}
+
+i {
+    cursor: pointer;
+}
+
+.hoverHighlight:hover {
+    background-color: lightgrey;
+}
+
+input {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid lightgrey;
+    width: 90%;
+    margin-left: 5px;
+}
+
+.row {
+    padding: 10px;
+}
+
+.row:hover {
+    background-color: lightgrey;
+}
+
+.loader-custom {
+    margin-left: 5px;
+    display: inline-block;
+    border: 2px solid lightgrey;
+    border-radius: 50%;
+    border-top: 2px solid dimgrey;
+    width: 18px;
+    height: 18px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+.example-viewport {
+    height: 80vh;
+    width: 100%;
+    border: none;
+}
+
+td {
+    position: relative;
+}
