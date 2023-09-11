@@ -195,7 +195,9 @@
                     </ng-container>
                 </tbody>
             </table>
-            <ng-container *ngIf="htmlRenderer.isOnlinePaymentEnabled() && getOverallFeesDue() > 0">
+
+            <!-- Fee Payment Form Starts -->
+            <ng-container *ngIf="htmlRenderer.isOnlinePaymentEnabled() && getOverallFeesDue() > 0 && selectedFeeReceiptBook">
                 <!-- Old Fee Payment Form Starts -->
                 <ng-container *ngIf="!htmlRenderer.isEasebuzzEnabled">
                     <mat-form-field style="display: block; max-width: 240px; margin-top: 16px;">
@@ -289,6 +291,10 @@
                 <!-- New Fee Payment Form Ends -->
             </ng-container>
 
+            <ng-container *ngIf="!selectedFeeReceiptBook">
+                Please ask school to activate at least one receipt book from 'Add Receipt Book' page. Thanks.
+            </ng-container>
+            <!-- Fee Payment Form Ends -->
 
         </ng-container>
 
@@ -320,7 +326,7 @@
                         [subFeeReceiptList]="subFeeReceiptList" [studentList]="selectedStudentList"
                         [studentSectionList]="selectedStudentSectionList" [employeeList]="employeeList"
                         [classList]="classList" [number]="3" [sectionList]="sectionList" [sessionList]="sessionList"
-                        [boardList]="boardList" [printSingleReceipt]="true"></app-fee-receipt-list>
+                        [boardList]="boardList" [printSingleReceipt]="true" [feeReceiptBookList]="feeReceiptBookList"></app-fee-receipt-list>
                 </div>
             </mat-expansion-panel>
 
