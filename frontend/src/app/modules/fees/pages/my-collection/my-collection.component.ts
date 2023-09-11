@@ -7,12 +7,13 @@ import { ClassService } from '../../../../services/modules/class/class.service';
 import { INSTALLMENT_LIST, ReceiptColumnFilter } from '../../classes/constants';
 import { CommonFunctions } from '../../../../classes/common-functions';
 import { DataStorage } from '../../../../classes/data-storage';
+import { GenericService } from '@services/generic/generic-service';
 
 @Component({
     selector: 'my-collection',
     templateUrl: './my-collection.component.html',
     styleUrls: ['./my-collection.component.css'],
-    providers: [FeeService, EmployeeService, StudentService, ClassService],
+    providers: [FeeService, EmployeeService, StudentService, ClassService, GenericService],
 })
 export class MyCollectionComponent implements OnInit {
     // Constants
@@ -36,6 +37,8 @@ export class MyCollectionComponent implements OnInit {
     studentList = [];
     studentSectionList = [];
 
+    feeReceiptBookList = [];
+
     serviceAdapter: MyCollectionServiceAdapter;
 
     selectedModeOfPayment = null;
@@ -48,6 +51,7 @@ export class MyCollectionComponent implements OnInit {
         public employeeService: EmployeeService,
         public studentService: StudentService,
         public classService: ClassService,
+        public genericService: GenericService,
         private cdRef: ChangeDetectorRef
     ) {}
 

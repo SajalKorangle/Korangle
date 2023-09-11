@@ -23,7 +23,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let feeReceipt of feeReceiptList | slice: 0:number">
-                <td *ngIf="receiptColumnFilter.receiptNumber">{{ feeReceipt.receiptNumber }}</td>
+                <td *ngIf="receiptColumnFilter.receiptNumber">{{ getFeeReceiptNo(feeReceipt) }}</td>
                 <td *ngIf="receiptColumnFilter.nameClass" align="center">
                     <ng-container *ngIf="!feeReceipt.parentStudent">Deleted Student</ng-container>
                     <ng-container *ngIf="feeReceipt.parentStudent">
@@ -57,11 +57,11 @@
                         <a
                             href="javascript:void(0)"
                             (click)="showCancelReceiptModal(feeReceipt)"
-                            *ngIf="hasUserPermissionToCancelAndNotPrintPage()"
+                            *ngIf="canCancelReceipt(feeReceipt) else justStatus"
                             style="text-decoration: underline; color: orange"
                             >Cancel Receipt</a
                         >
-                        <span *ngIf="!hasUserPermissionToCancelAndNotPrintPage()">Valid</span>
+                        <ng-template #justStatus>Valid</ng-template>
                     </ng-container>
                     <span *ngIf="feeReceipt.cancelled">Cancelled</span>
                 </td>

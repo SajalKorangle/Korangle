@@ -24,16 +24,21 @@ export class MyCollectionServiceAdapter {
         };
 
         Promise.all([
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),
-            this.vm.employeeService.getObject(this.vm.employeeService.employees, employee_data),
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list), // 0
+            this.vm.employeeService.getObject(this.vm.employeeService.employees, employee_data), // 1
+            this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 2
+            this.vm.classService.getObjectList(this.vm.classService.division, {}), // 3
+            this.vm.genericService.getObjectList(
+                {fees_third_app: 'FeeReceiptBook'},
+                {filter: { parentSchool: this.vm.user.activeSchool.dbId}, order_by: ['id']}
+            ), // 4
         ]).then(
             (value) => {
                 this.vm.feeTypeList = value[0];
                 this.vm.employeeList = [value[1]];
                 this.vm.classList = value[2];
                 this.vm.sectionList = value[3];
+                this.vm.feeReceiptBookList = value[4];
 
                 this.vm.isInitialLoading = false;
             },
@@ -67,7 +72,7 @@ export class MyCollectionServiceAdapter {
         ]).then(
             (value) => {
                 this.vm.feeReceiptList = value[0].sort((a, b) => {
-                    return b.receiptNumber - a.receiptNumber;
+                    return (new Date(b.generationDateTime).getTime()) - (new Date(a.generationDateTime).getTime());
                 });
                 this.vm.subFeeReceiptList = value[1];
 

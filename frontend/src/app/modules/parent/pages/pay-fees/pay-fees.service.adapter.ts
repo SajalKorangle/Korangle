@@ -85,6 +85,7 @@ export class PayFeesServiceAdapter {
             this.vm.paymentService.getObject(this.vm.paymentService.school_merchant_account, {parentSchool: schoolId}), // 13
             this.vm.genericService.getObjectList({ fees_third_app: 'FeeReceiptOrder' }, { filter: { parentSchool: schoolId } }), // 14
             modeOfPaymentQuery, //15
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: schoolId}, order_by: ['id']}), // 16
         ]).then(
             (value) => {
 
@@ -106,10 +107,13 @@ export class PayFeesServiceAdapter {
                 this.vm.sessionList = value[11];
                 this.vm.boardList = value[12];
                 this.vm.paymentTransactionList = value[14];
-                this.vm.handleStudentFeeProfile();
 
                 this.vm.htmlRenderer.modeOfPaymentList = value[15];
                 this.vm.htmlRenderer.selectedModeOfPayment = this.vm.htmlRenderer.modeOfPaymentList[0];
+
+                this.vm.feeReceiptBookList = value[16];
+                this.vm.selectedFeeReceiptBook = this.vm.feeReceiptBookList.find(feeReceiptBook => feeReceiptBook.active);
+                this.vm.handleStudentFeeProfile();
             }
         );
 
@@ -130,7 +134,7 @@ export class PayFeesServiceAdapter {
 
     populateFeeReceiptList(feeReceiptList: any): void {
         this.vm.feeReceiptList = feeReceiptList.sort((a, b) => {
-            return b.receiptNumber - a.receiptNumber;
+            return (new Date(b.generationDateTime).getTime()) - (new Date(a.generationDateTime).getTime());
         });
     }
 
@@ -201,6 +205,7 @@ export class PayFeesServiceAdapter {
                         parentStudent: studentId,
                         feeReceiptData: {
                             receiptNumber: 0,
+                            parentFeeReceiptBook: this.vm.selectedFeeReceiptBook.id,
                             parentSchool: this.vm.user.activeSchool.dbId,
                             parentStudent: studentId,
                             parentSession: session.id,
@@ -298,6 +303,7 @@ export class PayFeesServiceAdapter {
                         parentStudent: studentId,
                         feeReceiptData: {
                             receiptNumber: 0,
+                            parentFeeReceiptBook: this.vm.selectedFeeReceiptBook.id,
                             parentSchool: this.vm.user.activeSchool.dbId,
                             parentStudent: studentId,
                             parentSession: session.id,

@@ -37,6 +37,10 @@ export class TotalCollectionServiceAdapter {
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}), // 4
             this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 5
             this.vm.genericService.getObject({employee_app: 'EmployeePermission'}, {filter: employee_permission_data}), // 6
+            this.vm.genericService.getObjectList(
+                {fees_third_app: 'FeeReceiptBook'},
+                {filter: {parentSchool: this.vm.user.activeSchool.dbId}, order_by: ['id']}
+            ), // 7
         ]).then(
             (value) => {
                 this.feeTypeList = value[0];
@@ -53,6 +57,7 @@ export class TotalCollectionServiceAdapter {
                         this.vm.minDate.setDate(currentDate.getDate() - Math.floor(numberOfDays));
                     }
                 }
+                this.vm.feeReceiptBookList = value[7];
 
                 this.vm.isInitialLoading = false;
             },
@@ -90,7 +95,7 @@ export class TotalCollectionServiceAdapter {
         ]).then(
             (value) => {
                 this.vm.feeReceiptList = value[0].sort((a, b) => {
-                    return b.receiptNumber - a.receiptNumber;
+                    return (new Date(b.generationDateTime).getTime()) - (new Date(a.generationDateTime).getTime());
                 });
                 this.vm.subFeeReceiptList = value[1];
 
@@ -256,6 +261,16 @@ export class TotalCollectionServiceAdapter {
 
         this.vm.filteredSessionList.forEach((session) => {
             session.selectedSession = true;
+        });
+
+        // Filter Fee Receipt Book
+        this.vm.filteredFeeReceiptBookList = this.vm.feeReceiptBookList.filter((feeReceiptBook) => {
+            return this.vm.feeReceiptList.find(feeReceipt => {
+                return feeReceipt.parentFeeReceiptBook == feeReceiptBook.id;
+            }) != undefined;
+        });
+        this.vm.filteredFeeReceiptBookList.forEach((feeReceiptBook) => {
+            feeReceiptBook.selected = true;
         });
 
     }

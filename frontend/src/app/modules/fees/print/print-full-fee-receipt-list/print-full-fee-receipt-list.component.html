@@ -65,7 +65,7 @@
                     </div>
 
                     <div class="row" style="margin-top: 5px">
-                        <div class="col-xs-6">Receipt No. : {{ feeReceipt.receiptNumber }}</div>
+                        <div class="col-xs-6">Receipt No. : {{ getFeeReceiptNo(feeReceipt) }}</div>
                         <div class="col-xs-6" align="right">Date: {{ feeReceipt.generationDateTime | date: 'dd/MM/yyyy'
                             }}</div>
                     </div>
@@ -290,7 +290,7 @@
                     </div>
 
                     <div class="row" style="margin-top: 5px">
-                        <div class="col-xs-6">Receipt No. : {{ feeReceipt.receiptNumber }}</div>
+                        <div class="col-xs-6">Receipt No. : {{ getFeeReceiptNo(feeReceipt) }}</div>
                         <div class="col-xs-6" align="right">Date: {{ feeReceipt.generationDateTime | date: 'dd/MM/yyyy'
                             }}</div>
                     </div>
