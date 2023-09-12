@@ -80,7 +80,7 @@ class BookParameter(models.Model):
 
 class SchoolLibrarySettings(models.Model):
 
-    parentSchool = models.ForeignKey(
+    parentSchool = models.OneToOneField(
         School, on_delete=models.CASCADE, default=0)
 
     # Maximum number of books that can be issued to a student at once

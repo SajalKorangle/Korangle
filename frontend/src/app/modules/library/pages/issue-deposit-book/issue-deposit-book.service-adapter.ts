@@ -7,13 +7,8 @@ export class IssueDepositBookServiceAdapter {
 
     initializeAdapter(vm: IssueDepositBookComponent): void {
         this.vm = vm;
-        this.getBookList();
-    }
-
-
-    getBookList() {
         this.vm.isLoading = true;
-        const query = {
+        const bookListQuery = {
             filter: {
                 parentSchool_id: this.vm.user.activeSchool.dbId
             },
@@ -29,8 +24,27 @@ export class IssueDepositBookServiceAdapter {
             fields_list: ["isIssued", "__all__"]
         };
 
-        this.vm.genericService.getObjectList({ library_app: "Book" }, query).then((books) => {
-            this.vm.booksList = books;
+        const schoolSettingsQuery = {
+            filter: {
+                parentSchool_id: this.vm.user.activeSchool.dbId
+            }
+        };
+
+        Promise.all([
+            this.vm.genericService.getObjectList({ library_app: "Book" }, bookListQuery),
+            this.vm.genericService.getObject({ library_app: 'SchoolLibrarySettings' }, schoolSettingsQuery)
+        ]).then(async (values) => {
+            this.vm.booksList = values[0];
+            
+            if (!values[1]) {
+                values[1] = await this.vm.genericService.createObject({ library_app: 'SchoolLibrarySettings' }, {
+                    parentSchool: this.vm.user.activeSchool.dbId
+                });
+            }
+        
+            this.vm.issueLimits.student = values[1].maxStudentIssueCount;
+            this.vm.issueLimits.employee = values[1].maxEmployeeIssueCount;
+        
             this.vm.isLoading = false;
         });
     }
