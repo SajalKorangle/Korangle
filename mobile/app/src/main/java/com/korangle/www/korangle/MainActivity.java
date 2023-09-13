@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(BuildConfig.DEBUG) {
             webapp_url="https://test.korangle.com";
+            s3_bucket_url = "https://korangletesting.s3.amazonaws.com/";
         }
 
         // Check App updates
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webview.getSettings().setSupportMultipleWindows(true);
         webview.addJavascriptInterface(new WebAppInterface(this), "Android");
-        webview.getSettings().setAppCacheEnabled(true);
+        // webview.getSettings().setAppCacheEnabled(true);
         webview.getSettings().setDomStorageEnabled(true);
         webview.getSettings().setUserAgentString("Mobile");
         webview.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
