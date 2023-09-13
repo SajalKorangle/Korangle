@@ -12,6 +12,7 @@ import { TCService } from './../../../../services/modules/tc/tc.service';
 import { StudentService } from './../../../../services/modules/student/student.service';
 import { ClassService } from '@services/modules/class/class.service';
 import { FeeService } from './../../../../services/modules/fees/fee.service';
+import { GenericService } from '@services/generic/generic-service';
 
 import { INSTALLMENT_LIST } from './../../../fees/classes/constants';
 
@@ -19,13 +20,14 @@ interface CustomSSInterface extends StudentSection {
     parentStudentInstance: Student;
     tc: TransferCertificateNew;
     dueAmount: number;
+    booksIssued: number;
 }
 
 @Component({
     selector: 'app-issue-tc',
     templateUrl: './issue-tc.component.html',
     styleUrls: ['./issue-tc.component.css'],
-    providers: [TCService, StudentService, ClassService, FeeService],
+    providers: [TCService, StudentService, ClassService, FeeService, GenericService],
 })
 export class IssueTCComponent implements OnInit {
     user: any;
@@ -49,9 +51,15 @@ export class IssueTCComponent implements OnInit {
     subFeeReciptList: Array<SubFeeReceipt>;
     subDiscountList: Array<SubDiscount>;
 
+    libraryStudentsWithBookIssuedList: Array<number> = [];
+
     userHasFeePermission: boolean = false;
     feeModule: any;
     collectFeeTask: any;
+
+    userHasLibraryPermission: boolean = false;
+    libraryModule: any;
+    issueDepositBook: any;
 
     serviceAdapter: IssueTCServiceAdapter;
     isLoading = false;
@@ -60,7 +68,8 @@ export class IssueTCComponent implements OnInit {
         public tcService: TCService,
         public studentService: StudentService,
         public classService: ClassService,
-        public feeService: FeeService
+        public feeService: FeeService,
+        public genericService: GenericService
     ) {}
 
     ngOnInit() {
@@ -73,11 +82,25 @@ export class IssueTCComponent implements OnInit {
             this.collectFeeTask = this.feeModule.taskList.find((t) => t.path == 'collect_fee');
         }
         this.userHasFeePermission = this.feeModule && this.collectFeeTask;
+
+        this.libraryModule = this.user.activeSchool.moduleList.find((m) => m.path == 'library');
+        if (this.libraryModule) {
+            this.issueDepositBook = this.libraryModule.taskList.find((t) => t.path == 'issue_deposit_book');
+            if (this.issueDepositBook) {
+                this.userHasLibraryPermission = true;
+            }
+        }
     }
 
     navigateToCollectFee(): void {
         if (this.userHasFeePermission) {
             this.user.populateSectionAndRoute(this.collectFeeTask, this.feeModule);
+        }
+    }
+
+    navigateToIssueDepositBook(): void {
+        if (this.userHasLibraryPermission) {
+            this.user.populateSectionAndRoute(this.issueDepositBook, this.libraryModule);
         }
     }
 
@@ -189,6 +212,7 @@ export class IssueTCComponent implements OnInit {
                 tc: tc,
                 parentStudentInstance: this.studentList.find((s) => s.id == ss.parentStudent),
                 dueAmount: this.getStudentFeeDue(studentId),
+                booksIssued: this.libraryStudentsWithBookIssuedList.reduce((acc, cur)=>acc+=cur==studentId?1:0, 0),
             };
         });
     }
@@ -208,6 +232,10 @@ export class IssueTCComponent implements OnInit {
                 ss.tc.certificateNumber.toString().startsWith(this.certificateNumberSearchInput) &&
                 ss.parentStudentInstance.name.toLowerCase().startsWith(this.studentNameSearchInput.toLowerCase())
         );
+    }
+
+    isIssueBlocked(ss: CustomSSInterface): boolean {
+        return this.tcIssuedOnThisPageSession[ss.tc.id] || ss.dueAmount > 0 || ss.booksIssued > 0;
     }
 
     issueTC(tc: TransferCertificateNew): void {

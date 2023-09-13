@@ -49,18 +49,28 @@ export class IssueTCServiceAdapter {
                 parentStudentFee__cleared: 'False',
             };
 
+            const library_issued_books_request = {
+                filter: {
+                    parentStudent__in: this.vm.tcList.map((tc) => tc.parentStudent),
+                    depositTime: null
+                },
+                fields_list: ["parentStudent"]
+            };
+
             Promise.all([
                 this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data), // 0
                 this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 1
                 this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_request), // 2
                 this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipts_request), // 3
                 this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_request), // 4
+                this.vm.genericService.getObjectList({library_app: "BookIssueRecord"}, library_issued_books_request) //5
             ]).then((value) => {
                 this.vm.studentSectionList = value[0];
                 this.vm.studentList = value[1];
                 this.vm.studentFeeList = value[2];
                 this.vm.subFeeReciptList = value[3];
                 this.vm.subDiscountList = value[4];
+                this.vm.libraryStudentsWithBookIssuedList = value[5].map((record) => record.parentStudent);
 
                 this.vm.populateClassSectionList(data[1], data[2]);
                 this.vm.populateStudentSectionWithTC();

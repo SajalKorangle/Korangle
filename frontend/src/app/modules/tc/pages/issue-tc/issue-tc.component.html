@@ -48,12 +48,14 @@
                                 </a>
                             </td>
                             <td style="display: flex; flex-direction: column; align-items: center">
-                                <button mat-button [disabled]="tcIssuedOnThisPageSession[ss.tc.id] || ss.dueAmount > 0" (click)="issueTC(ss.tc)"
+                                <button mat-button [disabled]="isIssueBlocked(ss)" (click)="issueTC(ss.tc)"
                                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}" style="padding: 6px; margin: 0">
                                     Issue Certificate
                                 </button>
                                 <span style="color: red; font-size: 11px; margin-top: 1px" [style.cursor]="userHasFeePermission ? 'pointer' : ''"
                                     (click)="navigateToCollectFee()">Amount Due: {{ ss.dueAmount }}</span>
+                                <span *ngIf="ss.booksIssued>0" style="color: red; font-size: 11px; margin-top: 1px" [style.cursor]="userHasLibraryPermission ? 'pointer' : ''"
+                                    (click)="navigateToIssueDepositBook()">Books Issued: {{ ss.booksIssued }}</span>
                             </td>
                         </tr>
                     </ng-container>
