@@ -212,7 +212,7 @@ export class IssueTCComponent implements OnInit {
                 tc: tc,
                 parentStudentInstance: this.studentList.find((s) => s.id == ss.parentStudent),
                 dueAmount: this.getStudentFeeDue(studentId),
-                booksIssued: this.libraryStudentsWithBookIssuedList.reduce((acc, cur)=>acc+=cur==studentId?1:0, 0),
+                booksIssued: this.libraryStudentsWithBookIssuedList.reduce((acc, cur) => acc += cur == studentId ? 1 : 0, 0),
             };
         });
     }
