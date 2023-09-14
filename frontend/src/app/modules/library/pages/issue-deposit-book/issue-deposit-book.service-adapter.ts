@@ -35,16 +35,16 @@ export class IssueDepositBookServiceAdapter {
             this.vm.genericService.getObject({ library_app: 'SchoolLibrarySettings' }, schoolSettingsQuery)
         ]).then(async (values) => {
             this.vm.booksList = values[0];
-            
+
             if (!values[1]) {
                 values[1] = await this.vm.genericService.createObject({ library_app: 'SchoolLibrarySettings' }, {
                     parentSchool: this.vm.user.activeSchool.dbId
                 });
             }
-        
+
             this.vm.issueLimits.student = values[1].maxStudentIssueCount;
             this.vm.issueLimits.employee = values[1].maxEmployeeIssueCount;
-        
+
             this.vm.isLoading = false;
         });
     }
