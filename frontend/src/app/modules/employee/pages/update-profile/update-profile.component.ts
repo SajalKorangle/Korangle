@@ -599,4 +599,7 @@ export class UpdateProfileComponent implements OnInit {
         });
     }
 
+    canAddDateOfLeaving() {
+        
+    }
 }
