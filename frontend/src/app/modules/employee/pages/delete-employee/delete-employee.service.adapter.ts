@@ -1,4 +1,5 @@
 import { DeleteEmployeeComponent } from './delete-employee.component';
+import { Query } from '@services/generic/query';
 
 export class DeleteEmployeeServiceAdapter {
     vm: DeleteEmployeeComponent;
@@ -33,11 +34,18 @@ export class DeleteEmployeeServiceAdapter {
             // If employee have to be deleted from session only
             // 'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
+        let issuedBooksQuery = new Query()
+            .filter({
+                parentEmployee: employee.id,
+                depositTime: null
+            })
+            .setFields('id').getObjectList({ library_app: "BookIssueRecord" });
         Promise.all([
             this.vm.employeeService.getObject(this.vm.employeeService.employees, request_employee_data),
             this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_data),
             this.vm.feeService.getObjectList(this.vm.feeService.discounts, discount_data),
             this.vm.subjectService.getObjectList(this.vm.subjectService.class_subject, class_subject_data),
+            issuedBooksQuery
         ]).then(
             (value) => {
                 console.log(value);
@@ -45,6 +53,7 @@ export class DeleteEmployeeServiceAdapter {
                 this.vm.selectedEmployeeFeeReceiptList = value[1];
                 this.vm.selectedEmployeeDiscountList = value[2];
                 this.vm.selectedEmployeeClassSubjectList = value[3];
+                this.vm.selectedEmployeeIssuedBooks = value[4].length;
                 this.vm.isLoading = false;
             },
             (error) => {
