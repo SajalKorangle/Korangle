@@ -600,6 +600,6 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     canAddDateOfLeaving() {
-        
+        return this.currentEmployeeProfile.issuedBooks == 0;
     }
 }
