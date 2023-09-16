@@ -63,7 +63,7 @@ export class DeleteStudentServiceAdapter {
                 depositTime: null
             })
             .getObjectList({ library_app: 'BookIssueRecord' });
-        
+
         let classList, divisionList;
 
         [
