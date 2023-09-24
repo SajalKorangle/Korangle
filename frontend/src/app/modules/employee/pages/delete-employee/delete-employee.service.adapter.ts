@@ -35,11 +35,17 @@ export class DeleteEmployeeServiceAdapter {
             // 'parentSession': this.vm.user.activeSchool.currentSessionDbId,
         };
         let issuedBooksQuery = new Query()
-            .filter({
-                parentEmployee: employee.id,
-                depositTime: null
-            })
-            .setFields('id').getObjectList({ library_app: "BookIssueRecord" });
+            .filter({ id: employee.id })
+            .annotate(
+                'issuedBooks',
+                'book_issue_record__id',
+                'Count',
+                {
+                    book_issue_record__parentEmployee: employee.id,
+                    book_issue_record__depositTime: null
+                }
+            )
+            .setFields('issuedBooks').getObject({ employee_app: 'Employee' });
         Promise.all([
             this.vm.employeeService.getObject(this.vm.employeeService.employees, request_employee_data),
             this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_data),
@@ -48,12 +54,12 @@ export class DeleteEmployeeServiceAdapter {
             issuedBooksQuery
         ]).then(
             (value) => {
-                console.log(value);
                 this.vm.selectedEmployee = value[0];
                 this.vm.selectedEmployeeFeeReceiptList = value[1];
                 this.vm.selectedEmployeeDiscountList = value[2];
                 this.vm.selectedEmployeeClassSubjectList = value[3];
-                this.vm.selectedEmployeeIssuedBooks = value[4].length;
+                console.log(value[4])
+                this.vm.selectedEmployeeIssuedBooks = value[4].issuedBooks;
                 this.vm.isLoading = false;
             },
             (error) => {
