@@ -13,7 +13,7 @@ def add_view_book_flow_library_module_phase2(apps, schema_editor):
 
     task_obj = Task()
     task_obj.parentModule = module_obj
-    task_obj.path = 'view-book-flow'
+    task_obj.path = 'view_book_flow'
     task_obj.title = 'View Book Flow'
     task_obj.orderNumber = startIndex-1
     task_obj.parentBoard = None
