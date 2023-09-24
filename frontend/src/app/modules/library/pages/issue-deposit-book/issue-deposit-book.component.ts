@@ -99,6 +99,8 @@ export class IssueDepositBookComponent implements OnInit {
             return [];
         }
 
+        value = value.trim();
+
         return this.booksList.filter((book) => {
             return (
                 book.name.toLowerCase().indexOf(value.toLowerCase()) != -1 ||

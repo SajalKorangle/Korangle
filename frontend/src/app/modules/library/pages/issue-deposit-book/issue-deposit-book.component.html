@@ -93,7 +93,7 @@
                     <input
                         type="text"
                         id="bookInput"
-                        placeholder="Book Number"
+                        placeholder="Book Name / Book No."
                         matInput
                         aria-label="Search Book"
                         [formControl]="selectedBookFormControl"
@@ -149,16 +149,16 @@
                             />
                             <figcaption style="text-align: center; width: 100%;"><em>Back Image</em></figcaption>   
                         </figure>
-                        <p>
-                            <strong>Book No.: </strong><span>{{selectedBook.bookNumber}}</span><br/>
-                            <strong>Name: </strong><span>{{selectedBook.name}}</span><br/>
-                            <strong>Author: </strong><span>{{selectedBook.author}}</span><br/>
-                            <strong>Publisher: </strong><span>{{selectedBook.publisher}}</span><br/>
-                            <strong>Location: </strong><span>{{selectedBook.location}}</span><br/>
-                            <strong>No. of Pages: </strong><span>{{selectedBook.numberOfPages}}</span><br/>
-                            <strong>Cover Type: </strong><span>{{selectedBook.coverType}}</span><br/>
-                            <strong>Type of Book: </strong><span>{{selectedBook.typeOfBook}}</span><br/>
-                            <strong>Printed Cost: </strong><span>{{selectedBook.printedCost}}</span><br/>
+                        <p style="display: grid; grid-template-columns: 1fr 3fr;">
+                            <strong>Book No.: </strong><span>{{selectedBook.bookNumber}}</span>
+                            <strong>Name: </strong><span>{{selectedBook.name}}</span>
+                            <strong>Author: </strong><span>{{selectedBook.author}}</span>
+                            <strong>Publisher: </strong><span>{{selectedBook.publisher}}</span>
+                            <strong>Location: </strong><span>{{selectedBook.location}}</span>
+                            <strong>No. of Pages: </strong><span>{{selectedBook.numberOfPages}}</span>
+                            <strong>Cover Type: </strong><span>{{selectedBook.coverType}}</span>
+                            <strong>Type of Book: </strong><span>{{selectedBook.typeOfBook}}</span>
+                            <strong>Printed Cost: </strong><span>{{selectedBook.printedCost}}</span>
                         </p>
                     </div>
 
