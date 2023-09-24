@@ -109,6 +109,7 @@ mobile/captures/
 mobile/obj/
 mobile/.externalNativeBuild
 mobile/app/release/*
+mobile/app/debug/*
 
 *.prettierrc
 
