@@ -323,10 +323,16 @@
                 </thead>
                 <tbody>
                     <ng-container *cdkVirtualFor="let book of filterBooks()">
-                        <tr>
+                        <tr 
+                            [ngStyle]="{'opacity': book.isIssued ? 0.6 : 1}" 
+                            matTooltip="{{book.isIssued ? 'Book is currently issued' : undefined}}"
+                        >
                             <ng-container>
                                 <td>
-                                    <mat-checkbox [(ngModel)]="book.selected"> </mat-checkbox>
+                                    <mat-checkbox 
+                                        [(ngModel)]="book.selected" 
+                                        [disabled]="book.isIssued==1" 
+                                    ></mat-checkbox>
                                 </td>
                                 <td *ngIf="columnFilter.showSerialNumber">
                                     {{ book.index }}

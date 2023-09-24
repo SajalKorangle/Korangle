@@ -16,6 +16,16 @@ export class DeleteBookServiceAdapter {
             filter: {
                 parentSchool_id: this.vm.user.activeSchool.dbId
             },
+            annotate: {
+                isIssued: {
+                    function: "Count",
+                    field: "book_issue_record",
+                    filter: {
+                        book_issue_record__depositTime: null
+                    }
+                }
+            },
+            fields_list: ["isIssued", "__all__"]
         };
         const fetchedBookList = await this.vm.genericService.getObjectList({ library_app: "Book" }, query);
         fetchedBookList.forEach(book => {

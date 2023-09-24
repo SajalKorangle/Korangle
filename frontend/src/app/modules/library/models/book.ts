@@ -14,4 +14,6 @@ export class Book {
     frontImage: string = null;
     backImage: string = null;
     parentSchool: number = null;
+    canStudentIssue: boolean = true;
+    canEmployeeIssue: boolean = true;
 }
