@@ -58,7 +58,6 @@ export class DeleteEmployeeServiceAdapter {
                 this.vm.selectedEmployeeFeeReceiptList = value[1];
                 this.vm.selectedEmployeeDiscountList = value[2];
                 this.vm.selectedEmployeeClassSubjectList = value[3];
-                console.log(value[4])
                 this.vm.selectedEmployeeIssuedBooks = value[4].issuedBooks;
                 this.vm.isLoading = false;
             },
