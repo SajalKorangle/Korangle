@@ -101,7 +101,6 @@
                     selectedEmployeeFeeReceiptList.length == 0 &&
                     selectedEmployeeDiscountList.length == 0 &&
                     selectedEmployeeClassSubjectList.length == 0 &&
-                    selectedEmployeeIssuedBooks == 0 &&
                     !isCurrentlyLoggedIn();
                 else noDeletion
             "
@@ -125,9 +124,6 @@
                 /></ng-container>
                 <ng-container *ngIf="selectedEmployeeClassSubjectList.length != 0"
                     >Employee has been set as class subject teacher<br
-                /></ng-container>
-                <ng-container *ngIf="selectedEmployeeIssuedBooks > 0"
-                    >Employee has some issued books in library.<br
                 /></ng-container>
             </ng-container>
         </ng-template>
