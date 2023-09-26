@@ -5,20 +5,17 @@ import { map } from 'rxjs/operators';
 import { StudentService } from '../../services/modules/student/student.service';
 import { ParentStudentFilterServiceAdapter } from './parent-student-filter.service.adapter';
 import { ClassService } from '../../services/modules/class/class.service';
-import { TCService } from '../../services/modules/tc/tc.service';
 
 @Component({
     selector: 'parent-student-filter',
     templateUrl: './parent-student-filter.component.html',
     styleUrls: ['./parent-student-filter.component.css'],
-    providers: [StudentService, ClassService, TCService],
+    providers: [StudentService, ClassService],
 })
 export class ParentStudentFilterComponent implements OnInit {
     @Input() user;
 
     @Input() studentTcGenerated = false;
-
-    @Input() studentNewTcGenerated = true;
 
     @Input() bothFilters = true;
 
@@ -39,7 +36,6 @@ export class ParentStudentFilterComponent implements OnInit {
     studentSectionList = [];
     studentList = [];
     mobileNumberList = [];
-    student_new_tc_issued_list = [];
 
     studentFormControl = new FormControl();
     mobileNumberFormControl = new FormControl();
@@ -60,7 +56,7 @@ export class ParentStudentFilterComponent implements OnInit {
 
     isLoading = false;
 
-    constructor(public studentService: StudentService, public classService: ClassService, public tcService: TCService) {}
+    constructor(public studentService: StudentService, public classService: ClassService) {}
 
     ngOnInit(): void {
 
