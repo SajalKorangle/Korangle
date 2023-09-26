@@ -44,8 +44,8 @@
         <ng-container *ngIf="!isIssuedBooksLoading">
 
             <p>Currently Issued Books: <strong>{{issuedBooksList.length}}</strong></p>
-            <div *ngIf="issuedBooksList.length" style="width: 100%; overflow-x: scroll;">
-                <hr style="min-width: 450px;"/>
+            <ng-container *ngIf="issuedBooksList.length">
+                <hr/>
                 <table class="table table-hover">
                     <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                         <tr>
@@ -79,7 +79,7 @@
                         </ng-container>
                     </tbody>
                 </table>
-            </div>
+            </ng-container>
             
             <hr/>
             <h5><strong>Issue New Book</strong></h5>
