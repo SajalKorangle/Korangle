@@ -1,49 +1,26 @@
 .example-form {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-    min-width: 150px;
-    width: 100%;
-    align-items: center;
+    display: flex; gap: 2rem; flex-wrap: wrap; min-width: 150px;
+    width: 100%; align-items: center;
 }
 
 .example-full-width {
-    min-width: 150px;
-    max-width: 320px;
-    width: 100%;
+    min-width: 150px; max-width: 320px; width: 100%;
 }
 
 .pix {
-    width: 10%;
-    float: left;
-    vertical-align: middle;
-    margin-right: 1rem;
+    width: 10%; float: left; vertical-align: middle; margin-right: 1rem;
 }
 
 .box {
-    width: 100%;
-    display: flex;
-    align-items: center;
+    width: 100%; display: flex; align-items: center;
 }
 
 .paraUp {
-    margin-bottom: 0;
-    font-size: 16px;
-    font-weight: 500;
-    height: 20px;
-    width: inherit;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    margin-bottom: 0; font-size: 16px; font-weight: 500; height: 20px;
+    width: inherit; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
 }
 
 .paraDown {
-    margin: 0;
-    padding-top: 0;
-    font-size: 12px;
-    height: 15px;
-    width: inherit;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    margin: 0; padding-top: 0; font-size: 12px; height: 15px; width: inherit;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
