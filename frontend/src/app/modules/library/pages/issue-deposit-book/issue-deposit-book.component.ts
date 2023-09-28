@@ -63,6 +63,7 @@ export class IssueDepositBookComponent implements OnInit {
     reset() {
         this.selectedStudent = null;
         this.selectedEmployee = null;
+        this.employeeList = null;
         this.issuedBooksList = null;
         this.issueBookNumber = null;
         this.selectedBook = null;
