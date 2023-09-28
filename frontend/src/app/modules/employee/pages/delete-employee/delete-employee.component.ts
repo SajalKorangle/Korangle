@@ -22,6 +22,7 @@ export class DeleteEmployeeComponent implements OnInit {
     selectedEmployeeFeeReceiptList = null;
     selectedEmployeeDiscountList = null;
     selectedEmployeeClassSubjectList = null;
+    selectedEmployeeIssuedBooks = 0;
 
     serviceAdapter: DeleteEmployeeServiceAdapter;
 
