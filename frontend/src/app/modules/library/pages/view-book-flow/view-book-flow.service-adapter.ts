@@ -9,7 +9,6 @@ export class ViewBookFlowServiceAdapter {
         this.getBookList();
     }
 
-
     getBookList() {
         this.vm.isLoading = true;
         const query = {
@@ -32,9 +31,5 @@ export class ViewBookFlowServiceAdapter {
             this.vm.booksList = books;
             this.vm.isLoading = false;
         });
-    }
-
-    getBookIssueRecord(query: any) {
-        return this.vm.genericService.getObjectList({ library_app: "BookIssueRecord" }, query);
     }
 }

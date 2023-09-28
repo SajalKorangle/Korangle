@@ -21,37 +21,37 @@ export class ViewBookFlowComponent implements OnInit {
   serviceAdapter: ViewBookFlowServiceAdapter;
 
   isLoading: boolean = false;
-  
+
   minDate = new Date(1990, 0, 1);
   maxDate = new Date();
-  
+
   issueStartDate = new FormControl(this.minDate);
   issueEndDate = new FormControl(this.maxDate);
 
   depositStartDate = new FormControl(this.minDate);
   depositEndDate = new FormControl(this.maxDate);
-  
+
   showFilters: Boolean = false;
   issueVisibility: 'all' | 'issued' | 'deposited' = 'all';
-  
+
   booksList: any = [];
   filteredBookList: any = [];
   selectedBook: any = null;
   selectedBookFormControl: FormControl = new FormControl();
 
   issueToFormControl: FormControl = new FormControl('all');
-  
+
   selectedStudent: any = null;
   selectedStudentSection: any;
-  
+
   selectedEmployee: any = null;
   employeeList: any = null;
 
   isRecordListLoading: boolean = false;
   bookIssueRecordList: any = null;
-  
+
   constructor(public genericService: GenericService) { }
-  
+
   ngOnInit() {
     this.user = DataStorage.getInstance().getUser();
     this.serviceAdapter = new ViewBookFlowServiceAdapter();
@@ -167,8 +167,8 @@ export class ViewBookFlowComponent implements OnInit {
       order_by: ['-issueTime'],
       fields_list: ["__all__", "parentBook__name", "parentBook__bookNumber", "parentStudent__name", "parentStudent__scholarNumber", "parentEmployee__name"]
     };
-    
-    if(this.issueVisibility === 'issued') {
+
+    if (this.issueVisibility === 'issued') {
       query.filter['depositTime'] = null;
     } else if (this.issueVisibility === 'deposited') {
       query.filter['depositTime__date__isnull'] = false;
@@ -176,28 +176,20 @@ export class ViewBookFlowComponent implements OnInit {
       query.filter['depositTime__date__lte'] = moment(this.depositEndDate.value).format('YYYY-MM-DD');
     } else {
       query.filter['__or__'] = [
-        {
-          depositTime: null
-        },
+        { depositTime: null },
         {
           depositTime__date__gte: moment(this.depositStartDate.value).format('YYYY-MM-DD'),
           depositTime__date__lte: moment(this.depositEndDate.value).format('YYYY-MM-DD'),
         }
-      ]
+      ];
     }
 
-    if (this.selectedBook) {
-      query.filter['parentBook_id'] = this.selectedBook.id;
-    }
+    if (this.selectedBook) query.filter['parentBook_id'] = this.selectedBook.id;
 
-    if(this.issueToFormControl.value === 'student') {
-      if(this.selectedStudent) {
-        query.filter['parentStudent_id'] = this.selectedStudent.id;
-      }
-    } else if (this.issueToFormControl.value === 'employee') {
-      if(this.selectedEmployee) {
-        query.filter['parentEmployee_id'] = this.selectedEmployee.id;
-      }
+    if (this.issueToFormControl.value === 'student' && this.selectedStudent) {
+      query.filter['parentStudent_id'] = this.selectedStudent.id;
+    } else if (this.issueToFormControl.value === 'employee' && this.selectedEmployee) {
+      query.filter['parentEmployee_id'] = this.selectedEmployee.id;
     }
 
     this.isRecordListLoading = true;
