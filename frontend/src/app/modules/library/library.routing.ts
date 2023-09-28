@@ -42,6 +42,11 @@ const routes: Routes = [
         data: { moduleName: 'library' },
     },
     {
+        path: 'view_book_flow',
+        loadChildren: 'app/modules/library/pages/view-book-flow/view-book-flow.module#ViewBookFlowModule',
+        data: { moduleName: 'library' },
+    },
+    {
         path: '',
         component: LibraryComponent,
     },
