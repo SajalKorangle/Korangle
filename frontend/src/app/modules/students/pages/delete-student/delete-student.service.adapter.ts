@@ -256,7 +256,7 @@ export class DeleteStudentServiceAdapter {
                     tc.cancelledBy == null
                 );
             }) != undefined;
-            student.deleteDisabledReason["hasIssuedBooks"] = this.vm.issuedBookRecordList.find((record)=>record.id === student.dbId).issuedBooks;
+            student.deleteDisabledReason["hasIssuedBooks"] = this.vm.issuedBookRecordList.find((record) => record.id === student.dbId).issuedBooks;
 
             student.isDeletable = !student.deleteDisabledReason["hasMultipleSessions"] &&
             !student.deleteDisabledReason["hasFeeReceipt"] &&
