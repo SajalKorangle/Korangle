@@ -59,10 +59,18 @@ export class DeleteStudentServiceAdapter {
 
         const issuedBookQuery = new Query()
             .filter({
-                parentEmployee: null,
-                depositTime: null
+                parentSchool: this.vm.user.activeSchool.dbId,
             })
-            .getObjectList({ library_app: 'BookIssueRecord' });
+            .annotate(
+                'issuedBooks',
+                'book_issue_record__id',
+                'Count',
+                {
+                    book_issue_record__depositTime: null
+                }
+            )
+            .setFields('issuedBooks')
+            .getObjectList({ student_app: 'Student' });
 
         let classList, divisionList;
 
@@ -87,6 +95,8 @@ export class DeleteStudentServiceAdapter {
             studentSectionQuery,    // 7,
             issuedBookQuery // 8
         ]);
+
+        console.log(this.vm.issuedBookRecordList);
 
         classList.forEach((classs) => {
             classs.sectionList = [];
@@ -246,10 +256,7 @@ export class DeleteStudentServiceAdapter {
                     tc.cancelledBy == null
                 );
             }) != undefined;
-
-            student.deleteDisabledReason["hasIssuedBooks"] = this.vm.issuedBookRecordList.reduce((acc, book) => {
-                return acc + (book.parentStudent == student.dbId);
-            }, 0);
+            student.deleteDisabledReason["hasIssuedBooks"] = this.vm.issuedBookRecordList.find((record)=>record.id === student.dbId).issuedBooks;
 
             student.isDeletable = !student.deleteDisabledReason["hasMultipleSessions"] &&
             !student.deleteDisabledReason["hasFeeReceipt"] &&
