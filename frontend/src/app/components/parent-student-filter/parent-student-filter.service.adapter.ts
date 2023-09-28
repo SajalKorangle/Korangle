@@ -28,7 +28,6 @@ export class ParentStudentFilterServiceAdapter {
         };
 
         let student_new_tc_issued_list_data = {
-            // parentSession: this.vm.user.activeSchool.currentSessionDbId,
             status: 'Issued',
             fields__korangle: 'parentStudent',
         };
