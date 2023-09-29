@@ -28,3 +28,7 @@ hr {
     height: 1px;
     background-color: black;
 }
+
+.table{
+    min-width: 450px;
+}
