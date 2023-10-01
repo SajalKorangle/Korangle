@@ -41,6 +41,8 @@ export class DeleteStudentComponent implements OnInit {
     selectedStudentDiscountList = [];
     selectedStudentTcList: Array<TransferCertificateNew> = [];
 
+    issuedBookRecordList = [];
+
     // Data from Parent Student Filter
     classList = [];
     sectionList = [];

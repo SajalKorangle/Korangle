@@ -145,6 +145,9 @@
                         >Discount/s have been issued for the student<br
                     /></ng-container>
                     <ng-container *ngIf="selectedStudent.deleteDisabledReason.hasTC">TC is already generated<br /></ng-container>
+                    <ng-container *ngIf="selectedStudent.deleteDisabledReason.hasIssuedBooks">
+                        {{selectedStudent.deleteDisabledReason.hasIssuedBooks}} books have been issued to student.
+                    </ng-container>
                 </ng-container>
             </ng-container>
         </ng-container>
