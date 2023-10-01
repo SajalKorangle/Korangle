@@ -12,13 +12,15 @@ export class ParentStudentFilterServiceAdapter {
     }
 
     //initialize data
-    initializeData(): void {
+    async initializeData(): Promise<void> {
         this.vm.handleOnStudentListLoading(true);
 
         let student_section_data = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
         };
+
+        let currentSessionStudents = await this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data);
 
         let student_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -28,6 +30,7 @@ export class ParentStudentFilterServiceAdapter {
         };
 
         let student_new_tc_issued_list_data = {
+            parentStudent_in: currentSessionStudents.map((a) => a.parentStudent),
             status: 'Issued',
             fields__korangle: 'parentStudent',
         };
@@ -40,17 +43,16 @@ export class ParentStudentFilterServiceAdapter {
         Promise.all([
             this.vm.classService.getObjectList(this.vm.classService.classs, {}),
             this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data),
             this.vm.studentService.getObjectList(this.vm.studentService.student, student_data),
             this.vm.tcService.getObjectList(this.vm.tcService.transfer_certificate, student_new_tc_issued_list_data),
         ]).then(
             (value) => {
                 this.vm.classList = value[0];
                 this.vm.sectionList = value[1];
-                this.vm.studentSectionList = value[2];
-                this.vm.student_new_tc_issued_list = value[4].map((obj) => obj.parentStudent);
+                this.vm.studentSectionList = currentSessionStudents;
+                this.vm.student_new_tc_issued_list = value[3].map((obj) => obj.parentStudent);
 
-                this.populateStudentList(value[3]);
+                this.populateStudentList(value[2]);
                 this.populateMobileNumberList();
                 this.sortStudentList('name');
 
