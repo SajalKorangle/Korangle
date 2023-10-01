@@ -196,33 +196,35 @@
 
         <!-- Book records table starts -->
         <ng-container *ngIf="bookIssueRecordList !== null && !isRecordListLoading">
-            <table class="table table-hover" *ngIf="bookIssueRecordList.length > 0">
-                <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
-                    <tr>
-                        <th>S.No.</th>
-                        <th>Book</th>
-                        <th>Issued on</th>
-                        <th>Deposited on</th>
-                        <th>Issued by Student</th>
-                        <th>Issued by Employee</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ng-container *ngFor="let record of bookIssueRecordList; let i = index">
+            <div style="width: 100%; overflow-x: auto;">
+                <table class="table table-hover" *ngIf="bookIssueRecordList.length > 0">
+                    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                         <tr>
-                            <ng-container>
-                                <td>{{ i+1 }}</td>
-                                <td>{{ record.parentBook__name }} ({{record.parentBook__bookNumber}})</td>
-                                <td>{{ record.issueTime | date:'d-M-yyyy' }}</td>
-                                <td>{{ record.depositTime ? (record.depositTime | date:'d-M-yyyy') : 'N/A' }}</td>
-                                <td>{{ displayStudentName(record) }}</td>
-                                <td>{{ record.parentEmployee ? record.parentEmployee__name : 'N/A' }}</td>
-                            </ng-container>
+                            <th>S.No.</th>
+                            <th>Book</th>
+                            <th>Issued on</th>
+                            <th>Deposited on</th>
+                            <th>Issued by Student</th>
+                            <th>Issued by Employee</th>
                         </tr>
-                    </ng-container>
-                </tbody>
-            </table>
-            <p *ngIf="bookIssueRecordList.length===0"><em>No records found!</em></p>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let record of bookIssueRecordList; let i = index">
+                            <tr>
+                                <ng-container>
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ record.parentBook__name }} ({{record.parentBook__bookNumber}})</td>
+                                    <td>{{ record.issueTime | date:'d-M-yyyy' }}</td>
+                                    <td>{{ record.depositTime ? (record.depositTime | date:'d-M-yyyy') : 'N/A' }}</td>
+                                    <td>{{ displayStudentName(record) }}</td>
+                                    <td>{{ record.parentEmployee ? record.parentEmployee__name : 'N/A' }}</td>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+                <p *ngIf="bookIssueRecordList.length===0"><em>No records found!</em></p>
+            </div>
         </ng-container>
 
         <ng-container *ngIf="isRecordListLoading">
