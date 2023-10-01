@@ -161,15 +161,17 @@
                 
                 <!-- Select employee Section Starts -->
                 <ng-container *ngIf="issueToFormControl.value=='employee'">
+                    <mat-spinner *ngIf="!employeeList" diameter="{{32}}"></mat-spinner>
                     <div style="display: flex; flex-direction: row; gap: 1rem; align-items: center;" class="example-full-width">
                         <div style="min-width: 256px;">
                             <app-employee-filter 
                             [user]="user" 
                             [showAllEmployees]="false" 
+                            (emitEmployeeList)="employeeList = $event"
                             (employee)="handleEmployeeListSelection($event)"
                             ></app-employee-filter>
                         </div>
-                        <div>
+                        <div *ngIf="employeeList">
                             <button class="btn" style="padding: 4px 7px;" (click)="clearStudentEmployeeField()" *ngIf="!isStudentListLoading">
                                 Clear
                             </button>

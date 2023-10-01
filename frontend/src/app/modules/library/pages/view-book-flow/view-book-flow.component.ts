@@ -186,10 +186,12 @@ export class ViewBookFlowComponent implements OnInit {
 
     if (this.selectedBook) query.filter['parentBook_id'] = this.selectedBook.id;
 
-    if (this.issueToFormControl.value === 'student' && this.selectedStudent) {
-      query.filter['parentStudent_id'] = this.selectedStudent.id;
-    } else if (this.issueToFormControl.value === 'employee' && this.selectedEmployee) {
-      query.filter['parentEmployee_id'] = this.selectedEmployee.id;
+    if (this.issueToFormControl.value === 'student') {
+      query.filter['parentEmployee'] = null;
+      if (this.selectedStudent) query.filter['parentStudent_id'] = this.selectedStudent.id;
+    } else if (this.issueToFormControl.value === 'employee') {
+      query.filter['parentStudent'] = null;
+      if (this.selectedEmployee) query.filter['parentEmployee_id'] = this.selectedEmployee.id;
     }
 
     this.isRecordListLoading = true;
