@@ -1,20 +1,36 @@
 import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "@classes/data-storage";
 import { GenericService } from '@services/generic/generic-service';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ViewBookFlowServiceAdapter } from './view-book-flow.service-adapter';
 import { map } from 'rxjs/operators';
 import moment = require('moment');
-
 import {
   FormControl,
-  Validators,
 } from '@angular/forms';
+
+const MY_FORMATS = {
+  parse: {
+    dateInput: 'LL',
+  },
+  display: {
+    dateInput: 'DD-MM-YYYY',
+    monthYearLabel: 'YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'YYYY',
+  },
+};
 
 @Component({
   selector: 'app-view-book-flow',
   templateUrl: './view-book-flow.component.html',
   styleUrls: ['./view-book-flow.component.css'],
-  providers: [GenericService]
+  providers: [
+    GenericService,
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+  ]
 })
 export class ViewBookFlowComponent implements OnInit {
   user: any;
@@ -62,14 +78,12 @@ export class ViewBookFlowComponent implements OnInit {
       map((bookNumber) => this.filterBooksList(bookNumber))
     );
   }
-
   filterBooksList(value: string) {
     if (value === null || value === '' || typeof value !== 'string') {
       return [];
     }
 
     value = value.trim();
-
     return this.booksList.filter((book) => {
       return (
         book.name.toLowerCase().indexOf(value.toLowerCase()) != -1 ||
@@ -86,7 +100,6 @@ export class ViewBookFlowComponent implements OnInit {
         }
       })
       .slice(0, 20);
-
     function getBookIndex(book: any): number {
       let index = 100000;
       let nameIndex = book.name.toLowerCase().indexOf(value.toLowerCase());
@@ -96,11 +109,9 @@ export class ViewBookFlowComponent implements OnInit {
       return index;
     }
   }
-
   displayBook(book) {
     return book ? (typeof book == 'string' ? book : book.name + ' (' + book.bookNumber + ')') : '';
   }
-
   leftText(name: any): any {
     let text = (<HTMLInputElement>document.getElementById("bookInput")).value;
     let ind = name.toLowerCase().indexOf(text.toLowerCase());
@@ -110,7 +121,6 @@ export class ViewBookFlowComponent implements OnInit {
       return name.substring(0, ind);
     return '';
   }
-
   rightText(name: any): any {
     let text = (<HTMLInputElement>document.getElementById("bookInput")).value;
     let ind = name.toLowerCase().indexOf(text.toLowerCase());
@@ -121,7 +131,6 @@ export class ViewBookFlowComponent implements OnInit {
       return name.substring(right, name.length);
     return '';
   }
-
   highlightText(name: any): any {
     let text = (<HTMLInputElement>document.getElementById("bookInput")).value;
     let ind = name.toLowerCase().indexOf(text.toLowerCase());
@@ -129,21 +138,17 @@ export class ViewBookFlowComponent implements OnInit {
       return name.substring(ind, ind + text.length);
     return '';
   }
-
   handleStudentListSelection(value): void {
     this.selectedStudent = value[0][0];
     this.selectedStudentSection = value[1][0];
   }
-
   handleEmployeeListSelection(value): void {
     this.selectedEmployee = value;
   }
-
   clearBookField() {
     this.selectedBookFormControl.setValue('');
     this.selectedBook = null;
   }
-
   clearStudentEmployeeField() {
     this.issueToFormControl.setValue('all');
     this.selectedStudent = null;
@@ -151,13 +156,11 @@ export class ViewBookFlowComponent implements OnInit {
     this.selectedEmployee = null;
     this.employeeList = null;
   }
-
   handleIssueToFieldSelect(e: any) {
     this.selectedStudent = null;
     this.selectedEmployee = null;
     this.employeeList = null;
   }
-
   searchBookRecords() {
     let query = {
       filter: {
@@ -167,7 +170,6 @@ export class ViewBookFlowComponent implements OnInit {
       order_by: ['-issueTime'],
       fields_list: ["__all__", "parentBook__name", "parentBook__bookNumber", "parentStudent__name", "parentStudent__scholarNumber", "parentEmployee__name"]
     };
-
     if (this.issueVisibility === 'issued') {
       query.filter['depositTime'] = null;
     } else if (this.issueVisibility === 'deposited') {
@@ -183,9 +185,7 @@ export class ViewBookFlowComponent implements OnInit {
         }
       ];
     }
-
     if (this.selectedBook) query.filter['parentBook_id'] = this.selectedBook.id;
-
     if (this.issueToFormControl.value === 'student') {
       query.filter['parentEmployee'] = null;
       if (this.selectedStudent) query.filter['parentStudent_id'] = this.selectedStudent.id;
@@ -193,7 +193,6 @@ export class ViewBookFlowComponent implements OnInit {
       query.filter['parentStudent'] = null;
       if (this.selectedEmployee) query.filter['parentEmployee_id'] = this.selectedEmployee.id;
     }
-
     this.isRecordListLoading = true;
     this.genericService.getObjectList({ library_app: "BookIssueRecord" }, query).then((bookIssueRecordList) => {
       this.bookIssueRecordList = bookIssueRecordList;
