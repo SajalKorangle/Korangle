@@ -39,10 +39,10 @@ export class ViewBookFlowComponent implements OnInit {
   minDate = new Date(1990, 0, 1);
   maxDate = new Date();
 
-  issueStartDate = new FormControl(this.minDate);
+  issueStartDate = new FormControl(this.maxDate);
   issueEndDate = new FormControl(this.maxDate);
 
-  depositStartDate = new FormControl(this.minDate);
+  depositStartDate = new FormControl(this.maxDate);
   depositEndDate = new FormControl(this.maxDate);
 
   showFilters: Boolean = false;
