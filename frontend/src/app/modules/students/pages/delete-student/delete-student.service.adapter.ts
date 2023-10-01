@@ -96,7 +96,6 @@ export class DeleteStudentServiceAdapter {
             issuedBookQuery // 8
         ]);
 
-        console.log(this.vm.issuedBookRecordList);
 
         classList.forEach((classs) => {
             classs.sectionList = [];
