@@ -35,9 +35,7 @@ const MY_FORMATS = {
 export class ViewBookFlowComponent implements OnInit {
   user: any;
   serviceAdapter: ViewBookFlowServiceAdapter;
-
   isLoading: boolean = false;
-
   minDate = new Date(1990, 0, 1);
   maxDate = new Date();
 
