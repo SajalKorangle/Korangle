@@ -109,6 +109,7 @@ export class UpdateProfileServiceAdapter {
                 this.vm.currentEmployeeParameterValueList.push(tempObject);
             });
 
+            this.vm.selectedEmployeeProfile.issuedBooks = value[3].length;
             this.vm.currentEmployeeProfile.issuedBooks = value[3].length;
 
             this.vm.isLoading = false;
@@ -127,8 +128,6 @@ export class UpdateProfileServiceAdapter {
     }
 
     updateEmployeeProfile(): void {
-
-        console.log(this.vm.currentEmployeeProfile);
 
         if (this.vm.currentEmployeeProfile.name === undefined || this.vm.currentEmployeeProfile.name === '') {
             alert('Name should be populated');
