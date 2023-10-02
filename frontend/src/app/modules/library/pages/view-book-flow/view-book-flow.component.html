@@ -58,7 +58,7 @@
 
         <!-- Other filters starts -->
         <div>
-            <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters">
+            <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters; employeeList=null">
                 <ng-container *ngIf="!showFilters">Show Filters</ng-container>
                 <ng-container *ngIf="showFilters">Hide Filters</ng-container>
             </button>
@@ -76,8 +76,8 @@
                 </mat-form-field>
 
                 <!-- Select Book Filter starts -->
-                <div style="display: flex; flex-direction: row; gap: 1rem;" class="example-full-width">
-                    <mat-form-field >
+                <div style="display: flex; flex-direction: row; gap: 1rem;">
+                    <mat-form-field style="min-width: 280px;" class="example-full-width">
                         <input
                             type="text"
                             id="bookInput"
