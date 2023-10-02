@@ -18,6 +18,7 @@
             (onStudentListLoading)="isStudentListLoading = $event"
             [selectedFilterType]="'Student'"
             [studentTcGenerated]="false"
+            [studentNewTcIssued]="false"
             [bothFilters]="false"
         ></parent-student-filter>
         <mat-spinner *ngIf="isStudentListLoading" diameter="{{32}}"></mat-spinner>
