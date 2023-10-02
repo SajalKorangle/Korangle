@@ -80,8 +80,7 @@ class BookParameter(models.Model):
 
 class SchoolLibrarySettings(models.Model):
 
-    parentSchool = models.OneToOneField(
-        School, on_delete=models.CASCADE, default=0)
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0)
 
     # Maximum number of books that can be issued to a student at once
     maxStudentIssueCount = models.IntegerField(default=5)
@@ -95,6 +94,16 @@ class SchoolLibrarySettings(models.Model):
 
     class Meta:
         db_table = 'school_library_settings'
+
+
+@receiver(pre_save, sender=SchoolLibrarySettings)
+def create_school_library_settings(sender, instance, **kwargs):
+    
+    if instance._state.adding:
+        # Check if settings already exists
+        if(SchoolLibrarySettings.objects.filter(parentSchool=instance.parentSchool).exists()):
+            raise Exception('Settings already exists')
+            
 
 
 class BookIssueRecord(models.Model):

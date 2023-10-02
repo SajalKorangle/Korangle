@@ -20,13 +20,13 @@
             [studentTcGenerated]="false"
             [bothFilters]="false"
         ></parent-student-filter>
-        <mat-spinner *ngIf="isStudentListLoading" diameter="{{32}}"></mat-spinner>
+        <mat-spinner *ngIf="isStudentListLoading" diameter="32"></mat-spinner>
     </ng-container>
     <!-- Select student Section Ends -->
 
     <!-- Select employee Section Starts -->
     <ng-container *ngIf="issueTo=='employee'">
-        <mat-spinner *ngIf="!employeeList" diameter="{{32}}"></mat-spinner>
+        <mat-spinner *ngIf="!employeeList" diameter="32"></mat-spinner>
         <app-employee-filter 
             [user]="user" 
             [showAllEmployees]="false" 
