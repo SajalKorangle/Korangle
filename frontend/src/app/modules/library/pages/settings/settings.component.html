@@ -8,6 +8,13 @@
                 matInput 
                 min="0"
                 [formControl]="maxStudentIssueCountFormControl">
+            <mat-error *ngIf="
+                maxStudentIssueCountFormControl.hasError('notDecimalNumber') &&
+                !maxStudentIssueCountFormControl.hasError('min') && 
+                !maxStudentIssueCountFormControl.hasError('required')
+            ">
+                Count cannot be a decimal number
+            </mat-error>
             <mat-error *ngIf="maxStudentIssueCountFormControl.hasError('min') && !maxStudentIssueCountFormControl.hasError('required')">
                 Count cannot be negative
             </mat-error>
@@ -23,6 +30,13 @@
                 matInput 
                 min="0"
                 [formControl]="maxEmployeeIssueCountFormControl">
+            <mat-error *ngIf="
+                maxEmployeeIssueCountFormControl.hasError('notDecimalNumber') &&
+                !maxEmployeeIssueCountFormControl.hasError('min') && 
+                !maxEmployeeIssueCountFormControl.hasError('required')
+            ">
+                Count cannot be a decimal number
+            </mat-error>
             <mat-error *ngIf="maxEmployeeIssueCountFormControl.hasError('min') && !maxEmployeeIssueCountFormControl.hasError('required')">
                 Count cannot be negative
             </mat-error>

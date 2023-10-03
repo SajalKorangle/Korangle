@@ -4,7 +4,17 @@ import { GenericService } from '@services/generic/generic-service';
 import {
     FormControl,
     Validators,
+    AbstractControl,
+    ValidationErrors,
+    ValidatorFn
 } from '@angular/forms';
+
+function notDecimalNumberValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+        const forbidden = !Number.isInteger(control.value);
+        return forbidden ? { notDecimalNumber: { value: control.value } } : null;
+    };
+}
 
 @Component({
     selector: 'app-settings',
@@ -17,8 +27,8 @@ export class SettingsComponent implements OnInit {
 
     isLoading: boolean = false;
 
-    maxStudentIssueCountFormControl = new FormControl(0, [Validators.min(0), Validators.required]);
-    maxEmployeeIssueCountFormControl = new FormControl(0, [Validators.min(0), Validators.required]);
+    maxStudentIssueCountFormControl = new FormControl(0, [Validators.min(0), Validators.required, notDecimalNumberValidator()]);
+    maxEmployeeIssueCountFormControl = new FormControl(0, [Validators.min(0), Validators.required, notDecimalNumberValidator()]);
 
     settingsDbId: number = null;
 
