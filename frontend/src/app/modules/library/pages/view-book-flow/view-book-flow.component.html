@@ -145,7 +145,7 @@
                             (onStudentListSelected)="handleStudentListSelection($event)"
                             (onStudentListLoading)="isStudentListLoading = $event"
                             [selectedFilterType]="'Student'"
-                            [studentTcGenerated]="false"
+                            [studentTcGenerated]="true"
                             [bothFilters]="false"
                             ></parent-student-filter>
                         </div>
@@ -166,7 +166,7 @@
                         <div style="min-width: 256px;">
                             <app-employee-filter 
                             [user]="user" 
-                            [showAllEmployees]="false" 
+                            [showAllEmployees]="true" 
                             (emitEmployeeList)="employeeList = $event"
                             (employee)="handleEmployeeListSelection($event)"
                             ></app-employee-filter>
