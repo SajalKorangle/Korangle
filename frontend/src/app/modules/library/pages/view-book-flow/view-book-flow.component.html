@@ -4,54 +4,42 @@
         <form class="example-form">
             <mat-form-field class="example-full-width">
                 <input 
-                    matInput 
-                    [min]="minDate" 
-                    [max]="issueEndDate.value" 
-                    [matDatepicker]="issueStartPicker"
+                    matInput type="date" 
+                    [min]="moment(minDate).format('YYYY-MM-DD')" 
+                    [max]="moment(issueEndDate.value).format('YYYY-MM-DD')" 
                     [formControl]="issueStartDate"
                     placeholder="Choose Issue Start date"
                 />
-                <mat-datepicker-toggle matSuffix [for]="issueStartPicker"></mat-datepicker-toggle>
-                <mat-datepicker #issueStartPicker></mat-datepicker>
             </mat-form-field>
             <mat-form-field class="example-full-width">
                 <input 
-                    matInput 
-                    [min]="issueStartDate.value" 
-                    [max]="maxDate" 
-                    [matDatepicker]="issueEndPicker"
+                    matInput type="date" 
+                    [min]="moment(issueStartDate.value ? issueStartDate.value : minDate).format('YYYY-MM-DD')" 
+                    [max]="moment(maxDate).format('YYYY-MM-DD')" 
                     [formControl]="issueEndDate"
                     placeholder="Choose Issue End date"
                 />
-                <mat-datepicker-toggle matSuffix [for]="issueEndPicker"></mat-datepicker-toggle>
-                <mat-datepicker #issueEndPicker></mat-datepicker>
             </mat-form-field>
         </form>
 
         <form class="example-form">
             <mat-form-field class="example-full-width">
                 <input 
-                    matInput 
-                    [min]="minDate" 
-                    [max]="depositEndDate.value" 
-                    [matDatepicker]="depositStartPicker"
+                    matInput type="date" 
+                    [min]="moment(issueStartDate.value ? issueStartDate.value : minDate).format('YYYY-MM-DD')" 
+                    [max]="moment(depositEndDate.value).format('YYYY-MM-DD')" 
                     [formControl]="depositStartDate"
                     placeholder="Choose Deposit Start date"
                 />
-                <mat-datepicker-toggle matSuffix [for]="depositStartPicker"></mat-datepicker-toggle>
-                <mat-datepicker #depositStartPicker></mat-datepicker>
             </mat-form-field>
             <mat-form-field class="example-full-width">
                 <input 
-                    matInput 
-                    [min]="depositStartDate.value" 
-                    [max]="maxDate"
-                    [matDatepicker]="depositEndPicker"
+                    matInput type="date" 
+                    [min]="moment(depositStartDate.value ? depositStartDate.value : minDate).format('YYYY-MM-DD')" 
+                    [max]="moment(maxDate).format('YYYY-MM-DD')"
                     [formControl]="depositEndDate"
                     placeholder="Choose Deposit End date"
                 />
-                <mat-datepicker-toggle matSuffix [for]="depositEndPicker"></mat-datepicker-toggle>
-                <mat-datepicker #depositEndPicker></mat-datepicker>
             </mat-form-field>
         </form>
         <!-- Date range selection ends -->

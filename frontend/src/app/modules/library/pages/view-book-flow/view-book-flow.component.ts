@@ -33,21 +33,18 @@ const MY_FORMATS = {
   ]
 })
 export class ViewBookFlowComponent implements OnInit {
+  moment = moment;
   user: any;
   serviceAdapter: ViewBookFlowServiceAdapter;
   isLoading: boolean = false;
   minDate = new Date(1990, 0, 1);
   maxDate = new Date();
-
-  issueStartDate = new FormControl(this.maxDate);
+  issueStartDate = new FormControl(null);
   issueEndDate = new FormControl(this.maxDate);
-
-  depositStartDate = new FormControl(this.maxDate);
+  depositStartDate = new FormControl(null);
   depositEndDate = new FormControl(this.maxDate);
-
   showFilters: Boolean = false;
   issueVisibility: 'all' | 'issued' | 'deposited' = 'all';
-
   booksList: any = [];
   filteredBookList: any = [];
   selectedBook: any = null;
@@ -162,8 +159,8 @@ export class ViewBookFlowComponent implements OnInit {
   searchBookRecords() {
     let query = {
       filter: {
-        issueTime__date__gte: moment(this.issueStartDate.value).format('YYYY-MM-DD'),
-        issueTime__date__lte: moment(this.issueEndDate.value).format('YYYY-MM-DD'),
+        issueTime__date__gte: this.issueStartDate.value ? moment(this.issueStartDate.value).format('YYYY-MM-DD') : undefined,
+        issueTime__date__lte: this.issueEndDate.value ? moment(this.issueEndDate.value).format('YYYY-MM-DD') : undefined,
       },
       order_by: ['-issueTime'],
       fields_list: ["__all__", "parentBook__name", "parentBook__bookNumber", "parentStudent__name", "parentStudent__scholarNumber", "parentEmployee__name"]
@@ -172,14 +169,14 @@ export class ViewBookFlowComponent implements OnInit {
       query.filter['depositTime'] = null;
     } else if (this.issueVisibility === 'deposited') {
       query.filter['depositTime__date__isnull'] = false;
-      query.filter['depositTime__date__gte'] = moment(this.depositStartDate.value).format('YYYY-MM-DD');
-      query.filter['depositTime__date__lte'] = moment(this.depositEndDate.value).format('YYYY-MM-DD');
+      query.filter['depositTime__date__gte'] = this.depositStartDate.value ? moment(this.depositStartDate.value).format('YYYY-MM-DD') : undefined;
+      query.filter['depositTime__date__lte'] = this.depositEndDate.value ? moment(this.depositEndDate.value).format('YYYY-MM-DD') : undefined;
     } else {
       query.filter['__or__'] = [
         { depositTime: null },
         {
-          depositTime__date__gte: moment(this.depositStartDate.value).format('YYYY-MM-DD'),
-          depositTime__date__lte: moment(this.depositEndDate.value).format('YYYY-MM-DD'),
+          depositTime__date__gte: this.depositStartDate.value ? moment(this.depositStartDate.value).format('YYYY-MM-DD') : undefined,
+          depositTime__date__lte: this.depositEndDate.value ? moment(this.depositEndDate.value).format('YYYY-MM-DD') : undefined,
         }
       ];
     }
