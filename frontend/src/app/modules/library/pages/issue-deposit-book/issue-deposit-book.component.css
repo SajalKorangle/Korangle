@@ -29,6 +29,11 @@ hr {
     background-color: black;
 }
 
+
+.table{
+    min-width: 450px;
+}
+
 .pix {
     width: 10%;
     float: left;
@@ -69,4 +74,5 @@ hr {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
 }
