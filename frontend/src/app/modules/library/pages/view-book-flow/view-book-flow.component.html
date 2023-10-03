@@ -63,7 +63,7 @@
                 <ng-container *ngIf="showFilters">Hide Filters</ng-container>
             </button>
         </div>
-        <ng-container *ngIf="showFilters">
+        <div [ngStyle]="{'display': showFilters ? 'block' : 'none'}">
 
             <form  class="example-form">
                 <mat-form-field class="example-full-width">
@@ -181,7 +181,7 @@
                 <!-- Select employee Section Ends -->
                 
             </form>
-        </ng-container>
+        </div>
         <!-- Other filters ends -->
 
         <div>
