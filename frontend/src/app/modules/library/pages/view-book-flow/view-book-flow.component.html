@@ -1,5 +1,6 @@
 <ng-container *ngIf="!isLoading">
     <main style="padding: 2rem; display: flex; flex-direction: column;">
+        <em style="margin-bottom: 1rem;"><strong>Note: </strong>You can leave date fields blank.</em>
         <!-- Date range selection starts -->
         <form class="example-form">
             <mat-form-field class="example-full-width">
@@ -24,6 +25,14 @@
 
         <form class="example-form">
             <mat-form-field class="example-full-width">
+                <mat-label>Deposit Status</mat-label>
+                <mat-select [(value)]="issueVisibility">
+                    <mat-option value="all">Show All</mat-option>
+                    <mat-option value="issued">Show only Non Deposited</mat-option>
+                    <mat-option value="deposited">Show only Deposited</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field *ngIf="issueVisibility == 'deposited'" class="example-full-width">
                 <input 
                     matInput type="date" 
                     [min]="moment(issueStartDate.value ? issueStartDate.value : minDate).format('YYYY-MM-DD')" 
@@ -32,7 +41,7 @@
                     placeholder="Choose Deposit Start date"
                 />
             </mat-form-field>
-            <mat-form-field class="example-full-width">
+            <mat-form-field *ngIf="issueVisibility == 'deposited'" class="example-full-width">
                 <input 
                     matInput type="date" 
                     [min]="moment(depositStartDate.value ? depositStartDate.value : minDate).format('YYYY-MM-DD')" 
@@ -54,15 +63,6 @@
         <div [ngStyle]="{'display': showFilters ? 'block' : 'none'}">
 
             <form  class="example-form">
-                <mat-form-field class="example-full-width">
-                    <mat-label>Deposit Status</mat-label>
-                    <mat-select [(value)]="issueVisibility">
-                        <mat-option value="all">Show All</mat-option>
-                        <mat-option value="issued">Show only Non Deposited</mat-option>
-                        <mat-option value="deposited">Show only Deposited</mat-option>
-                    </mat-select>
-                </mat-form-field>
-
                 <!-- Select Book Filter starts -->
                 <div style="display: flex; flex-direction: row; gap: 1rem;">
                     <mat-form-field style="min-width: 280px;" class="example-full-width">

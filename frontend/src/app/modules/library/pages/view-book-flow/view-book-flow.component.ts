@@ -171,15 +171,8 @@ export class ViewBookFlowComponent implements OnInit {
       query.filter['depositTime__date__isnull'] = false;
       query.filter['depositTime__date__gte'] = this.depositStartDate.value ? moment(this.depositStartDate.value).format('YYYY-MM-DD') : undefined;
       query.filter['depositTime__date__lte'] = this.depositEndDate.value ? moment(this.depositEndDate.value).format('YYYY-MM-DD') : undefined;
-    } else {
-      query.filter['__or__'] = [
-        { depositTime: null },
-        {
-          depositTime__date__gte: this.depositStartDate.value ? moment(this.depositStartDate.value).format('YYYY-MM-DD') : undefined,
-          depositTime__date__lte: this.depositEndDate.value ? moment(this.depositEndDate.value).format('YYYY-MM-DD') : undefined,
-        }
-      ];
     }
+    
     if (this.selectedBook) query.filter['parentBook_id'] = this.selectedBook.id;
     if (this.issueToFormControl.value === 'student') {
       query.filter['parentEmployee'] = null;
