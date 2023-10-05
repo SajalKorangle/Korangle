@@ -185,6 +185,7 @@
         <!-- Book records table starts -->
         <ng-container *ngIf="bookIssueRecordList !== null && !isRecordListLoading">
             <div style="width: 100%; overflow-x: auto;">
+                <p *ngIf="bookIssueRecordList.length > 0" style="margin-bottom: 1rem;">Total Records: {{bookIssueRecordList.length}}</p>
                 <table class="table table-hover" *ngIf="bookIssueRecordList.length > 0">
                     <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                         <tr>
