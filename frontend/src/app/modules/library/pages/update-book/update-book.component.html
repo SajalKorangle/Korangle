@@ -381,6 +381,17 @@
                             </mat-form-field>
                         </div>
                     </div>
+
+                    <ng-container *ngIf="isIssueBookFeatureFlagEnabled">
+                        <div>
+                            <mat-checkbox style="margin-right: 1rem" [(ngModel)]="updatedBook.canStudentIssue"></mat-checkbox>
+                            <mat-label>Students can issue this book.</mat-label>
+                        </div>
+                        <div>
+                            <mat-checkbox style="margin-right: 1rem" [(ngModel)]="updatedBook.canEmployeeIssue"></mat-checkbox>
+                            <mat-label>Employees can issue this book.</mat-label>
+                        </div>
+                    </ng-container>
                 </div>
 
                 <!-- Back cover img - if desktop -->
