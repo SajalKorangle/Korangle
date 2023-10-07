@@ -18,17 +18,20 @@
             (onStudentListLoading)="isStudentListLoading = $event"
             [selectedFilterType]="'Student'"
             [studentTcGenerated]="false"
+            [studentNewTcIssued]="false"
             [bothFilters]="false"
         ></parent-student-filter>
-        <mat-spinner *ngIf="isStudentListLoading" diameter="{{32}}"></mat-spinner>
+        <mat-spinner *ngIf="isStudentListLoading" diameter="32"></mat-spinner>
     </ng-container>
     <!-- Select student Section Ends -->
 
     <!-- Select employee Section Starts -->
     <ng-container *ngIf="issueTo=='employee'">
+        <mat-spinner *ngIf="!employeeList" diameter="32"></mat-spinner>
         <app-employee-filter 
             [user]="user" 
             [showAllEmployees]="false" 
+            (emitEmployeeList)="employeeList = $event"
             (employee)="handleEmployeeListSelection($event)"
         ></app-employee-filter>
     </ng-container>
@@ -43,8 +46,8 @@
         <ng-container *ngIf="!isIssuedBooksLoading">
 
             <p>Currently Issued Books: <strong>{{issuedBooksList.length}}</strong></p>
-            <ng-container *ngIf="issuedBooksList.length">
-                <hr/>
+            <div *ngIf="issuedBooksList.length" style="width: 100%; overflow-x: scroll;">
+                <hr style="min-width: 450px;"/>
                 <table class="table table-hover">
                     <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                         <tr>
@@ -78,41 +81,101 @@
                         </ng-container>
                     </tbody>
                 </table>
-            </ng-container>
+            </div>
             
             <hr/>
-            <h5><strong>Issue New Book</strong></h5>
-            <mat-form-field>
-                <input
-                    type="text"
-                    placeholder="Book Number"
-                    matInput
-                    aria-label="Search Book"
-                    [formControl]="selectedBookFormControl"
-                    [matAutocomplete]="autoBook"
-                />
-                <mat-autocomplete
-                    #autoBook="matAutocomplete"
-                    (optionSelected)="selectedBook = $event.option.value"
-                    [displayWith]="displayBook"
-                >
-                    <mat-option *ngFor="let book of filteredBookList | async" [value]="book">
-                        <p>{{book.name}} ({{book.bookNumber}})</p>
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
 
-            <ng-container *ngIf="selectedBook">
-                <button 
-                    class="btn btn-{{user.activeSchool.secondaryThemeColor}}" 
-                    style="display: block;"
-                    [disabled]="selectedBook.isIssued"
-                    (click)="handleIssue()"
-                >
-                    Issue Book
-                </button>
-                <p *ngIf="selectedBook.isIssued" style="color: red;"><em>This book is already issued</em></p>
+            <ng-container *ngIf="hasReachedIssueLimit()">
+                <p style="color: red"><em>Issuer has reached maximum Issue Count. Deposit some books to issue more.</em></p>
             </ng-container>
+            <ng-container *ngIf="!hasReachedIssueLimit()">
+                <h5><strong>Issue New Book</strong></h5>
+                <mat-form-field>
+                    <input
+                        type="text"
+                        id="bookInput"
+                        placeholder="Book Name / Book No."
+                        matInput
+                        aria-label="Search Book"
+                        [formControl]="selectedBookFormControl"
+                        [matAutocomplete]="autoBook"
+                    />
+                    <mat-autocomplete
+                        #autoBook="matAutocomplete"
+                        (optionSelected)="selectedBook = $event.option.value"
+                        [displayWith]="displayBook"
+                    >
+                        <mat-option *ngFor="let book of filteredBookList | async" [value]="book">
+                            <div class="box">
+                                <img class="pix" *ngIf="book.frontImage"  src="{{ book.frontImage }}" />
+                                <img
+                                    class="pix"
+                                    *ngIf="!book.frontImage"
+                                    src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                                />
+                                <span style="width: 85%;">
+                                    <p class="paraUp">
+                                    {{ leftText(book.name) }}<font color="#00bfff">{{ highlightText(book.name) }}</font>{{ rightText(book.name)}}
+                                        <span>
+                                        {{ ' ('+leftText(book.bookNumber.toString()) }}<font color="#00bfff">{{ highlightText(book.bookNumber.toString()) }}</font>{{ rightText(book.bookNumber.toString())+')'}}
+                                        </span>
+                                    </p>
+                                    <p class="paraDown" *ngIf="book.author || book.publisher">
+                                    {{ [book.author, book.publisher].join(', ') }}
+                                    </p>
+                                </span>
+                            </div>
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <ng-container *ngIf="selectedBook">
+
+                    <div style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 1rem;">
+                        <figure>
+                            <img class="book-cover" *ngIf="selectedBook.frontImage"  src="{{ selectedBook.frontImage }}" />
+                            <img
+                                class="book-cover"
+                                *ngIf="!selectedBook.frontImage"
+                                src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                            />
+                            <figcaption style="text-align: center; width: 100%;"><em>Front Image</em></figcaption>   
+                        </figure>
+                        <figure>
+                            <img class="book-cover" *ngIf="selectedBook.backImage"  src="{{ selectedBook.backImage }}" />
+                            <img
+                                class="book-cover"
+                                *ngIf="!selectedBook.backImage"
+                                src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                            />
+                            <figcaption style="text-align: center; width: 100%;"><em>Back Image</em></figcaption>   
+                        </figure>
+                        <p style="display: grid; grid-template-columns: 1fr 3fr;">
+                            <strong>Book No.: </strong><span>{{selectedBook.bookNumber}}</span>
+                            <strong>Name: </strong><span>{{selectedBook.name}}</span>
+                            <strong>Author: </strong><span>{{selectedBook.author}}</span>
+                            <strong>Publisher: </strong><span>{{selectedBook.publisher}}</span>
+                            <strong>Location: </strong><span>{{selectedBook.location}}</span>
+                            <strong>No. of Pages: </strong><span>{{selectedBook.numberOfPages}}</span>
+                            <strong>Cover Type: </strong><span>{{selectedBook.coverType}}</span>
+                            <strong>Type of Book: </strong><span>{{selectedBook.typeOfBook}}</span>
+                            <strong>Printed Cost: </strong><span>{{selectedBook.printedCost}}</span>
+                        </p>
+                    </div>
+
+                    <button 
+                        class="btn btn-{{user.activeSchool.secondaryThemeColor}}" 
+                        style="display: block;"
+                        [disabled]="selectedBook.isIssued || isBookBlocked(selectedBook)"
+                        (click)="handleIssue()"
+                    >
+                        Issue Book
+                    </button>
+                    <p *ngIf="selectedBook.isIssued" style="color: red;"><em>This book is already issued</em></p>
+                    <p *ngIf="isBookBlocked(selectedBook)" style="color: red;"><em>Book blocked for issue to {{issueTo}} at the moment.</em></p>
+                </ng-container>
+            </ng-container>
+
         </ng-container>
     </div>
 
