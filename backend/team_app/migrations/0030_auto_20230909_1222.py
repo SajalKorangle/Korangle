@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('feature_flag_app', '0009_auto_20230901_1425'),
-        ('team_app', '0027_auto_20230901_1426'),
+        ('team_app', '0029_auto_20230913_1019'),
     ]
 
     operations = [
