@@ -151,7 +151,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     bill_app: 'Bill';
     activity_record_app: 'ActivityRecord';
     student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue' | 'CountAllTable';
-    library_app: 'Book' | 'BookParameter';
+    library_app: 'Book' | 'BookParameter' | 'BookIssueRecord' | 'SchoolLibrarySettings';
     class_app: 'Class' | 'Division';
     school_app: 'Session' | 'BusStop' | 'School';
     tc_app: 'TransferCertificateNew';

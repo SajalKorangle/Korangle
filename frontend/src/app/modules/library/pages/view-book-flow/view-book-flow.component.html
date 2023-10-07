@@ -1,0 +1,229 @@
+<ng-container *ngIf="!isLoading">
+    <main style="padding: 2rem; display: flex; flex-direction: column;">
+        <em style="margin-bottom: 1rem;"><strong>Note: </strong>You can leave date fields blank.</em>
+        <!-- Date range selection starts -->
+        <form class="example-form">
+            <mat-form-field class="example-full-width">
+                <input 
+                    matInput type="date" 
+                    [min]="moment(minDate).format('YYYY-MM-DD')" 
+                    [max]="moment(issueEndDate.value).format('YYYY-MM-DD')" 
+                    [formControl]="issueStartDate"
+                    placeholder="Choose Issue Start date"
+                />
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <input 
+                    matInput type="date" 
+                    [min]="moment(issueStartDate.value ? issueStartDate.value : minDate).format('YYYY-MM-DD')" 
+                    [max]="moment(maxDate).format('YYYY-MM-DD')" 
+                    [formControl]="issueEndDate"
+                    placeholder="Choose Issue End date"
+                />
+            </mat-form-field>
+        </form>
+
+        <form class="example-form">
+            <mat-form-field class="example-full-width">
+                <mat-label>Deposit Status</mat-label>
+                <mat-select [(value)]="issueVisibility">
+                    <mat-option value="all">Show All</mat-option>
+                    <mat-option value="issued">Show only Non Deposited</mat-option>
+                    <mat-option value="deposited">Show only Deposited</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field *ngIf="issueVisibility == 'deposited'" class="example-full-width">
+                <input 
+                    matInput type="date" 
+                    [min]="moment(issueStartDate.value ? issueStartDate.value : minDate).format('YYYY-MM-DD')" 
+                    [max]="moment(depositEndDate.value).format('YYYY-MM-DD')" 
+                    [formControl]="depositStartDate"
+                    placeholder="Choose Deposit Start date"
+                />
+            </mat-form-field>
+            <mat-form-field *ngIf="issueVisibility == 'deposited'" class="example-full-width">
+                <input 
+                    matInput type="date" 
+                    [min]="moment(depositStartDate.value ? depositStartDate.value : minDate).format('YYYY-MM-DD')" 
+                    [max]="moment(maxDate).format('YYYY-MM-DD')"
+                    [formControl]="depositEndDate"
+                    placeholder="Choose Deposit End date"
+                />
+            </mat-form-field>
+        </form>
+        <!-- Date range selection ends -->
+
+        <!-- Other filters starts -->
+        <div>
+            <button class="btn" style="padding: 4px 7px" (click)="showFilters = !showFilters;">
+                <ng-container *ngIf="!showFilters">Show Filters</ng-container>
+                <ng-container *ngIf="showFilters">Hide Filters</ng-container>
+            </button>
+        </div>
+        <div [ngStyle]="{'display': showFilters ? 'block' : 'none'}">
+
+            <form  class="example-form">
+                <!-- Select Book Filter starts -->
+                <div style="display: flex; flex-direction: row; gap: 1rem;">
+                    <mat-form-field style="min-width: 280px;" class="example-full-width">
+                        <input
+                            type="text"
+                            id="bookInput"
+                            placeholder="Book Name / Book No."
+                            matInput
+                            aria-label="Search Book"
+                            [formControl]="selectedBookFormControl"
+                            [matAutocomplete]="autoBook"
+                        />
+                        <mat-autocomplete
+                            #autoBook="matAutocomplete"
+                            (optionSelected)="selectedBook = $event.option.value"
+                            [displayWith]="displayBook"
+                        >
+                            <mat-option *ngFor="let book of filteredBookList | async" [value]="book">
+                                <div class="box">
+                                    <img class="pix" *ngIf="book.frontImage"  src="{{ book.frontImage }}" />
+                                    <img
+                                        class="pix"
+                                        *ngIf="!book.frontImage"
+                                        src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                                    />
+                                    <span style="width: 85%;">
+                                        <p class="paraUp">
+                                        {{ leftText(book.name) }}<font color="#00bfff">{{ highlightText(book.name) }}</font>{{ rightText(book.name)}}
+                                            <span>
+                                            {{ ' ('+leftText(book.bookNumber.toString()) }}<font color="#00bfff">{{ highlightText(book.bookNumber.toString()) }}</font>{{ rightText(book.bookNumber.toString())+')'}}
+                                            </span>
+                                        </p>
+                                        <p class="paraDown" *ngIf="book.author || book.publisher">
+                                        {{ [book.author, book.publisher].join(', ') }}
+                                        </p>
+                                    </span>
+                                </div>
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <div>
+                        <button class="btn" style="padding: 4px 7px;" (click)="clearBookField()">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+                <!-- Select Book Filter ends -->
+            </form>
+
+            <form class="example-form">
+                <!-- Issue to Student/Employee dropdown starts -->
+                <mat-form-field class="example-full-width">
+                    <mat-label>Issued to</mat-label>
+                    <mat-select [formControl]="issueToFormControl" (selectionChange)="handleIssueToFieldSelect($event)">
+                        <mat-option value="all">All</mat-option>
+                        <mat-option value="student">Student</mat-option>        
+                        <mat-option value="employee">Employee</mat-option>        
+                    </mat-select>
+                </mat-form-field>
+                <!-- Issue to Student/Employee dropdown ends -->
+                
+                <!-- Select student Section Starts -->
+                <ng-container *ngIf="issueToFormControl.value=='student'">
+                    <div style="display: flex; flex-direction: row; gap: 1rem; align-items: center;">
+                        <div class="example-full-width" style="min-width: 356px;">
+                            <parent-student-filter
+                            [user]="user"
+                            (onStudentListSelected)="handleStudentListSelection($event)"
+                            (onStudentListLoading)="isStudentListLoading = $event"
+                            [selectedFilterType]="'Student'"
+                            [studentTcGenerated]="true"
+                            [bothFilters]="false"
+                            ></parent-student-filter>
+                        </div>
+                        <div>
+                            <button class="btn" style="padding: 4px 7px; margin-left: -96px;" (click)="clearStudentEmployeeField()" *ngIf="!isStudentListLoading">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                    <mat-spinner *ngIf="isStudentListLoading" diameter="{{32}}"></mat-spinner>
+                </ng-container>
+                <!-- Select student Section Ends -->
+                
+                <!-- Select employee Section Starts -->
+                <ng-container *ngIf="issueToFormControl.value=='employee'">
+                    <mat-spinner *ngIf="!employeeList" diameter="{{32}}"></mat-spinner>
+                    <div style="display: flex; flex-direction: row; gap: 1rem; align-items: center;" class="example-full-width">
+                        <div style="min-width: 256px;">
+                            <app-employee-filter 
+                            [user]="user" 
+                            [showAllEmployees]="true" 
+                            (emitEmployeeList)="employeeList = $event"
+                            (employee)="handleEmployeeListSelection($event)"
+                            ></app-employee-filter>
+                        </div>
+                        <div *ngIf="employeeList">
+                            <button class="btn" style="padding: 4px 7px;" (click)="clearStudentEmployeeField()" *ngIf="!isStudentListLoading">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </ng-container>
+                <!-- Select employee Section Ends -->
+                
+            </form>
+        </div>
+        <!-- Other filters ends -->
+
+        <div>
+            <button 
+                class="btn btn-{{user.activeSchool.secondaryThemeColor}}" 
+                [disabled]="false"
+                (click)="searchBookRecords()"
+            >
+                Search
+            </button>
+        </div>
+
+        <!-- Book records table starts -->
+        <ng-container *ngIf="bookIssueRecordList !== null && !isRecordListLoading">
+            <div style="width: 100%; overflow-x: auto;">
+                <p *ngIf="bookIssueRecordList.length > 0" style="margin-bottom: 1rem;">Total Records: {{bookIssueRecordList.length}}</p>
+                <table class="table table-hover" *ngIf="bookIssueRecordList.length > 0">
+                    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Book</th>
+                            <th>Issued on</th>
+                            <th>Deposited on</th>
+                            <th>Issued by Student</th>
+                            <th>Issued by Employee</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let record of bookIssueRecordList; let i = index">
+                            <tr>
+                                <ng-container>
+                                    <td>{{ i+1 }}</td>
+                                    <td>{{ record.parentBook__name }} ({{record.parentBook__bookNumber}})</td>
+                                    <td>{{ record.issueTime | date:'d-M-yyyy' }}</td>
+                                    <td>{{ record.depositTime ? (record.depositTime | date:'d-M-yyyy') : 'N/A' }}</td>
+                                    <td>{{ displayStudentName(record) }}</td>
+                                    <td>{{ record.parentEmployee ? record.parentEmployee__name : 'N/A' }}</td>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+                <p *ngIf="bookIssueRecordList.length===0"><em>No records found!</em></p>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="isRecordListLoading">
+            <app-loading-spinner [user]="user"></app-loading-spinner>
+        </ng-container>
+        <!-- Book records table ends -->
+    </main>
+</ng-container>
+
+
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>

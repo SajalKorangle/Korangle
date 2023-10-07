@@ -8,6 +8,7 @@ import { Book } from '@modules/library/models/book';
 class DeleteBookObject extends Book {
     selected: boolean = false;
     index: number = 0;
+    isIssued: number = 0;
 }
 
 class ColumnFilter {

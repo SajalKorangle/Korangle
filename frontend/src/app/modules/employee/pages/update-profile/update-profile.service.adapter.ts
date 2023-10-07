@@ -1,5 +1,6 @@
-import { toInteger } from 'lodash';
+import { filter, toInteger } from 'lodash';
 import { UpdateProfileComponent } from './update-profile.component';
+import { Query } from '@services/generic/query';
 
 export class UpdateProfileServiceAdapter {
     vm: UpdateProfileComponent;
@@ -10,7 +11,6 @@ export class UpdateProfileServiceAdapter {
     }
 
     initializeData(): void {
-        console.log('init');
         this.vm.isLoading = true;
         Promise.all([
             this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter, { parentSchool: this.vm.user.activeSchool.dbId }),
@@ -60,11 +60,19 @@ export class UpdateProfileServiceAdapter {
             parentEmployee: employee.id,
         };
 
+        const issueBookQuery = new Query()
+            .filter({
+                parentEmployee: employee.id,
+                depositTime: null
+            })
+            .setFields('id').getObjectList({ library_app: "BookIssueRecord" });
+
         this.vm.isLoading = true;
         Promise.all([
             this.vm.employeeService.getObject(this.vm.employeeService.employees, data),
             this.vm.employeeService.getObject(this.vm.employeeService.employee_session_detail, session_data),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter_value, { parentEmployee: employee.id, })
+            this.vm.employeeService.getObjectList(this.vm.employeeService.employee_parameter_value, { parentEmployee: employee.id, }),
+            issueBookQuery
         ]).then(value => {
             // console.dir(value);
             this.vm.selectedEmployeeProfile = value[0];
@@ -100,6 +108,10 @@ export class UpdateProfileServiceAdapter {
                 });
                 this.vm.currentEmployeeParameterValueList.push(tempObject);
             });
+
+            this.vm.selectedEmployeeProfile.issuedBooks = value[3].length;
+            this.vm.currentEmployeeProfile.issuedBooks = value[3].length;
+
             this.vm.isLoading = false;
 
         }, error => {
@@ -116,8 +128,6 @@ export class UpdateProfileServiceAdapter {
     }
 
     updateEmployeeProfile(): void {
-
-        console.log(this.vm.currentEmployeeProfile);
 
         if (this.vm.currentEmployeeProfile.name === undefined || this.vm.currentEmployeeProfile.name === '') {
             alert('Name should be populated');

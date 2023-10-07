@@ -57,6 +57,21 @@ export class DeleteStudentServiceAdapter {
             .orderBy('parentClass__orderNumber', 'parentDivision__orderNumber', 'rollNumber', 'parentStudent__name')
             .getObjectList({ student_app: 'StudentSection' });
 
+        const issuedBookQuery = new Query()
+            .filter({
+                parentSchool: this.vm.user.activeSchool.dbId,
+            })
+            .annotate(
+                'issuedBooks',
+                'book_issue_record__id',
+                'Count',
+                {
+                    book_issue_record__depositTime: null
+                }
+            )
+            .setFields('issuedBooks')
+            .getObjectList({ student_app: 'Student' });
+
         let classList, divisionList;
 
         [
@@ -67,7 +82,8 @@ export class DeleteStudentServiceAdapter {
             this.vm.busStopList,
             this.vm.session_list,
             this.vm.backendData.tcList,
-            this.vm.studentSectionList
+            this.vm.studentSectionList,
+            this.vm.issuedBookRecordList
         ] = await Promise.all([
             classQuery, // 0
             divisionQuery,  // 1
@@ -76,8 +92,10 @@ export class DeleteStudentServiceAdapter {
             busStopQuery,   // 4
             sessionQuery,   // 5
             transferCertificateNewQuery,    // 6
-            studentSectionQuery,    // 7
+            studentSectionQuery,    // 7,
+            issuedBookQuery // 8
         ]);
+
 
         classList.forEach((classs) => {
             classs.sectionList = [];
@@ -217,8 +235,8 @@ export class DeleteStudentServiceAdapter {
             student.deleteDisabledReason["hasFeeReceipt"] = this.vm.selectedStudentFeeReceiptList.find((feeReceipt) => {
                 return (
                     feeReceipt.parentStudent == student.dbId &&
-                feeReceipt.parentSession == this.vm.user.activeSchool.currentSessionDbId &&
-                feeReceipt.cancelled == false
+                    feeReceipt.parentSession == this.vm.user.activeSchool.currentSessionDbId &&
+                    feeReceipt.cancelled == false
                 );
             }) != undefined;
 
@@ -227,7 +245,7 @@ export class DeleteStudentServiceAdapter {
                     discount.parentStudent == student.dbId &&
                     discount.parentSession == this.vm.user.activeSchool.currentSessionDbId &&
                     discount.cancelled == false
-                    );
+                );
             }) != undefined;
 
             student.deleteDisabledReason["hasTC"] = this.vm.selectedStudentTcList.find((tc) => {
@@ -237,11 +255,13 @@ export class DeleteStudentServiceAdapter {
                     tc.cancelledBy == null
                 );
             }) != undefined;
+            student.deleteDisabledReason["hasIssuedBooks"] = this.vm.issuedBookRecordList.find((record) => record.id === student.dbId).issuedBooks;
 
             student.isDeletable = !student.deleteDisabledReason["hasMultipleSessions"] &&
             !student.deleteDisabledReason["hasFeeReceipt"] &&
             !student.deleteDisabledReason["hasDiscount"] &&
-            !student.deleteDisabledReason["hasTC"]
+            !student.deleteDisabledReason["hasTC"] &&
+            !student.deleteDisabledReason["hasIssuedBooks"]
             ;
 
             if (!student.isDeletable) {
@@ -257,6 +277,9 @@ export class DeleteStudentServiceAdapter {
                 }
                 if (student.deleteDisabledReason["hasTC"]) {
                     msg = msg + "TC is already generated.\n";
+                }
+                if (student.deleteDisabledReason["hasIssuedBooks"]) {
+                    msg = msg + `Student has ${student.deleteDisabledReason["hasIssuedBooks"]} issued books.\n`;
                 }
                 student['nonDeletableMessage'] = msg;
             }
