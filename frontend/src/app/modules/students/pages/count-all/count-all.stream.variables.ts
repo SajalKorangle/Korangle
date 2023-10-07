@@ -20,7 +20,7 @@ export class CountAllStreamVariables {
 
         // starts populate rowCountList
         this.vm.rowFilterList$.asObservable().subscribe(rowFilterList => {
-            
+
             this.rowCountList = [];
             rowFilterList.forEach(rowFilter => {
 
@@ -31,16 +31,16 @@ export class CountAllStreamVariables {
                         count++;
                     }
                 });
-        
-                this.rowCountList.push(count); 
 
-            })
+                this.rowCountList.push(count);
+
+            });
         });
         // ends populate rowCountList
 
         // starts populate columnCountList
         this.vm.columnFilterList$.asObservable().subscribe(columnFilterList => {
-            
+
             this.columnCountList = [];
             columnFilterList.forEach(columnFilter => {
 
@@ -51,10 +51,10 @@ export class CountAllStreamVariables {
                         count++;
                     }
                 });
-        
-                this.columnCountList.push(count); 
 
-            })
+                this.columnCountList.push(count);
+
+            });
         });
         // ends populate columnCountList
 
@@ -82,11 +82,11 @@ export class CountAllStreamVariables {
 
                     this.table[rowIndex].push([]);
                     this.table[rowIndex][columnIndex] = count;
-            
+
                 });
             });
 
-        })
+        });
         // ends populate table data
 
     }
