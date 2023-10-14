@@ -14,7 +14,10 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.db import transaction as db_transaction
 from datetime import datetime
+from django.utils.timezone import now
 
+def upload_bill_to(instance,filename):
+    return 'bill/%s_%s' % (now().timestamp(),filename)
 
 # Create your models here.
 
@@ -51,7 +54,7 @@ class Bill(models.Model):
     paidDate = models.DateTimeField(null=True, blank=True)
 
     # To keep the pdf of bill
-    billPDF = models.FileField(null=True, blank=True)
+    billPDF = models.FileField("Bill", upload_to=upload_bill_to, blank=True, null=True)
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentSchool_id']
