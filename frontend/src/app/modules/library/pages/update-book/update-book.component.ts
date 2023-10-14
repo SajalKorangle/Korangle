@@ -41,20 +41,24 @@ export class UpdateBookComponent implements OnInit {
     backImage: any;
     frontImage: any;
 
+    isIssueBookFeatureFlagEnabled: boolean = false;
+
     constructor(public genericService: GenericService, public libraryService: LibraryService) { }
 
     ngOnInit() {
         this.user = DataStorage.getInstance().getUser();
+        this.isIssueBookFeatureFlagEnabled = DataStorage.getInstance().isFeatureEnabled('Library Phase 2 (Issue Deposit Book)');
+
         this.serviceAdapter = new UpdateBookServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
 
         this.filteredBookList = this.searchBookFormControl.valueChanges
             .pipe(
-            startWith(''),
-            map((value) => (typeof value === 'string' ? value : (value as any).name)),
-            map(searchedBookName => this.getFilteredBookList(searchedBookName)),
-        );
+                startWith(''),
+                map((value) => (typeof value === 'string' ? value : (value as any).name)),
+                map(searchedBookName => this.getFilteredBookList(searchedBookName)),
+            );
     }
 
     isMobile(): boolean {
@@ -235,8 +239,8 @@ export class UpdateBookComponent implements OnInit {
             this.isBookLoading = true;
             let book = await this.serviceAdapter.getBook(event.option.value.id);
             if (book) {
-                this.selectedBook = {...book};
-                this.updatedBook = {...book};
+                this.selectedBook = { ...book };
+                this.updatedBook = { ...book };
                 this.frontImage = book.frontImage;
                 this.backImage = book.backImage;
             }
