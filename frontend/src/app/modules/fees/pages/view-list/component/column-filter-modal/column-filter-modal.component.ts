@@ -15,7 +15,7 @@ export class ColumnFilterModalComponent implements OnInit {
     COLUMN_TYPE_LIST = [
         {display: 'Fee Parameters', type: 'fee'},
         {display: 'Profile Parameters', type: 'profile'}
-    ]
+    ];
     selectedColumnType: 'profile' | 'fee';
 
     AMOUNT_TYPE_LIST = [
@@ -47,7 +47,7 @@ export class ColumnFilterModalComponent implements OnInit {
         {display: 'None', variable: null},
         {display: 'Ascending', variable: 'ascending'},
         {display: 'Descending', variable: 'descending'}
-    ]
+    ];
     selectedSort: any;
 
     constructor(
@@ -84,7 +84,7 @@ export class ColumnFilterModalComponent implements OnInit {
                         ) : false
                     ) : false
                 ) : false
-            }
+            };
         });
         // ends populate useful session list
 
@@ -101,7 +101,7 @@ export class ColumnFilterModalComponent implements OnInit {
                         ) : false
                     ) : false
                 ) : false
-            }
+            };
         });
         // ends populate fee type list
 
@@ -116,17 +116,17 @@ export class ColumnFilterModalComponent implements OnInit {
                         ) : false
                     ) : false
                 ) : false
-            }
+            };
         });
         // ends populate installment list
 
         // starts main and late fee
         this.mainAndLateFee = data['columnFilter'] ? (
-            data['columnFilter']['type'] == 'fee'? (
+            data['columnFilter']['type'] == 'fee' ? (
                 data['columnFilter']['variable']['mainAndLateFee'] ?
                     data['columnFilter']['variable']['mainAndLateFee'] : { mainFee: false, lateFee: false }
             ) : { mainFee: false, lateFee: false }
-        ) : { mainFee: false, lateFee: false }
+        ) : { mainFee: false, lateFee: false };
         // ends main and late fee
 
         // starts populate minimum Amount
@@ -191,7 +191,7 @@ export class ColumnFilterModalComponent implements OnInit {
 
         // starts populate selected type and variable
         if (columnFilter['type'] == 'fee') {
-            
+
             // starts populate selected amount type
             columnFilter['variable'] = {};
             columnFilter['variable']['amountType'] = this.selectedAmountType;
@@ -249,7 +249,7 @@ export class ColumnFilterModalComponent implements OnInit {
         if (this.selectedSort) {
             columnFilter['sort'] = this.selectedSort;
         }
-        // ends populate selected column type        
+        // ends populate selected column type
 
         this.dialogRef.close({
             columnIndex: this.columnIndex,

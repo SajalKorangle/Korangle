@@ -7,8 +7,8 @@ def add_fees_view_list_page(apps, schema_editor):
     module_object = Module.objects.get(path='fees')
     task_object = Task()
     task_object.parentModule = module_object
-    task_object.path = 'notify_defaulters'
-    task_object.title = 'Notify Defaulters 2.0'
+    task_object.path = 'view_list'
+    task_object.title = 'View List'
     task_object.orderNumber = 4
     task_object.parentBoard = None
     task_object.save()

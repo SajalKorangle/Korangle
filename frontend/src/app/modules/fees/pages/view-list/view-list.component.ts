@@ -11,7 +11,7 @@ import xlsx = require('xlsx');
 @Component({
     selector: 'view-list',
     templateUrl: './view-list.component.html',
-    styleUrls: ['./view-.ist.component.css'],
+    styleUrls: ['./view-list.component.css'],
 })
 
 export class ViewListComponent implements OnInit {
@@ -124,7 +124,7 @@ export class ViewListComponent implements OnInit {
     }
 
     getValue(student, type, parameter) : any {
-        switch(type) {
+        switch (type) {
             case 'profile':
                 return student[parameter];
             case 'fee':
@@ -139,38 +139,38 @@ export class ViewListComponent implements OnInit {
                     return total + this.installmentList.filter((installment) => {
                         return !(parameter['installmentList'] && !parameter['installmentList'].includes(installment));
                     }).reduce((total2, installment) => {
-                        switch(parameter['amountType']) {
+                        switch (parameter['amountType']) {
                             case 'feeDue':
                                 return total2 + (
-                                    mainFee && feeDetails[installment+'Fee'] ? feeDetails[installment+'Fee'] : 0
+                                    mainFee && feeDetails[installment + 'Fee'] ? feeDetails[installment + 'Fee'] : 0
                                 ) + (
-                                    lateFee && feeDetails[installment+'LateFee'] ? feeDetails[installment+'LateFee'] : 0
+                                    lateFee && feeDetails[installment + 'LateFee'] ? feeDetails[installment + 'LateFee'] : 0
                                 ) - (
-                                    mainFee && feeDetails[installment+'FeePaid'] ? feeDetails[installment+'FeePaid'] : 0
+                                    mainFee && feeDetails[installment + 'FeePaid'] ? feeDetails[installment + 'FeePaid'] : 0
                                 ) - (
-                                    lateFee && feeDetails[installment+'LateFeePaid'] ? feeDetails[installment+'LateFeePaid'] : 0
+                                    lateFee && feeDetails[installment + 'LateFeePaid'] ? feeDetails[installment + 'LateFeePaid'] : 0
                                 ) - (
-                                    mainFee && feeDetails[installment+'DiscountGiven'] ? feeDetails[installment+'DiscountGiven'] : 0
+                                    mainFee && feeDetails[installment + 'DiscountGiven'] ? feeDetails[installment + 'DiscountGiven'] : 0
                                 ) - (
-                                    lateFee && feeDetails[installment+'LateFeeDiscountGiven'] ? feeDetails[installment+'LateFeeDiscountGiven'] : 0
+                                    lateFee && feeDetails[installment + 'LateFeeDiscountGiven'] ? feeDetails[installment + 'LateFeeDiscountGiven'] : 0
                                 );
                             case 'fee':
                                 return total2 + (
-                                    mainFee && feeDetails[installment+'Fee'] ? feeDetails[installment+'Fee'] : 0
+                                    mainFee && feeDetails[installment + 'Fee'] ? feeDetails[installment + 'Fee'] : 0
                                 ) + (
-                                    lateFee && feeDetails[installment+'LateFee'] ? feeDetails[installment+'LateFee'] : 0
+                                    lateFee && feeDetails[installment + 'LateFee'] ? feeDetails[installment + 'LateFee'] : 0
                                 );
                             case 'feePaid':
                                 return total2 + (
-                                    mainFee && feeDetails[installment+'FeePaid'] ? feeDetails[installment+'FeePaid'] : 0
+                                    mainFee && feeDetails[installment + 'FeePaid'] ? feeDetails[installment + 'FeePaid'] : 0
                                 ) + (
-                                    lateFee && feeDetails[installment+'LateFeePaid'] ? feeDetails[installment+'LateFeePaid'] : 0
+                                    lateFee && feeDetails[installment + 'LateFeePaid'] ? feeDetails[installment + 'LateFeePaid'] : 0
                                 );
                             case 'discountGiven':
                                 return total2 + (
-                                    mainFee && feeDetails[installment+'DiscountGiven'] ? feeDetails[installment+'DiscountGiven'] : 0
+                                    mainFee && feeDetails[installment + 'DiscountGiven'] ? feeDetails[installment + 'DiscountGiven'] : 0
                                 ) + (
-                                    lateFee && feeDetails[installment+'LateFeeDiscountGiven'] ? feeDetails[installment+'LateFeeDiscountGiven'] : 0
+                                    lateFee && feeDetails[installment + 'LateFeeDiscountGiven'] ? feeDetails[installment + 'LateFeeDiscountGiven'] : 0
                                 );
                         }
                     }, 0);

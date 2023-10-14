@@ -74,9 +74,9 @@ export class ViewListStreamVariables {
                 );
 
             })
-        ).subscribe(value => {;
+        ).subscribe(value => {
             this.vm.tcList$.next(value);
-        })
+        });
         // ends populate tc list
 
         // starts populate session list
@@ -93,7 +93,7 @@ export class ViewListStreamVariables {
             this.vm.sessionList$.asObservable(),
             this.vm.intermediaryStudentSectionList$.asObservable(),
         ]).subscribe(([sessionList, intermediaryStudentSectionList]) => {
-            
+
             if (!sessionList || !intermediaryStudentSectionList) {
                 return;
             }
@@ -133,7 +133,7 @@ export class ViewListStreamVariables {
             .getObjectList({class_app: 'Division'})
         ).subscribe(value => {
             this.vm.sectionList$.next(value);
-        })
+        });
         // ends populate section list
 
         // starts populate student parameter list
@@ -157,7 +157,7 @@ export class ViewListStreamVariables {
             .getObjectList({fees_third_app: 'FeesViewAllReport'})
         ).subscribe(value => {
             this.vm.intialReportList$.next(value);
-        })
+        });
         // ends populate initial report list
 
         // starts populate report list
@@ -168,7 +168,7 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'initialization',
                         data: value
-                    }
+                    };
                 })
             ),
             // newly saved
@@ -177,7 +177,7 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'newlySavedReport',
                         data: value
-                    }
+                    };
                 })
             ),
             // updation
@@ -186,7 +186,7 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'recentlyUpdatedReport',
                         data: value
-                    }
+                    };
                 })
             ),
             // deletion
@@ -195,14 +195,14 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'recentlyDeletedReport',
                         data: value
-                    }
+                    };
                 })
             )
         ).subscribe(value => {
             let data = value.data;
             if (!data) { return; }
             let reportList = this.vm.reportList$.getValue();
-            switch(value.operation) {
+            switch (value.operation) {
                 case 'initialization':
                     reportList = data;
                     break;
@@ -211,7 +211,7 @@ export class ViewListStreamVariables {
                     break;
                 case 'recentlyUpdatedReport':
                     let index = reportList.findIndex((report => {
-                        return report.id == data.id
+                        return report.id == data.id;
                     }));
                     reportList[index] = data;
                     break;
@@ -231,7 +231,7 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'initialization',
                         data: value
-                    }
+                    };
                 })
             ),
             // newly saved
@@ -240,7 +240,7 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'newlySavedReport',
                         data: value
-                    }
+                    };
                 })
             ),
             // updation
@@ -249,7 +249,7 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'recentlyUpdatedReport',
                         data: value
-                    }
+                    };
                 })
             ),
             // deletion
@@ -258,13 +258,13 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'recentlyDeletedReport',
                         data: value
-                    }
+                    };
                 })
             )
         ).subscribe(value => {
             let data = value.data;
             if (!data) { return; }
-            switch(value.operation) {
+            switch (value.operation) {
                 case 'initialization':
                     this.vm.selectedReport$.next(data.length > 0 ? data[0] : null);
                     break;
@@ -287,7 +287,7 @@ export class ViewListStreamVariables {
                 selectedReport && selectedReport.name ?
                     selectedReport.name : ''
             );
-        })
+        });
         // ends populate selected report name
 
         // starts populate student display parameter list
@@ -310,7 +310,7 @@ export class ViewListStreamVariables {
                 {display: 'Remark', variable: 'remark'}
             ].concat(
                 studentParameterList.map(studentParameter => {
-                    return {display: studentParameter.name, variable: 'studentParameter_'+studentParameter.id}
+                    return {display: studentParameter.name, variable: 'studentParameter_' + studentParameter.id};
                 })
             ));
         });
@@ -322,7 +322,7 @@ export class ViewListStreamVariables {
                 this.vm.searchText$.next('');
                 return;
             }
-            this.vm.searchText$.next(value.searchText)
+            this.vm.searchText$.next(value.searchText);
         });
         // ends populate search text
 
@@ -387,7 +387,7 @@ export class ViewListStreamVariables {
             sessionList,
             feeTypeList
         ]) => {
-            
+
             if (
                 !classList || !sectionList || !studentSectionList || !tcList ||
                 !studentParameterList || !studentParameterValueList || !sessionList || !feeTypeList
@@ -396,6 +396,7 @@ export class ViewListStreamVariables {
             }
 
             this.vm.intermediaryStudentSectionList$.next(studentSectionList.map(studentSection => {
+
                 let tempStudentSection = {
                     ...studentSection.parentStudentInstance,
                     rollNumber: studentSection.rollNumber,
@@ -403,7 +404,7 @@ export class ViewListStreamVariables {
                         + ', ' + sectionList.find(section => section.id === studentSection.parentDivision).name,
                     tc: tcList.find(tc => tc.parentStudent == studentSection.parentStudent),
                     feeDetailsList: []
-                }
+                };
 
                 // starts calculate amount
                 tempStudentSection.feeDetailsList = tempStudentSection.studentfee.map(studentFee => {
@@ -414,10 +415,10 @@ export class ViewListStreamVariables {
                     this.installmentList.filter((installment) => {
                         return (
                             !studentFee.isAnnually || (studentFee.isAnnually && installment == 'april')
-                        ) && studentFee[installment+'Amount'] && studentFee[installment+'Amount'] > 0;
+                        ) && studentFee[installment + 'Amount'] && studentFee[installment + 'Amount'] > 0;
                     }).forEach((installment) => {
 
-                        result[installment+'Fee'] = studentFee[installment+'Amount'];
+                        result[installment + 'Fee'] = studentFee[installment + 'Amount'];
 
                         // starts calculate late fee amount
                         let lateFeeAmount = 0;
@@ -444,44 +445,44 @@ export class ViewListStreamVariables {
                             }
                         }
                         if (lateFeeAmount > 0) {
-                            result[installment+'LateFee'] = lateFeeAmount;
+                            result[installment + 'LateFee'] = lateFeeAmount;
                         }
                         // ends calculate late fee amount
 
                         // starts calculate main fee paid
                         let feePaid = studentFee.subFeeReceiptList.reduce((total, subFeeReceipt) => {
                             return total + (
-                                subFeeReceipt[installment+'Amount'] ? subFeeReceipt[installment+'Amount'] : 0
+                                subFeeReceipt[installment + 'Amount'] ? subFeeReceipt[installment + 'Amount'] : 0
                             );
                         }, 0);
-                        if (feePaid > 0) { result[installment+'FeePaid'] = feePaid; }
+                        if (feePaid > 0) { result[installment + 'FeePaid'] = feePaid; }
                         // ends calculate main fee paid
 
                         // starts calculate late fee paid
                         let lateFeePaid = studentFee.subFeeReceiptList.reduce((total, subFeeReceipt) => {
                             return total + (
-                                subFeeReceipt[installment+'LateFee'] ? subFeeReceipt[installment+'LateFee'] : 0
+                                subFeeReceipt[installment + 'LateFee'] ? subFeeReceipt[installment + 'LateFee'] : 0
                             );
                         }, 0);
-                        if (lateFeePaid > 0) { result[installment+'LateFeePaid'] = lateFeePaid; }
+                        if (lateFeePaid > 0) { result[installment + 'LateFeePaid'] = lateFeePaid; }
                         // ends calculate late fee paid
 
                         // starts calculate main fee discount given
                         let discountGiven = studentFee.subDiscountList.reduce((total, subDiscount) => {
                             return total + (
-                                subDiscount[installment+'Amount'] ? subDiscount[installment+'Amount'] : 0
+                                subDiscount[installment + 'Amount'] ? subDiscount[installment + 'Amount'] : 0
                             );
                         }, 0);
-                        if (discountGiven > 0) { result[installment+'DiscountGiven'] = discountGiven; }
+                        if (discountGiven > 0) { result[installment + 'DiscountGiven'] = discountGiven; }
                         // ends calculate main fee discount given
 
                         // starts calculate late fee discount given
                         let lateFeeDiscountGiven = studentFee.subDiscountList.reduce((total, subDiscount) => {
                             return total + (
-                                subDiscount[installment+'LateFee'] ? subDiscount[installment+'LateFee'] : 0
+                                subDiscount[installment + 'LateFee'] ? subDiscount[installment + 'LateFee'] : 0
                             );
                         }, 0);
-                        if (lateFeeDiscountGiven > 0) { result[installment+'LateFeeDiscountGiven'] = lateFeeDiscountGiven; }
+                        if (lateFeeDiscountGiven > 0) { result[installment + 'LateFeeDiscountGiven'] = lateFeeDiscountGiven; }
                         // ends calculate late fee discount given
 
                     });
@@ -491,11 +492,11 @@ export class ViewListStreamVariables {
 
                 // starts attach student parameter value
                 studentParameterList.forEach(studentCustomFilter => {
-                    tempStudentSection['studentParameter_'+studentCustomFilter.id] =
-                        studentParameterValueList.find(studentParameterValue => 
+                    tempStudentSection['studentParameter_' + studentCustomFilter.id] =
+                        studentParameterValueList.find(studentParameterValue =>
                             studentParameterValue.parentStudent == studentSection.parentStudent &&
                             studentParameterValue.parentStudentParameter == studentCustomFilter.id
-                        )
+                        );
                 });
                 // ends attach student parameter value
 
@@ -536,7 +537,7 @@ export class ViewListStreamVariables {
                 tempFilteredStudentSectionList = tempFilteredStudentSectionList.filter(studentSection => {
 
                     if (!studentListFilter) { return true; }
-    
+
                     // Starts : Check class section filter
                     if (studentListFilter['selectedClassList']) {
                         if (!studentListFilter['selectedClassList'].includes(
@@ -546,18 +547,18 @@ export class ViewListStreamVariables {
                         }
                     }
                     // Ends : Check class section filter
-    
+
                     // Starts : Age Filter
                     if (studentListFilter['age']) {
-    
+
                         let ageFilter = studentListFilter['age'];
-    
+
                         if (!studentSection.dateOfBirth) {
                             return false;
                         }
-    
+
                         let age = CommonFunctions.getAge(ageFilter['asOnDate'], studentSection.dateOfBirth);
-    
+
                         /* Min-Age check */
                         if (
                             ageFilter['minAge'] &&
@@ -566,7 +567,7 @@ export class ViewListStreamVariables {
                         ) {
                             return false;
                         }
-        
+
                         /* Max-Age check */
                         if (
                             ageFilter['maxAge'] &&
@@ -575,10 +576,10 @@ export class ViewListStreamVariables {
                         ) {
                             return false;
                         }
-        
+
                     }
                     // Ends : Age Filter
-    
+
                     // Starts : Category Filter
                     if (
                         studentListFilter['category'] &&
@@ -589,7 +590,7 @@ export class ViewListStreamVariables {
                         return false;
                     }
                     // Ends : Category Filter
-    
+
                     // Starts : Gender Filter
                     if (
                         studentListFilter['gender'] &&
@@ -600,13 +601,13 @@ export class ViewListStreamVariables {
                         return false;
                     }
                     // Ends : Gender Filter
-    
+
                     // Starts : Admission Filter
                     if (studentListFilter['admission']) {
                         let admissionFilter = studentListFilter['admission'];
                         let studentAdmissionSession = studentSection.parentAdmissionSession;
                         let admissionType;
-                        
+
                         if (!studentAdmissionSession) {
                             admissionType = "NONE";
                         } else if (studentAdmissionSession === this.vm.user.activeSchool.currentSessionDbId) {
@@ -614,13 +615,13 @@ export class ViewListStreamVariables {
                         } else {
                             admissionType = "Old";
                         }
-        
+
                         if (!admissionFilter.includes(admissionType)) {
                             return false;
                         }
                     }
                     // Ends : Admission Filter
-    
+
                     // Starts : RTE Filter
                     if (
                         studentListFilter['RTE'] &&
@@ -631,7 +632,7 @@ export class ViewListStreamVariables {
                         return false;
                     }
                     // Ends : RTE Filter
-    
+
                     // Starts : TC Filter
                     if (
                         studentListFilter['TC'] &&
@@ -642,34 +643,34 @@ export class ViewListStreamVariables {
                         return false;
                     }
                     // Ends : TC Filter
-    
+
                     // Starts : Custom Filter
                     if (
                         studentListFilter['studentCustomFilterList'] &&
                         studentListFilter['studentCustomFilterList'].find(studentCustomFilter => {
                             return (
-                                !studentSection['studentParameter_'+studentCustomFilter.id] &&
+                                !studentSection['studentParameter_' + studentCustomFilter.id] &&
                                 !studentCustomFilter.noneSelected
                             ) || (
-                                studentSection['studentParameter_'+studentCustomFilter.id] &&
-                                !studentCustomFilter.filterValues.includes(studentSection['studentParameter_'+studentCustomFilter.id])
-                            )
+                                studentSection['studentParameter_' + studentCustomFilter.id] &&
+                                !studentCustomFilter.filterValues.includes(studentSection['studentParameter_' + studentCustomFilter.id])
+                            );
                         }) != undefined
                     ) {
                         return false;
                     }
                     // Ends : Custom Filter
-    
+
                     return true;
-    
+
                 });
-    
+
             }
             // ends filter by student list filter
 
             // starts show only selected columns
             tempFilteredStudentSectionList = tempFilteredStudentSectionList.map(studentSection => {
-                return columnListFilter.map(column => 
+                return columnListFilter.map(column =>
                     this.vm.getValue(studentSection, column.type, column.variable),
                 );
             });
@@ -701,7 +702,7 @@ export class ViewListStreamVariables {
                     });
                     if (columnFilter.sort == 'descending') {
                         tempFilteredStudentSectionList.reverse();
-                    }    
+                    }
                 }
             });
             // ends sort
@@ -718,7 +719,7 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'reportSelected',
                         data: value
-                    }
+                    };
                 })
             ),
             this.vm.openStudentListFilterDialogBtnClicked$.pipe(
@@ -747,7 +748,7 @@ export class ViewListStreamVariables {
             )
         ).subscribe(value => {
             let data = value['data'];
-            switch(value['operation']) {
+            switch (value['operation']) {
                 case 'dialogClosed':
                     if (!data || !data['studentListFilter']) { return; }
                     this.vm.studentListFilter$.next(this.deepCopy(data['studentListFilter']));
@@ -769,12 +770,12 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'reportSelected',
                         data: value
-                    }
+                    };
                 })
             ),
             this.vm.openColumnFilterDialogBtnClicked$.pipe(
                 mergeMap((value) => {
-                    if(value === null) { return (new BehaviorSubject<any>(null)).asObservable(); }
+                    if (value === null) { return (new BehaviorSubject<any>(null)).asObservable(); }
                     let columnListFilter = this.vm.columnListFilter$.getValue();
                     return from(this.vm.dialog.open(ColumnFilterModalComponent, {
                         data: {
@@ -791,23 +792,23 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'dialogClosed',
                         data: value
-                    }
+                    };
                 })
             ),
             this.vm.columnDragged$.asObservable().pipe(
                 map(value => {
-                    if(!value) { return (new BehaviorSubject<any>(null)).asObservable(); }
+                    if (!value) { return (new BehaviorSubject<any>(null)).asObservable(); }
                     return {
                         operation: 'dragged',
                         data: value
-                    }
+                    };
                 })
             )
         ).subscribe(value => {
 
             let data = value['data'];
             let columnListFilter = this.vm.columnListFilter$.getValue();
-            switch(value['operation']) {
+            switch (value['operation']) {
                 case 'dialogClosed':
                     if (!data) { return; }
                     if (data.shouldDelete) {
@@ -822,8 +823,8 @@ export class ViewListStreamVariables {
                     moveItemInArray(columnListFilter, data.previousIndex, data.currentIndex);
                     break;
                 case 'reportSelected':
-                    if (!data) {columnListFilter = this.vm.DEFAULT_COLUMN_LIST_FILTER; }
-                    else {columnListFilter = data['columnListFilter']}
+                    if (!data) { columnListFilter = this.vm.DEFAULT_COLUMN_LIST_FILTER; }
+                    else { columnListFilter = data['columnListFilter']; }
                     break;
             }
             this.vm.columnListFilter$.next(this.deepCopy(columnListFilter));
@@ -849,7 +850,7 @@ export class ViewListStreamVariables {
                 (this.vm.reportList$.getValue() && this.vm.reportList$.getValue().find(report => {
                     return report.name == selectedReportName && report.id != this.vm.selectedReport$.getValue().id;
                 }) != undefined)
-            )
+            );
         });
         // ends populate update btn disable
 
@@ -895,7 +896,7 @@ export class ViewListStreamVariables {
                         return report.name == selectedReportName;
                     }) != undefined) ? toolTip + '- Report Name already exists\n' : toolTip;
             this.vm.saveNewBtnToolTip$.next(toolTip);
-        })
+        });
         // ends populate save new btn tool tip
 
         // starts populate newly saved report
@@ -909,7 +910,7 @@ export class ViewListStreamVariables {
                     columnListFilter: this.vm.columnListFilter$.getValue(),
                     searchText: this.vm.searchText$.getValue(),
                     searchParameter: this.vm.selectedSearchParameter$.getValue()
-                }
+                };
                 return from(new Query()
                     .createObject({fees_third_app: 'FeesViewAllReport'}, data)
                 );
@@ -917,7 +918,7 @@ export class ViewListStreamVariables {
         ).subscribe(value => {
             if (!value)  { return; }
             this.vm.recentlySavedReport$.next(value);
-        })
+        });
         // ends populate newly saved report
 
         // starts populate newly updated report
@@ -989,7 +990,7 @@ export class ViewListStreamVariables {
             } else {
                 this.vm.reportMightHaveChanged$.next(false);
             }
-        })
+        });
         // ends is report changed
 
     }
@@ -1001,7 +1002,7 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'saveBtnClicked',
                         data: value
-                    }
+                    };
                 })
             ),
             this.vm.recentlySavedReport$.asObservable().pipe(
@@ -1009,7 +1010,7 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'newlySavedReport',
                         data: value
-                    }
+                    };
                 })
             ),
             this.vm.updateBtnClicked$.asObservable().pipe(
@@ -1017,7 +1018,7 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'updateBtnClicked',
                         data: value
-                    }
+                    };
                 })
             ),
             this.vm.recentlyUpdatedReport$.asObservable().pipe(
@@ -1025,7 +1026,7 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'recentlyUpdatedReport',
                         data: value
-                    }
+                    };
                 })
             ),
             this.vm.deleteBtnClicked$.asObservable().pipe(
@@ -1033,7 +1034,7 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'deleteBtnClicked',
                         data: value
-                    }
+                    };
                 })
             ),
             this.vm.recentlyDeletedReportId$.asObservable().pipe(
@@ -1041,7 +1042,7 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'recentlyDeletedReport',
                         data: value
-                    }
+                    };
                 })
             ),
             combineLatest([
@@ -1060,32 +1061,32 @@ export class ViewListStreamVariables {
                     return {
                         operation: 'initialization',
                         data: valueList
-                    }
+                    };
                 })
-            )    
+            )
         ).subscribe(value => {
             let data = value['data'];
-            switch(value.operation) {
+            switch (value.operation) {
                 case 'initialization':
                     this.vm.isInitialLoading$.next(!data.every(value => value != null));
                     break;
                 case 'saveBtnClicked':
-                    if (data) {this.vm.isInitialLoading$.next(true); return;}
+                    if (data) { this.vm.isInitialLoading$.next(true); return; }
                     break;
                 case 'newlySavedReport':
-                    if (data) {this.vm.isInitialLoading$.next(false); return;}
+                    if (data) { this.vm.isInitialLoading$.next(false); return; }
                     break;
                 case 'updateBtnClicked':
-                    if (data) {this.vm.isInitialLoading$.next(true); return;}
+                    if (data) { this.vm.isInitialLoading$.next(true); return; }
                     break;
                 case 'recentlyUpdatedReport':
-                    if (data) {this.vm.isInitialLoading$.next(false); return;}
+                    if (data) { this.vm.isInitialLoading$.next(false); return; }
                     break;
                 case 'deleteBtnClicked':
-                    if (data) {this.vm.isInitialLoading$.next(true); return;}
+                    if (data) { this.vm.isInitialLoading$.next(true); return; }
                     break;
                 case 'recentlyDeletedReport':
-                    if (data) {this.vm.isInitialLoading$.next(false); return;}
+                    if (data) { this.vm.isInitialLoading$.next(false); return; }
                     break;
             }
         });

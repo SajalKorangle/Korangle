@@ -203,7 +203,7 @@ export class StudentListFilterModalComponent implements OnInit {
             userFilterText$: new BehaviorSubject<any>(''),
         }));
         this.studentCustomFilterList.forEach(studentCustomFilter => {
-            studentCustomFilter.userFilterText$.asObservable().subscribe(value => {                
+            studentCustomFilter.userFilterText$.asObservable().subscribe(value => {
                 if (value === '') {
                     studentCustomFilter['filteredFilterValues'] = studentCustomFilter.filterValues;
                 } else {

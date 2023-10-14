@@ -38,7 +38,7 @@ const routes: Routes = [
 
     {
         path: 'view_list',
-        loadChildren: 'app/modules/fees/pages/view_list/view-list.module#ViewListModule',
+        loadChildren: 'app/modules/fees/pages/view-list/view-list.module#ViewListModule',
         data: { moduleName: 'fees' },
     },
 
