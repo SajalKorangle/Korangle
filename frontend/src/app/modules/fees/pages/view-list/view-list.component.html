@@ -1,0 +1,165 @@
+<div class="card-content table-responsive">
+
+    <!-- Starts : When loading is completed -->
+    <ng-container *ngIf="!isInitialLoading$.getValue()">
+
+        <div class="row" style="border-bottom: 2px solid black;">
+
+            <div class="col-md-6">
+
+                <!-- Starts : Choose Report -->
+                <mat-form-field>
+                    <mat-label>Select Report</mat-label>
+                    <mat-select [ngModel]="selectedReport$.getValue()"
+                        (ngModelChange)="selectedReport$.next($event)">
+                        <mat-option [value]="NULL_VALUE"> Create New Report </mat-option>
+                        <mat-option *ngFor="let report of reportList$.getValue()" [value]="report">
+                            {{report.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <!-- Ends : Choose Report -->
+
+                <!-- Starts : Type Report Name -->
+                <mat-form-field style="margin-left: 10px;">
+                    <mat-label>Report Name</mat-label>
+                    <input matInput required type="text"
+                        [ngModel]="selectedReportName$.getValue()"
+                        (ngModelChange)="selectedReportName$.next($event)"/>
+                </mat-form-field>
+                <!-- Ends : Type Report Name -->
+
+            </div>
+
+            <div class="col-md-6">
+
+                <!-- Starts : Delete -->
+                <button type="button"
+                    *ngIf="showDeleteBtn$.getValue()"
+                    (click)="deleteBtnClicked$.next('clicked')"
+                    class="btn btn-danger"
+                    style="padding: 4px 7px; float: right; margin-left: 15px;">
+                    Delete
+                </button>
+                <!-- Ends : Delete -->
+
+                <!-- Starts : Update this -->
+                <button type="button"
+                    *ngIf="showUpdateBtn$.getValue()"
+                    (click)="updateBtnClicked$.next('clicked')"
+                    [matTooltip]="updateBtnToolTip$.getValue()"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    style="padding: 4px 7px; float: right; margin-left: 15px;"
+                    [disabled]="isUpdateBtnDisabled$.getValue()">
+                    Update this
+                </button>
+                <!-- Ends : Update This -->
+
+                <!-- Starts : Save New -->
+                <button type="button"
+                    (click)="saveNewBtnClicked$.next('clicked')"
+                    [matTooltip]="saveNewBtnToolTip$.getValue()"
+                    [disabled]="isSaveNewBtnDisabled$.getValue()"
+                    class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                    style="padding: 4px 7px; float: right;">
+                    Save New
+                </button>
+                <!-- Ends : Save New -->
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <!-- Starts : Open Student List Filter Dialog -->
+            <button class="btn" style="padding: 4px 7px" (click)="openStudentListFilterDialogBtnClicked$.next('clicked')">
+                Show Student List Filters
+            </button>
+            <!-- Ends : Open Student List Filter Dialog -->
+
+            <!-- Starts : Download Excel button -->
+            <button class="btn"
+                style="padding: 4px 7px; float: right;"
+                (click)="download()">
+                Excel
+            </button>
+            <!-- Ends : Download Excel button -->
+
+        </div>
+
+        <!-- Starts: Search Filter -->
+        <!-- Starts: Search Text -->
+        <mat-form-field>
+            <mat-label>Search by</mat-label>
+            <input matInput type="text"
+                [ngModel]="searchText$.getValue()"
+                (ngModelChange)="searchText$.next($event)"/>
+        </mat-form-field>
+        <!-- Ends: Search Text -->
+        <!-- Starts: Search Parameter -->
+        <mat-form-field style="margin-left: 10px;">
+            <mat-select [ngModel]="selectedSearchParameter$.getValue()"
+                (ngModelChange)="selectedSearchParameter$.next($event)">
+                <mat-option *ngFor="let searchParameter of studentDisplayParameterList$.getValue()" [value]="searchParameter.variable">
+                    {{searchParameter.display}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- Ends: Search Parameter -->
+        <br/>
+        <!-- Ends: Search Filter -->
+
+        <!-- Starts : # of students -->
+        Showing: <b>{{filteredStudentSectionList$.getValue().length}}</b> out of {{studentSectionList$.getValue().length}} students
+        <!-- Ends : # of students -->
+
+        <!-- Starts : Student List -->
+        <cdk-virtual-scroll-viewport itemSize="0" class="example-viewport">
+        <table class="table table-hover">
+            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                <tr cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="this.columnDragged$.next($event)">
+                    <th *ngFor="let column of columnListFilter$.getValue(); let i=index;"
+                        class="minWidth"
+                        cdkDragLockAxis="x" cdkDrag>
+                        <span style="cursor: pointer" (click)="openColumnFilterDialogBtnClicked$.next(i)">
+                            {{column.header}}
+                            <ng-container *ngIf="column.sort == 'ascending'">&darr;</ng-container>
+                            <ng-container *ngIf="column.sort == 'descending'">&uarr;</ng-container>
+                        </span>
+                        <i class="material-icons menu-icon" style="float: right; margin-right: 10px;" cdkDragHandle>menu</i>
+                    </th>
+                    <th class="minWidth">
+                        <span (click)="openColumnFilterDialogBtnClicked$.next(columnListFilter$.getValue().length)"
+                            style="cursor: pointer">
+                            Add Column +
+                        </span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *cdkVirtualFor="let student of filteredStudentSectionList$.getValue()">
+                    <td *ngFor="let value of student; let i=index;">
+                        <span *ngIf="columnListFilter$.getValue()[i].type == 'fee'; else profile">
+                            {{ value | indianCurrency: true }}
+                        </span>
+                        <ng-template #profile>{{value}}</ng-template>
+                    </td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+        </cdk-virtual-scroll-viewport>
+        <!-- Ends : Student List -->
+
+
+    </ng-container>
+    <!-- Ends : When loading is completed -->
+
+    <!-- Starts :- Loader -->
+    <ng-container *ngIf="isInitialLoading$.getValue()">
+        <app-loading-spinner [user]="user" [timer]="60"></app-loading-spinner>
+    </ng-container>
+    <!-- Ends :- Loader -->
+
+</div>

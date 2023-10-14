@@ -1,0 +1,178 @@
+<mat-dialog-content class="filter-modal-container">
+
+    <!-- Starts: Header -->
+    <b>Header - </b>
+    <mat-form-field style="margin-left: 10px;">
+        <input matInput required type="text" [(ngModel)]="header" />
+    </mat-form-field>
+    <p *ngIf="!header" style="color: red;">Header is necessary.</p>
+    <!-- Ends: Header -->
+
+    <br>
+
+    <!-- Starts: Column Type -->
+    <mat-form-field>
+        <mat-select [(ngModel)]="selectedColumnType" placeholder="Column Type">
+            <mat-option *ngFor="let columnType of COLUMN_TYPE_LIST" [value]="columnType.type">
+                {{columnType.display}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <!-- Ends: Column Type -->
+
+    <br>
+
+    <!-- Starts: Fee Parameters -->
+    <ng-container *ngIf="selectedColumnType=='fee'">
+
+        <!-- Starts: Amount Type -->
+        <mat-form-field>
+            <mat-select [(ngModel)]="selectedAmountType" placeholder="Amount Type">
+                <mat-option *ngFor="let amountType of AMOUNT_TYPE_LIST" [value]="amountType.type">
+                    {{amountType.display}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- Ends: Column Type -->
+
+        <br>
+
+        <!-- Starts: Useful Session List -->
+        <mat-form-field>
+            <mat-select placeholder="Select Sessions">
+                <mat-option *ngFor="let session of usefulSessionList">
+                    <mat-checkbox [(ngModel)]="session.selected" (click)="$event.stopPropagation();">
+                        <ng-container *ngIf="currentSessionId == session.id; else normalSessionName"><b><i>Current Session</i></b></ng-container>
+                        <ng-template #normalSessionName>{{session.name}}</ng-template>
+                    </mat-checkbox>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- Ends: Useful Session List -->
+
+        <br>
+
+        <!-- Starts: Fee Type List -->
+        <mat-form-field>
+            <mat-select placeholder="Select Fee Types">
+                <mat-option *ngFor="let feeType of feeTypeList">
+                    <mat-checkbox [(ngModel)]="feeType.selected" (click)="$event.stopPropagation();">
+                        {{feeType.name}}
+                    </mat-checkbox>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- Ends: Fee Type List -->
+
+        <br>
+
+        <!-- Starts: Installment List -->
+        <mat-form-field>
+            <mat-select placeholder="Select Installments">
+                <mat-option *ngFor="let installment of installmentList">
+                    <mat-checkbox [(ngModel)]="installment.selected" (click)="$event.stopPropagation();">
+                        {{installment.name}}
+                    </mat-checkbox>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- Ends: Installment List -->
+
+        <br>
+
+        <!-- Starts: Main And Late Fee -->
+        <mat-form-field>
+            <mat-select placeholder="Select Main & Late Fee">
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="mainAndLateFee.mainFee" (click)="$event.stopPropagation();">
+                        Main Fee
+                    </mat-checkbox>
+                </mat-option>
+                <mat-option>
+                    <mat-checkbox [(ngModel)]="mainAndLateFee.lateFee" (click)="$event.stopPropagation();">
+                        Late Fee
+                    </mat-checkbox>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- Ends: Main And Late Fee -->
+
+        <br>
+
+        <!-- Starts: Minimum Amount -->
+        <b>Min Amount - </b>
+        <mat-form-field style="margin-left: 10px;">
+            <input matInput required type="number" [(ngModel)]="minAmount" />
+        </mat-form-field>
+        <!-- Ends: Minimum Amount -->
+
+        <br>
+
+        <!-- Starts: Maximum Amount -->
+        <b>Max Amount - </b>
+        <mat-form-field style="margin-left: 10px;">
+            <input matInput required type="number" [(ngModel)]="maxAmount" />
+        </mat-form-field>
+        <!-- Ends: Maximum Amount -->
+
+    </ng-container>
+    <!-- Starts: Fee Parameters -->
+
+    <!-- Starts: Student Profile Parameters -->
+    <ng-container *ngIf="selectedColumnType=='profile'">
+
+        <!-- Starts: Student Parameter List -->
+        <mat-form-field>
+            <mat-select [(ngModel)]="selectedStudentParameter" placeholder="Student Profile">
+                <mat-option *ngFor="let studentParameter of studentDisplayParameterList" [value]="studentParameter.variable">
+                    {{studentParameter.display}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <!-- Ends: Student Parameter List -->
+
+    </ng-container>
+    <!-- Ends: Student Profile Parameters -->
+
+    <br>
+
+    <!-- Starts: Sort -->
+    <mat-form-field>
+        <mat-select [(ngModel)]="selectedSort" placeholder="Sort">
+            <mat-option *ngFor="let sort of sortList" [value]="sort.variable">
+                {{sort.display}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <!-- Ends: Sort -->
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <!-- Starts: Bottom Buttons -->
+    <div class="bottom-btns">
+
+        <button
+            type="button"
+            class="btn delete-btn"
+            style="padding: 7px 17px;"
+            matTooltip="Delete Filter"
+            tooltip-position="left"
+            (click) = "deleteClick()"
+        >
+            Delete
+        </button>
+
+        <button
+            type="button"
+            class="btn btn-warning"
+            style="padding: 7px 17px;"
+            matTooltip="Apply Filter"
+            tooltip-position="left"
+            (click) = "applyClick()"
+        >
+            Apply
+        </button>
+    </div>
+    <!-- Ends: Bottom Buttons -->
+</mat-dialog-actions>
