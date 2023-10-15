@@ -492,9 +492,13 @@ export class CountAllComponent implements OnInit {
                 this.isTableUpdated = true;
                 let filtersData = data.filtersData;
                 if (this.whereToAdd === 'row') {  /* Row Filter */
-                    this.rowFilterList$.next(this.rowFilterList$.getValue().push(filtersData));
+                    let rowFilterList = this.rowFilterList$.getValue();
+                    rowFilterList.push(filtersData);
+                    this.rowFilterList$.next(rowFilterList);
                 } else if (this.whereToAdd === 'col') {  /* Column Filter */
-                    this.columnFilterList$.next(this.columnFilterList$.getValue().push(filtersData));
+                    let columnFilterList = this.columnFilterList$.getValue();
+                    columnFilterList.push(filtersData);
+                    this.columnFilterList$.next(columnFilterList);
                 }
             }
         });
