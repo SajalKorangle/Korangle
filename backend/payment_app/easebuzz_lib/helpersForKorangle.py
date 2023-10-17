@@ -10,7 +10,8 @@ from collections import defaultdict
 import json
 
 KORANGLE_CHARGE = 5.9
-KORANGLE_EASEBUZZ_BANK_LABEL = "KORANGLE"
+# KORANGLE_EASEBUZZ_BANK_LABEL = "KORANGLE"
+KORANGLE_EASEBUZZ_BANK_LABEL = "KORANGLEICICI 6175"
 GST = 0.18
 
 easebuzz = Easebuzz(EASEBUZZ_MERCHANT_KEY, EASEBUZZ_SALT, EASEBUZZ_ENV)
@@ -46,7 +47,7 @@ def createSelfOrder(orderData, orderId):
     order = defaultdict(str, {
         "txnid": orderId,
         "amount": calculateAmount(orderData),
-        "productinfo": orderData["orderNote"][:45],
+        "productinfo": orderData["orderNote"][:38],
         "firstname": orderData["customerName"],
         "phone": orderData["customerPhone"],
         "email": orderData["customerEmail"],
