@@ -1,0 +1,65 @@
+<div class='card-content table-responsive'>
+
+    <!-- Showing List of Bills after Loading starts -->
+    <ng-container *ngIf='!isInitialLoading'>
+
+        <!-- No Unpaid Bill Message Starts -->
+        <span *ngIf="unpaidBillList.length==0">No Pending Bills !!!</span>
+        <!-- No Unpaid Bill Message Ends -->
+
+        <!-- Showing List of Unpaid Bills in table format Starts -->
+        <table class="table table-hover" *ngIf="unpaidBillList.length!=0">
+            <thead style="color: rgba(255, 152, 0, 1);">
+                <tr>
+                    <th>S No.</th>
+                    <th>Bill Date</th>
+                    <th>Amount</th>
+                    <th>Towards</th>
+                    <th>Bill</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let bill of unpaidBillList; let i = index;">
+
+                    <td>{{i+1}}.</td>
+                    <td>{{bill.billDate | date: 'd MMM y'}}</td>
+                    <td>Rs. {{bill.amount | indianCurrency }}/-</td>
+                    <td matTooltip="{{bill.towards}}" >{{ bill.towards.length > 10 ? bill.towards.substring(0, 10) + '...' : bill.towards }}</td>
+                    <td>
+                        <img *ngIf="bill.billPDF"
+                            src="/assets/img/pdfIcon.png"
+                            style="width: 20px; cursor: pointer;"
+                            (click)="downloadFile(bill.billPDF)"/>
+                    </td>
+                    <td>
+                        <ng-container *ngIf="isOrderProcessing(bill); else showButton">
+                            Processing
+                        </ng-container>
+                        <ng-template #showButton>
+                            <button
+                                type="submit"
+                                class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+                                style="padding: 3px 8px"
+                                (click)="openPaymentDialog(bill)"
+                            >
+                                Pay
+                            </button>
+                        </ng-template>
+                    </td>
+                </tr>
+            </tbody>
+    
+        </table>
+        <!-- Showing List of Unpaid Bills in table format Starts -->
+    
+    </ng-container>
+    <!-- Showing List of Bills after Loading ends -->
+
+    <!-- Showing Loader Starts -->
+    <ng-container *ngIf='isInitialLoading'>
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+    <!-- Showing Loader Ends -->
+
+</div>

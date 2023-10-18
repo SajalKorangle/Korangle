@@ -150,6 +150,7 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
     payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport'
         | 'PaymentGateway' | 'ModeOfPayment' | 'ModeOfPaymentCharges';
+    bill_app: 'Bill';
     activity_record_app: 'ActivityRecord';
     student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue' | 'CountAllTable';
     library_app: 'Book' | 'BookParameter' | 'BookIssueRecord' | 'SchoolLibrarySettings';

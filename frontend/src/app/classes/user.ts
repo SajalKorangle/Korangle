@@ -279,6 +279,7 @@ export class User {
                 subRoute: task.path,
                 title: module.title,
                 subTitle: task.title,
+                blockWhenSuspended: task.blockWhenSuspended ? task.blockWhenSuspended : false,
             };
             if (task.videoUrl) {
                 this.section['videoUrl'] = task.videoUrl;
