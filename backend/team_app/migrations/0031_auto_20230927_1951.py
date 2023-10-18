@@ -7,7 +7,7 @@ from team_app.db_script.add_fees_view_list_page import add_fees_view_list_page
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('team_app', '0029_auto_20230913_1019'),
+        ('team_app', '0030_auto_20230909_1222'),
     ]
 
     operations = [
