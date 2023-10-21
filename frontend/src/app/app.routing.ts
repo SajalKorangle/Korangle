@@ -160,7 +160,11 @@ const routes: Routes = [
             {
                 path: 'website',
                 loadChildren: 'app/modules/website/website.module#WebsiteModule',
-            }
+            },
+            {
+                path: 'bill',
+                loadChildren: 'app/modules/bill/bill.module#BillModule',
+            },
         ]
     },
     // ----- Routes For inside User DashBoard Ends -------

@@ -40,6 +40,11 @@ export class School {
     studentList = [];
     parentModuleList = [];
 
+    pendingBillList = [];
+    isSuspended = false;
+    showPageHeaderWarning = false;
+    showModalWarning = false;
+
     fromServerObject(schoolData: any) {
         this.dbId = schoolData.dbId;
         this.name = schoolData.name;
@@ -77,8 +82,35 @@ export class School {
 
         this.parentBoard = schoolData.parentBoard;
 
+        this.pendingBillList = schoolData.pendingBillList;
+
         if ('employeeId' in schoolData && schoolData['employeeId'] !== null) {
+
+            let todaysDate = new Date();
+            this.pendingBillList.every(bill => {
+                let billDate = new Date(bill.billDate + 'T00:00:00');
+                this.isSuspended = this.isSuspended ||
+                    (todaysDate.getTime() - Math.abs(billDate.getTime())) / (1000 * 60 * 60 * 24) > bill.functionalityBlockedInterval;
+                return !this.isSuspended;
+            });
+
             this.moduleList = schoolData.moduleList;
+
+            if (this.moduleList.find(module => {
+                return module.taskList.find(task => {
+                    return task.blockWhenSuspended;
+                }) != undefined;
+            })) {
+                this.pendingBillList.every(bill => {
+                    let billDate = new Date(bill.billDate + 'T00:00:00');
+                    this.showPageHeaderWarning = this.showPageHeaderWarning ||
+                        (todaysDate.getTime() - Math.abs(billDate.getTime())) / (1000 * 60 * 60 * 24) > bill.pageHeaderWarningInterval;
+                    this.showModalWarning = this.showModalWarning ||
+                        (todaysDate.getTime() - Math.abs(billDate.getTime())) / (1000 * 60 * 60 * 24) > bill.modalWarningInterval;
+                    return !(this.showPageHeaderWarning && this.showModalWarning);
+                });
+            }
+
             this.moduleList.push({
                 dbId: null,
                 path: 'job',
