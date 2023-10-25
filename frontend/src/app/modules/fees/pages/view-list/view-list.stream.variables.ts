@@ -286,7 +286,7 @@ export class ViewListStreamVariables {
                     break;
                 case 'discardChanges':
                     this.vm.selectedReport$.next(
-                        this.vm.reportList$.getValue().find(report => 
+                        this.vm.reportList$.getValue().find(report =>
                             report.id == this.vm.selectedReport$.getValue().id
                         )
                     );
