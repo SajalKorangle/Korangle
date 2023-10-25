@@ -58,14 +58,17 @@ export class ViewListComponent implements OnInit {
     ];
     columnListFilter$: BehaviorSubject<any> = new BehaviorSubject(this.DEFAULT_COLUMN_LIST_FILTER);
 
+    selectedColumnsValueByStudentId$: BehaviorSubject<any> = new BehaviorSubject(null);
+
     filteredStudentSectionList$: BehaviorSubject<any> = new BehaviorSubject(null);
 
     intialReportList$ = new BehaviorSubject<any>(null);
 
-    // isInitialLoading will be false only after it becomes an array.
-    // so initial null value doesn't have much affect anywher
+    // isInitialLoading will be false only after reportList becomes an array.
+    // so initial null value doesn't have much affect anywhere
     reportList$ = new BehaviorSubject<any>(null);
     selectedReport$ = new BehaviorSubject<any>(null); // null means 'create new report' is selected.
+    handleSelectReportClick$ = new BehaviorSubject<any>(null);
 
     selectedReportName$ = new BehaviorSubject<any>(null);
 

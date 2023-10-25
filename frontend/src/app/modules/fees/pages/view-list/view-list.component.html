@@ -11,6 +11,8 @@
                 <mat-form-field>
                     <mat-label>Select Report</mat-label>
                     <mat-select [ngModel]="selectedReport$.getValue()"
+                        (click)="this.handleSelectReportClick$.next(1)"
+                        [disabled]="!isUpdateBtnDisabled$.getValue()"
                         (ngModelChange)="selectedReport$.next($event)">
                         <mat-option [value]="NULL_VALUE"> Create New Report </mat-option>
                         <mat-option *ngFor="let report of reportList$.getValue()" [value]="report">
@@ -25,7 +27,7 @@
                     <mat-label>Report Name</mat-label>
                     <input matInput required type="text"
                         [ngModel]="selectedReportName$.getValue()"
-                        (ngModelChange)="selectedReportName$.next($event)"/>
+                        (ngModelChange)="selectedReportName$.next($event.trim())"/>
                 </mat-form-field>
                 <!-- Ends : Type Report Name -->
 

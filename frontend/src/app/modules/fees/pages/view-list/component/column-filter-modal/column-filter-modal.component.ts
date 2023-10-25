@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { INSTALLMENT_LIST } from "@modules/fees/classes/constants";
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
     templateUrl: './column-filter-modal.component.html',
@@ -10,7 +11,7 @@ export class ColumnFilterModalComponent implements OnInit {
 
     columnIndex: number;
 
-    header: string;
+    header$ = new BehaviorSubject<string>(null);
 
     COLUMN_TYPE_LIST = [
         {display: 'Fee Parameters', type: 'fee'},
@@ -50,6 +51,10 @@ export class ColumnFilterModalComponent implements OnInit {
     ];
     selectedSort: any;
 
+    isApplyButtonDisabled$ = new BehaviorSubject<any>(true);
+
+    showDeleteBtn = true;
+
     constructor(
         public dialogRef: MatDialogRef<ColumnFilterModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data,
@@ -60,7 +65,7 @@ export class ColumnFilterModalComponent implements OnInit {
         // ends populate column index
 
         // starts populate header
-        this.header = data['columnFilter'] ? data['columnFilter'].header : '';
+        this.header$.next(data['columnFilter'] ? data['columnFilter'].header : '');
         // ends populate header
 
         // starts populate column type
@@ -162,6 +167,16 @@ export class ColumnFilterModalComponent implements OnInit {
         ) : this.studentDisplayParameterList[0].variable;
         // ends populate student parameter list
 
+        // starts populate is apply button disabled
+        this.header$.asObservable().subscribe(header => {
+            this.isApplyButtonDisabled$.next(!(header && header != ''));
+        });
+        // ends populate is apply button disabled
+
+        // starts populate show delete button
+        this.showDeleteBtn = data['columnFilter'] ? true : false;
+        // ends populate show delete button
+
     }
 
     ngOnInit() { }
@@ -182,7 +197,7 @@ export class ColumnFilterModalComponent implements OnInit {
         let columnFilter = {};
 
         // starts populate header
-        columnFilter['header'] = this.header;
+        columnFilter['header'] = this.header$.getValue();
         // ends populate header
 
         // starts populate selected column type

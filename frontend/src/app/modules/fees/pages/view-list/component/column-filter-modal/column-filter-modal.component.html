@@ -3,9 +3,9 @@
     <!-- Starts: Header -->
     <b>Header - </b>
     <mat-form-field style="margin-left: 10px;">
-        <input matInput required type="text" [(ngModel)]="header" />
+        <input matInput required type="text" [ngModel]="header$.getValue()" (ngModelChange)="header$.next($event.trim())"/>
     </mat-form-field>
-    <p *ngIf="!header" style="color: red;">Header is necessary.</p>
+    <p *ngIf="!header$.getValue() && header$.getValue() != ''" style="color: red;">Header is necessary.</p>
     <!-- Ends: Header -->
 
     <br>
@@ -152,7 +152,10 @@
     <!-- Starts: Bottom Buttons -->
     <div class="bottom-btns">
 
+        <button mat-button mat-dialog-close>Cancel</button>
+
         <button
+            *ngIf="showDeleteBtn"
             type="button"
             class="btn delete-btn"
             style="padding: 7px 17px;"
@@ -170,6 +173,7 @@
             matTooltip="Apply Filter"
             tooltip-position="left"
             (click) = "applyClick()"
+            [disabled] = "isApplyButtonDisabled$.getValue()"
         >
             Apply
         </button>

@@ -174,11 +174,6 @@ export class StudentListFilterModalComponent implements OnInit {
             }   //  Ends: Initialize TC
 
         }  // Ends: Initialize Default Value of Filters
-        else {
-            let today = new Date();
-            today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-            this.asOnDate = today.toJSON().slice(0, 10);
-        }
 
         // Starts : Populate Student Parameter List
         this.studentCustomFilterList = data.studentCustomFilterList;

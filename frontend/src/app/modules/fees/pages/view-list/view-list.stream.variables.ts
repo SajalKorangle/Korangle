@@ -225,15 +225,6 @@ export class ViewListStreamVariables {
 
         // starts populate selected report
         merge (
-            // intialization
-            this.vm.intialReportList$.pipe(
-                map(value => {
-                    return {
-                        operation: 'initialization',
-                        data: value
-                    };
-                })
-            ),
             // newly saved
             this.vm.recentlySavedReport$.asObservable().pipe(
                 map(value => {
@@ -260,14 +251,30 @@ export class ViewListStreamVariables {
                         data: value
                     };
                 })
+            ),
+            // discard changes
+            this.vm.handleSelectReportClick$.asObservable().pipe(
+                map(value => {
+                    if (
+                        value &&
+                        !this.vm.isUpdateBtnDisabled$.getValue() &&
+                        confirm("Do you want to discard your current changes in this report?")
+                    ) {
+                        return {
+                            operation: 'discardChanges',
+                            data: value
+                        };
+                    }
+                    return {
+                        operation: 'discardChanges',
+                        data: null
+                    };
+                })
             )
         ).subscribe(value => {
             let data = value.data;
             if (!data) { return; }
             switch (value.operation) {
-                case 'initialization':
-                    this.vm.selectedReport$.next(data.length > 0 ? data[0] : null);
-                    break;
                 case 'newlySavedReport':
                     this.vm.selectedReport$.next(data);
                     break;
@@ -276,6 +283,13 @@ export class ViewListStreamVariables {
                     break;
                 case 'recentlyDeletedReport':
                     this.vm.selectedReport$.next(null);
+                    break;
+                case 'discardChanges':
+                    this.vm.selectedReport$.next(
+                        this.vm.reportList$.getValue().find(report => 
+                            report.id == this.vm.selectedReport$.getValue().id
+                        )
+                    );
                     break;
             }
         });
@@ -505,16 +519,42 @@ export class ViewListStreamVariables {
         });
         // ends populate intermediary student section list
 
+        // starts populate selected columns value mapped by student id
+        combineLatest([
+            this.vm.intermediaryStudentSectionList$.asObservable(),
+            this.vm.columnListFilter$.asObservable(),
+        ]).subscribe(([intermediaryStudentSectionList, columnListFilter]) => {
+
+            if (!intermediaryStudentSectionList || !columnListFilter) {
+                return;
+            }
+
+            let tempSelectedColumnsValueMappedByStudentId = {};
+
+            intermediaryStudentSectionList.forEach(studentSection => {
+                tempSelectedColumnsValueMappedByStudentId[studentSection.id] = columnListFilter.map(column =>
+                    this.vm.getValue(studentSection, column.type, column.variable),
+                );
+            });
+
+            this.vm.selectedColumnsValueByStudentId$.next(tempSelectedColumnsValueMappedByStudentId);
+
+        });
+        // ends populate selected columns value mapped by student id
+
         // starts populate filtered student section list
         combineLatest([
             this.vm.studentListFilter$.asObservable(),
             this.vm.intermediaryStudentSectionList$.asObservable(),
             this.vm.columnListFilter$.asObservable(),
             this.vm.searchText$.asObservable(),
-            this.vm.selectedSearchParameter$.asObservable()
-        ]).subscribe(([studentListFilter, intermediaryStudentSectionList, columnListFilter, searchText, selectedSearchParameter]) => {
+            this.vm.selectedSearchParameter$.asObservable(),
+            this.vm.selectedColumnsValueByStudentId$.asObservable()
+        ]).subscribe(([
+            studentListFilter, intermediaryStudentSectionList, columnListFilter,
+             searchText, selectedSearchParameter, selectedColumnsValueByStudentId]) => {
 
-            if (!intermediaryStudentSectionList || !selectedSearchParameter || !columnListFilter) {
+            if (!intermediaryStudentSectionList || !selectedSearchParameter || !columnListFilter || !selectedColumnsValueByStudentId) {
                 return;
             }
 
@@ -605,7 +645,7 @@ export class ViewListStreamVariables {
                     // Starts : Admission Filter
                     if (studentListFilter['admission']) {
                         let admissionFilter = studentListFilter['admission'];
-                        let studentAdmissionSession = studentSection.parentAdmissionSession;
+                        let studentAdmissionSession = studentSection.admissionSession;
                         let admissionType;
 
                         if (!studentAdmissionSession) {
@@ -670,9 +710,7 @@ export class ViewListStreamVariables {
 
             // starts show only selected columns
             tempFilteredStudentSectionList = tempFilteredStudentSectionList.map(studentSection => {
-                return columnListFilter.map(column =>
-                    this.vm.getValue(studentSection, column.type, column.variable),
-                );
+                return selectedColumnsValueByStudentId[studentSection.id];
             });
             // ends show only selected columns
 
@@ -917,6 +955,7 @@ export class ViewListStreamVariables {
             })
         ).subscribe(value => {
             if (!value)  { return; }
+            alert('Report "' + value.name + '" saved successfully');
             this.vm.recentlySavedReport$.next(value);
         });
         // ends populate newly saved report
@@ -939,11 +978,12 @@ export class ViewListStreamVariables {
             })
         ).subscribe(value => {
             if (!value) { return; }
+            alert('Report "' + value.name + '" updated successfully');
             this.vm.recentlyUpdatedReport$.next(value);
         });
         // ends populate newly updated report
 
-        // starts populate deleted report id
+        // starts populate recently deleted report id
         this.vm.deleteBtnClicked$.asObservable().pipe(
             mergeMap(value => {
                 if (!value) { return new BehaviorSubject<any>(null); }
@@ -958,9 +998,10 @@ export class ViewListStreamVariables {
             })
         ).subscribe(value => {
             if (!value) { return; }
+            alert('Report deleted successfully');
             this.vm.recentlyDeletedReportId$.next(value);
         });
-        // ends populate deleted report id
+        // ends populate recently deleted report id
 
         // starts is report changed
         combineLatest([
