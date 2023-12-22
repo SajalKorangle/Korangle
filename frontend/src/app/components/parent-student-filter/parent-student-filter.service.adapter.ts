@@ -23,17 +23,14 @@ export class ParentStudentFilterServiceAdapter {
         let currentSessionStudents = await this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_data);
 
         let student_data = {
-            parentSchool: this.vm.user.activeSchool.dbId,
+            id__in: currentSessionStudents.map((a) => a.parentStudent),
             fields__korangle:
                 'id,profileImage,name,fathersName,motherName,mobileNumber,secondMobileNumber,scholarNumber,' +
                 'address,currentBusStop,rte,parentTransferCertificate',
         };
 
         let student_new_tc_issued_list_data = {
-            // TODO :- Above line is throwing filter exception because it should be double underscore
-            // parentStudent__in. When we correct it we also need to see the impact it will have at all the
-            // places that's why not correcting it now. As focus is on some other issue for now.
-            parentStudent_in: currentSessionStudents.map((a) => a.parentStudent),
+            parentStudent__in: currentSessionStudents.map((a) => a.parentStudent),
             status: 'Issued',
             fields__korangle: 'parentStudent',
         };
