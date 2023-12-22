@@ -14,12 +14,14 @@ from employee_app.models import Employee
 from accounts_app.models import Transaction, AccountSession
 from payment_app.models import Order
 
-from datetime import datetime
+from datetime import datetime, timedelta
+import pytz
 from accounts_app.models import Transaction, AccountSession
 
 from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save
 from django.db.models import Max
+from django.core.validators import MinValueValidator
 import json
 
 from django.db import transaction as db_transaction
@@ -58,76 +60,76 @@ class SchoolFeeRule(models.Model):
     isAnnually = models.BooleanField(verbose_name='isAnnually', default=False)
 
     # April
-    aprilAmount = models.IntegerField(null=True, verbose_name='aprilAmount')
+    aprilAmount = models.IntegerField(null=True, verbose_name='aprilAmount', validators=[MinValueValidator(0)])
     aprilLastDate = models.DateField(null=True, verbose_name='aprilLastDate')
-    aprilLateFee = models.IntegerField(null=True, verbose_name='aprilLateFee')
-    aprilMaximumLateFee = models.IntegerField(null=True, verbose_name='aprilMaximumLateFee')
+    aprilLateFee = models.IntegerField(null=True, verbose_name='aprilLateFee', validators=[MinValueValidator(0)])
+    aprilMaximumLateFee = models.IntegerField(null=True, verbose_name='aprilMaximumLateFee', validators=[MinValueValidator(0)])
 
     # May
-    mayAmount = models.IntegerField(null=True, verbose_name='mayAmount')
+    mayAmount = models.IntegerField(null=True, verbose_name='mayAmount', validators=[MinValueValidator(0)])
     mayLastDate = models.DateField(null=True, verbose_name='mayLastDate')
-    mayLateFee = models.IntegerField(null=True, verbose_name='mayLateFee')
-    mayMaximumLateFee = models.IntegerField(null=True, verbose_name='mayMaximumLateFee')
+    mayLateFee = models.IntegerField(null=True, verbose_name='mayLateFee', validators=[MinValueValidator(0)])
+    mayMaximumLateFee = models.IntegerField(null=True, verbose_name='mayMaximumLateFee', validators=[MinValueValidator(0)])
 
     # June
-    juneAmount = models.IntegerField(null=True, verbose_name='juneAmount')
+    juneAmount = models.IntegerField(null=True, verbose_name='juneAmount', validators=[MinValueValidator(0)])
     juneLastDate = models.DateField(null=True, verbose_name='juneLastDate')
-    juneLateFee = models.IntegerField(null=True, verbose_name='juneLateFee')
-    juneMaximumLateFee = models.IntegerField(null=True, verbose_name='juneMaximumLateFee')
+    juneLateFee = models.IntegerField(null=True, verbose_name='juneLateFee', validators=[MinValueValidator(0)])
+    juneMaximumLateFee = models.IntegerField(null=True, verbose_name='juneMaximumLateFee', validators=[MinValueValidator(0)])
 
     # July
-    julyAmount = models.IntegerField(null=True, verbose_name='julyAmount')
+    julyAmount = models.IntegerField(null=True, verbose_name='julyAmount', validators=[MinValueValidator(0)])
     julyLastDate = models.DateField(null=True, verbose_name='julyLastDate')
-    julyLateFee = models.IntegerField(null=True, verbose_name='julyLateFee')
-    julyMaximumLateFee = models.IntegerField(null=True, verbose_name='julyMaximumLateFee')
+    julyLateFee = models.IntegerField(null=True, verbose_name='julyLateFee', validators=[MinValueValidator(0)])
+    julyMaximumLateFee = models.IntegerField(null=True, verbose_name='julyMaximumLateFee', validators=[MinValueValidator(0)])
 
     # August
-    augustAmount = models.IntegerField(null=True, verbose_name='augustAmount')
+    augustAmount = models.IntegerField(null=True, verbose_name='augustAmount', validators=[MinValueValidator(0)])
     augustLastDate = models.DateField(null=True, verbose_name='augustLastDate')
-    augustLateFee = models.IntegerField(null=True, verbose_name='augustLateFee')
-    augustMaximumLateFee = models.IntegerField(null=True, verbose_name='augustMaximumLateFee')
+    augustLateFee = models.IntegerField(null=True, verbose_name='augustLateFee', validators=[MinValueValidator(0)])
+    augustMaximumLateFee = models.IntegerField(null=True, verbose_name='augustMaximumLateFee', validators=[MinValueValidator(0)])
 
     # September
-    septemberAmount = models.IntegerField(null=True, verbose_name='septemberAmount')
+    septemberAmount = models.IntegerField(null=True, verbose_name='septemberAmount', validators=[MinValueValidator(0)])
     septemberLastDate = models.DateField(null=True, verbose_name='septemberLastDate')
-    septemberLateFee = models.IntegerField(null=True, verbose_name='septemberLateFee')
-    septemberMaximumLateFee = models.IntegerField(null=True, verbose_name='septemberMaximumLateFee')
+    septemberLateFee = models.IntegerField(null=True, verbose_name='septemberLateFee', validators=[MinValueValidator(0)])
+    septemberMaximumLateFee = models.IntegerField(null=True, verbose_name='septemberMaximumLateFee', validators=[MinValueValidator(0)])
 
     # October
-    octoberAmount = models.IntegerField(null=True, verbose_name='octoberAmount')
+    octoberAmount = models.IntegerField(null=True, verbose_name='octoberAmount', validators=[MinValueValidator(0)])
     octoberLastDate = models.DateField(null=True, verbose_name='octoberLastDate')
-    octoberLateFee = models.IntegerField(null=True, verbose_name='octoberLateFee')
-    octoberMaximumLateFee = models.IntegerField(null=True, verbose_name='octoberMaximumLateFee')
+    octoberLateFee = models.IntegerField(null=True, verbose_name='octoberLateFee', validators=[MinValueValidator(0)])
+    octoberMaximumLateFee = models.IntegerField(null=True, verbose_name='octoberMaximumLateFee', validators=[MinValueValidator(0)])
 
     # November
-    novemberAmount = models.IntegerField(null=True, verbose_name='novemberAmount')
+    novemberAmount = models.IntegerField(null=True, verbose_name='novemberAmount', validators=[MinValueValidator(0)])
     novemberLastDate = models.DateField(null=True, verbose_name='novemberLastDate')
-    novemberLateFee = models.IntegerField(null=True, verbose_name='novemberLateFee')
-    novemberMaximumLateFee = models.IntegerField(null=True, verbose_name='novemberMaximumLateFee')
+    novemberLateFee = models.IntegerField(null=True, verbose_name='novemberLateFee', validators=[MinValueValidator(0)])
+    novemberMaximumLateFee = models.IntegerField(null=True, verbose_name='novemberMaximumLateFee', validators=[MinValueValidator(0)])
 
     # December
-    decemberAmount = models.IntegerField(null=True, verbose_name='decemberAmount')
+    decemberAmount = models.IntegerField(null=True, verbose_name='decemberAmount', validators=[MinValueValidator(0)])
     decemberLastDate = models.DateField(null=True, verbose_name='decemberLastDate')
-    decemberLateFee = models.IntegerField(null=True, verbose_name='decemberLateFee')
-    decemberMaximumLateFee = models.IntegerField(null=True, verbose_name='decemberMaximumLateFee')
+    decemberLateFee = models.IntegerField(null=True, verbose_name='decemberLateFee', validators=[MinValueValidator(0)])
+    decemberMaximumLateFee = models.IntegerField(null=True, verbose_name='decemberMaximumLateFee', validators=[MinValueValidator(0)])
 
     # January
-    januaryAmount = models.IntegerField(null=True, verbose_name='januaryAmount')
+    januaryAmount = models.IntegerField(null=True, verbose_name='januaryAmount', validators=[MinValueValidator(0)])
     januaryLastDate = models.DateField(null=True, verbose_name='januaryLastDate')
-    januaryLateFee = models.IntegerField(null=True, verbose_name='januaryLateFee')
-    januaryMaximumLateFee = models.IntegerField(null=True, verbose_name='januaryMaximumLateFee')
+    januaryLateFee = models.IntegerField(null=True, verbose_name='januaryLateFee', validators=[MinValueValidator(0)])
+    januaryMaximumLateFee = models.IntegerField(null=True, verbose_name='januaryMaximumLateFee', validators=[MinValueValidator(0)])
 
     # February
-    februaryAmount = models.IntegerField(null=True, verbose_name='februaryAmount')
+    februaryAmount = models.IntegerField(null=True, verbose_name='februaryAmount', validators=[MinValueValidator(0)])
     februaryLastDate = models.DateField(null=True, verbose_name='februaryLastDate')
-    februaryLateFee = models.IntegerField(null=True, verbose_name='februaryLateFee')
-    februaryMaximumLateFee = models.IntegerField(null=True, verbose_name='februaryMaximumLateFee')
+    februaryLateFee = models.IntegerField(null=True, verbose_name='februaryLateFee', validators=[MinValueValidator(0)])
+    februaryMaximumLateFee = models.IntegerField(null=True, verbose_name='februaryMaximumLateFee', validators=[MinValueValidator(0)])
 
     # March
-    marchAmount = models.IntegerField(null=True, verbose_name='marchAmount')
+    marchAmount = models.IntegerField(null=True, verbose_name='marchAmount', validators=[MinValueValidator(0)])
     marchLastDate = models.DateField(null=True, verbose_name='marchLastDate')
-    marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
-    marchMaximumLateFee = models.IntegerField(null=True, verbose_name='marchMaximumLateFee')
+    marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee', validators=[MinValueValidator(0)])
+    marchMaximumLateFee = models.IntegerField(null=True, verbose_name='marchMaximumLateFee', validators=[MinValueValidator(0)])
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentFeeType__parentSchool__id']
@@ -135,6 +137,39 @@ class SchoolFeeRule(models.Model):
     class Meta:
         db_table = 'school_fee_rule'
         unique_together = [('ruleNumber', 'parentFeeType', 'parentSession'), ('name', 'parentFeeType', 'parentSession')]
+
+# check whether installments other april are null or not when isannually is true.
+@receiver(pre_save, sender=SchoolFeeRule)
+def SchoolFeeRulePreSave(sender, instance, **kwargs):
+
+    if(kwargs['raw']):
+        return
+
+    # School fee Rule is created only from frontend
+
+    for month in INSTALLMENT_LIST:
+
+        amount = getattr(instance, month + 'Amount') or 0
+        lastDate = getattr(instance, month + 'LastDate')
+        lateFee = getattr(instance, month + 'LateFee') or 0
+        maximumLateFee = getattr(instance, month + 'MaximumLateFee') or 0
+
+        # check if is annually is true then installments other than april shouldn't be populated
+        isAnnually = instance.isAnnually or False
+        if isAnnually and month != 'april':
+            assert not amount, str(instance.id) + ', ' + month + '\'s amount ' + str(amount) + ' shouldn\'t be present when isAnnually is true'
+            assert not lastDate, str(instance.id) + ', ' + month + '\'s last date ' + str(lastDate) + ' shouldn\'t be present when isAnnually is true'
+            assert not lateFee, str(instance.id) + ', ' + month + '\'s late fee ' + str(lateFee) + ' shouldn\'t be present when isAnnually is true'
+            assert not maximumLateFee, str(instance.id) + ', ' + month + '\'s maximum late fee ' + str(maximumLateFee) + ' shouldn\'t be present when isAnnually is true'
+
+        # last date should only be populated if amount is populated
+        assert (lastDate and amount) or (not lastDate), month + '\'s last date is present but not amount'
+
+        # late fee should only be populated if last date is populated
+        assert (lateFee and lastDate) or (not lateFee), month + '\'s late fee is present but not last date'
+
+        # maximum late fee should only be populated if late fee is populated
+        assert (maximumLateFee and lateFee) or (not maximumLateFee), month + '\'s maximum late fee is present but not late fee'
 
 
 class ClassFilterFee(models.Model):
@@ -202,89 +237,98 @@ class StudentFee(models.Model):
     isAnnually = models.BooleanField(verbose_name='isAnnually', default=False)
 
     cleared = models.BooleanField(verbose_name='cleared', default=False)
+    # to avoid fetching old cleared data for notify defaulters,
+    # if notify defaulters page gets scrapped then I don't know where it will be used much,
+    # May be in collect fees, we are not fetching old cleared fees. but that is not that pressing issue
+    # as the data load in that scenario isn't that much. In notify defaulters the load was actually too much to avoid.
 
     # April
-    aprilAmount = models.IntegerField(null=True, verbose_name='aprilAmount')
+    aprilAmount = models.IntegerField(null=True, verbose_name='aprilAmount', validators=[MinValueValidator(0)])
     aprilLastDate = models.DateField(null=True, verbose_name='aprilLastDate')
-    aprilLateFee = models.IntegerField(null=True, verbose_name='aprilLateFee')
-    aprilMaximumLateFee = models.IntegerField(null=True, verbose_name='aprilMaximumLateFee')
+    aprilLateFee = models.IntegerField(null=True, verbose_name='aprilLateFee', validators=[MinValueValidator(0)])
+    aprilMaximumLateFee = models.IntegerField(null=True, verbose_name='aprilMaximumLateFee', validators=[MinValueValidator(0)])
     aprilClearanceDate = models.DateField(null=True, verbose_name='aprilClearanceDate')
+    # clearance date is a meta data used to calculate late fees and cleared variable, so that last submitted date doesn't need to be calculated every time.
+    # clearance date is only from main amount last submission date not from late fees last submission date,
+    # there can be a case where amount is submitted then some previous fee receipt of late fees is cancelled
+    # in that case clearance date will still be there, client would have to handle that scenario
+    # by generating extra fee receipts or discounts for that late fees. In the eyes of software it is valid.
 
     # May
-    mayAmount = models.IntegerField(null=True, verbose_name='mayAmount')
+    mayAmount = models.IntegerField(null=True, verbose_name='mayAmount', validators=[MinValueValidator(0)])
     mayLastDate = models.DateField(null=True, verbose_name='mayLastDate')
-    mayLateFee = models.IntegerField(null=True, verbose_name='mayLateFee')
-    mayMaximumLateFee = models.IntegerField(null=True, verbose_name='mayMaximumLateFee')
+    mayLateFee = models.IntegerField(null=True, verbose_name='mayLateFee', validators=[MinValueValidator(0)])
+    mayMaximumLateFee = models.IntegerField(null=True, verbose_name='mayMaximumLateFee', validators=[MinValueValidator(0)])
     mayClearanceDate = models.DateField(null=True, verbose_name='mayClearanceDate')
 
     # June
-    juneAmount = models.IntegerField(null=True, verbose_name='juneAmount')
+    juneAmount = models.IntegerField(null=True, verbose_name='juneAmount', validators=[MinValueValidator(0)])
     juneLastDate = models.DateField(null=True, verbose_name='juneLastDate')
-    juneLateFee = models.IntegerField(null=True, verbose_name='juneLateFee')
-    juneMaximumLateFee = models.IntegerField(null=True, verbose_name='juneMaximumLateFee')
+    juneLateFee = models.IntegerField(null=True, verbose_name='juneLateFee', validators=[MinValueValidator(0)])
+    juneMaximumLateFee = models.IntegerField(null=True, verbose_name='juneMaximumLateFee', validators=[MinValueValidator(0)])
     juneClearanceDate = models.DateField(null=True, verbose_name='juneClearanceDate')
 
     # July
-    julyAmount = models.IntegerField(null=True, verbose_name='julyAmount')
+    julyAmount = models.IntegerField(null=True, verbose_name='julyAmount', validators=[MinValueValidator(0)])
     julyLastDate = models.DateField(null=True, verbose_name='julyLastDate')
-    julyLateFee = models.IntegerField(null=True, verbose_name='julyLateFee')
-    julyMaximumLateFee = models.IntegerField(null=True, verbose_name='julyMaximumLateFee')
+    julyLateFee = models.IntegerField(null=True, verbose_name='julyLateFee', validators=[MinValueValidator(0)])
+    julyMaximumLateFee = models.IntegerField(null=True, verbose_name='julyMaximumLateFee', validators=[MinValueValidator(0)])
     julyClearanceDate = models.DateField(null=True, verbose_name='julyClearanceDate')
 
     # August
-    augustAmount = models.IntegerField(null=True, verbose_name='augustAmount')
+    augustAmount = models.IntegerField(null=True, verbose_name='augustAmount', validators=[MinValueValidator(0)])
     augustLastDate = models.DateField(null=True, verbose_name='augustLastDate')
-    augustLateFee = models.IntegerField(null=True, verbose_name='augustLateFee')
-    augustMaximumLateFee = models.IntegerField(null=True, verbose_name='augustMaximumLateFee')
+    augustLateFee = models.IntegerField(null=True, verbose_name='augustLateFee', validators=[MinValueValidator(0)])
+    augustMaximumLateFee = models.IntegerField(null=True, verbose_name='augustMaximumLateFee', validators=[MinValueValidator(0)])
     augustClearanceDate = models.DateField(null=True, verbose_name='augustClearanceDate')
 
     # September
-    septemberAmount = models.IntegerField(null=True, verbose_name='septemberAmount')
+    septemberAmount = models.IntegerField(null=True, verbose_name='septemberAmount', validators=[MinValueValidator(0)])
     septemberLastDate = models.DateField(null=True, verbose_name='septemberLastDate')
-    septemberLateFee = models.IntegerField(null=True, verbose_name='septemberLateFee')
-    septemberMaximumLateFee = models.IntegerField(null=True, verbose_name='septemberMaximumLateFee')
+    septemberLateFee = models.IntegerField(null=True, verbose_name='septemberLateFee', validators=[MinValueValidator(0)])
+    septemberMaximumLateFee = models.IntegerField(null=True, verbose_name='septemberMaximumLateFee', validators=[MinValueValidator(0)])
     septemberClearanceDate = models.DateField(null=True, verbose_name='septemberClearanceDate')
 
     # October
-    octoberAmount = models.IntegerField(null=True, verbose_name='octoberAmount')
+    octoberAmount = models.IntegerField(null=True, verbose_name='octoberAmount', validators=[MinValueValidator(0)])
     octoberLastDate = models.DateField(null=True, verbose_name='octoberLastDate')
-    octoberLateFee = models.IntegerField(null=True, verbose_name='octoberLateFee')
-    octoberMaximumLateFee = models.IntegerField(null=True, verbose_name='octoberMaximumLateFee')
+    octoberLateFee = models.IntegerField(null=True, verbose_name='octoberLateFee', validators=[MinValueValidator(0)])
+    octoberMaximumLateFee = models.IntegerField(null=True, verbose_name='octoberMaximumLateFee', validators=[MinValueValidator(0)])
     octoberClearanceDate = models.DateField(null=True, verbose_name='octoberClearanceDate')
 
     # November
-    novemberAmount = models.IntegerField(null=True, verbose_name='novemberAmount')
+    novemberAmount = models.IntegerField(null=True, verbose_name='novemberAmount', validators=[MinValueValidator(0)])
     novemberLastDate = models.DateField(null=True, verbose_name='novemberLastDate')
-    novemberLateFee = models.IntegerField(null=True, verbose_name='novemberLateFee')
-    novemberMaximumLateFee = models.IntegerField(null=True, verbose_name='novemberMaximumLateFee')
+    novemberLateFee = models.IntegerField(null=True, verbose_name='novemberLateFee', validators=[MinValueValidator(0)])
+    novemberMaximumLateFee = models.IntegerField(null=True, verbose_name='novemberMaximumLateFee', validators=[MinValueValidator(0)])
     novemberClearanceDate = models.DateField(null=True, verbose_name='novemberClearanceDate')
 
     # December
-    decemberAmount = models.IntegerField(null=True, verbose_name='decemberAmount')
+    decemberAmount = models.IntegerField(null=True, verbose_name='decemberAmount', validators=[MinValueValidator(0)])
     decemberLastDate = models.DateField(null=True, verbose_name='decemberLastDate')
-    decemberLateFee = models.IntegerField(null=True, verbose_name='decemberLateFee')
-    decemberMaximumLateFee = models.IntegerField(null=True, verbose_name='decemberMaximumLateFee')
+    decemberLateFee = models.IntegerField(null=True, verbose_name='decemberLateFee', validators=[MinValueValidator(0)])
+    decemberMaximumLateFee = models.IntegerField(null=True, verbose_name='decemberMaximumLateFee', validators=[MinValueValidator(0)])
     decemberClearanceDate = models.DateField(null=True, verbose_name='decemberClearanceDate')
 
     # January
-    januaryAmount = models.IntegerField(null=True, verbose_name='januaryAmount')
+    januaryAmount = models.IntegerField(null=True, verbose_name='januaryAmount', validators=[MinValueValidator(0)])
     januaryLastDate = models.DateField(null=True, verbose_name='januaryLastDate')
-    januaryLateFee = models.IntegerField(null=True, verbose_name='januaryLateFee')
-    januaryMaximumLateFee = models.IntegerField(null=True, verbose_name='januaryMaximumLateFee')
+    januaryLateFee = models.IntegerField(null=True, verbose_name='januaryLateFee', validators=[MinValueValidator(0)])
+    januaryMaximumLateFee = models.IntegerField(null=True, verbose_name='januaryMaximumLateFee', validators=[MinValueValidator(0)])
     januaryClearanceDate = models.DateField(null=True, verbose_name='januaryClearanceDate')
 
     # February
-    februaryAmount = models.IntegerField(null=True, verbose_name='februaryAmount')
+    februaryAmount = models.IntegerField(null=True, verbose_name='februaryAmount', validators=[MinValueValidator(0)])
     februaryLastDate = models.DateField(null=True, verbose_name='februaryLastDate')
-    februaryLateFee = models.IntegerField(null=True, verbose_name='februaryLateFee')
-    februaryMaximumLateFee = models.IntegerField(null=True, verbose_name='februaryMaximumLateFee')
+    februaryLateFee = models.IntegerField(null=True, verbose_name='februaryLateFee', validators=[MinValueValidator(0)])
+    februaryMaximumLateFee = models.IntegerField(null=True, verbose_name='februaryMaximumLateFee', validators=[MinValueValidator(0)])
     februaryClearanceDate = models.DateField(null=True, verbose_name='februaryClearanceDate')
 
     # March
-    marchAmount = models.IntegerField(null=True, verbose_name='marchAmount')
+    marchAmount = models.IntegerField(null=True, verbose_name='marchAmount', validators=[MinValueValidator(0)])
     marchLastDate = models.DateField(null=True, verbose_name='marchLastDate')
-    marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
-    marchMaximumLateFee = models.IntegerField(null=True, verbose_name='marchMaximumLateFee')
+    marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee', validators=[MinValueValidator(0)])
+    marchMaximumLateFee = models.IntegerField(null=True, verbose_name='marchMaximumLateFee', validators=[MinValueValidator(0)])
     marchClearanceDate = models.DateField(null=True, verbose_name='marchClearanceDate')
 
     class Permissions(BasePermission):
@@ -294,6 +338,102 @@ class StudentFee(models.Model):
     class Meta:
         db_table = 'student_fee'
         unique_together = ('parentSchoolFeeRule', 'parentStudent')
+
+
+@receiver(pre_save, sender=StudentFee)
+def StudentFeePreSave(sender, instance, **kwargs):
+
+    if(kwargs['raw']):
+        return
+
+    old_instance = None
+    subFeeReceiptList = []
+    subDiscountList = []
+    if instance.id:
+        old_instance = StudentFee.objects.get(id=instance.id)
+        subFeeReceiptList = old_instance.subFeeReceiptList.filter(parentFeeReceipt__cancelled=False)
+        subDiscountList = old_instance.subDiscountList.filter(parentDiscount__cancelled=False)
+
+    cleared = True
+
+    for month in INSTALLMENT_LIST:
+
+        amount = getattr(instance, month + 'Amount') or (old_instance and getattr(old_instance, month + 'Amount')) or 0
+        lastDate = getattr(instance, month + 'LastDate') or (old_instance and getattr(old_instance, month + 'LastDate')) or None
+        lateFee = getattr(instance, month + 'LateFee') or (old_instance and getattr(old_instance, month + 'LateFee')) or 0
+        maximumLateFee = getattr(instance, month + 'MaximumLateFee') or (old_instance and getattr(old_instance, month + 'MaximumLateFee')) or 0
+
+        # check if is annually is true then installments other than april shouldn't be populated
+        isAnnually = instance.isAnnually or (old_instance and old_instance.isAnnually) or False
+        if isAnnually and month != 'april':
+            assert not amount, str(instance.id) + ', ' + month + '\'s amount ' + str(amount) + ' shouldn\'t be present when isAnnually is true'
+            assert not lastDate, str(instance.id) + ', ' + month + '\'s last date ' + str(lastDate) + ' shouldn\'t be present when isAnnually is true'
+            assert not lateFee, str(instance.id) + ', ' + month + '\'s late fee ' + str(lateFee) + ' shouldn\'t be present when isAnnually is true'
+            assert not maximumLateFee, str(instance.id) + ', ' + month + '\'s maximum late fee ' + str(maximumLateFee) + ' shouldn\'t be present when isAnnually is true'
+
+        # last date should only be populated if amount is populated
+        assert (lastDate and amount) or (not lastDate), month + '\'s last date is present but not amount'
+
+        # late fee should only be populated if last date is populated
+        assert (lateFee and lastDate) or (not lateFee), month + '\'s late fee is present but not last date'
+
+        # maximum late fee should only be populated if late fee is populated
+        assert (maximumLateFee and lateFee) or (not maximumLateFee), month + '\'s maximum late fee is present but not late fee'
+
+        # Starts :- Calculate submitted amount and date
+        lastSubmittedDate = pytz.utc.localize(datetime(1980, 1, 1))
+        submittedAmount = 0
+        submittedLateAmount = 0
+
+        for subFeeReceipt in subFeeReceiptList:
+            paidFee = getattr(subFeeReceipt, month + 'Amount') or 0
+            submittedAmount += paidFee
+            if paidFee > 0:
+                lastSubmittedDate = max(lastSubmittedDate, subFeeReceipt.parentFeeReceipt.generationDateTime + timedelta(hours=5, minutes=30))
+            submittedLateAmount += getattr(subFeeReceipt, month + 'LateFee') or 0
+
+        for subDiscount in subDiscountList:
+            givenDiscount = getattr(subDiscount, month + 'Amount') or 0
+            submittedAmount += givenDiscount
+            if givenDiscount > 0:
+                lastSubmittedDate = max(lastSubmittedDate, subDiscount.parentDiscount.generationDateTime + timedelta(hours=5, minutes=30))
+            submittedLateAmount += getattr(subDiscount, month + 'LateFee') or 0
+        # Ends :- Calculate submitted amount and date
+
+        # Check main amount validity
+        assert submittedAmount <= amount, month + '\'s paid amount is greater than demand amount.'
+
+        # Set clearance date for installments
+        if amount == 0:
+            setattr(instance, month + 'ClearanceDate', None)
+        elif submittedAmount == amount:
+            setattr(instance, month + 'ClearanceDate', lastSubmittedDate.date())
+        else:
+            setattr(instance, month + 'ClearanceDate', None)
+            cleared = False
+
+        # Starts :- Check late amount validity, it is getting calculated & checked afterwards because we need clearance date to be calculated before.
+        lateAmount = 0
+        if lateFee:  # late fee
+            deltaDays = ((getattr(instance, month + 'ClearanceDate') or datetime.now().date()) - lastDate).days
+            deltaDays = max(deltaDays, 0)
+            lateAmount = deltaDays * lateFee
+            if maximumLateFee:
+                lateAmount = min(lateAmount, maximumLateFee)
+
+        assert submittedLateAmount <= lateAmount, month + "'s total paid late fee is exceeding actual late fee"
+        # Ends :- Check late amount validity, it is getting calculated & checked afterwards because we need clearance date to be calculated before.
+
+        # Following can generate problems if fee receipt of only late amount is being cancelled. And we shouldn't be stopping that
+        # Intention is to stop receipt generation of main amount while late amount is scrapped off.
+        # I think we can do without submission of late amount even if main amount is submitted. There shouldn't be any problems in code.
+        # If due fees is visible because of late fees then user can generate discount to handle that case on his own so that shouldn't be an issue.
+        # Finally commenting below two lines.
+        '''if submittedLateAmount < lateAmount and submittedAmount > 0:
+            assert False, "incoming fee amount without clearing late fee"'''
+
+    # set the cleared variable
+    setattr(instance, 'cleared', cleared)
 
 
 class FeeReceiptBook(models.Model):
@@ -313,6 +453,8 @@ class FeeReceiptBook(models.Model):
 
 @receiver(post_save, sender=School)
 def SchoolCreationHandler(sender, instance, created, **kwargs):
+    if(kwargs['raw']):
+        return
     if created:
         FeeReceiptBook.objects.create(name='Default', parentSchool=instance)
 
@@ -394,11 +536,16 @@ def FeeReceiptPreSave(sender, instance, **kwargs):
         ## Handling Fee Receipt Cancellation Ends ##
 
 
+# this is important when fee receipt is cancelled, then sub fee receipt isn't touched
+# so student fee meta data (cleared, clearance date) needs to be handled from here.
 @receiver(post_save, sender=FeeReceipt)
 def FeeReceiptPostSave(sender, instance: FeeReceipt, **kwargs):
-    subFeeReceiptList = instance.subFeeReceiptList.all()
-    for subFeeReceipt in subFeeReceiptList:
-        receiptValidateAndUpdate(subFeeReceipt.parentStudentFee)
+    if(kwargs['raw']):
+        return
+    if instance.cancelled:
+        subFeeReceiptList = instance.subFeeReceiptList.all()
+        for subFeeReceipt in subFeeReceiptList:
+            subFeeReceipt.parentStudentFee.save()
 
 class SubFeeReceipt(models.Model):
 
@@ -409,52 +556,52 @@ class SubFeeReceipt(models.Model):
     isAnnually = models.BooleanField(verbose_name='isAnnually', default=False)
 
     # April
-    aprilAmount = models.IntegerField(null=True, verbose_name='aprilAmount')
-    aprilLateFee = models.IntegerField(null=True, verbose_name='aprilLateFee')
+    aprilAmount = models.IntegerField(null=True, verbose_name='aprilAmount', validators=[MinValueValidator(0)])
+    aprilLateFee = models.IntegerField(null=True, verbose_name='aprilLateFee', validators=[MinValueValidator(0)])
 
     # May
-    mayAmount = models.IntegerField(null=True, verbose_name='mayAmount')
-    mayLateFee = models.IntegerField(null=True, verbose_name='mayLateFee')
+    mayAmount = models.IntegerField(null=True, verbose_name='mayAmount', validators=[MinValueValidator(0)])
+    mayLateFee = models.IntegerField(null=True, verbose_name='mayLateFee', validators=[MinValueValidator(0)])
 
     # June
-    juneAmount = models.IntegerField(null=True, verbose_name='juneAmount')
-    juneLateFee = models.IntegerField(null=True, verbose_name='juneLateFee')
+    juneAmount = models.IntegerField(null=True, verbose_name='juneAmount', validators=[MinValueValidator(0)])
+    juneLateFee = models.IntegerField(null=True, verbose_name='juneLateFee', validators=[MinValueValidator(0)])
 
     # July
-    julyAmount = models.IntegerField(null=True, verbose_name='julyAmount')
-    julyLateFee = models.IntegerField(null=True, verbose_name='julyLateFee')
+    julyAmount = models.IntegerField(null=True, verbose_name='julyAmount', validators=[MinValueValidator(0)])
+    julyLateFee = models.IntegerField(null=True, verbose_name='julyLateFee', validators=[MinValueValidator(0)])
 
     # August
-    augustAmount = models.IntegerField(null=True, verbose_name='augustAmount')
-    augustLateFee = models.IntegerField(null=True, verbose_name='augustLateFee')
+    augustAmount = models.IntegerField(null=True, verbose_name='augustAmount', validators=[MinValueValidator(0)])
+    augustLateFee = models.IntegerField(null=True, verbose_name='augustLateFee', validators=[MinValueValidator(0)])
 
     # September
-    septemberAmount = models.IntegerField(null=True, verbose_name='septemberAmount')
-    septemberLateFee = models.IntegerField(null=True, verbose_name='septemberLateFee')
+    septemberAmount = models.IntegerField(null=True, verbose_name='septemberAmount', validators=[MinValueValidator(0)])
+    septemberLateFee = models.IntegerField(null=True, verbose_name='septemberLateFee', validators=[MinValueValidator(0)])
 
     # October
-    octoberAmount = models.IntegerField(null=True, verbose_name='octoberAmount')
-    octoberLateFee = models.IntegerField(null=True, verbose_name='octoberLateFee')
+    octoberAmount = models.IntegerField(null=True, verbose_name='octoberAmount', validators=[MinValueValidator(0)])
+    octoberLateFee = models.IntegerField(null=True, verbose_name='octoberLateFee', validators=[MinValueValidator(0)])
 
     # November
-    novemberAmount = models.IntegerField(null=True, verbose_name='novemberAmount')
-    novemberLateFee = models.IntegerField(null=True, verbose_name='novemberLateFee')
+    novemberAmount = models.IntegerField(null=True, verbose_name='novemberAmount', validators=[MinValueValidator(0)])
+    novemberLateFee = models.IntegerField(null=True, verbose_name='novemberLateFee', validators=[MinValueValidator(0)])
 
     # December
-    decemberAmount = models.IntegerField(null=True, verbose_name='decemberAmount')
-    decemberLateFee = models.IntegerField(null=True, verbose_name='decemberLateFee')
+    decemberAmount = models.IntegerField(null=True, verbose_name='decemberAmount', validators=[MinValueValidator(0)])
+    decemberLateFee = models.IntegerField(null=True, verbose_name='decemberLateFee', validators=[MinValueValidator(0)])
 
     # January
-    januaryAmount = models.IntegerField(null=True, verbose_name='januaryAmount')
-    januaryLateFee = models.IntegerField(null=True, verbose_name='januaryLateFee')
+    januaryAmount = models.IntegerField(null=True, verbose_name='januaryAmount', validators=[MinValueValidator(0)])
+    januaryLateFee = models.IntegerField(null=True, verbose_name='januaryLateFee', validators=[MinValueValidator(0)])
 
     # February
-    februaryAmount = models.IntegerField(null=True, verbose_name='februaryAmount')
-    februaryLateFee = models.IntegerField(null=True, verbose_name='februaryLateFee')
+    februaryAmount = models.IntegerField(null=True, verbose_name='februaryAmount', validators=[MinValueValidator(0)])
+    februaryLateFee = models.IntegerField(null=True, verbose_name='februaryLateFee', validators=[MinValueValidator(0)])
 
     # March
-    marchAmount = models.IntegerField(null=True, verbose_name='marchAmount')
-    marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
+    marchAmount = models.IntegerField(null=True, verbose_name='marchAmount', validators=[MinValueValidator(0)])
+    marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee', validators=[MinValueValidator(0)])
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentFeeReceipt__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
@@ -468,9 +615,31 @@ class SubFeeReceipt(models.Model):
         db_table = 'sub_fee_receipt__new'
 
 
+# check whether sub fee receipt amount is not completely zero. there is at least one installment present.
 @receiver(pre_save, sender=SubFeeReceipt)
-def subFeeReceiptDataCheck(sender, instance: SubFeeReceipt, **kwargs):
-    receiptValidateAndUpdate(instance.parentStudentFee, instance)
+def subFeeReceiptPreSave(sender, instance: SubFeeReceipt, **kwargs):
+    if(kwargs['raw']):
+        return
+    # Checking whether there is at least one non-zero amount is present.
+    present = False
+    for month in INSTALLMENT_LIST:
+        if (
+            (getattr(instance, month + 'Amount') or 0) > 0
+        ) or (
+            (getattr(instance, month + 'LateFee') or 0) > 0
+        ):
+            present = True
+            break
+    assert present, "Sub Fee Receipt doesn't contain any amount."
+
+# This is important when fee receipt is generated, unless sub fee receipt is generated in database
+# there is no point in calling student fee save function, that's why it is handled in sub fee receipt's
+# post save function and not from fee receipt's post save function.
+@receiver(post_save, sender=SubFeeReceipt)
+def subFeeReceiptPostSave(sender, instance: SubFeeReceipt, **kwargs):
+    if(kwargs['raw']):
+        return
+    instance.parentStudentFee.save()
 
 
 class Discount(models.Model):
@@ -508,14 +677,16 @@ def discountPreSave(sender, instance: Discount, **kwargs):
         instance.discountNumber = (last_discount_number or 0) + 1
         ## Getting Discount Number Ends ##
 
-
+# this is important when discount is cancelled, then sub discount isn't touched
+# so student fee meta data (cleared, clearance date) needs to be handled from here.
 @receiver(post_save, sender=Discount)
 def discountPostSave(sender, instance: Discount, **kwargs):
     if(kwargs['raw']):
         return
-    subDiscountList = instance.subDiscountList.all()
-    for subDiscount in subDiscountList:
-        receiptValidateAndUpdate(subDiscount.parentStudentFee)
+    if instance.cancelled:
+        subDiscountList = instance.subDiscount.all()
+        for subDiscount in subDiscountList:
+            subDiscount.parentStudentFee.save()
 
 
 class SubDiscount(models.Model):
@@ -527,52 +698,52 @@ class SubDiscount(models.Model):
     isAnnually = models.BooleanField(verbose_name='isAnnually', default=False)
 
     # April
-    aprilAmount = models.IntegerField(null=True, verbose_name='aprilAmount')
-    aprilLateFee = models.IntegerField(null=True, verbose_name='aprilLateFee')
+    aprilAmount = models.IntegerField(null=True, verbose_name='aprilAmount', validators=[MinValueValidator(0)])
+    aprilLateFee = models.IntegerField(null=True, verbose_name='aprilLateFee', validators=[MinValueValidator(0)])
 
     # May
-    mayAmount = models.IntegerField(null=True, verbose_name='mayAmount')
-    mayLateFee = models.IntegerField(null=True, verbose_name='mayLateFee')
+    mayAmount = models.IntegerField(null=True, verbose_name='mayAmount', validators=[MinValueValidator(0)])
+    mayLateFee = models.IntegerField(null=True, verbose_name='mayLateFee', validators=[MinValueValidator(0)])
 
     # June
-    juneAmount = models.IntegerField(null=True, verbose_name='juneAmount')
-    juneLateFee = models.IntegerField(null=True, verbose_name='juneLateFee')
+    juneAmount = models.IntegerField(null=True, verbose_name='juneAmount', validators=[MinValueValidator(0)])
+    juneLateFee = models.IntegerField(null=True, verbose_name='juneLateFee', validators=[MinValueValidator(0)])
 
     # July
-    julyAmount = models.IntegerField(null=True, verbose_name='julyAmount')
-    julyLateFee = models.IntegerField(null=True, verbose_name='julyLateFee')
+    julyAmount = models.IntegerField(null=True, verbose_name='julyAmount', validators=[MinValueValidator(0)])
+    julyLateFee = models.IntegerField(null=True, verbose_name='julyLateFee', validators=[MinValueValidator(0)])
 
     # August
-    augustAmount = models.IntegerField(null=True, verbose_name='augustAmount')
-    augustLateFee = models.IntegerField(null=True, verbose_name='augustLateFee')
+    augustAmount = models.IntegerField(null=True, verbose_name='augustAmount', validators=[MinValueValidator(0)])
+    augustLateFee = models.IntegerField(null=True, verbose_name='augustLateFee', validators=[MinValueValidator(0)])
 
     # September
-    septemberAmount = models.IntegerField(null=True, verbose_name='septemberAmount')
-    septemberLateFee = models.IntegerField(null=True, verbose_name='septemberLateFee')
+    septemberAmount = models.IntegerField(null=True, verbose_name='septemberAmount', validators=[MinValueValidator(0)])
+    septemberLateFee = models.IntegerField(null=True, verbose_name='septemberLateFee', validators=[MinValueValidator(0)])
 
     # October
-    octoberAmount = models.IntegerField(null=True, verbose_name='octoberAmount')
-    octoberLateFee = models.IntegerField(null=True, verbose_name='octoberLateFee')
+    octoberAmount = models.IntegerField(null=True, verbose_name='octoberAmount', validators=[MinValueValidator(0)])
+    octoberLateFee = models.IntegerField(null=True, verbose_name='octoberLateFee', validators=[MinValueValidator(0)])
 
     # November
-    novemberAmount = models.IntegerField(null=True, verbose_name='novemberAmount')
-    novemberLateFee = models.IntegerField(null=True, verbose_name='novemberLateFee')
+    novemberAmount = models.IntegerField(null=True, verbose_name='novemberAmount', validators=[MinValueValidator(0)])
+    novemberLateFee = models.IntegerField(null=True, verbose_name='novemberLateFee', validators=[MinValueValidator(0)])
 
     # December
-    decemberAmount = models.IntegerField(null=True, verbose_name='decemberAmount')
-    decemberLateFee = models.IntegerField(null=True, verbose_name='decemberLateFee')
+    decemberAmount = models.IntegerField(null=True, verbose_name='decemberAmount', validators=[MinValueValidator(0)])
+    decemberLateFee = models.IntegerField(null=True, verbose_name='decemberLateFee', validators=[MinValueValidator(0)])
 
     # January
-    januaryAmount = models.IntegerField(null=True, verbose_name='januaryAmount')
-    januaryLateFee = models.IntegerField(null=True, verbose_name='januaryLateFee')
+    januaryAmount = models.IntegerField(null=True, verbose_name='januaryAmount', validators=[MinValueValidator(0)])
+    januaryLateFee = models.IntegerField(null=True, verbose_name='januaryLateFee', validators=[MinValueValidator(0)])
 
     # February
-    februaryAmount = models.IntegerField(null=True, verbose_name='februaryAmount')
-    februaryLateFee = models.IntegerField(null=True, verbose_name='februaryLateFee')
+    februaryAmount = models.IntegerField(null=True, verbose_name='februaryAmount', validators=[MinValueValidator(0)])
+    februaryLateFee = models.IntegerField(null=True, verbose_name='februaryLateFee', validators=[MinValueValidator(0)])
 
     # March
-    marchAmount = models.IntegerField(null=True, verbose_name='marchAmount')
-    marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee')
+    marchAmount = models.IntegerField(null=True, verbose_name='marchAmount', validators=[MinValueValidator(0)])
+    marchLateFee = models.IntegerField(null=True, verbose_name='marchLateFee', validators=[MinValueValidator(0)])
 
     class Permissions(BasePermission):
         RelationsToSchool = ['parentDiscount__parentSchool__id', 'parentStudentFee__parentStudent__parentSchool__id', 'parentFeeType__parentSchool__id']
@@ -581,81 +752,31 @@ class SubDiscount(models.Model):
     class Meta:
         db_table = 'sub_discount_new'
 
+# check whether sub discount amount is not completely zero. there is at least one installment present.
+@receiver(pre_save, sender=SubDiscount)
+def subDiscountPreSave(sender, instance: SubDiscount, **kwargs):
+    if(kwargs['raw']):
+        return
+    # Checking whether there is at least one non-zero amount is present.
+    present = False
+    for month in INSTALLMENT_LIST:
+        if (
+            (getattr(instance, month + 'Amount') or 0) > 0
+        ) or (
+            (getattr(instance, month + 'LateFee') or 0) > 0
+        ):
+            present = True
+            break
+    assert present, "Sub Discount doesn't contain any amount."
 
+# This is important when discount is generated, unless sub discount is generated in database
+# there is no point in calling student fee save function, that's why it is handled in sub discount's
+# post save function and not from discount's post save function.
 @receiver(post_save, sender=SubDiscount)
 def subDiscountPostSave(sender, instance: SubDiscount, **kwargs):
     if(kwargs['raw']):
         return
-    receiptValidateAndUpdate(instance.parentStudentFee)
-
-
-def receiptValidateAndUpdate(studentFee, newSubFeeReceipt=SubFeeReceipt()):
-    ## Initialization Starts ##
-    subFeeReceiptList = studentFee.subFeeReceiptList.filter(parentFeeReceipt__cancelled=False)
-    subDiscountList = SubDiscount.objects.filter(parentDiscount__cancelled=False, parentStudentFee=studentFee)
-
-    isClearedMappedByMonth = {}  # To store month wise clearance
-    for month in INSTALLMENT_LIST:
-        isClearedMappedByMonth[month] = False  # Initialize all months as False
-
-    ## Initialization Ends ##
-
-    ## Monthwise Validity Check For New SubFeeReceipt and Student Fee Updation Starts##
-    for month in INSTALLMENT_LIST:
-        paidAmount = 0
-
-        paidAmount += getattr(newSubFeeReceipt, month + 'Amount') or 0  # Add the amount of to be created SubFeeReceipt
-
-        for subFeeReceipt in subFeeReceiptList:
-            paidAmount += getattr(subFeeReceipt, month + 'Amount') or 0  # Add the amount of to be saved SubFeeReceipt
-
-        studentFeeAmount = getattr(studentFee, month + 'Amount') or 0  # Get the amount of studentFee
-        for subDiscount in subDiscountList:
-            studentFeeAmount -= getattr(subDiscount, month + 'Amount') or 0  # Subtract the discounted amount
-
-        assert paidAmount <= studentFeeAmount, 'Total Paid Amount is exceeding actual Student Fee Amount'
-        if paidAmount == studentFeeAmount:
-            isClearedMappedByMonth[month] = True
-
-        ## Validations Starts ##
-
-        # if(getattr(studentFee, month + 'ClearanceDate')):  # month already cleared
-            ## Relaxed # assert not getattr(newSubFeeReceipt, month + 'LateFee'), "incoming late fee after month fee is cleared"
-            ## Not Required, handeled earlier while check total paid amount and actual amount # assert not getattr(newSubFeeReceipt, month + 'Amount'), "incoming amount after month fee is cleared"
-
-        if getattr(studentFee, month + 'Amount') and getattr(studentFee, month + 'LastDate')\
-                and getattr(studentFee, month + 'LateFee'):  # late fee
-            deltaDays = ((getattr(studentFee, month + 'ClearanceDate') or datetime.now().date()) - getattr(studentFee, month + 'LastDate')).days
-            deltaDays = max(deltaDays, 0)
-            lateFee = deltaDays * getattr(studentFee, month + 'LateFee')
-            if(getattr(studentFee, month + 'MaximumLateFee')):
-                lateFee = min(lateFee, getattr(studentFee, month + 'MaximumLateFee'))
-
-            for subDiscount in subDiscountList:
-                lateFee -= getattr(subDiscount, month + 'LateFee') or 0
-
-            totalPaidLateFee = 0
-            for subFeeReceipt in subFeeReceiptList:
-                totalPaidLateFee += getattr(subFeeReceipt, month + 'LateFee') or 0
-
-            totalPaidLateFee += getattr(newSubFeeReceipt, month + 'LateFee') or 0
-
-            assert totalPaidLateFee <= lateFee, "total paid late fee is exceeding actual late fee"
-
-            if totalPaidLateFee < lateFee:
-                assert (getattr(newSubFeeReceipt, month + 'Amount') or 0) == 0, "incoming fee amount without clearing late fee"
-
-    ## Cleared and Cleared Date Handling for Student Fee ##
-    cleared = True
-    for month in INSTALLMENT_LIST:
-        cleared = cleared and isClearedMappedByMonth[month]
-        if isClearedMappedByMonth[month] and getattr(studentFee, month + 'Amount') is not None:
-            setattr(studentFee, month + 'ClearanceDate', getattr(studentFee, month + 'ClearanceDate') or datetime.now())
-        else:
-            setattr(studentFee, month + 'ClearanceDate', None)
-    if(cleared):
-        studentFee.cleared = True
-    studentFee.save()
+    instance.parentStudentFee.save()
 
 
 class FeeSchoolSessionSettings(models.Model):

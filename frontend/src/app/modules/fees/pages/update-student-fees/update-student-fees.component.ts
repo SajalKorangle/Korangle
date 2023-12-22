@@ -14,6 +14,7 @@ import { ClassService } from '../../../../services/modules/class/class.service';
 import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-old.service';
 import { GenericService } from '@services/generic/generic-service';
 import { DataStorage } from '../../../../classes/data-storage';
+import { INSTALLMENT_LIST } from '@modules/fees/classes/constants';
 
 @Component({
     selector: 'update-student-fees',
@@ -22,20 +23,7 @@ import { DataStorage } from '../../../../classes/data-storage';
     providers: [FeeService, ClassService, VehicleOldService, GenericService ],
 })
 export class UpdateStudentFeesComponent implements OnInit {
-    installmentList = [
-        'april',
-        'may',
-        'june',
-        'july',
-        'august',
-        'september',
-        'october',
-        'november',
-        'december',
-        'january',
-        'february',
-        'march',
-    ];
+    installmentList = INSTALLMENT_LIST;
 
     user;
 
@@ -175,17 +163,6 @@ export class UpdateStudentFeesComponent implements OnInit {
 
     handleNewStudentFeeAmountChange(installment: any, value: any): void {
         this.newStudentFee[installment + 'Amount'] = value;
-        if (value == null || value == 0) {
-            this.newStudentFee[installment + 'LastDate'] = null;
-            this.newStudentFee[installment + 'LateFee'] = null;
-        }
-    }
-
-    disableNewStudentFeeMonthLastDate(installment: any): boolean {
-        if (this.newStudentFee[installment + 'Amount'] == null || this.newStudentFee[installment + 'Amount'] == 0) {
-            return true;
-        }
-        return false;
     }
 
     disableNewStudentFeeMonthLateFee(installment: any): boolean {

@@ -196,6 +196,22 @@ export class GiveDiscountServiceAdapter {
             delete discount.subDiscountList;
             return discount;
         });
+
+        // Starts :- We are re-fetching student fee so that we have correct clearance date,
+        // which is calculated in backend
+        let studentFeeIdList = subDiscountList.map(a => a.parentStudentFee);
+        let studentFeeListQuery = { id__in: studentFeeIdList };
+        let studentFeeListResponse = await this.vm.genericService.getObjectList(
+            { fees_third_app: 'StudentFee' },
+            { filter: studentFeeListQuery }
+        );
+        this.populateStudentFeeList(
+            this.vm.studentFeeList.filter(item => !studentFeeIdList.includes(item.id))
+                .push(...studentFeeListResponse)
+        );
+        // Ends :- We are re-fetching student fee so that we have correct clearance date,
+        // which is calculated in backend
+
         this.addToDiscountList(newDiscountList);
         this.vm.subDiscountList = this.vm.subDiscountList.concat(subDiscountList);
 

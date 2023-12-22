@@ -30,6 +30,9 @@ export class ParentStudentFilterServiceAdapter {
         };
 
         let student_new_tc_issued_list_data = {
+            // TODO :- Above line is throwing filter exception because it should be double underscore
+            // parentStudent__in. When we correct it we also need to see the impact it will have at all the
+            // places that's why not correcting it now. As focus is on some other issue for now.
             parentStudent_in: currentSessionStudents.map((a) => a.parentStudent),
             status: 'Issued',
             fields__korangle: 'parentStudent',

@@ -77,22 +77,12 @@
                                         />
                                     </td>
                                     <td>
-                                        <day-date-old
-                                            *ngIf="!disableNewStudentFeeMonthLastDate(installment)"
-                                            [initialValue]="selectedStudentFee[installment + 'LastDate']"
-                                            [acceptNull]="true"
+                                        <day-date
                                             [formattedDateOutput]="true"
-                                            (onDateSelected)="newStudentFee[installment + 'LastDate'] = $event"
-                                        >
-                                        </day-date-old>
-                                        <day-date-old
-                                            *ngIf="disableNewStudentFeeMonthLastDate(installment)"
-                                            [acceptNull]="true"
                                             [initialValue]="newStudentFee[installment + 'LastDate']"
-                                            [disableDatePicker]="true"
-                                        >
-                                        </day-date-old>
-                                    </td>
+                                            (onDateSelected)="newStudentFee[installment + 'LastDate'] = $event">
+                                        </day-date>
+                                     </td>
                                     <td>
                                         <input
                                             type="number"
@@ -177,21 +167,12 @@
                                     />
                                 </td>
                                 <td>
-                                    <day-date-old
-                                        *ngIf="!disableNewStudentFeeMonthLastDate('april')"
-                                        [initialValue]="selectedStudentFee['aprilLastDate']"
-                                        [acceptNull]="true"
+                                    <day-date
                                         [formattedDateOutput]="true"
-                                        (onDateSelected)="newStudentFee['aprilLastDate'] = $event"
-                                    >
-                                    </day-date-old>
-                                    <day-date-old
-                                        *ngIf="disableNewStudentFeeMonthLastDate('april')"
-                                        [acceptNull]="true"
+                                        [placeHolder]="'Start Date'"
                                         [initialValue]="newStudentFee['aprilLastDate']"
-                                        [disableDatePicker]="true"
-                                    >
-                                    </day-date-old>
+                                        (onDateSelected)="newStudentFee['aprilLastDate'] = $event">
+                                    </day-date>
                                 </td>
                                 <td>
                                     <input
