@@ -156,7 +156,7 @@ export class ColumnFilterModalComponent implements OnInit {
 
         // starts populate sort
         this.selectedSort = data['columnFilter'] && data['columnFilter']['sort'] ?
-            data['columnFilter']['sort'] : this.sortList[0].variable;
+            data['columnFilter']['sort']['type'] : this.sortList[0].variable;
         // ends populate sort
 
         // starts populate student parameter list
@@ -262,7 +262,10 @@ export class ColumnFilterModalComponent implements OnInit {
 
         // starts populate selected column type
         if (this.selectedSort) {
-            columnFilter['sort'] = this.selectedSort;
+            columnFilter['sort'] = {
+                type: this.selectedSort,
+                time: Date.now()
+            };
         }
         // ends populate selected column type
 

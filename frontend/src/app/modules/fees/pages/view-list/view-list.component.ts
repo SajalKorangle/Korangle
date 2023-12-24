@@ -54,7 +54,7 @@ export class ViewListComponent implements OnInit {
         {header: 'Name', type: 'profile', variable: 'name'},
         {header: 'Father\'s Name', type: 'profile', variable: 'fathersName'},
         {header: 'Mobile Number', type: 'profile', variable: 'mobileNumber'},
-        {header: 'Total Fees Due', type: 'fee', variable: {amountType: 'feeDue', minAmount: 1}, sort: 'descending'},
+        {header: 'Total Fees Due', type: 'fee', variable: {amountType: 'feeDue', minAmount: 1}, sort: {type: 'descending', time: 0}},
     ];
     columnListFilter$: BehaviorSubject<any> = new BehaviorSubject(this.DEFAULT_COLUMN_LIST_FILTER);
 
@@ -96,6 +96,8 @@ export class ViewListComponent implements OnInit {
     openStudentListFilterDialogBtnClicked$: BehaviorSubject<any> = new BehaviorSubject(null);
 
     openColumnFilterDialogBtnClicked$: BehaviorSubject<any> = new BehaviorSubject(null);
+
+    reverseOrderClicked$: BehaviorSubject<any> = new BehaviorSubject(null);
 
     columnDragged$: BehaviorSubject<any> = new BehaviorSubject(null);
     // Ends : HTML Event Variables

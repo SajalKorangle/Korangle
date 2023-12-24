@@ -126,9 +126,14 @@
                         cdkDragLockAxis="x" cdkDrag>
                         <span style="cursor: pointer" (click)="openColumnFilterDialogBtnClicked$.next(i)">
                             {{column.header}}
-                            <ng-container *ngIf="column.sort == 'ascending'">&darr;</ng-container>
-                            <ng-container *ngIf="column.sort == 'descending'">&uarr;</ng-container>
                         </span>
+                        <ng-container *ngIf="column.sort">
+                            -
+                            <span style="cursor: pointer" (click)="reverseOrderClicked$.next(i)">
+                                <ng-container *ngIf="column.sort.type == 'ascending'">&darr;</ng-container>
+                                <ng-container *ngIf="column.sort.type == 'descending'">&uarr;</ng-container>
+                            </span>
+                        </ng-container>
                         <i class="material-icons menu-icon" style="float: right; margin-right: 10px;" cdkDragHandle>menu</i>
                     </th>
                     <th class="minWidth">

@@ -5,7 +5,10 @@
     <mat-form-field style="margin-left: 10px;">
         <input matInput required type="text" [ngModel]="header$.getValue()" (ngModelChange)="header$.next($event.trim())"/>
     </mat-form-field>
-    <p *ngIf="!header$.getValue() && header$.getValue() != ''" style="color: red;">Header is necessary.</p>
+    <span *ngIf="!header$.getValue() || header$.getValue() == ''"
+        style="color: red; margin-left: 10px;">
+        Header is necessary.
+    </span>
     <!-- Ends: Header -->
 
     <br>

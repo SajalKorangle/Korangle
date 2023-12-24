@@ -67,6 +67,7 @@ export class ViewListStreamVariables {
                     new Query()
                         .filter({
                             parentStudent__in: studentSectionList.map(item => item.parentStudent),
+                            parentSession: this.vm.user.activeSchool.currentSessionDbId,
                             status__in: ['Generated', 'Issued']
                         })
                         .setFields('parentStudent', 'status')
@@ -370,7 +371,7 @@ export class ViewListStreamVariables {
                     new Query()
                         .filter({
                             parentStudent__in: value.map(item => item.parentStudent),
-                            parentStudentParameter__parameterType: 'FILTER'
+                            parentStudentParameter__parameterType__in : ['TEXT', 'FILTER']
                         })
                         .getObjectList({student_app: 'StudentParameterValue'})
                 );
@@ -506,11 +507,12 @@ export class ViewListStreamVariables {
 
                 // starts attach student parameter value
                 studentParameterList.forEach(studentCustomFilter => {
+                    let studentParameterValueObj = studentParameterValueList.find(studentParameterValue =>
+                        studentParameterValue.parentStudent == studentSection.parentStudent &&
+                        studentParameterValue.parentStudentParameter == studentCustomFilter.id
+                    );
                     tempStudentSection['studentParameter_' + studentCustomFilter.id] =
-                        studentParameterValueList.find(studentParameterValue =>
-                            studentParameterValue.parentStudent == studentSection.parentStudent &&
-                            studentParameterValue.parentStudentParameter == studentCustomFilter.id
-                        );
+                        studentParameterValueObj ? studentParameterValueObj.value : null;
                 });
                 // ends attach student parameter value
 
@@ -717,7 +719,7 @@ export class ViewListStreamVariables {
             // starts filter by amount
             tempFilteredStudentSectionList = tempFilteredStudentSectionList.filter(studentSection => {
                 return studentSection.find((value, index) => {
-                    return columnListFilter[index]['type'] == 'fee' && (
+                    return columnListFilter[index] && columnListFilter[index]['type'] == 'fee' && (
                         (
                             columnListFilter[index]['variable']['minAmount'] &&
                             columnListFilter[index]['variable']['minAmount'] > value
@@ -731,17 +733,30 @@ export class ViewListStreamVariables {
             // ends filter by amount
 
             // starts sort
-            columnListFilter.forEach((columnFilter, columnIndex) => {
-                if (columnFilter.sort) {
-                    tempFilteredStudentSectionList.sort((a, b) => {
-                        return columnFilter.type == 'profile' ? (
+            let columnListFilterSortFiltered = columnListFilter
+                .map((item, index) => { return {originalIndex: index, item: item}; })
+                .filter(item => item.item.sort)
+                .sort((a,b) => a.item.sort.time - b.item.sort.time);
+
+            columnListFilterSortFiltered.forEach(columnFilterSortFiltered => {
+                let columnIndex = columnFilterSortFiltered.originalIndex;
+                let type = columnFilterSortFiltered.item.type;
+                let order = columnFilterSortFiltered.item.sort.type;
+                tempFilteredStudentSectionList.sort((a, b) => {
+                    return type == 'profile' ? (
+                        order == 'ascending' ? (
                             (a[columnIndex] ? a[columnIndex].toString() : '').localeCompare(b[columnIndex] ? b[columnIndex].toString() : '')
-                        ) : a[columnIndex] - b[columnIndex];
-                    });
-                    if (columnFilter.sort == 'descending') {
-                        tempFilteredStudentSectionList.reverse();
-                    }
-                }
+                        ) : (
+                            (b[columnIndex] ? b[columnIndex].toString() : '').localeCompare(a[columnIndex] ? a[columnIndex].toString() : '')
+                        )
+                    ) : (
+                        order == 'ascending' ? (
+                            a[columnIndex] - b[columnIndex]
+                        ) : (
+                            b[columnIndex] - a[columnIndex]
+                        )
+                    );
+                });
             });
             // ends sort
 
@@ -835,9 +850,16 @@ export class ViewListStreamVariables {
             ),
             this.vm.columnDragged$.asObservable().pipe(
                 map(value => {
-                    if (!value) { return (new BehaviorSubject<any>(null)).asObservable(); }
                     return {
                         operation: 'dragged',
+                        data: value
+                    };
+                })
+            ),
+            this.vm.reverseOrderClicked$.asObservable().pipe(
+                map(value => {
+                    return {
+                        operation: 'reverseOrder',
                         data: value
                     };
                 })
@@ -858,11 +880,23 @@ export class ViewListStreamVariables {
                     }
                     break;
                 case 'dragged':
+                    if (!data) { return; }
                     moveItemInArray(columnListFilter, data.previousIndex, data.currentIndex);
                     break;
                 case 'reportSelected':
                     if (!data) { columnListFilter = this.vm.DEFAULT_COLUMN_LIST_FILTER; }
                     else { columnListFilter = data['columnListFilter']; }
+                    break;
+                case 'reverseOrder':
+                    if (data == null) {
+                        return;
+                    }
+                    else {
+                        columnListFilter[data].sort = {
+                            type: columnListFilter[data].sort.type == 'ascending' ? 'descending': 'ascending',
+                            time: Date.now()
+                        }
+                    }
                     break;
             }
             this.vm.columnListFilter$.next(this.deepCopy(columnListFilter));
