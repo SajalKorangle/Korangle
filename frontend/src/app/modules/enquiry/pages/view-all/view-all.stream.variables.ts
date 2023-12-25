@@ -45,13 +45,13 @@ export class ViewAllStreamVariables {
                         return enqList.parentEmployee == valueList[2].id;
                     });
                 }
-        
+
                 if (valueList[1]) {
                     tempList = tempList.filter((enqList) => {
                         return enqList.parentClass == valueList[1].id;
                     });
                 }
-                this.vm.filteredEnquiryList = tempList;        
+                this.vm.filteredEnquiryList = tempList;
             })
         ).subscribe();
         // ends populate filtered enquiry list
