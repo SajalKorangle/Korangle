@@ -157,7 +157,7 @@ class GenericSerializerInterface():
             for row in return_data:
                 for field in file_field_list:
                     row[field] = AWS_S3_BASE_URL + row[field] if row[field] and row[field] != '' else row[field]
-                    row[field] = row[field].replace("//","/") if row[field] and row[field] != '' else row[field] # This is a hack that we are not proud of.
+                    row[field] = row[field].replace("com//","com/") if row[field] and row[field] != '' else row[field] # This is a hack that we are not proud of.
         # Ends :- Make file fields' url absolute
 
         return_data = make_dict_list_serializable(return_data)  # making json serializable
