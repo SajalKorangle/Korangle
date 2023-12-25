@@ -23,7 +23,7 @@
                 <!-- Ends : Choose Report -->
 
                 <!-- Starts : Type Report Name -->
-                <mat-form-field style="margin-left: 10px;">
+                <mat-form-field *ngIf="selectedReport$.getValue()" style="margin-left: 10px;">
                     <mat-label>Report Name</mat-label>
                     <input matInput required type="text"
                         [ngModel]="selectedReportName$.getValue()"
@@ -60,8 +60,6 @@
                 <!-- Starts : Save New -->
                 <button type="button"
                     (click)="saveNewBtnClicked$.next('clicked')"
-                    [matTooltip]="saveNewBtnToolTip$.getValue()"
-                    [disabled]="isSaveNewBtnDisabled$.getValue()"
                     class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
                     style="padding: 4px 7px; float: right;">
                     Save New

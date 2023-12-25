@@ -84,9 +84,8 @@ export class ViewListComponent implements OnInit {
     showDeleteBtn$ = new BehaviorSubject<boolean>(false);
     deleteBtnClicked$ = new BehaviorSubject<any>(null);
 
-    isSaveNewBtnDisabled$ = new BehaviorSubject<boolean>(true);
-    saveNewBtnToolTip$ = new BehaviorSubject<string>('');
     saveNewBtnClicked$ = new BehaviorSubject<any>(null);
+    newReportName$ = new BehaviorSubject<any>(null);
 
     recentlySavedReport$ = new BehaviorSubject<any>(null);
     recentlyUpdatedReport$ = new BehaviorSubject<any>(null);

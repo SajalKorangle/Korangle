@@ -8,6 +8,7 @@ import { StudentListFilterModalComponent } from "./component/student-list-filter
 import { INSTALLMENT_LIST } from "@modules/fees/classes/constants";
 import { ColumnFilterModalComponent } from "./component/column-filter-modal/column-filter-modal.component";
 import { moveItemInArray } from "@angular/cdk/drag-drop";
+import { NameReportDialog } from "./component/name-report-dialog/name-report.dialog";
 
 export class ViewListStreamVariables {
 
@@ -736,7 +737,7 @@ export class ViewListStreamVariables {
             let columnListFilterSortFiltered = columnListFilter
                 .map((item, index) => { return {originalIndex: index, item: item}; })
                 .filter(item => item.item.sort)
-                .sort((a,b) => a.item.sort.time - b.item.sort.time);
+                .sort((a, b) => a.item.sort.time - b.item.sort.time);
 
             columnListFilterSortFiltered.forEach(columnFilterSortFiltered => {
                 let columnIndex = columnFilterSortFiltered.originalIndex;
@@ -893,9 +894,9 @@ export class ViewListStreamVariables {
                     }
                     else {
                         columnListFilter[data].sort = {
-                            type: columnListFilter[data].sort.type == 'ascending' ? 'descending': 'ascending',
+                            type: columnListFilter[data].sort.type == 'ascending' ? 'descending' : 'ascending',
                             time: Date.now()
-                        }
+                        };
                     }
                     break;
             }
@@ -948,35 +949,30 @@ export class ViewListStreamVariables {
         });
         // ends populate show delete btn
 
-        // starts populate save new btn disable property
-        this.vm.selectedReportName$.asObservable().subscribe(selectedReportName => {
-            this.vm.isSaveNewBtnDisabled$.next(
-                !selectedReportName ||
-                selectedReportName == '' ||
-                (this.vm.reportList$.getValue() && this.vm.reportList$.getValue().find(report => {
-                    return report.name == selectedReportName;
-                }) != undefined)
-            );
-        });
-        // ends populate save new btn disable property
-
-        // starts populate save new btn tool tip
-        this.vm.selectedReportName$.asObservable().subscribe(selectedReportName => {
-            let toolTip = '';
-            toolTip = !selectedReportName || selectedReportName == '' ? toolTip + '- Report Name should be populated\n' : toolTip;
-            toolTip = (this.vm.reportList$.getValue() && this.vm.reportList$.getValue().find(report => {
-                        return report.name == selectedReportName;
-                    }) != undefined) ? toolTip + '- Report Name already exists\n' : toolTip;
-            this.vm.saveNewBtnToolTip$.next(toolTip);
-        });
-        // ends populate save new btn tool tip
-
-        // starts populate newly saved report
+        // starts populate new report name
         this.vm.saveNewBtnClicked$.asObservable().pipe(
             mergeMap( value => {
                 if (!value) { return new BehaviorSubject<any>(null); }
+                if (value == 'clicked') {
+                    return from(this.vm.dialog.open(NameReportDialog, {
+                        data: {
+                            reportList: this.vm.reportList$.getValue()
+                        }
+                    }).afterClosed());
+                }
+            })
+        ).subscribe(value => {
+            if (!value) { return; }
+            this.vm.newReportName$.next(value.name);
+        });
+        // ends populate new report name
+
+        // starts populate newly saved report
+        this.vm.newReportName$.asObservable().pipe(
+            mergeMap( value => {
+                if (!value) { return new BehaviorSubject<any>(null); }
                 let data = {
-                    name: this.vm.selectedReportName$.getValue(),
+                    name: value,
                     parentSchool: this.vm.user.activeSchool.dbId,
                     studentListFilter: this.vm.studentListFilter$.getValue(),
                     columnListFilter: this.vm.columnListFilter$.getValue(),
@@ -1072,10 +1068,10 @@ export class ViewListStreamVariables {
 
     populateIsInitialLoading() {
         merge(
-            this.vm.saveNewBtnClicked$.asObservable().pipe(
+            this.vm.newReportName$.asObservable().pipe(
                 map(value => {
                     return {
-                        operation: 'saveBtnClicked',
+                        operation: 'newReportName',
                         data: value
                     };
                 })
@@ -1145,7 +1141,7 @@ export class ViewListStreamVariables {
                 case 'initialization':
                     this.vm.isInitialLoading$.next(!data.every(value => value != null));
                     break;
-                case 'saveBtnClicked':
+                case 'newReportName':
                     if (data) { this.vm.isInitialLoading$.next(true); return; }
                     break;
                 case 'newlySavedReport':
