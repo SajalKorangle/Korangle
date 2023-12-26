@@ -205,10 +205,9 @@ export class GiveDiscountServiceAdapter {
             { fees_third_app: 'StudentFee' },
             { filter: studentFeeListQuery }
         );
-        this.populateStudentFeeList(
-            this.vm.studentFeeList.filter(item => !studentFeeIdList.includes(item.id))
-                .push(...studentFeeListResponse)
-        );
+        this.vm.studentFeeList = this.vm.studentFeeList.filter(item => !studentFeeIdList.includes(item.id));
+        this.vm.studentFeeList.push(...studentFeeListResponse);
+        this.populateStudentFeeList(this.vm.studentFeeList);
         // Ends :- We are re-fetching student fee so that we have correct clearance date,
         // which is calculated in backend
 
