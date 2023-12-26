@@ -154,6 +154,9 @@ export class CountAllStudentAttendanceServiceAdapter{
             }
 
             ++attendanceList[classNo][division]['TOTAL'];
+
+            ++this.vm.overallSchoolAttendance[attendanceStatus];
+            ++this.vm.overallSchoolAttendance['TOTAL'];
         }
         this.vm.isLoading = false;
         this.vm.showStudentList = true;
