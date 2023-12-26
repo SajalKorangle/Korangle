@@ -684,7 +684,7 @@ def discountPostSave(sender, instance: Discount, **kwargs):
     if(kwargs['raw']):
         return
     if instance.cancelled:
-        subDiscountList = instance.subDiscount.all()
+        subDiscountList = instance.subDiscountList.all()
         for subDiscount in subDiscountList:
             subDiscount.parentStudentFee.save()
 
