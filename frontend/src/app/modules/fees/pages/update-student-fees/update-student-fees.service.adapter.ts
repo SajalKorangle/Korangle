@@ -263,6 +263,7 @@ export class UpdateStudentFeesServiceAdapter {
                 (tempObject[month + 'LateFee'] && !tempObject[month + 'LastDate']) ||
                 (tempObject[month + 'MaximumLateFee'] && !tempObject[month + 'LateFee'])
             ) {
+                console.log(month);
                 invalid = true;
                 return false;
             }
@@ -273,7 +274,7 @@ export class UpdateStudentFeesServiceAdapter {
             // Starts :- No Installment other than april should be present when is annually is true.
             if (
                 tempObject.isAnnually &&
-                month != 'April' &&
+                month != 'april' &&
                 (
                     tempObject[month + 'Amount'] ||
                     tempObject[month + 'LastDate'] ||
@@ -281,6 +282,7 @@ export class UpdateStudentFeesServiceAdapter {
                     tempObject[month + 'MaximumLateFee']
                 )
             ) {
+                console.log(month);
                 invalid = true;
                 return false;
             }
