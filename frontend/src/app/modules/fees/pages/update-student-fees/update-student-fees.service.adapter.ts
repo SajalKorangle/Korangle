@@ -263,7 +263,6 @@ export class UpdateStudentFeesServiceAdapter {
                 (tempObject[month + 'LateFee'] && !tempObject[month + 'LastDate']) ||
                 (tempObject[month + 'MaximumLateFee'] && !tempObject[month + 'LateFee'])
             ) {
-                console.log(month);
                 invalid = true;
                 return false;
             }
@@ -282,7 +281,6 @@ export class UpdateStudentFeesServiceAdapter {
                     tempObject[month + 'MaximumLateFee']
                 )
             ) {
-                console.log(month);
                 invalid = true;
                 return false;
             }
