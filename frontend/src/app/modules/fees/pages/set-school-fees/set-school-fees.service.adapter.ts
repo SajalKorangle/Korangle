@@ -205,7 +205,7 @@ export class SetSchoolFeesServiceAdapter {
             // Starts :- No Installment other than april should be present when is annually is true.
             if (
                 school_fee_rule_data.isAnnually &&
-                month != 'April' &&
+                month != 'april' &&
                 (
                     school_fee_rule_data[month + 'Amount'] ||
                     school_fee_rule_data[month + 'LastDate'] ||
