@@ -419,7 +419,7 @@
                                     <td>
                                         <input
                                             type="number"
-                                            [disabled]="disableSchoolFeeRuleMonthLateFee(newSchoolFeeRule, installment)"
+                                            [disabled]="disableSchoolFeeRuleMonthMaximumLateFee(newSchoolFeeRule, installment)"
                                             [(ngModel)]="newSchoolFeeRule[installment + 'MaximumLateFee']"
                                             (keypress)="policeAmountInput($event)"
                                         />
@@ -468,7 +468,7 @@
                                     <td>
                                         <input
                                             type="number"
-                                            [disabled]="disableSchoolFeeRuleMonthLateFee(newSchoolFeeRule, 'april')"
+                                            [disabled]="disableSchoolFeeRuleMonthMaximumLateFee(newSchoolFeeRule, 'april')"
                                             [(ngModel)]="newSchoolFeeRule.aprilMaximumLateFee"
                                             (keypress)="policeAmountInput($event)"
                                         />

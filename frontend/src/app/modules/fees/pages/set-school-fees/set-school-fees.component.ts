@@ -296,6 +296,15 @@ export class SetSchoolFeesComponent implements OnInit {
 
     disableSchoolFeeRuleMonthLateFee(schoolFeeRule: any, month: any): boolean {
         if (schoolFeeRule[month + 'Amount'] == null || schoolFeeRule[month + 'Amount'] == 0 || schoolFeeRule[month + 'LastDate'] == null) {
+            schoolFeeRule[month + 'LateFee'] = null;
+            return true;
+        }
+        return false;
+    }
+
+    disableSchoolFeeRuleMonthMaximumLateFee(schoolFeeRule: any, month: any): boolean {
+        if (schoolFeeRule[month + 'LateFee'] == null || schoolFeeRule[month + 'LateFee'] == 0) {
+            schoolFeeRule[month + 'MaximumLateFee'] = null;
             return true;
         }
         return false;

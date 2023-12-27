@@ -102,14 +102,14 @@
                                     <td>
                                         <input
                                             type="number"
-                                            *ngIf="disableNewStudentFeeMonthLateFee(installment)"
+                                            *ngIf="disableNewStudentFeeMonthMaximumLateFee(installment)"
                                             [ngModel]="newStudentFee[installment + 'MaximumLateFee']"
                                             [disabled]="true"
                                             (keypress)="policeAmountInput($event)"
                                         />
                                         <input
                                             type="number"
-                                            *ngIf="!disableNewStudentFeeMonthLateFee(installment)"
+                                            *ngIf="!disableNewStudentFeeMonthMaximumLateFee(installment)"
                                             [ngModel]="selectedStudentFee[installment + 'MaximumLateFee']"
                                             (ngModelChange)="newStudentFee[installment + 'MaximumLateFee'] = $event"
                                             (keypress)="policeAmountInput($event)"
@@ -193,14 +193,14 @@
                                 <td>
                                     <input
                                         type="number"
-                                        *ngIf="disableNewStudentFeeMonthLateFee('april')"
+                                        *ngIf="disableNewStudentFeeMonthMaximumLateFee('april')"
                                         [ngModel]="newStudentFee['aprilMaximumLateFee']"
                                         [disabled]="true"
                                         (keypress)="policeAmountInput($event)"
                                     />
                                     <input
                                         type="number"
-                                        *ngIf="!disableNewStudentFeeMonthLateFee('april')"
+                                        *ngIf="!disableNewStudentFeeMonthMaximumLateFee('april')"
                                         [ngModel]="selectedStudentFee['aprilMaximumLateFee']"
                                         (ngModelChange)="newStudentFee['aprilMaximumLateFee'] = $event"
                                         (keypress)="policeAmountInput($event)"

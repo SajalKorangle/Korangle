@@ -171,6 +171,18 @@ export class UpdateStudentFeesComponent implements OnInit {
             this.newStudentFee[installment + 'Amount'] == 0 ||
             this.newStudentFee[installment + 'LastDate'] == null
         ) {
+            this.newStudentFee[installment + 'LateFee'] = null;
+            return true;
+        }
+        return false;
+    }
+
+    disableNewStudentFeeMonthMaximumLateFee(installment: any): boolean {
+        if (
+            this.newStudentFee[installment + 'LateFee'] == null ||
+            this.newStudentFee[installment + 'LateFee'] == 0
+        ) {
+            this.newStudentFee[installment + 'MaximumLateFee'] = null;
             return true;
         }
         return false;
