@@ -166,8 +166,6 @@ export class UpdateStudentFeesServiceAdapter {
     // Edit Student Fee Rule
     editStudentFee(): void {
 
-        console.log(this.vm.newStudentFee);
-
         // Starts :- Validate New Student Fee Data
         let invalid = false;
         INSTALLMENT_LIST.every(month => {
@@ -181,7 +179,6 @@ export class UpdateStudentFeesServiceAdapter {
                 (this.vm.newStudentFee[month + 'MaximumLateFee'] && !this.vm.newStudentFee[month + 'LateFee'])
             ) {
                 invalid = true;
-                console.log(month);
                 return false;
             }
             // Ends :- Last Date should only be present when amount is present.
@@ -252,8 +249,6 @@ export class UpdateStudentFeesServiceAdapter {
             tempObject[installment + 'LateFee'] = schoolFeeRule[installment + 'LateFee'];
             tempObject[installment + 'MaximumLateFee'] = schoolFeeRule[installment + 'MaximumLateFee'];
         });
-
-        console.log(tempObject);
 
         // Starts :- Validate temp object
         let invalid = false;
