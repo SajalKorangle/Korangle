@@ -285,6 +285,21 @@ export class CollectFeeServiceAdapter {
             delete feeReceipt.subFeeReceiptList;
             return feeReceipt;
         });
+
+        // Starts :- We are re-fetching student fee so that we have correct clearance date,
+        // which is calculated in backend
+        let studentFeeIdList = newSubFeeReceiptList.map(a => a.parentStudentFee);
+        let studentFeeListQuery = { id__in: studentFeeIdList };
+        let studentFeeListResponse = await this.vm.genericService.getObjectList(
+            { fees_third_app: 'StudentFee' },
+            { filter: studentFeeListQuery }
+        );
+        this.vm.studentFeeList = this.vm.studentFeeList.filter(item => !studentFeeIdList.includes(item.id));
+        this.vm.studentFeeList.push(...studentFeeListResponse);
+        this.populateStudentFeeList(this.vm.studentFeeList);
+        // Ends :- We are re-fetching student fee so that we have correct clearance date,
+        // which is calculated in backend
+
         this.addToFeeReceiptList(newFeeReceiptList);
         this.vm.subFeeReceiptList = this.vm.subFeeReceiptList.concat(newSubFeeReceiptList);
 

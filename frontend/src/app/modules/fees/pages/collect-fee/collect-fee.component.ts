@@ -467,26 +467,6 @@ export class CollectFeeComponent implements OnInit {
         return amount;
     }
 
-    getStudentClearanceDate(student: any): any {
-        let clearanceDate = new Date('1000-01-01');
-        let result = null;
-        this.getFilteredSessionListByStudent(student).every((session) => {
-            let sessionClearanceDate = this.getSessionClearanceDate(student, session);
-            if (sessionClearanceDate) {
-                if (new Date(sessionClearanceDate).getTime() > clearanceDate.getTime()) {
-                    clearanceDate = new Date(sessionClearanceDate);
-                    result = sessionClearanceDate;
-                }
-            } else {
-                clearanceDate = null;
-                result = null;
-                return false;
-            }
-            return true;
-        });
-        return result;
-    }
-
     getStudentFeesDueTillMonth(student: any, includeNewSubFeeReceipt = true): number {
         let amount = 0;
         this.getFilteredSessionListByStudent(student).forEach((session) => {
@@ -630,26 +610,6 @@ export class CollectFeeComponent implements OnInit {
             amount += this.getStudentFeeLateFeeTotal(studentFee);
         });
         return amount;
-    }
-
-    getSessionClearanceDate(student: any, session: any): any {
-        let clearanceDate = new Date('1000-01-01');
-        let result = null;
-        this.getFilteredStudentFeeListBySession(student, session).every((studentFee) => {
-            let studentFeeClearanceDate = this.getStudentFeeClearanceDate(studentFee);
-            if (studentFeeClearanceDate) {
-                if (new Date(studentFeeClearanceDate).getTime() > clearanceDate.getTime()) {
-                    clearanceDate = new Date(studentFeeClearanceDate);
-                    result = studentFeeClearanceDate;
-                }
-            } else {
-                clearanceDate = null;
-                result = null;
-                return false;
-            }
-            return true;
-        });
-        return result;
     }
 
     getSessionFeesDueTillMonth(student: any, session: any, includeNewSubFeeReceipt = true): number {
@@ -803,26 +763,6 @@ export class CollectFeeComponent implements OnInit {
             amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
         });
         return amount;
-    }
-
-    getStudentFeeClearanceDate(studentFee: any): any {
-        let clearanceDate = new Date('1000-01-01');
-        let result = null;
-        this.getFilteredInstallmentListByStudentFee(studentFee).every((installment) => {
-            let studentFeeInstallmentClearanceDate = this.getStudentFeeInstallmentClearanceDate(studentFee, installment);
-            if (studentFeeInstallmentClearanceDate) {
-                if (new Date(studentFeeInstallmentClearanceDate).getTime() > clearanceDate.getTime()) {
-                    clearanceDate = new Date(studentFeeInstallmentClearanceDate);
-                    result = studentFeeInstallmentClearanceDate;
-                }
-            } else {
-                clearanceDate = null;
-                result = null;
-                return false;
-            }
-            return true;
-        });
-        return result;
     }
 
     getStudentFeeFeesDueTillMonth(studentFee: any, includeNewSubFeeReceipt = true): number {
@@ -1010,10 +950,6 @@ export class CollectFeeComponent implements OnInit {
         return amount;
     }
 
-    getStudentFeeInstallmentClearanceDate(studentFee: any, installment: string): any {
-        return studentFee[installment + 'ClearanceDate'];
-    }
-
     getStudentFeeInstallmentPayment(studentFee: any, installment: string): number {
         let subFeeReceipt = this.newSubFeeReceiptList.find((subFeeReceipt) => {
             return subFeeReceipt.parentStudentFee == studentFee.id;
@@ -1048,23 +984,11 @@ export class CollectFeeComponent implements OnInit {
 
         if (subFeeReceipt) {
             subFeeReceipt[installment + 'Amount'] = payment;
-            if (payment == studentFeeInstallmentFeesDue) {
-                studentFee[installment + 'ClearanceDate'] = this.formatDate(null);
-            } else {
-                studentFee[installment + 'ClearanceDate'] = null;
-            }
-
             if (payment == 0) {
                 this.checkAndDeleteNewSubFeeReceipt(subFeeReceipt, studentFee);
             }
         } else if (payment > 0) {
             this.createNewSubFeeReceipt(studentFee, installment + 'Amount', payment);
-
-            if (payment == studentFeeInstallmentFeesDue) {
-                studentFee[installment + 'ClearanceDate'] = this.formatDate(null);
-            } else {
-                studentFee[installment + 'ClearanceDate'] = null;
-            }
         }
     }
 
