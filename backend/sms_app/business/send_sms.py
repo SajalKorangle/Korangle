@@ -7,13 +7,10 @@ import json
 
 def is_school_sms_balance_low(instance_dict):
 
-    # school_object = School.objects.get(id=instance_dict['parentSchool_id'])
-
-    # sms_count = get_sms_count(school_object.id)
-
     sms_count = get_sms_count(instance_dict['parentSchool_id'])
 
-    if instance_dict['count'] > sms_count['count']:
+    # instance is already generated so we just need to check whether sms count has gone below zero
+    if sms_count['count'] < 0:
         return True
     else:
         return False
@@ -22,7 +19,7 @@ def is_school_sms_balance_low(instance_dict):
 def send_sms_via_smsgatewayhub(instance_dict):
 
     if is_school_sms_balance_low(instance_dict):
-        return {'remark': 'INSUFFICIENT BALANCE', 'requestId': -1, 'mobileNumberContentJson': instance_dict['mobileNumberContentJson']}
+        return {'remark': 'INSUFFICIENT BALANCE', 'requestId': -1, 'mobileNumberContentJson': instance_dict['mobileNumberContentJson'], 'payload': None, 'response': None}
 
     sms_id_object = SMSId.objects.get(id=instance_dict['parentSMSId_id'])
 
@@ -82,7 +79,7 @@ def send_sms_via_smsgatewayhub(instance_dict):
 def send_sms_via_msgclub(instance_dict):
 
     if is_school_sms_balance_low(instance_dict):
-        return {'remark': 'INSUFFICIENT BALANCE', 'requestId': -1, 'mobileNumberContentJson': instance_dict['mobileNumberContentJson']}
+        return {'remark': 'INSUFFICIENT BALANCE', 'requestId': -1, 'mobileNumberContentJson': instance_dict['mobileNumberContentJson'], 'payload': None, 'response': None}
 
     sms_id_object = SMSId.objects.get(id=instance_dict['parentSMSId_id'])
     sms_template_object = SMSTemplate.objects.get(id=instance_dict['parentSMSTemplate_id'])
