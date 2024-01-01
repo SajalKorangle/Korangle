@@ -10,12 +10,14 @@ import { DataStorage } from '@classes/data-storage';
 export class ShowStudentListModalComponent implements OnInit {
     user: any;
     studentList: any = [];
+    headerValue = "";
 
     constructor(
         public dialogRef: MatDialogRef<ShowStudentListModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data,
     ) {
         this.studentList = data.studentList;
+        this.headerValue = data.headerValue;
     }
 
     ngOnInit() {

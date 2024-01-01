@@ -52,10 +52,11 @@ export class CountAllStudentAttendanceComponent implements OnInit {
     }
 
     /* Open Table Format Name Dialog */
-    openShowStudentListDialog(studentSectionList: any): void {
+    openShowStudentListDialog(classSection, attendanceStatus, studentSectionList: any): void {
         const dialogRef = this.dialog.open(ShowStudentListModalComponent, {
             data: {
                 studentList: studentSectionList,
+                headerValue: classSection + " >> " + attendanceStatus
             }
         });
     }  // Ends: openShowStudentListDialog()

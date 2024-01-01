@@ -53,11 +53,11 @@
                             <ng-container *ngFor="let section of class | keyvalue;">
                                 <tr *ngIf="section.key !== 'name'">
                                     <td >{{class.name}} - {{section.key}}</td>
-                                    <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(section.value.PRESENT.studentSectionList)">{{section.value.PRESENT.count}}</td>
-                                    <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(section.value.ABSENT.studentSectionList)">{{section.value.ABSENT.count}}</td>
-                                    <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(section.value.HOLIDAY.studentSectionList)">{{section.value.HOLIDAY.count}}</td>
-                                    <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(section.value.NOT_RECORDED.studentSectionList)">{{section.value.NOT_RECORDED.count}}</td>
-                                    <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(section.value.TOTAL.studentSectionList)">{{section.value.TOTAL.count}}</td>
+                                    <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(class.name + ' - ' + section.key, 'PRESENT', section.value.PRESENT.studentSectionList)">{{section.value.PRESENT.count}}</td>
+                                    <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(class.name + ' - ' + section.key, 'ABSENT', section.value.ABSENT.studentSectionList)">{{section.value.ABSENT.count}}</td>
+                                    <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(class.name + ' - ' + section.key, 'HOLIDAY', section.value.HOLIDAY.studentSectionList)">{{section.value.HOLIDAY.count}}</td>
+                                    <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(class.name + ' - ' + section.key, 'NOT_RECORDED', section.value.NOT_RECORDED.studentSectionList)">{{section.value.NOT_RECORDED.count}}</td>
+                                    <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(class.name + ' - ' + section.key, 'TOTAL', section.value.TOTAL.studentSectionList)">{{section.value.TOTAL.count}}</td>
                                 </tr>
                             </ng-container>
                         </ng-container>
