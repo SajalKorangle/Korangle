@@ -2,6 +2,7 @@
 import { SetSchoolFeesComponent } from './set-school-fees.component';
 import { CommonFunctions } from "../../../../classes/common-functions";
 import { SchoolFeeRule } from "../../../../services/modules/fees/models/school-fee-rule";
+import { INSTALLMENT_LIST } from '@modules/fees/classes/constants';
 
 export class SetSchoolFeesServiceAdapter {
 
@@ -182,6 +183,49 @@ export class SetSchoolFeesServiceAdapter {
 
         school_fee_rule_data['parentFeeType'] = this.vm.selectedFeeType.id;
 
+        // Starts :- Validate School Fee Rule Data
+        let invalid = false;
+        INSTALLMENT_LIST.every(month => {
+
+            // Starts :- Last Date should only be present when amount is present.
+            // Late Fees should only be present when last date is present.
+            // Maximum Late Fees should only be present when late fees is present.
+            if (
+                (school_fee_rule_data[month + 'LastDate'] && !school_fee_rule_data[month + 'Amount']) ||
+                (school_fee_rule_data[month + 'LateFee'] && !school_fee_rule_data[month + 'LastDate']) ||
+                (school_fee_rule_data[month + 'MaximumLateFee'] && !school_fee_rule_data[month + 'LateFee'])
+            ) {
+                invalid = true;
+                return false;
+            }
+            // Ends :- Last Date should only be present when amount is present.
+            // Late Fees should only be present when last date is present.
+            // Maximum Late Fees should only be present when late fees is present.
+
+            // Starts :- No Installment other than april should be present when is annually is true.
+            if (
+                school_fee_rule_data.isAnnually &&
+                month != 'april' &&
+                (
+                    school_fee_rule_data[month + 'Amount'] ||
+                    school_fee_rule_data[month + 'LastDate'] ||
+                    school_fee_rule_data[month + 'LateFee'] ||
+                    school_fee_rule_data[month + 'MaximumLateFee']
+                )
+            ) {
+                invalid = true;
+                return false;
+            }
+            // Ends :- No Installment other than april should be present when is annually is true.
+
+            return true;
+        });
+        if (invalid) {
+            alert('Invalid Data!!!');
+            return;
+        }
+        // Ends :- Validate School Fee Rule Data
+
         let class_filter_fee_list = [];
         if (this.vm.newSchoolFeeRule.isClassFilter) {
             class_filter_fee_list = this.vm.newClassFilterFeeList.map(a => {
@@ -218,7 +262,6 @@ export class SetSchoolFeesServiceAdapter {
                 'parentFeeType': school_fee_rule_data['parentFeeType'],
                 'parentSession': school_fee_rule_data['parentSession'],
                 'isAnnually': school_fee_rule_data['isAnnually'],
-                'cleared': false,
             };
             this.vm.installmentList.forEach(installment => {
                 // --- Starts : not updating other months if isannually is true --
@@ -230,7 +273,6 @@ export class SetSchoolFeesServiceAdapter {
                 tempObject[installment + 'LastDate'] = school_fee_rule_data[installment + 'LastDate'];
                 tempObject[installment + 'LateFee'] = school_fee_rule_data[installment + 'LateFee'];
                 tempObject[installment + 'MaximumLateFee'] = school_fee_rule_data[installment + 'MaximumLateFee'];
-                tempObject[installment + 'ClearanceDate'] = null;
             });
             student_fee_list.push(tempObject);
         });
