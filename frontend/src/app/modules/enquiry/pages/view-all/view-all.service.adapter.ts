@@ -55,10 +55,10 @@ export class ViewAllServiceAdapter {
             enquiryQueryFilterData['parentSchool'] = this.vm.user.activeSchool.dbId :
             enquiryQueryFilterData['parentEmployee'] = this.vm.user.activeSchool.employeeId;
 
-        this.vm.enquiryList = await new Query()
+        this.vm.streamVariables.enquiryList$.next(await new Query()
             .filter(enquiryQueryFilterData)
             .orderBy('dateOfEnquiry')
-            .getObjectList({enquiry_app: 'Enquiry'});
+            .getObjectList({enquiry_app: 'Enquiry'}));
 
         this.vm.isLoading = false;
 

@@ -294,15 +294,17 @@ export class SetSchoolFeesComponent implements OnInit {
         return new FormControl({ value: formattedDate, disabled: true });
     }
 
-    disableSchoolFeeRuleMonthLastDate(schoolFeeRule: any, month: any): boolean {
-        if (schoolFeeRule[month + 'Amount'] == null || schoolFeeRule[month + 'Amount'] == 0) {
+    disableSchoolFeeRuleMonthLateFee(schoolFeeRule: any, month: any): boolean {
+        if (schoolFeeRule[month + 'Amount'] == null || schoolFeeRule[month + 'Amount'] == 0 || schoolFeeRule[month + 'LastDate'] == null) {
+            schoolFeeRule[month + 'LateFee'] = null;
             return true;
         }
         return false;
     }
 
-    disableSchoolFeeRuleMonthLateFee(schoolFeeRule: any, month: any): boolean {
-        if (schoolFeeRule[month + 'Amount'] == null || schoolFeeRule[month + 'Amount'] == 0 || schoolFeeRule[month + 'LastDate'] == null) {
+    disableSchoolFeeRuleMonthMaximumLateFee(schoolFeeRule: any, month: any): boolean {
+        if (schoolFeeRule[month + 'LateFee'] == null || schoolFeeRule[month + 'LateFee'] == 0) {
+            schoolFeeRule[month + 'MaximumLateFee'] = null;
             return true;
         }
         return false;
@@ -310,10 +312,6 @@ export class SetSchoolFeesComponent implements OnInit {
 
     handleNewSchoolFeeRuleAmountChange(newSchoolFeeRule: any, month: any, value: any): void {
         newSchoolFeeRule[month + 'Amount'] = value;
-        if (value == null || value == 0) {
-            newSchoolFeeRule[month + 'LastDate'] = null;
-            newSchoolFeeRule[month + 'LateFee'] = null;
-        }
     }
 
     getStudentListBySchoolFeeRule(schoolFeeRule: any): any {

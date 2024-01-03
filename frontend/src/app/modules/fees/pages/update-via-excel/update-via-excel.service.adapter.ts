@@ -159,7 +159,6 @@ export class UpdateViaExcelServiceAdapter {
                                 parentFeeType: feeTypeId,
                                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
                                 isAnnually: true,
-                                cleared: false,
 
                                 aprilAmount: this.vm.excelDataFromUser[rowIndex + 1][colIndex],
                             });
