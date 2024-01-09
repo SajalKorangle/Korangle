@@ -105,6 +105,14 @@ export class CountAllStudentAttendanceServiceAdapter{
             console.log(err);
         });
 
+        this.vm.overallSchoolAttendance = {
+            'PRESENT' : 0,
+            'ABSENT' : 0,
+            'HOLIDAY' : 0,
+            'NOT_RECORDED' : 0,
+            'TOTAL' : 0,
+        };
+
         for (let i = 0; i < this.vm.studentSectionList.length; ++i) {
 
             if (this.vm.studentsWithTc.indexOf(this.vm.studentSectionList[i]['id']) !== -1) {
@@ -154,6 +162,9 @@ export class CountAllStudentAttendanceServiceAdapter{
             }
 
             ++attendanceList[classNo][division]['TOTAL'];
+
+            ++this.vm.overallSchoolAttendance[attendanceStatus];
+            ++this.vm.overallSchoolAttendance['TOTAL'];
         }
         this.vm.isLoading = false;
         this.vm.showStudentList = true;

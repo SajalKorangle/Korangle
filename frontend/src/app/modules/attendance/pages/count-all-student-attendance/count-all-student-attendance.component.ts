@@ -21,6 +21,13 @@ export class CountAllStudentAttendanceComponent implements OnInit {
     divisionList: any;
     showStudentList = false;
     attendanceList: any;
+    overallSchoolAttendance = {
+        'PRESENT' : 0,
+        'ABSENT' : 0,
+        'HOLIDAY' : 0,
+        'NOT_RECORDED' : 0,
+        'TOTAL' : 0,
+    };
     initialDate: Date;
     selectedDate: Date;
     studentsWithTc = [];
