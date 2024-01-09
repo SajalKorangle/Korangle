@@ -1,7 +1,7 @@
-<div *ngIf="!isLoading" class="card-content" [ngStyle]="{'min-height': (rowFilterList.length > 0 || columnFilterList.length > 0) ? '80vh' : '90vh'}">
+<div *ngIf="!isLoading" class="card-content" [ngStyle]="{'min-height': (rowFilterList$.getValue().length > 0 || columnFilterList$.getValue().length > 0) ? '80vh' : '90vh'}">
     <b>Define custom rows and columns or choose from saved tables.</b>
     <!-- Starts: Print && Download Buttons Section (Mobile Browser) -->
-    <ng-container *ngIf="!htmlRenderer.isMobileApplication() && htmlRenderer.isMobileBrowser() && (rowFilterList.length > 0 || columnFilterList.length > 0)">
+    <ng-container *ngIf="!htmlRenderer.isMobileApplication() && htmlRenderer.isMobileBrowser() && (rowFilterList$.getValue().length > 0 || columnFilterList$.getValue().length > 0)">
         <button
             type="button"
             id="download"
@@ -34,7 +34,7 @@
 
         <div class="print-download-button">
             <!-- Starts: Print && Download Buttons Section (Desktop) -->
-            <ng-container *ngIf="!htmlRenderer.isMobileApplication() && !htmlRenderer.isMobileBrowser() && (rowFilterList.length > 0 || columnFilterList.length > 0)">
+            <ng-container *ngIf="!htmlRenderer.isMobileApplication() && !htmlRenderer.isMobileBrowser() && (rowFilterList$.getValue().length > 0 || columnFilterList$.getValue().length > 0)">
                 <button
                     id="print-list"
                     type="button"
@@ -87,9 +87,9 @@
                 <thead>
                     <tr cdkDropList cdkDropListOrientation="horizontal" class="example-list" (cdkDropListDropped)="dropColumn($event)">
                         <th class="minWidth"></th>
-                        <th *ngFor="let filter of columnFilterList" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth" cdkDragLockAxis="x" cdkDrag>
+                        <th *ngFor="let filter of columnFilterList$.getValue(); let idx = index;" class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth" cdkDragLockAxis="x" cdkDrag>
                             <span (click)="whereToAdd = 'col'; openChangeDialog(filter)" style="cursor: pointer">
-                                {{ filter.name }} (<span>{{ htmlRenderer.getFilterTotalCount(filter) }}</span>)
+                                {{ filter.name }} (<span>{{ streamVariables.columnCountList[idx] }}</span>)
                             </span>
                             <i class="material-icons menu-icon" style="float: right; margin-right: 10px;" cdkDragHandle>menu</i>
                         </th>
@@ -104,16 +104,16 @@
 
                 <!-- Starts: Table Body -->
                 <tbody cdkDropList class="example-list" (cdkDropListDropped)="dropRow($event)">
-                    <tr class="example-box" *ngFor="let rowFilter of rowFilterList" cdkDragLockAxis="y" cdkDrag>
+                    <tr class="example-box" *ngFor="let rowFilter of rowFilterList$.getValue(); let rowIndex = index;" cdkDragLockAxis="y" cdkDrag>
                         <th class="text-{{ user.activeSchool.secondaryThemeColor }} minWidth">
                             <i class="material-icons menu-icon" style="float: left" cdkDragHandle>menu</i>
                             <span (click)="whereToAdd = 'row'; openChangeDialog(rowFilter)" style="cursor: pointer">
-                                {{ rowFilter.name }} (<span>{{ htmlRenderer.getFilterTotalCount(rowFilter) }}</span>)
+                                {{ rowFilter.name }} (<span>{{ streamVariables.rowCountList[rowIndex] }}</span>)
                             </span>
                         </th>
-                        <ng-container *ngFor="let columnFilter of columnFilterList; let idx = index">
+                        <ng-container *ngFor="let columnFilter of columnFilterList$.getValue(); let columnIndex = index;">
                             <td class="minWidth" style="cursor: pointer" (click)="openShowStudentListDialog(rowFilter, columnFilter)">
-                                {{ htmlRenderer.getIntersectionCount(rowFilter, columnFilter) }}
+                                {{ streamVariables.table[rowIndex][columnIndex] }}
                             </td>
                         </ng-container>
                         <td class="minWidth">-</td>
@@ -124,7 +124,7 @@
                                 + Row
                             </span>
                         </th>
-                        <td class="minWidth" *ngFor="let filter of columnFilterList">-</td>
+                        <td class="minWidth" *ngFor="let filter of columnFilterList$.getValue()">-</td>
                         <td class="minWidth">-</td>
                     </tr>
                 </tbody>
@@ -140,7 +140,7 @@
 
     <!-- Starts: Save Button -->
     <ng-container *ngIf="!isTableEditing">
-        <button *ngIf="rowFilterList.length > 0 || columnFilterList.length > 0"
+        <button *ngIf="rowFilterList$.getValue().length > 0 || columnFilterList$.getValue().length > 0"
             type="button"
             (click)="openSaveFormatDialog()"
             class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"

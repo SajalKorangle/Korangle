@@ -30,38 +30,11 @@ export class CountAllHtmlRenderer {
             tableCols.push(value);
         });
 
-        this.vm.columnFilterList = tableCols;
-        this.vm.rowFilterList = tableRows;
+
+        this.vm.columnFilterList$.next(tableCols);
+        this.vm.rowFilterList$.next(tableRows);
+
     }  // Ends: tableOpenClicked()
-
-    /* Get total count of a filter */
-    getFilterTotalCount(filter) {
-        let count = 0;
-        this.vm.studentFullProfileList.forEach((student) => {
-            let check = this.vm.checkFilters(student, filter);
-            if (check) {
-                count++;
-            }
-        });
-
-        return count;
-    }  // Ends: getFilterTotalCount()
-
-    /* Get total count of intersection of two filters */
-    getIntersectionCount(rowFilter, columnFilter) {
-        let count = 0;
-        this.vm.studentFullProfileList.forEach((student) => {
-            let check = this.vm.checkFilters(student, rowFilter);
-            if (check) {
-                check = this.vm.checkFilters(student, columnFilter);
-                if (check) {
-                    count++;
-                }
-            }
-        });
-
-        return count;
-    }  // Ends: getIntersectionCount()
 
     /* Check Table Name Uniqueness */
     checkTableName() {
