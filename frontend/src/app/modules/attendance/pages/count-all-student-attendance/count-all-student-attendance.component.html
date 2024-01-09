@@ -51,11 +51,11 @@
                 <tbody>
                     <tr style="font-weight: bold;">
                         <td >Overall</td>
-                        <td align="center" (click)="openShowStudentListDialog('Total', 'PRESENT', overallSchoolAttendance.PRESENT.studentSectionList)>{{overallSchoolAttendance.PRESENT.count}}</td>
-                        <td align="center" (click)="openShowStudentListDialog('Total', 'ABSENT', overallSchoolAttendance.ABSENT.studentSectionList)>{{overallSchoolAttendance.ABSENT.count}}</td>
-                        <td align="center" (click)="openShowStudentListDialog('Total', 'HOLIDAY', overallSchoolAttendance.HOLIDAY.studentSectionList)>{{overallSchoolAttendance.HOLIDAY.count}}</td>
-                        <td align="center" (click)="openShowStudentListDialog('Total', 'NOT_RECORDED', overallSchoolAttendance.NOT_RECORDED.studentSectionList)>{{overallSchoolAttendance.NOT_RECORDED.count}}</td>
-                        <td align="center" (click)="openShowStudentListDialog('Total', 'TOTAL', overallSchoolAttendance.TOTAL.studentSectionList)>{{overallSchoolAttendance.TOTAL.count}}</td>
+                        <td align="center" (click)="openShowStudentListDialog('Total', 'PRESENT', overallSchoolAttendance.PRESENT.studentSectionList)">{{overallSchoolAttendance.PRESENT.count}}</td>
+                        <td align="center" (click)="openShowStudentListDialog('Total', 'ABSENT', overallSchoolAttendance.ABSENT.studentSectionList)">{{overallSchoolAttendance.ABSENT.count}}</td>
+                        <td align="center" (click)="openShowStudentListDialog('Total', 'HOLIDAY', overallSchoolAttendance.HOLIDAY.studentSectionList)">{{overallSchoolAttendance.HOLIDAY.count}}</td>
+                        <td align="center" (click)="openShowStudentListDialog('Total', 'NOT_RECORDED', overallSchoolAttendance.NOT_RECORDED.studentSectionList)">{{overallSchoolAttendance.NOT_RECORDED.count}}</td>
+                        <td align="center" (click)="openShowStudentListDialog('Total', 'TOTAL', overallSchoolAttendance.TOTAL.studentSectionList)">{{overallSchoolAttendance.TOTAL.count}}</td>
                     </tr>
                     <ng-container *ngFor="let class of attendanceList; let i = index">
                         <ng-container *ngFor="let section of class | keyvalue;">
