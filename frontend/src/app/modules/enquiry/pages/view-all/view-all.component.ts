@@ -5,6 +5,7 @@ import { PRINT_ENQUIRY_LIST } from '../../../../print/print-routes.constants';
 import { DataStorage } from '../../../../classes/data-storage';
 import {CommonFunctions} from '@classes/common-functions';
 import { ViewAllServiceAdapter } from './view-all.service.adapter';
+import { ViewAllStreamVariables } from './view-all.stream.variables';
 
 @Component({
     selector: 'view-all',
@@ -14,15 +15,11 @@ import { ViewAllServiceAdapter } from './view-all.service.adapter';
 export class ViewAllComponent implements OnInit {
     user: any;
 
-    enquiryList: any;
-
     classList = [];
     employeeList = [];
 
-    selectedEmployee = null;
     filteredEmployeeList = [];
 
-    selectedClass = null;
     filteredClassList = [];
 
     startDate = this.todaysDate();
@@ -32,7 +29,13 @@ export class ViewAllComponent implements OnInit {
 
     serviceAdapter: ViewAllServiceAdapter;
 
+    filteredEnquiryList = [];
+
+    streamVariables: ViewAllStreamVariables;
+
     isLoading = false;
+
+    nullValue = null;
 
     constructor(
         private printService: PrintService,
@@ -44,6 +47,9 @@ export class ViewAllComponent implements OnInit {
         this.serviceAdapter = new ViewAllServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+
+        this.streamVariables = new ViewAllStreamVariables();
+        this.streamVariables.initialize(this);
 
     }
 
@@ -79,7 +85,7 @@ export class ViewAllComponent implements OnInit {
 
     getFilteredEmployeeList() {
         this.filteredEmployeeList = this.employeeList.filter((employee) => {
-            return this.enquiryList
+            return this.streamVariables.enquiryList$.getValue()
                 .map((a) => a.parentEmployee)
                 .filter((item, index, final) => {
                     return final.indexOf(item) == index;
@@ -90,26 +96,10 @@ export class ViewAllComponent implements OnInit {
         return this.filteredEmployeeList;
     }
 
-    getFilteredEnquiryList(): any {
-        let tempList = this.enquiryList;
-        if (this.selectedEmployee) {
-            tempList = tempList.filter((enqList) => {
-                return enqList.parentEmployee == this.selectedEmployee.id;
-            });
-        }
-
-        if (this.selectedClass) {
-            tempList = tempList.filter((enqList) => {
-                return enqList.parentClass == this.selectedClass.id;
-            });
-        }
-        return tempList;
-    }
-
     printEnquiryList() {
         this.printService.navigateToPrintRoute(PRINT_ENQUIRY_LIST, {
             user: this.user,
-            value: [this.getFilteredEnquiryList(), this.getFilteredClassList(), this.getFilteredEmployeeList()],
+            value: [this.filteredEnquiryList, this.getFilteredClassList(), this.getFilteredEmployeeList()],
         });
     }
 
@@ -127,7 +117,7 @@ export class ViewAllComponent implements OnInit {
 
     getFilteredClassList() {
         this.filteredClassList = this.classList.filter((className) => {
-            return this.enquiryList
+            return this.streamVariables.enquiryList$.getValue()
                 .map((a) => a.parentClass)
                 .filter((item, index, final) => {
                     return final.indexOf(item) == index;
