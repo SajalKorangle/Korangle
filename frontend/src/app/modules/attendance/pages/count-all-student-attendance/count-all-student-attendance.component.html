@@ -49,18 +49,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                        <ng-container *ngFor="let class of attendanceList; let i = index">
-                            <ng-container *ngFor="let section of class | keyvalue;">
-                                <tr *ngIf="section.key !== 'name'">
-                                    <td >{{class.name}} - {{section.key}}</td>
-                                    <td align="center" >{{section.value.PRESENT}}</td>
-                                    <td align="center" >{{section.value.ABSENT}}</td>
-                                    <td align="center" >{{section.value.HOLIDAY}}</td>
-                                    <td align="center" >{{section.value.NOT_RECORDED}}</td>
-                                    <td align="center" >{{section.value.TOTAL}}</td>
-                                </tr>
-                            </ng-container>
+                    <tr style="font-weight: bold;">
+                        <td >Overall</td>
+                        <td align="center" >{{overallSchoolAttendance.PRESENT}}</td>
+                        <td align="center" >{{overallSchoolAttendance.ABSENT}}</td>
+                        <td align="center" >{{overallSchoolAttendance.HOLIDAY}}</td>
+                        <td align="center" >{{overallSchoolAttendance.NOT_RECORDED}}</td>
+                        <td align="center" >{{overallSchoolAttendance.TOTAL}}</td>
+                    </tr>
+                    <ng-container *ngFor="let class of attendanceList; let i = index">
+                        <ng-container *ngFor="let section of class | keyvalue;">
+                            <tr *ngIf="section.key !== 'name'">
+                                <td >{{class.name}} - {{section.key}}</td>
+                                <td align="center" >{{section.value.PRESENT}}</td>
+                                <td align="center" >{{section.value.ABSENT}}</td>
+                                <td align="center" >{{section.value.HOLIDAY}}</td>
+                                <td align="center" >{{section.value.NOT_RECORDED}}</td>
+                                <td align="center" >{{section.value.TOTAL}}</td>
+                            </tr>
                         </ng-container>
+                    </ng-container>
                 </tbody>
             </table>
         </ng-container>

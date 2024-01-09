@@ -1,6 +1,7 @@
 import { UpdateStudentFeesComponent } from './update-student-fees.component';
 import { CommonFunctions } from '@modules/common/common-functions';
 import { SchoolFeeRule } from '../../../../services/modules/fees/models/school-fee-rule';
+import { INSTALLMENT_LIST } from '@modules/fees/classes/constants';
 
 export class UpdateStudentFeesServiceAdapter {
     vm: UpdateStudentFeesComponent;
@@ -164,6 +165,50 @@ export class UpdateStudentFeesServiceAdapter {
 
     // Edit Student Fee Rule
     editStudentFee(): void {
+
+        // Starts :- Validate New Student Fee Data
+        let invalid = false;
+        INSTALLMENT_LIST.every(month => {
+
+            // Starts :- Last Date should only be present when amount is present.
+            // Late Fees should only be present when last date is present.
+            // Maximum Late Fees should only be present when late fees is present.
+            if (
+                (this.vm.newStudentFee[month + 'LastDate'] && !this.vm.newStudentFee[month + 'Amount']) ||
+                (this.vm.newStudentFee[month + 'LateFee'] && !this.vm.newStudentFee[month + 'LastDate']) ||
+                (this.vm.newStudentFee[month + 'MaximumLateFee'] && !this.vm.newStudentFee[month + 'LateFee'])
+            ) {
+                invalid = true;
+                return false;
+            }
+            // Ends :- Last Date should only be present when amount is present.
+            // Late Fees should only be present when last date is present.
+            // Maximum Late Fees should only be present when late fees is present.
+
+            // Starts :- No Installment other than april should be present when is annually is true.
+            if (
+                this.vm.newStudentFee.isAnnually &&
+                month != 'april' &&
+                (
+                    this.vm.newStudentFee[month + 'Amount'] ||
+                    this.vm.newStudentFee[month + 'LastDate'] ||
+                    this.vm.newStudentFee[month + 'LateFee'] ||
+                    this.vm.newStudentFee[month + 'MaximumLateFee']
+                )
+            ) {
+                invalid = true;
+                return false;
+            }
+            // Ends :- No Installment other than april should be present when is annually is true.
+
+            return true;
+        });
+        if (invalid) {
+            alert('Invalid Data!!!');
+            return;
+        }
+        // Ends :- Validate New Student Fee Data
+
         this.vm.isLoading = true;
 
         this.vm.feeService.updateObject(this.vm.feeService.student_fees, this.vm.newStudentFee).then(
@@ -197,15 +242,56 @@ export class UpdateStudentFeesServiceAdapter {
             parentFeeType: schoolFeeRule.parentFeeType,
             parentSession: schoolFeeRule.parentSession,
             isAnnually: schoolFeeRule.isAnnually,
-            cleared: false,
         };
         this.vm.installmentList.forEach((installment) => {
             tempObject[installment + 'Amount'] = schoolFeeRule[installment + 'Amount'];
             tempObject[installment + 'LastDate'] = schoolFeeRule[installment + 'LastDate'];
             tempObject[installment + 'LateFee'] = schoolFeeRule[installment + 'LateFee'];
             tempObject[installment + 'MaximumLateFee'] = schoolFeeRule[installment + 'MaximumLateFee'];
-            tempObject[installment + 'ClearanceDate'] = null;
         });
+
+        // Starts :- Validate temp object
+        let invalid = false;
+        INSTALLMENT_LIST.every(month => {
+
+            // Starts :- Last Date should only be present when amount is present.
+            // Late Fees should only be present when last date is present.
+            // Maximum Late Fees should only be present when late fees is present.
+            if (
+                (tempObject[month + 'LastDate'] && !tempObject[month + 'Amount']) ||
+                (tempObject[month + 'LateFee'] && !tempObject[month + 'LastDate']) ||
+                (tempObject[month + 'MaximumLateFee'] && !tempObject[month + 'LateFee'])
+            ) {
+                invalid = true;
+                return false;
+            }
+            // Ends :- Last Date should only be present when amount is present.
+            // Late Fees should only be present when last date is present.
+            // Maximum Late Fees should only be present when late fees is present.
+
+            // Starts :- No Installment other than april should be present when is annually is true.
+            if (
+                tempObject.isAnnually &&
+                month != 'april' &&
+                (
+                    tempObject[month + 'Amount'] ||
+                    tempObject[month + 'LastDate'] ||
+                    tempObject[month + 'LateFee'] ||
+                    tempObject[month + 'MaximumLateFee']
+                )
+            ) {
+                invalid = true;
+                return false;
+            }
+            // Ends :- No Installment other than april should be present when is annually is true.
+
+            return true;
+        });
+        if (invalid) {
+            alert('Invalid Data!!!');
+            return;
+        }
+        // Ends :- Validate temp object
 
         this.vm.isLoading = true;
 

@@ -56,7 +56,6 @@ export class CancelDiscountServiceAdapter {
             this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),
         ]).then(
             (value) => {
-                console.log(value);
 
                 this.vm.discountList = value[0];
                 this.vm.subDiscountList = value[1];
@@ -115,7 +114,6 @@ export class CancelDiscountServiceAdapter {
                 if (service_list.length > 0) {
                     Promise.all(service_list).then(
                         (value2) => {
-                            console.log(value2);
 
                             if (student_list.id__in.length != 0) {
                                 this.vm.studentList = this.vm.studentList.concat(value2[0]);
