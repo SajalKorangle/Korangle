@@ -110,11 +110,11 @@ export class CountAllStudentAttendanceServiceAdapter{
         });
 
         this.vm.overallSchoolAttendance = {
-            'PRESENT' : 0,
-            'ABSENT' : 0,
-            'HOLIDAY' : 0,
-            'NOT_RECORDED' : 0,
-            'TOTAL' : 0,
+            'PRESENT' : {'count': 0, 'studentSectionList': []},
+            'ABSENT' : {'count': 0, 'studentSectionList': []},
+            'HOLIDAY' : {'count': 0, 'studentSectionList': []},
+            'NOT_RECORDED' : {'count': 0, 'studentSectionList': []},
+            'TOTAL' : {'count': 0, 'studentSectionList': []},
         };
 
         for (let i = 0; i < this.vm.studentSectionList.length; ++i) {
