@@ -472,9 +472,8 @@ export class UpdateViaExcelComponent implements OnInit {
             let [student_id] = uploadedRow;
 
             excelFeeColumnList.forEach((feeColumn) => {
-                let studentFee;
                 let feeTypeId = this.feeTypeIdMappedByFeeTypeName[feeColumn[0].split("-")[0]];
-                
+
                 //checking if student_id and feeTypeId already exists
                 if (
                     this.studentFeeListMappedByStudentIdFeeTypeId[student_id] &&
@@ -482,7 +481,7 @@ export class UpdateViaExcelComponent implements OnInit {
                 ) {
 
                     //checking if a previously unused installment is being added 
-                    let studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId]
+                    let studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId];
                     if (!studentFee[feeColumn[0].split("-")[1] + "Amount"]) {
                         if (uploadedRow[feeColumn[1]]) {
                             this.newErrorCell(row + 1, feeColumn[1], 'Fees already exists for this fee type of the student');

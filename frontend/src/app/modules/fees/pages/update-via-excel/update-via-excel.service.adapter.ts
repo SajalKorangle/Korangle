@@ -161,7 +161,7 @@ export class UpdateViaExcelServiceAdapter {
                         ) {
                             let studentFee;
 
-                            //Start checking if feeType for a particular student has already been added to studentFeeListToBeUploaded 
+                            //Start checking if feeType for a particular student has already been added to studentFeeListToBeUploaded
                             studentFee = studentFeeListToBeUploaded.find(e => e.parentStudent == student_id && e.parentFeeType == feeTypeId);
                             if (studentFee) {
                                 //add installment to feeType that has already been added to studentFeeListToBeUploaded
@@ -171,7 +171,7 @@ export class UpdateViaExcelServiceAdapter {
                             else {
                                 studentFee = {};
                             }
-                            //End checking if feeType for a particular student has already been added to studentFeeListToBeUploaded 
+                            //End checking if feeType for a particular student has already been added to studentFeeListToBeUploaded
 
                             //Create studentFee
                             studentFee['parentStudent'] = student_id;
@@ -190,7 +190,7 @@ export class UpdateViaExcelServiceAdapter {
                                 let schoolFeeRuleListBackendFilteredByFeeTypeId = schoolFeeRuleListBackend.filter(
                                     (item) => item.parentFeeType == feeTypeId
                                 );
-                                
+
                                 //create SchoolFeeRule
                                 let newSchoolFeeRule = new SchoolFeeRule();
                                 newSchoolFeeRule.parentSession = this.vm.user.activeSchool.currentSessionDbId;
