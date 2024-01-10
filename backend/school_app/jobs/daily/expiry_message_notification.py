@@ -9,7 +9,7 @@ from django_extensions.management.jobs import DailyJob
 from school_app.model.models import School, SchoolExpiryInformationJobsReport
 from employee_app.models import Employee, EmployeePermission
 from sms_app.models import SMSId, SMS
-from sms_app.business.send_sms import send_sms
+from sms_app.business.send_sms import send_sms_via_smsgatewayhub
 from notification_app.models import Notification
 from information_app.models import AdminInformation
 from push_notifications.models import GCMDevice
@@ -126,7 +126,7 @@ class Job(DailyJob):
                     "contentType": '8' if unicodeFlag else '0'
                 }
 
-                response = send_sms(sms_dict)
+                response = send_sms_via_smsgatewayhub(sms_dict)
 
                 admin_info_dict = {
                     "parentSchool_id": sms_dict["parentSchool_id"],

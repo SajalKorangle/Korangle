@@ -1,4 +1,5 @@
 from django.db import models
+from common.common import BasePermission
 
 # Create your models here.
 
@@ -44,6 +45,9 @@ class StudentAttendance(models.Model):
         db_table = 'student_attendance'
         unique_together = ('parentStudent', 'dateOfAttendance')
 
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentStudent__parentSchool__id']
+        RelationsToStudent = ['parentStudent__id']
 
 PENDING_LEAVE_STATUS = 'PENDING'
 APPROVED_LEAVE_STATUS = 'APPROVED'
@@ -85,3 +89,7 @@ class AttendancePermission(models.Model):
 
         db_table = 'attendance_permission'
         unique_together = ('parentEmployee', 'parentDivision', 'parentClass', 'parentSession')
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentEmployee__parentSchool__id']
+    

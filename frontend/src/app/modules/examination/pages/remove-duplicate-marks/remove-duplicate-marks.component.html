@@ -1,0 +1,74 @@
+<div class="card-content table-responsive">
+
+    <ng-container *ngIf="!isLoading">
+
+        This page might be discontinued after 1st July 2023. Please get your marks sorted before then. Thanks. <br/>
+
+        <ng-container *ngIf="examinationList.length == 0">
+            No duplicate marks in this session.
+        </ng-container>
+
+        <ng-container *ngIf="examinationList.length > 0">
+            Select the correct mark to green, all others will be deleted.<br/>
+        </ng-container>
+
+        <table *ngIf="examinationList.length > 0" class="table table-hover">
+            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                <tr>
+                    <th>Examination</th>
+                    <th>Class</th>
+                    <th>Section</th>
+                    <th>Subject</th>
+                    <th>Student</th>
+                    <th>Roll No.</th>
+                    <th>Max. Marks</th>
+                    <th>Duplicate Results</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let examination of examinationList">
+                    <tr *ngFor="let studentTest of examination.studenttest">
+                        <td>{{ examination.name }} </td>
+                        <td>{{ htmlAdapter.getName(studentTest.parentStudentInstance.studentSectionList[0].parentClass, classList) }}</td>
+                        <td>{{ htmlAdapter.getName(studentTest.parentStudentInstance.studentSectionList[0].parentDivision, sectionList) }}</td>
+                        <td>{{ htmlAdapter.getName(studentTest.parentSubject, subjectList) }}</td>
+                        <td>{{ studentTest.parentStudentInstance.name }}</td>
+                        <td>{{ studentTest.parentStudentInstance.studentSectionList[0].rollNumber }}</td>
+                        <td>{{ htmlAdapter.getMaximumMarks(examination, studentTest) }}</td>
+                        <td>
+                            <ng-container *ngFor="let result of studentTest.marksList; let last=last;">
+                                <button
+                                    class="btn"
+                                    [style.background-color]="result.selected ? 'green': 'grey'"
+                                    style="padding: 4px 7px;"
+                                    (click)="htmlAdapter.buttonClicked(result, studentTest)"
+                                >
+                                    <ng-container *ngIf="result.absent; else notAbsent;">
+                                        Abs.
+                                    </ng-container>
+                                    <ng-template #notAbsent>
+                                        {{result.marks}}
+                                    </ng-template>
+                                </button>
+                            <ng-container *ngIf="!last">,</ng-container>
+                            </ng-container>
+                        </td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+
+        <button
+            *ngIf="examinationList.length > 0"
+            class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
+            (click)="serviceAdapter.removeDuplicateMarks()"
+        >
+            Remove Duplicate Marks
+        </button>
+
+    </ng-container>
+
+    <ng-container *ngIf="isLoading">
+        <app-loading-spinner [user]="user"></app-loading-spinner>
+    </ng-container>
+</div>

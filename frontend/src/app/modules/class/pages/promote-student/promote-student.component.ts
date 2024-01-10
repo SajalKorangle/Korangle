@@ -1,27 +1,23 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { PromoteStudentServiceAdapter } from './promote-student.service.adapter';
 
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { CommonFunctions } from '../../../../classes/common-functions';
-import { SubjectService } from '../../../../services/modules/subject/subject.service';
-import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 import { StudentService } from '../../../../services/modules/student/student.service';
 import { StudentSection } from '../../../../services/modules/student/models/student-section';
-import { FeeService } from '../../../../services/modules/fees/fee.service';
-import { INSTALLMENT_LIST } from '../../../fees/classes/constants';
 import { DataStorage } from '../../../../classes/data-storage';
 import { SchoolService } from './../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { TCService } from './../../../../services/modules/tc/tc.service';
 @Component({
     selector: 'promote-student',
     templateUrl: './promote-student.component.html',
     styleUrls: ['./promote-student.component.css'],
-    providers: [SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService, TCService],
+    providers: [SchoolService, StudentService, ClassService, TCService, GenericService],
 })
 export class PromoteStudentComponent implements OnInit {
     sessionList = [];
-    installmentList = INSTALLMENT_LIST;
 
     STUDENT_LIMITER = 200;
 
@@ -33,17 +29,15 @@ export class PromoteStudentComponent implements OnInit {
     studentSectionListOne: any;
     studentSectionListTwo: any;
     studentList: any;
-    classSubjectList = [];
-    testSecondList = []; // represents Class Test
-    schoolFeeRuleList = [];
-    classFilterFeeList = [];
-    busStopFilterFeeList = [];
 
+    fromSessionName: string;
     fromSelectedClass: any;
     fromSelectedSection: any;
 
+    toSessionName: string;
     toSelectedClass: any;
     toSelectedSection: any;
+    toSessionId: number;
 
     unPromotedStudentList: any;
 
@@ -57,9 +51,7 @@ export class PromoteStudentComponent implements OnInit {
         public schoolService: SchoolService,
         public studentService: StudentService,
         public classService: ClassService,
-        public subjectService: SubjectService,
-        public feeService: FeeService,
-        public examinationService: ExaminationService,
+        public genericService: GenericService,
         public tcService: TCService
     ) {}
 
@@ -73,12 +65,6 @@ export class PromoteStudentComponent implements OnInit {
         this.serviceAdapter = new PromoteStudentServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
-    }
-
-    getSessionName(sessionId: number): any {
-        return this.sessionList.find((session) => {
-            return session.id == sessionId;
-        }).name;
     }
 
     isMobileMenu(): boolean {
@@ -157,7 +143,7 @@ export class PromoteStudentComponent implements OnInit {
         tempObject.parentClass = this.toSelectedClass.id;
         tempObject.parentDivision = this.toSelectedSection.id;
         tempObject.parentStudent = studentSection.parentStudent;
-        tempObject.parentSession = this.user.activeSchool.currentSessionDbId + 1;
+        tempObject.parentSession = this.toSessionId;
         this.newPromotedList.push(tempObject);
     }
 

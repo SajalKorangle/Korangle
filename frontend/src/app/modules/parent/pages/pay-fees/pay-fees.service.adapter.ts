@@ -1,5 +1,7 @@
 import { PayFeesComponent } from './pay-fees.component';
 import { environment } from 'environments/environment';
+import { Query } from "@services/generic/query";
+import { openUrlInBrowser, isMobile } from '@classes/common.js';
 
 export class PayFeesServiceAdapter {
     vm: PayFeesComponent;
@@ -17,9 +19,7 @@ export class PayFeesServiceAdapter {
 
         let schoolId = this.vm.user.activeSchool.dbId;
 
-        let studentListId = this.vm.user.section.student.studentList.map((a) => a.id).join();
-
-        console.log(studentListId);
+        let studentListId = this.vm.user.section.student.studentList.map((a) => a.id);
 
         let fee_type_list = {
             parentSchool: schoolId,
@@ -39,44 +39,55 @@ export class PayFeesServiceAdapter {
 
         let fee_receipt_list = {
             parentStudent__in: studentListId,
-            cancelled: 'false__boolean',
+            cancelled: false,
         };
 
         let sub_fee_receipt_list = {
             parentStudentFee__parentStudent__in: studentListId,
-            parentFeeReceipt__cancelled: 'false__boolean',
+            parentFeeReceipt__cancelled: false,
         };
 
         let discount_list = {
             parentStudent__in: studentListId,
-            cancelled: 'false__boolean',
+            cancelled: false,
         };
 
         let sub_discount_list = {
             parentStudentFee__parentStudent__in: studentListId,
-            parentDiscount__cancelled: 'false__boolean',
+            parentDiscount__cancelled: false,
         };
+
+        let modeOfPaymentQuery = new Query()
+        .addChildQuery(
+            'modeofpaymentcharges',
+            new Query()
+        )
+        .addParentQuery(
+            'parentPaymentGateway',
+            new Query()
+        )
+        .getObjectList({payment_app: 'ModeOfPayment'});
 
         await Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),   // 0
             this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),    // 2
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),    // 3
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),  // 4
-
-            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list),    // 5
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),    // 6
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),    // 7
-            this.vm.feeService.getObjectList(this.vm.feeService.discounts, discount_list),  // 8
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),  // 9
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list), // 10
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 11
+            this.vm.genericService.getObjectList({employee_app: 'Employee'}, {filter: employee_list}), // 2
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 3
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 4
+            this.vm.genericService.getObjectList({fees_third_app: 'StudentFee'}, {filter: student_fee_list}), // 5
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceipt'}, {filter: fee_receipt_list}), // 6
+            this.vm.genericService.getObjectList({fees_third_app: 'SubFeeReceipt'}, {filter: sub_fee_receipt_list}), // 7
+            this.vm.genericService.getObjectList({fees_third_app: 'Discount'}, {filter: discount_list}), // 8
+            this.vm.genericService.getObjectList({fees_third_app: 'SubDiscount'}, {filter: sub_discount_list}), // 9
+            this.vm.genericService.getObjectList({student_app: 'StudentSection'}, {filter: student_fee_list}), // 10
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 11
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}),   // 12
             this.vm.paymentService.getObject(this.vm.paymentService.school_merchant_account, {parentSchool: schoolId}), // 13
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipt_order, {parentSchool: schoolId}), //14
+            this.vm.genericService.getObjectList({ fees_third_app: 'FeeReceiptOrder' }, { filter: { parentSchool: schoolId } }), // 14
+            modeOfPaymentQuery, //15
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: schoolId}, order_by: ['id']}), // 16
         ]).then(
             (value) => {
-                console.log(value);
 
                 this.vm.schoolMerchantAccount = value[13];
 
@@ -96,6 +107,12 @@ export class PayFeesServiceAdapter {
                 this.vm.sessionList = value[11];
                 this.vm.boardList = value[12];
                 this.vm.paymentTransactionList = value[14];
+
+                this.vm.htmlRenderer.modeOfPaymentList = value[15];
+                this.vm.htmlRenderer.selectedModeOfPayment = this.vm.htmlRenderer.modeOfPaymentList[0];
+
+                this.vm.feeReceiptBookList = value[16];
+                this.vm.selectedFeeReceiptBook = this.vm.feeReceiptBookList.find(feeReceiptBook => feeReceiptBook.active);
                 this.vm.handleStudentFeeProfile();
             }
         );
@@ -111,15 +128,13 @@ export class PayFeesServiceAdapter {
 
     populateStudentFeeList(studentFeeList: any): void {
         this.vm.studentFeeList = studentFeeList.sort((a, b) => {
-            let first = this.vm.getFeeTypeByStudentFee(a);
-            let second = this.vm.getFeeTypeByStudentFee(b);
             return a.orderNumber - b.orderNumber;
         });
     }
 
     populateFeeReceiptList(feeReceiptList: any): void {
         this.vm.feeReceiptList = feeReceiptList.sort((a, b) => {
-            return b.receiptNumber - a.receiptNumber;
+            return (new Date(b.generationDateTime).getTime()) - (new Date(a.generationDateTime).getTime());
         });
     }
 
@@ -165,7 +180,7 @@ export class PayFeesServiceAdapter {
                 'email': this.vm.email
             };
             // no need to await for response, not critical task/ utility task
-            this.vm.userService.partiallyUpdateObject(this.vm.userService.user, user_email_update_request);
+            this.vm.genericService.partiallyUpdateObject({user_app: 'User'}, user_email_update_request);
         }
 
         const currentRedirectParams = new URLSearchParams(location.search);
@@ -190,6 +205,7 @@ export class PayFeesServiceAdapter {
                         parentStudent: studentId,
                         feeReceiptData: {
                             receiptNumber: 0,
+                            parentFeeReceiptBook: this.vm.selectedFeeReceiptBook.id,
                             parentSchool: this.vm.user.activeSchool.dbId,
                             parentStudent: studentId,
                             parentSession: session.id,
@@ -234,4 +250,97 @@ export class PayFeesServiceAdapter {
         document.body.appendChild(form);
         form.submit();
     }
+
+    async initiatePaymentWithNewMethod() {
+        const amount = this.vm.getTotalPaymentAmount();
+
+        // ---------------- Data Validation ----------------
+        if (amount <= 0) {
+            alert('Invalid amount');
+            return;
+        }
+
+        let errorFlag = false;
+
+        this.vm.selectedStudentList.forEach(student => { // initializing
+            if (this.vm.amountError(student)())
+                errorFlag = true;
+        });
+
+        if (errorFlag) {
+            alert('Invalid Amount');
+            return;
+        }
+
+
+        // Email Test
+        if (!this.vm.validatorRegex.email.test(this.vm.email)) {
+            alert('Email Validation Failed');
+            return;
+        }
+        // --------------- Data Validation Ends ---------------
+        this.vm.isLoading = true;
+
+        const currentRedirectParams = new URLSearchParams(location.search);
+        const frontendReturnUrlParams = new URLSearchParams();
+        // redirect_to params decides the frontend page and state at which the user is redirected after payment
+        frontendReturnUrlParams.append('redirect_to', location.origin + location.pathname + '?' + currentRedirectParams.toString());
+
+
+        const onlineFeePaymentTransactionList = [];
+
+
+        Object.keys(this.vm.amountMappedByStudentId).forEach(studentId => {
+            if (this.vm.amountMappedByStudentId[studentId] == 0)
+                return; // return from forEach
+            this.vm.sessionList.forEach(session => {
+                const filteredSubFeeReceiptList
+                    = this.vm.newSubFeeReceiptListMappedByStudentId[studentId]
+                        .filter(subFeeReceipt => subFeeReceipt.parentSession == session.id);
+                if (filteredSubFeeReceiptList.length > 0) {
+                    const onlineFeePaymentTransaction = {
+                        parentSchool: this.vm.user.activeSchool.dbId,
+                        parentStudent: studentId,
+                        feeReceiptData: {
+                            receiptNumber: 0,
+                            parentFeeReceiptBook: this.vm.selectedFeeReceiptBook.id,
+                            parentSchool: this.vm.user.activeSchool.dbId,
+                            parentStudent: studentId,
+                            parentSession: session.id,
+                            subFeeReceiptList: filteredSubFeeReceiptList
+                        },
+                    };
+                    onlineFeePaymentTransactionList.push(onlineFeePaymentTransaction);
+                }
+            });
+        });
+
+        const newOrder = {
+            orderAmount: amount,
+            orderTotalAmount: this.vm.htmlRenderer.getNewMethodTotalPayableAmount(),
+            paymentMode: this.vm.htmlRenderer.selectedModeOfPayment,
+            customerName: this.vm.user.activeSchool.studentList[0].fathersName,
+            customerPhone: this.vm.user.username,
+            customerEmail: this.vm.email,
+            returnData: {
+                origin: environment.DJANGO_SERVER,  // backend url api which will be hit by cashfree to verify the completion of payment on their portal
+                searchParams: frontendReturnUrlParams.toString()
+            },
+            orderNote: `payment towards school with KID ${this.vm.user.activeSchool.dbId}`,
+            feeReceiptOrderList: onlineFeePaymentTransactionList,
+        };
+
+        const newOrderResponse = await this.vm.paymentService.createObject(this.vm.paymentService.easebuzz_order_school, newOrder);
+        if (newOrderResponse.success) {
+            this.vm.isLoading = false;
+            // if (isMobile()) {
+                // openUrlInBrowser(newOrderResponse.success);
+            // } else {
+                window.location.href = newOrderResponse.success;
+            // }
+        } else {
+            this.vm.isLoading = false;
+            alert(newOrderResponse.failure || "Unable to generate payment link.");
+        }
+   }
 }

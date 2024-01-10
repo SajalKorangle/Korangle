@@ -32,6 +32,8 @@ export class PrintStudentJuniorReportListComponent implements OnInit, OnDestroy,
     showPromotionStatement: any;
     showAbsentOnZero: any;
 
+    sessionList: any;
+
     absentValue = 'Abs.';
     attendance_status_list = ATTENDANCE_STATUS_LIST;
 
@@ -61,6 +63,7 @@ export class PrintStudentJuniorReportListComponent implements OnInit, OnDestroy,
         this.classTeacherSignature = value['classTeacherSignature'];
         this.showPromotionStatement = value['showPromotionStatement'];
         this.showAbsentOnZero = value['showAbsentOnZero'];
+        this.sessionList = value['sessionList'];
         this.viewChecked = false;
     }
 
@@ -111,25 +114,9 @@ export class PrintStudentJuniorReportListComponent implements OnInit, OnDestroy,
     }
 
     getSessionName(sessionId: any): any {
-        let result = '';
-        switch (sessionId) {
-            case 1:
-                result = 'Session 2017-18';
-                break;
-            case 2:
-                result = 'Session 2018-19';
-                break;
-            case 3:
-                result = 'Session 2019-20';
-                break;
-            case 4:
-                result = 'Session 2020-21';
-                break;
-            case 5:
-                result = 'Session 2021-22';
-                break;
-        }
-        return result;
+        return this.sessionList.find(session => {
+            return session.id == sessionId;
+        }).name;
     }
 
     getExaminationMarks(student: any, classSubject: any, examinationId: any, baseMarks: any): any {

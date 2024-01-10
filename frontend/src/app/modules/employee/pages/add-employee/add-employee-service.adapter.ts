@@ -76,45 +76,54 @@ export class AddEmployeeServiceAdapter {
         this.vm.employeeParameterList = this.vm.employeeParameterList.map(x => ({...x, filterValues: JSON.parse(x.filterValues)}));
         this.vm.initializeModuleList(moduleList, taskList);
 
-         // Extracting Delegation Permission Dict for Logged in Employee STARTS
-         let loggedInEmployeePermission = await new Query()
-         .filter({
-             parentEmployee__parentSchool: this.vm.user.activeSchool.dbId,
-             parentEmployee__mobileNumber: this.vm.user.username,
-             parentTask: 42
-         })
-         .getObject({ employee_app: 'EmployeePermission' });
+        // Extracting Delegation Permission Dict for Logged in Employee STARTS
+        let loggedInEmployeePermission = await new Query()
+        .filter({
+            parentEmployee__parentSchool: this.vm.user.activeSchool.dbId,
+            parentEmployee__mobileNumber: this.vm.user.username,
+            parentTask: 42
+        })
+        .getObject({ employee_app: 'EmployeePermission' });
 
 
-         if (loggedInEmployeePermission) {
-             // Extracting Delegation Permission Dict for Logged in Employee ENDS
-             let loggedInEmployeePermissionPermissionDict = JSON.parse(loggedInEmployeePermission.configJSON);
+        if (loggedInEmployeePermission) {
+            // Extracting Delegation Permission Dict for Logged in Employee ENDS
+            let loggedInEmployeePermissionPermissionDict = JSON.parse(loggedInEmployeePermission.configJSON);
 
-             // If loggedInEmployeePermissionPermissionDict is empty means employee has delegation permission for each task
-             if (Object.keys(loggedInEmployeePermissionPermissionDict).length !== 0) {
-                 let tempModuleList = [];
-                 this.vm.moduleList.forEach(module => {
-                     let tempTaskList = [];
-                     let tempModule = module;
+            // If loggedInEmployeePermissionPermissionDict is empty means employee has delegation permission for each task
+            if (Object.keys(loggedInEmployeePermissionPermissionDict).length !== 0) {
+                let tempModuleList = [];
+                this.vm.moduleList.forEach(module => {
+                    let tempTaskList = [];
+                    let tempModule = module;
 
-                     module.taskList.forEach(task => {
-                         if (loggedInEmployeePermissionPermissionDict[module.id][task.id] === true) {
-                             tempTaskList.push(task);
-                         }
-                     });
+                    module.taskList.forEach(task => {
 
-                     if (tempTaskList.length) {
-                         tempModule.taskList = tempTaskList;
-                         tempModuleList.push(tempModule);
-                     }
-                 });
+                        if (loggedInEmployeePermissionPermissionDict[module.id] == undefined) {
+                            loggedInEmployeePermissionPermissionDict[module.id] = {};
+                            if (loggedInEmployeePermissionPermissionDict[module.id][task.id] == undefined) {
+                                loggedInEmployeePermissionPermissionDict[module.id][task.id] = true;
+                            }
+                        }
 
-                 this.vm.moduleList = tempModuleList;
-                 this.intializeAssignTaskPermission();
-             }
-         } else {
-             this.vm.assignTaskPermission = false;
-         }
+                        if (loggedInEmployeePermissionPermissionDict[module.id][task.id] === true) {
+                            tempTaskList.push(task);
+                        }
+
+                    });
+
+                    if (tempTaskList.length) {
+                        tempModule.taskList = tempTaskList;
+                        tempModuleList.push(tempModule);
+                    }
+                });
+
+                this.vm.moduleList = tempModuleList;
+                this.intializeAssignTaskPermission();
+            }
+        } else {
+            this.vm.assignTaskPermission = false;
+        }
 
         this.vm.isLoading = false;
     }
@@ -212,6 +221,12 @@ export class AddEmployeeServiceAdapter {
             alert("Aadhar No. should be 12 digits");
             return;
         }
+
+        if (this.vm.newEmployee.bankIfscCode != null
+            && this.vm.newEmployee.bankIfscCode.toString().length !== 11) {
+                alert("Bank IFSC code should be 11 digits");
+                return;
+            }
 
         if (this.vm.newEmployee.isNonSalariedEmployee === undefined) {
             this.vm.newEmployee.isNonSalariedEmployee = false;

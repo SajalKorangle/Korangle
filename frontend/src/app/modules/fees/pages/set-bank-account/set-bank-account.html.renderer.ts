@@ -1,4 +1,5 @@
 import { SetBankAccountComponent } from './set-bank-account.component';
+import { DataStorage } from '@classes/data-storage';
 
 export class SetBankAccountHtmlRenderer {
 
@@ -10,9 +11,17 @@ export class SetBankAccountHtmlRenderer {
         this.vm = vm;
     }
 
+    isUpdatingBankDetailsAllowed(): boolean {
+        if (DataStorage.getInstance().isFeatureEnabled("Easebuzz in Pay Fees page feature flag")) {
+            return (this.vm.schoolMerchantAccount.easebuzzBankLabel != "") || !this.vm.schoolMerchantAccount.id;
+        }
+        return true;
+    }
+
     isBankAccountUpdationEnabled(): boolean {
         return this.vm.backendData.schoolBankAccountUpdationPermissionCountList.length > 0
-            && this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0].bankAccountUpdationPermissionCount > 0;
+            && this.vm.backendData.schoolBankAccountUpdationPermissionCountList[0].bankAccountUpdationPermissionCount > 0
+            && this.isUpdatingBankDetailsAllowed();
     }
 
     isUpdateButtonDisabled(): boolean {

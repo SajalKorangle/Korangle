@@ -2,11 +2,13 @@ from django.db.models import Q
 from rest_framework import serializers
 from django.db.models.fields.related import ForeignKey
 from common.json_encoding import make_dict_list_serializable
+from helloworld_project.settings import AWS_S3_BASE_URL
 
-from django.db.models import Count
+from django.db.models import Count, Sum
 
 AGGREGATOR_FUNCTION_MAPPED_BY_NAME = {
     'Count': Count,
+    'Sum': Sum,
 }
 
 
@@ -81,11 +83,19 @@ class GenericSerializerInterface():
                     query = query.union(parsed_query)
             elif key == 'annotate':
                 for alias_name, alias_generator_data in value.items():
-                    parsed_filter = self.parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else get_default_filter()
+                    parsed_filter = self.parseFilter(alias_generator_data['filter']) if 'filter' in alias_generator_data else self.parseFilter(alias_generator_data['exclude']) if 'exclude' in alias_generator_data else get_default_filter()
                     annotate_field_name = alias_generator_data['field']
                     annotate_function = AGGREGATOR_FUNCTION_MAPPED_BY_NAME[alias_generator_data['function']]
-                    query = query.annotate(**{alias_name: annotate_function(annotate_field_name, filter=Q(*
-                                                                                                          parsed_filter['filter_args'], **parsed_filter['filter_kwargs']))})
+                    if 'exclude' in alias_generator_data:
+                        query = query.annotate(**{alias_name: annotate_function(
+                            annotate_field_name,
+                            filter=~Q(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs']),
+                        )})
+                    else: 
+                        query = query.annotate(**{alias_name: annotate_function(
+                            annotate_field_name,
+                            filter=Q(*parsed_filter['filter_args'], **parsed_filter['filter_kwargs']),
+                        )})
             elif key in ['order_by', 'pagination']:
                 pass
             else:
@@ -114,13 +124,16 @@ class GenericSerializerInterface():
 
         ## Response Structure(fields_list) Processing Starts ##
         processed_field_list = ['__all__']
+        file_field_list = []
         if 'fields_list' in self.data:
             processed_field_list = self.data['fields_list']
+            file_field_list = [field.name for field in self.Model._meta.concrete_fields if field.name in self.data['fields_list'] and self.Model._meta.get_field(field.name).get_internal_type() == 'FileField']
             del self.data['fields_list']
 
         if '__all__' in processed_field_list:
             __all__index = processed_field_list.index('__all__')
             processed_field_list[__all__index: __all__index + 1] = [field.name for field in self.Model._meta.concrete_fields]  # Replacing __all__ with concrete fields
+            file_field_list = [field.name for field in self.Model._meta.concrete_fields if self.Model._meta.get_field(field.name).get_internal_type() == 'FileField']
 
         if 'parent_query' in self.data:
             parent_field_name_mapped_by_query = self.data['parent_query']
@@ -138,13 +151,22 @@ class GenericSerializerInterface():
         pk_field_name = self.Model._meta.pk.name
         processed_field_list.append(pk_field_name)  # ensuring pk field is always included, duplicates are allowed
         return_data = list(query_set.values(*processed_field_list))
+
+        # Starts :- Make file fields' url absolute
+        if len(file_field_list) > 0:
+            for row in return_data:
+                for field in file_field_list:
+                    row[field] = AWS_S3_BASE_URL + row[field] if row[field] and row[field] != '' else row[field]
+                    row[field] = row[field].replace("com//","com/") if row[field] and row[field] != '' else row[field] # This is a hack that we are not proud of.
+        # Ends :- Make file fields' url absolute
+
         return_data = make_dict_list_serializable(return_data)  # making json serializable
 
         pk_list = [instance_data[pk_field_name] for instance_data in return_data]
 
         ## Child Nested Data Query Starts ##
         for key, value in child_field_name_mapped_by_query.items():
-            assert key in self.Model._meta.fields_map[key], 'Invalid Child Name in Child Query, child name: {0}, query: {1}'.format(key, value)
+            assert key in self.Model._meta.fields_map, 'Invalid Child Name in Child Query, child name: {0}, query: {1}'.format(key, value)
             child_field_name = self.Model._meta.fields_map[key].field.name
             child_model = self.Model._meta.fields_map[key].related_model
             value.update({   # added parent<Model> filter

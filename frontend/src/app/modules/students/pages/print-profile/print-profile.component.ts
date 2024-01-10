@@ -1,14 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { PrintProfileServiceAdapter } from './print-profile.service.adapter';
 import { SchoolService } from '../../../../services/modules/school/school.service';
-import { StudentService } from '../../../../services/modules/student/student.service';
-import { ClassService } from '../../../../services/modules/class/class.service';
-import { SubjectService } from '../../../../services/modules/subject/subject.service';
-import { FeeService } from '../../../../services/modules/fees/fee.service';
-import { ExaminationService } from '../../../../services/modules/examination/examination.service';
 import { DataStorage } from '../../../../classes/data-storage';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_STUDENT_PROFILE } from '../../../../print/print-routes.constants';
+import { GenericService } from '@services/generic/generic-service';
 
 declare const $: any;
 
@@ -16,7 +12,10 @@ declare const $: any;
     selector: 'app-print-profile',
     templateUrl: './print-profile.component.html',
     styleUrls: ['./print-profile.component.css'],
-    providers: [SchoolService, StudentService, ClassService, SubjectService, ExaminationService, FeeService],
+    providers: [
+        SchoolService,
+        GenericService,
+    ],
 })
 export class PrintProfileComponent implements OnInit {
     sessionList = [];
@@ -40,12 +39,8 @@ export class PrintProfileComponent implements OnInit {
 
     constructor(
         public schoolService: SchoolService,
-        public studentService: StudentService,
-        public classService: ClassService,
-        public subjectService: SubjectService,
-        public feeService: FeeService,
-        public examinationService: ExaminationService,
-        public printService: PrintService
+        public genericService: GenericService,
+        public printService: PrintService,
     ) {}
 
     ngOnInit(): void {

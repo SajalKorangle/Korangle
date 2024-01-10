@@ -14,6 +14,7 @@ export const PRINT_EMPLOYEE_LIST = 'print-employee-list';
 //attendance
 export const PRINT_EMPLOYEE_ATTENDANCE = 'print-employee-attendance';
 export const PRINT_STUDENT_ATTENDANCE = 'print-student-attendance';
+export const PRINT_STUDENT_ATTENDANCE_COUNT = 'print-student-attendance-count';
 
 // Report Card
 
@@ -53,3 +54,6 @@ export const PRINT_LEDGER = 'print-ledger';
 
 // Parent Support
 export const PRINT_COUNT_ALL_TABLE_COMPLAINTS = 'print-count-all-table-complaints';
+
+// Library
+export const PRINT_BOOK_LIST = 'print-book-list';

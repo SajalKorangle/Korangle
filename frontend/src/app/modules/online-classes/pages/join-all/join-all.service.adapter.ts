@@ -25,7 +25,8 @@ export class JoinAllServiceAdapter {
         };
 
         this.vm.isLoading = true;
-        if (this.vm.user.activeSchool.currentSessionDbId != CommonFunctions.getActiveSession().id) {
+        const sessionList = await this.vm.genericService.getObjectList({school_app: 'Session'}, {});
+        if (!CommonFunctions.isSessionActive(this.vm.user.activeSchool.currentSessionDbId, sessionList)) {
             this.vm.isActiveSession = false;
             this.vm.isLoading = false;
             return;

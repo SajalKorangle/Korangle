@@ -14,6 +14,8 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
 
     boardList: any;
 
+    sessionList: any;
+
     viewChecked = true;
 
     examination: any;
@@ -25,6 +27,7 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
         this.user = user;
         this.examination = value.examination;
         this.boardList = value.boardList;
+        this.sessionList = value.sessionList;
         this.viewChecked = false;
     }
 
@@ -375,19 +378,9 @@ export class PrintStudentMarksheetListComponent implements OnInit, OnDestroy, Af
     }
 
     getSessionName(sessionId: any): any {
-        let result = '';
-        switch (sessionId) {
-            case 1:
-                result = 'Session 2017-18';
-                break;
-            case 2:
-                result = 'Session 2018-19';
-                break;
-            case 3:
-                result = 'Session 2019-20';
-                break;
-        }
-        return result;
+        return this.sessionList.find(session => {
+            return session.id == sessionId;
+        }).name;
     }
 
     getRomanClassName(className: any): any {

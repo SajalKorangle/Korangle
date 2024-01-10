@@ -20,9 +20,9 @@ export class SettingsServiceAdapter {
 
         this.vm.isLoading = true;
 
-        const sessionList = await this.vm.schoolService.getObjectList(this.vm.schoolService.session, {});
+        const sessionList = await this.vm.genericService.getObjectList({school_app: 'Session'}, {});
         const activeSession: Session = sessionList.find(s => s.id == this.vm.user.activeSchool.currentSessionDbId);
-        this.populateActiveSession(activeSession);
+        this.populateActiveSession(activeSession, sessionList);
 
         const fee_settings_request = {
             'parentSession': activeSession.id,
@@ -68,9 +68,9 @@ export class SettingsServiceAdapter {
         this.vm.isLoading = false;
     }
 
-    populateActiveSession(activeSession: Session): void {
+    populateActiveSession(activeSession: Session, sessionList: any): void {
         this.vm.activeSession = activeSession;
-        this.vm.isActiveSession = activeSession.id == CommonFunctions.getActiveSession().id;
+        this.vm.isActiveSession = CommonFunctions.isSessionActive(activeSession.id, sessionList);
     }
 
     populateCustomAccountSession(accountsList, accountSessionList): void {
@@ -119,7 +119,7 @@ export class SettingsServiceAdapter {
                 new Query().partiallyUpdateObject(
                     {payment_app: 'SchoolMerchantAccount'},
                     this.vm.backendData.schoolMerchantAccount
-                    )
+                )
             );
         }
 

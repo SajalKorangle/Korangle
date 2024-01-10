@@ -81,7 +81,8 @@
             <div class="row" style="border-bottom: 1px solid black; margin-top: 15px; margin-bottom: 15px">
                 <div class="col-md-12"></div>
             </div>
-            <div style="height: 75vh;overflow: scroll;">
+            <div *ngIf="selectedExamination.marksUpdationStatus == MARKS_UPDATION_LOCKED_STATUS_BACKEND">* Kindly contact administrator for modifying marks for this exam </div>
+            <div class="responsive-table-wrapper">
             <table class="table table-hover">
                 <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
                     <tr>
@@ -106,18 +107,27 @@
                         "
                     >
                         <td>{{ i + 1 }}.</td>
-                        <td style="min-width: 100px;">{{ student.name }}</td>
-                        <td>
-                            <span *ngIf="student.rollNumber != null">{{ student.rollNumber }}</span>
-                            <span *ngIf="student.rollNumber == null"> N/A </span>
-                        </td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.rollNumber }}</td>
                         <ng-container *ngFor="let test of student.testData">
-                            <td style="min-width: 100px;">
-                                <input [ngClass]="{'invalidMarks': test.marksObtained > test.maximumMarks}" type="number" [disabled]="test.absent" [(ngModel)]="test.marksObtained" (change)="handleUpdate(test,$event)" placeholder="Type marks here" />
-                            </td>
-                            <td style="min-width: 100px; padding-left:4px;padding-right:4px;">
-                                <mat-checkbox style="margin-left: 14px" [(ngModel)]="test.absent" (ngModelChange)="handleUpdate(test)"></mat-checkbox>
-                            </td>
+                            <ng-container *ngIf="test.studentSubjectExists; else studentSubjectDoesntExist">
+                                <td>
+                                    <input
+                                        [ngClass]="{'invalidMarks': test.marksObtained > test.maximumMarks}"
+                                        type="number"
+                                        [disabled]="test.absent || selectedExamination.marksUpdationStatus == MARKS_UPDATION_LOCKED_STATUS_BACKEND"
+                                        [(ngModel)]="test.marksObtained"
+                                        (change)="handleUpdate(test,$event)"
+                                        placeholder="Type marks here"
+                                    />
+                                </td>
+                                <td style="padding-left:4px;padding-right:4px;">
+                                    <mat-checkbox style="margin-left: 14px" [disabled]="selectedExamination.marksUpdationStatus == MARKS_UPDATION_LOCKED_STATUS_BACKEND" [(ngModel)]="test.absent" (ngModelChange)="handleUpdate(test)"></mat-checkbox>
+                                </td>
+                            </ng-container>
+                            <ng-template #studentSubjectDoesntExist>
+                                <td></td><td></td>
+                            </ng-template>
                         </ng-container>
                     </tr>
                 </tbody>

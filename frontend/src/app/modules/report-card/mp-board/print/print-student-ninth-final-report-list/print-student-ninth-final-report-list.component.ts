@@ -20,6 +20,7 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
     showPrincipalSignature: any;
     classTeacherSignature: any;
     boardList: any;
+    sessionList: any;
 
     marksDecimalPoint: any;
 
@@ -34,6 +35,7 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
         this.showPrincipalSignature = value['showPrincipalSignature'];
         this.classTeacherSignature = value['classTeacherSignature'];
         this.boardList = value['boardList'];
+        this.sessionList = value['sessionList'];
         this.marksDecimalPoint =
             '1.' + this.reportCardMapping.minimumDecimalPoints.toString() + '-' + this.reportCardMapping.maximumDecimalPoints;
         this.viewChecked = false;
@@ -278,25 +280,9 @@ export class PrintStudentNinthFinalReportListComponent implements OnInit, OnDest
     }
 
     getSessionName(sessionId: any): any {
-        let result = '';
-        switch (sessionId) {
-            case 1:
-                result = 'Session 2017-18';
-                break;
-            case 2:
-                result = 'Session 2018-19';
-                break;
-            case 3:
-                result = 'Session 2019-20';
-                break;
-            case 4:
-                result = 'Session 2020-21';
-                break;
-            case 5:
-                result = 'Session 2021-22';
-                break;
-        }
-        return result;
+        return this.sessionList.find(session => {
+            return session.id == sessionId;
+        }).name;
     }
 
     /*getNextStep(student: any): any {

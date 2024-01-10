@@ -20,6 +20,9 @@ from team_app.models import Module
 from student_app.models import StudentSection
 from employee_app.models import Employee, EmployeePermission
 from online_classes_app.models import RestrictedStudent
+from school_app.model.models import Session
+from bill_app.models import Bill
+
 
 
 def get_data_from_school_list(schoolList, schoolDbId):
@@ -113,6 +116,7 @@ def get_employee_school_module_list(employee_object):
 
     for module_object in \
             Module.objects.filter(Q(parentBoard=None) | Q(parentBoard=school_object.parentBoard))\
+                    .exclude(parentFeatureFlag__enabled=False)\
                     .order_by('orderNumber'):
         tempModule = {}
         tempModule['dbId'] = module_object.id
@@ -123,6 +127,8 @@ def get_employee_school_module_list(employee_object):
         for permission_object in \
                 EmployeePermission.objects.filter(parentEmployee=employee_object,
                                                   parentTask__parentModule=module_object)\
+                    .exclude(parentTask__parentFeatureFlag__enabled=False)\
+                    .exclude(parentTask__parentModule__parentFeatureFlag__enabled=False)\
                     .order_by('parentTask__orderNumber') \
                     .select_related('parentTask'):
             tempTask = {}
@@ -130,6 +136,7 @@ def get_employee_school_module_list(employee_object):
             tempTask['path'] = permission_object.parentTask.path
             tempTask['title'] = permission_object.parentTask.title
             tempTask['videoUrl'] = permission_object.parentTask.videoUrl
+            tempTask['blockWhenSuspended'] = permission_object.parentTask.blockWhenSuspended
             tempModule['taskList'].append(tempTask)
         if len(tempModule['taskList']) > 0:
             moduleList.append(tempModule)
@@ -178,6 +185,13 @@ def get_school_data_by_object(school_object):
 
     school_data['expired'] = school_object.expired
     school_data['dateOfExpiry'] = school_object.dateOfExpiry
+
+    school_data['pendingBillList'] = list(Bill.objects.filter(
+        parentSchool=school_object,
+        billDate__lte=date.today(),
+        paidDate=None,
+        cancelledDate=None
+    ).values())
 
     school_data['moduleList'] = []
     school_data['studentList'] = []
@@ -241,6 +255,7 @@ def get_user_details(user_object):
         'email': user_object.email,
         'id': user_object.id,
         'schoolList': get_school_list(user_object),
+        'session_list': Session.objects.values()
     }
 
     return response

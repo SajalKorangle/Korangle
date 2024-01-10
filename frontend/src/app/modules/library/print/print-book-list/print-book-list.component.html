@@ -1,0 +1,59 @@
+<table *ngIf="bookList && columnFilter" class="table table-hover">
+    <thead style="font-weight: 400">
+        <tr>
+            <th [class.hidden]="!columnFilter.showSerialNumber">S No.</th>
+            <th [class.hidden]="!columnFilter.showFrontImage" style="text-align: center">Front Image</th>
+            <th [class.hidden]="!columnFilter.showBackImage" style="text-align: center">Back Image</th>
+            <th [class.hidden]="!columnFilter.showBookNumber">Book No.</th>
+            <th [class.hidden]="!columnFilter.showName">Name</th>
+            <th [class.hidden]="!columnFilter.showAuthor">Author</th>
+            <th [class.hidden]="!columnFilter.showLocation">Location</th>
+            <th [class.hidden]="!columnFilter.showDateOfPurchase">Date of Purchase</th>
+            <th [class.hidden]="!columnFilter.showPublisher">Publisher</th>
+            <th [class.hidden]="!columnFilter.showEdition">Edition</th>
+            <th [class.hidden]="!columnFilter.showNumberOfPages">No. of pages</th>
+            <th [class.hidden]="!columnFilter.showPrintedCost">Printed Cost</th>
+            <th [class.hidden]="!columnFilter.showCoverType">Cover Type</th>
+            <th [class.hidden]="!columnFilter.showBookType">Book Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-container *ngFor="let book of bookList; let i = index">
+            <tr [class.hidden]="!book.show">
+                <ng-container>
+                    <td [class.hidden]="!columnFilter.showSerialNumber">{{ i + 1 }}.</td>
+
+                    <td [class.hidden]="!columnFilter.showFrontImage" align="center">
+                        <img *ngIf="book.frontImage" src="{{ book.frontImage }}" style="width: 50px" />
+                        <img
+                            *ngIf="!book.frontImage"
+                            src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                            style="width: 50px"
+                        />
+                    </td>
+
+                    <td [class.hidden]="!columnFilter.showBackImage" align="center">
+                        <img *ngIf="book.backImage" src="{{ book.backImage }}" style="width: 50px" />
+                        <img
+                            *ngIf="!book.backImage"
+                            src="https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg"
+                            style="width: 50px"
+                        />
+                    </td>
+
+                    <td [class.hidden]="!columnFilter.showBookNumber">{{ book.bookNumber }}</td>
+                    <td [class.hidden]="!columnFilter.showName">{{ book.name }}</td>
+                    <td [class.hidden]="!columnFilter.showAuthor">{{ book.author | titlecase }}</td>
+                    <td [class.hidden]="!columnFilter.showLocation">{{ book.location }}</td>
+                    <td [class.hidden]="!columnFilter.showDateOfPurchase">{{ book.dateOfPurchase | date: 'dd/MM/yyyy' }}</td>
+                    <td [class.hidden]="!columnFilter.showPublisher">{{ book.publisher }}</td>
+                    <td [class.hidden]="!columnFilter.showEdition">{{ book.edition }}</td>
+                    <td [class.hidden]="!columnFilter.showNumberOfPages">{{ book.numberOfPages }}</td>
+                    <td [class.hidden]="!columnFilter.showPrintedCost">{{ book.printedCost }}</td>
+                    <td [class.hidden]="!columnFilter.showCoverType">{{ book.coverType }}</td>
+                    <td [class.hidden]="!columnFilter.showBookType">{{ book.typeOfBook }}</td>
+                </ng-container>
+            </tr>
+        </ng-container>
+    </tbody>
+</table>

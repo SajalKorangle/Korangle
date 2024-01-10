@@ -1,0 +1,26 @@
+<table class="table table-hover" *ngIf="studentAttendanceCountList">
+    <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+        <tr>
+            <th>Class</th>
+            <th style="text-align: center;">Present</th>
+            <th style="text-align: center;">Absent</th>
+            <th style="text-align: center;">Holiday</th>
+            <th style="text-align: center;">Not Recorded</th>
+            <th style="text-align: center;">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <ng-container *ngFor="let class of studentAttendanceCountList; let i = index">
+            <ng-container *ngFor="let section of class | keyvalue;">
+                <tr *ngIf="section.key !== 'name'">
+                    <td >{{class.name}} - {{section.key}}</td>
+                    <td align="center" >{{section.value.PRESENT}}</td>
+                    <td align="center" >{{section.value.ABSENT}}</td>
+                    <td align="center" >{{section.value.HOLIDAY}}</td>
+                    <td align="center" >{{section.value.NOT_RECORDED}}</td>
+                    <td align="center" >{{section.value.TOTAL}}</td>
+                </tr>
+            </ng-container>
+        </ng-container>
+    </tbody>
+</table>

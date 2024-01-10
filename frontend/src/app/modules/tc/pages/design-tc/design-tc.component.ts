@@ -11,6 +11,7 @@ import { StudentService } from '@services/modules/student/student.service';
 import { ClassService } from '@services/modules/class/class.service';
 import { SubjectService } from '@services/modules/subject/subject.service';
 import { SchoolService } from '@services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { AttendanceService } from '@services/modules/attendance/attendance.service';
 
 import { DesignTCHtmlAdapter } from './design-tc.html.adapter';
@@ -22,7 +23,7 @@ import { Layer, DATA_SOUCE_TYPE } from './../../class/constants';
     selector: 'app-design-tc',
     templateUrl: './design-tc.component.html',
     styleUrls: ['./design-tc.component.css'],
-    providers: [TCService, StudentService, ClassService, SubjectService, SchoolService, AttendanceService, MatDialog],
+    providers: [TCService, StudentService, ClassService, SubjectService, SchoolService, GenericService, AttendanceService, MatDialog],
 })
 export class DesignTCComponent implements OnInit, OnDestroy {
     user: any;
@@ -123,6 +124,7 @@ export class DesignTCComponent implements OnInit, OnDestroy {
         public classService: ClassService,
         public subjectService: SubjectService,
         public schoolService: SchoolService,
+        public genericService: GenericService,
         public attendanceService: AttendanceService,
         public dialog: MatDialog
     ) {}

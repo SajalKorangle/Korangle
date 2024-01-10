@@ -76,6 +76,14 @@ export class AssignTaskServiceAdapter {
                 let tempModule = module;
 
                 module.taskList.forEach(task => {
+
+                    if (loggedInEmployeePermissionPermissionDict[module.id] == undefined) {
+                        loggedInEmployeePermissionPermissionDict[module.id] = {};
+                        if (loggedInEmployeePermissionPermissionDict[module.id][task.id] == undefined) {
+                            loggedInEmployeePermissionPermissionDict[module.id][task.id] = true;
+                        }
+                    }
+
                     if (loggedInEmployeePermissionPermissionDict[module.id][task.id] === true) {
                         tempTaskList.push(task);
                     }
@@ -131,12 +139,31 @@ export class AssignTaskServiceAdapter {
         Promise.all([this.vm.employeeService.getObjectList(this.vm.employeeService.employee_permissions, data)]).then(
             (value) => {
                 this.vm.currentPermissionList = value[0];
+                this.populateCurrentPermissionList();
                 this.vm.isLoading = false;
             },
             (error) => {
                 this.vm.isLoading = false;
             }
         );
+    }
+
+    populateCurrentPermissionList() {
+        let assignTaskInPagePermission = this.vm.currentPermissionList.find( currentPermission => {
+            return currentPermission.parentTask == 42;
+        });
+        if (assignTaskInPagePermission) {
+            this.vm.moduleList.forEach(module => {
+                module.taskList.forEach(task => {
+                    if (assignTaskInPagePermission.configJSON[module.id] == undefined) {
+                        assignTaskInPagePermission.configJSON[module.id] = {};
+                        if (assignTaskInPagePermission.configJSON[module.id][task.id] == undefined) {
+                            assignTaskInPagePermission.configJSON[module.id][task.id] = true;
+                        }
+                    }
+                });
+            });
+        }
     }
 
     initializeModuleList(moduleList: any, taskList: any): void {

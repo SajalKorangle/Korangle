@@ -31,12 +31,16 @@ export class TotalCollectionServiceAdapter {
 
         Promise.all([
             this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list), // 0
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list), // 1
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 2
-            this.vm.classService.getObjectList(this.vm.classService.division, {}), // 3
+            this.vm.genericService.getObjectList({employee_app: 'Employee'}, {filter: employee_list}), // 1
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 2
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 3
             this.vm.schoolService.getObjectList(this.vm.schoolService.board, {}), // 4
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 5
-            this.vm.employeeService.getObject(this.vm.employeeService.employee_permissions, employee_permission_data), // 6
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 5
+            this.vm.genericService.getObject({employee_app: 'EmployeePermission'}, {filter: employee_permission_data}), // 6
+            this.vm.genericService.getObjectList(
+                {fees_third_app: 'FeeReceiptBook'},
+                {filter: {parentSchool: this.vm.user.activeSchool.dbId}, order_by: ['id']}
+            ), // 7
         ]).then(
             (value) => {
                 this.feeTypeList = value[0];
@@ -53,6 +57,7 @@ export class TotalCollectionServiceAdapter {
                         this.vm.minDate.setDate(currentDate.getDate() - Math.floor(numberOfDays));
                     }
                 }
+                this.vm.feeReceiptBookList = value[7];
 
                 this.vm.isInitialLoading = false;
             },
@@ -67,24 +72,30 @@ export class TotalCollectionServiceAdapter {
         this.vm.isLoading = true;
 
         let fee_receipt_list = {
-            generationDateTime__gte: this.vm.startDate + ' 00:00:00+05:30',
-            generationDateTime__lte: this.vm.endDate + ' 23:59:59+05:30',
             parentSchool: this.vm.user.activeSchool.dbId,
         };
 
         let sub_fee_receipt_list = {
-            parentFeeReceipt__generationDateTime__gte: this.vm.startDate + ' 00:00:00+05:30',
-            parentFeeReceipt__generationDateTime__lte: this.vm.endDate + ' 23:59:59+05:30',
             parentFeeReceipt__parentSchool: this.vm.user.activeSchool.dbId,
         };
 
+        if (this.vm.startDate) {
+            fee_receipt_list['generationDateTime__gte'] = this.vm.startDate + ' 00:00:00+05:30';
+            sub_fee_receipt_list['parentFeeReceipt__generationDateTime__gte'] = this.vm.startDate + ' 00:00:00+05:30';
+        }
+
+        if (this.vm.endDate) {
+            fee_receipt_list['generationDateTime__lte'] = this.vm.endDate + ' 23:59:59+05:30';
+            sub_fee_receipt_list['parentFeeReceipt__generationDateTime__lte'] = this.vm.endDate + ' 23:59:59+05:30';
+        }
+
         Promise.all([
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceipt'}, {filter: fee_receipt_list}),
+            this.vm.genericService.getObjectList({fees_third_app: 'SubFeeReceipt'}, {filter: sub_fee_receipt_list}),
         ]).then(
             (value) => {
                 this.vm.feeReceiptList = value[0].sort((a, b) => {
-                    return b.receiptNumber - a.receiptNumber;
+                    return (new Date(b.generationDateTime).getTime()) - (new Date(a.generationDateTime).getTime());
                 });
                 this.vm.subFeeReceiptList = value[1];
 
@@ -109,7 +120,7 @@ export class TotalCollectionServiceAdapter {
                 };
 
                 if (student_list.id__in.length != 0) {
-                    service_list.push(this.vm.studentService.getObjectList(this.vm.studentService.student, student_list));
+                    service_list.push(this.vm.genericService.getObjectList({student_app: 'Student'}, {filter: student_list}));
                 }
 
                 let tempList = value[0].map((item) => item.parentSession);
@@ -139,7 +150,7 @@ export class TotalCollectionServiceAdapter {
 
                         if (student_section_list.parentStudent__in.length != 0) {
                             service_list.push(
-                                this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list)
+                                this.vm.genericService.getObjectList({student_app: 'StudentSection'}, {filter: student_section_list})
                             );
                         }
                     });
@@ -250,6 +261,16 @@ export class TotalCollectionServiceAdapter {
 
         this.vm.filteredSessionList.forEach((session) => {
             session.selectedSession = true;
+        });
+
+        // Filter Fee Receipt Book
+        this.vm.filteredFeeReceiptBookList = this.vm.feeReceiptBookList.filter((feeReceiptBook) => {
+            return this.vm.feeReceiptList.find(feeReceipt => {
+                return feeReceipt.parentFeeReceiptBook == feeReceiptBook.id;
+            }) != undefined;
+        });
+        this.vm.filteredFeeReceiptBookList.forEach((feeReceiptBook) => {
+            feeReceiptBook.selected = true;
         });
 
     }

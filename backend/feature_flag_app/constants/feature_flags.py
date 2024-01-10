@@ -1,0 +1,1 @@
+SCHOOL_WEBSITE_FEATURE_FLAG = 'School Website'

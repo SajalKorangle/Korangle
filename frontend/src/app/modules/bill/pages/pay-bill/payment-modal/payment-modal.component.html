@@ -1,0 +1,92 @@
+<!-- Starts :- This section will not be shown when user is waiting on api response -->
+<ng-container *ngIf="!isLoading">
+
+    <!-- Starts :- Displaying Dialog Header -->
+    <h4>
+        Select Mode of Payment
+    </h4>
+    <!-- Ends :- Displaying Dialog Header -->
+
+    <hr style="background-color: black;" />
+
+    <!-- Starts :- User will select mode of payment from below -->
+    <div>
+        <mat-form-field>
+            <mat-select placeholder="Select" [(value)]="selectedModeOfPayment">
+                <mat-option *ngFor="let modeOfPayment of modeOfPaymentList" [value]="modeOfPayment">
+                    {{modeOfPayment.name}} ({{modeOfPayment.parentPaymentGatewayInstance.name}})
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <!-- Ends :- User will select mode of payment from below -->
+
+    <!-- Starts :- Displaying Bill Amount -->
+    <div class="row">
+        <div class="col-md-6">
+            Amount :-
+        </div>
+        <div class="col-md-6">
+            {{ bill.amount }}
+        </div>
+    </div>
+    <!-- Ends :- Displaying Bill Amount -->
+
+    <!-- Starts :- Displaying Platform Charges -->
+    <div class="row">
+        <div class="col-md-6">
+            Platform Charges :-
+        </div>
+        <div class="col-md-6">
+            {{ getPlatformCharges() }}
+        </div>
+    </div>
+    <!-- Ends :- Displaying Platform Charges -->
+
+    <div style="border-bottom: 1px solid#BFBFBF;">
+    </div>
+
+    <!-- Starts :- Displaying Final Amount that needs to be paid by School -->
+    <div class="row">
+        <div class="col-md-6">
+            Total Amount :-
+        </div>
+        <div class="col-md-6">
+            {{ getTotalAmount() }}
+        </div>
+    </div>
+    <!-- Ends :- Displaying Final Amount that needs to be paid by School -->
+
+    <!-- Starts :- User will put down his email address here -->
+    <div style="margin-top: 22px;">
+        <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input required matInput [(ngModel)]="email" [pattern]="validatorRegex.email"
+                [value]="email">
+        </mat-form-field>
+    </div>
+    <!-- User Email Input Ends -->
+
+    <hr style="background-color: black;" />
+
+    <!-- Starts :- User will click on this button for initiating payment -->
+    <div  mat-dialog-actions>
+        <button
+            type="submit"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="padding: 3px 8px"
+            (click)="payBill()"
+        >
+            Pay
+        </button>
+    </div>
+    <!-- Ends :- User will click on this button for initiating payment -->
+
+</ng-container>
+<!-- Ends :- This section will not be shown when user is waiting on api response -->
+
+<!-- START: Loader -->
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- END: Loader -->

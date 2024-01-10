@@ -30,6 +30,10 @@ class SubjectSecond(models.Model):
     def __str__(self):
         return self.name
 
+    class Permissions(BasePermission):
+        RelationsToSchool = []
+        RelationsToStudent = []
+
     class Meta:
         db_table = 'subject_second'
         ordering = ['name']

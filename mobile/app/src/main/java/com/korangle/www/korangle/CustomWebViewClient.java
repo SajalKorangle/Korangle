@@ -13,6 +13,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,7 +26,7 @@ import java.util.Map;
 public class CustomWebViewClient extends WebViewClient {
 
     MainActivity mainActivity;
-
+    final int UPI_PAYMENT = 0;
     CustomWebViewClient(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
@@ -93,6 +94,22 @@ public class CustomWebViewClient extends WebViewClient {
             Intent intent = new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse(url));
             mainActivity.startActivity(intent);
+            return true;
+        }
+        if(url.startsWith(mainActivity.UPI_PREFIX)) {
+            Uri upi = Uri.parse(url);
+            Intent upiPayIntent = new Intent(Intent.ACTION_VIEW);
+            upiPayIntent.setData(upi);
+
+            // will always show a dialog to user to choose an app
+            Intent chooser = Intent.createChooser(upiPayIntent, "Pay with");
+
+            // check if intent resolves
+            if(null != chooser.resolveActivity(wv.getContext().getPackageManager())) {
+                wv.getContext().startActivity(chooser);
+            } else {
+                Toast.makeText(wv.getContext(),"No UPI app found, please install one to continue",Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
         if ( url.contains(".pdf")){

@@ -8,13 +8,13 @@
                 <div class="col-xs-6">
                     From:
                     <span style="font-weight: 800; font-size: 16px">
-                        Session {{ getSessionName(user.activeSchool.currentSessionDbId) }}
+                        {{ fromSessionName }}
                     </span>
                 </div>
                 <div class="col-xs-6">
                     To:
                     <span style="font-weight: 800; font-size: 16px">
-                        Session {{ getSessionName(user.activeSchool.currentSessionDbId + 1) }}
+                        {{ toSessionName }}
                     </span>
                 </div>
             </div>
@@ -130,14 +130,14 @@
                 <div class="col-xs-6">
                     From:
                     <span style="font-weight: 800; font-size: 16px">
-                        Session {{ getSessionName(user.activeSchool.currentSessionDbId) }} </span
-                    >, {{ fromSelectedClass.name }}, {{ fromSelectedSection.name }}
+                        {{ fromSessionName }}
+                    </span>, {{ fromSelectedClass.name }}, {{ fromSelectedSection.name }}
                 </div>
                 <div class="col-xs-6">
                     To:
                     <span style="font-weight: 800; font-size: 16px">
-                        Session {{ getSessionName(user.activeSchool.currentSessionDbId + 1) }} </span
-                    >, {{ toSelectedClass.name }}, {{ toSelectedSection.name }}
+                        {{ toSessionName }}
+                    </span>, {{ toSelectedClass.name }}, {{ toSelectedSection.name }}
                 </div>
             </div>
 

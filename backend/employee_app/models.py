@@ -78,7 +78,7 @@ class Employee(models.Model):
     epfAccountNumber = models.TextField(null=True)
 
     # Pan No.
-    panNumber = models.TextField(null=True)
+    panNumber = models.TextField(null=True, blank=True)
 
     # Remark
     remark = models.TextField(null=True)
@@ -121,11 +121,21 @@ class EmployeeSessionDetail(models.Model):
         unique_together = ('parentEmployee', 'parentSession')
 
 
+class EmployeePermissionManager(models.Manager):
+
+    def get_queryset(self):
+        return super().get_queryset()\
+            .exclude(parentTask__parentFeatureFlag__enabled=False)\
+            .exclude(parentTask__parentModule__parentFeatureFlag__enabled=False)
+
+
 class EmployeePermission(models.Model):
 
     parentTask = models.ForeignKey(Task, on_delete=models.PROTECT, null=False, verbose_name='parentTask', default=0)
     parentEmployee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=False, verbose_name='parentEmployee', default=0)
     configJSON = models.TextField(default="{}")
+
+    objects = EmployeePermissionManager()
 
     def __str__(self):
         return self.parentEmployee.parentSchool.name + ' -- ' + self.parentEmployee.name + ' -- ' + str(self.parentTask)

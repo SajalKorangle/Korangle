@@ -1,0 +1,22 @@
+/* Starts: header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #C4C4C4;   /* Light Gray */
+}
+/* Ends: header */
+
+.title {
+    font-weight: 500;
+}
+
+.close-btn {
+    color: red;
+    cursor: pointer;
+}
+
+.red {
+    background-color: red;
+}

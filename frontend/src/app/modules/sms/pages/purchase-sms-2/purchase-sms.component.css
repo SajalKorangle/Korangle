@@ -1,0 +1,76 @@
+mat-slider {
+    width: 15vw;
+    transform: scale(2);
+}
+Result Skip Results Iframe
+EDIT ON
+.range-wrap {
+  position: relative;
+  margin: 0 auto 3rem;
+}
+
+@media (min-width: 992px) {
+    .card-content {
+        max-height: 88vh;
+    }
+}
+
+.range {
+  width: 30vw;
+  min-width: 280px;
+}
+
+.bubble {
+  background: #4CA750;
+  color: white;
+  padding: 4px 12px;
+  position: absolute;
+  border-radius: 4px;
+  transform: translateX(-50%);
+}
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #4CA750;
+  top: -1px;
+}
+
+body {
+  margin: 2rem;
+}
+
+.selectedMobile {
+  border: 3px solid #4CA750;
+  box-sizing: border-box;
+  border-radius: 6px;
+  padding: 2vh; 
+  font-size: 18px;
+  margin-right: 1vw; 
+  margin-left: 1vw;
+  margin-bottom: 1vw; 
+  cursor: pointer; 
+  width: 230px;
+  text-align: center;
+}
+
+.unselectedMobile{
+  border: 2px dashed #ACACAC;
+  box-sizing: border-box;
+  border-radius: 6px;
+  padding: 2vh; 
+  font-size: 18px;
+  margin-right: 1vw; 
+  margin-left: 1vw;
+  margin-bottom: 1vw; 
+  cursor: pointer; 
+  width: 230px;
+  text-align: center;
+}
+
+.flex-row{
+    display: flex;
+    justify-content: space-between;
+}

@@ -50,9 +50,16 @@ export class PaymentResponseDialogComponent implements OnInit, OnDestroy {
         this.isLoading = false;
     }
 
-
     isTransactionSuccessful() {
         return this.backendData.order.status == STATUS_CHOICES[1];
+    }
+
+    isTransactionFailed() {
+        return this.backendData.order.status == STATUS_CHOICES[2];
+    }
+
+    isTransactionPending() {
+        return this.backendData.order.status != STATUS_CHOICES[1] && this.backendData.order.status != STATUS_CHOICES[2];
     }
 
 }

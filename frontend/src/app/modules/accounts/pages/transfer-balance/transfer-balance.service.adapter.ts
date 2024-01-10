@@ -29,13 +29,13 @@ export class TransferBalanceServiceAdapter {
         };
 
         Promise.all([
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 0
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 0
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, accounts_data), // 1
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, current_session_accounts_data), // 2
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, next_session_accounts_data), //3
         ]).then(value => {
             this.vm.currentSession = value[0].find(session => session.id == this.vm.user.activeSchool.currentSessionDbId);
-            this.vm.nextSession = value[0].find(session => session.id == (this.vm.user.activeSchool.currentSessionDbId + 1));
+            this.vm.nextSession = value[0].find(session => session.orderNumber == (this.vm.currentSession.orderNumber + 1));
             this.vm.selectedSession = this.vm.currentSession;
             this.vm.accountList = value[1];
             this.populateNextSessionAccountSessionList(value[3]);
@@ -141,7 +141,7 @@ export class TransferBalanceServiceAdapter {
                         parentAccount: element.parentAccount,
                         parentGroup: element.parentGroup,
                         parentHead: element.parentHead,
-                        parentSession: this.vm.user.activeSchool.currentSessionDbId + 1,
+                        parentSession: this.vm.nextSession.id,
                         openingBalance: 0,
                     };
                     if (element.type == 'ACCOUNT') {

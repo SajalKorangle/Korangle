@@ -2,6 +2,7 @@
 import { SetSchoolFeesComponent } from './set-school-fees.component';
 import { CommonFunctions } from "../../../../classes/common-functions";
 import { SchoolFeeRule } from "../../../../services/modules/fees/models/school-fee-rule";
+import { INSTALLMENT_LIST } from '@modules/fees/classes/constants';
 
 export class SetSchoolFeesServiceAdapter {
 
@@ -39,16 +40,6 @@ export class SetSchoolFeesServiceAdapter {
             'parentSession': sessionId,
         };
 
-        let request_class_filter_fee_data = {
-            'parentSchoolFeeRule__parentFeeType__parentSchool': schoolId,
-            'parentSchoolFeeRule__parentSession': sessionId,
-        };
-
-        let request_bus_stop_filter_fee_data = {
-            'parentSchoolFeeRule__parentFeeType__parentSchool': schoolId,
-            'parentSchoolFeeRule__parentSession': sessionId,
-        };
-
         let request_student_fee_data = {
             'parentSchoolFeeRule__parentFeeType__parentSchool': schoolId,
             'parentSchoolFeeRule__parentSession': sessionId,
@@ -77,17 +68,40 @@ export class SetSchoolFeesServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, request_fee_type_data), // 0
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 1
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),   // 2
-            this.vm.vehicleService.getBusStopList(request_bus_stop_data, this.vm.user.jwt), // 3
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeType'}, {filter: request_fee_type_data}), // 0
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 1
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 2
+            this.vm.genericService.getObjectList({school_app: 'BusStop'}, {filter: request_bus_stop_data}), // 3
             this.vm.studentService.getStudentFullProfileList(student_full_profile_request_data, this.vm.user.jwt),  // 4
-            this.vm.feeService.getObjectList(this.vm.feeService.school_fee_rules, request_school_fee_rule_data),  // 5
-            this.vm.feeService.getObjectList(this.vm.feeService.class_filter_fees, request_class_filter_fee_data),    // 6
-            this.vm.feeService.getObjectList(this.vm.feeService.bus_stop_filter_fees, request_bus_stop_filter_fee_data),  // 7
-            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, request_student_fee_data),  // 8
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, request_sub_fee_receipt_data),  // 9
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, request_sub_discount_data),    // 10
+            this.vm.genericService.getObjectList(
+                {fees_third_app: 'SchoolFeeRule'},
+                {
+                    filter: request_school_fee_rule_data,
+                    order_by: ['ruleNumber'],
+                    child_query: {
+                        classfilterfee: {
+                            order_by: ['parentClass__orderNumber', 'parentDivision__orderNumber']
+                        },
+                        busstopfilterfee: {
+                            order_by: ['parentBusStop_id']
+                        },
+                        customfilterfee: {
+                            order_by: ['parentStudentParameter_id']
+                        }
+                    }
+                }
+            ), // 5
+            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, request_student_fee_data),  // 6
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, request_sub_fee_receipt_data),  // 7
+            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, request_sub_discount_data),    // 8
+            this.vm.genericService.getObjectList(
+                {student_app: 'StudentParameter'},
+                {filter: {parentSchool: schoolId, parameterType: 'FILTER'}}
+            ), // 9
+            this.vm.genericService.getObjectList(
+                {student_app: 'StudentParameterValue'},
+                {filter: {parentStudentParameter__parentSchool: schoolId, parentStudentParameter__parameterType: 'FILTER'}},
+            ), // 10
             this.vm.feeService.getObjectList(this.vm.feeService.fee_settings, fee_settings_request),    // 11
         ]).then(value => {
 
@@ -98,16 +112,23 @@ export class SetSchoolFeesServiceAdapter {
             this.vm.studentList = value[4].filter(student => {
                 return student.parentTransferCertificate == null;
             });
-
-            this.vm.schoolFeeRuleList = value[5].sort((a, b) => {
-                return a.ruleNumber - b.ruleNumber;
+            this.vm.schoolFeeRuleList = value[5];
+            this.vm.schoolFeeRuleList.forEach(schoolFeeRule => {
+                schoolFeeRule.customfilterfee.forEach(item => {
+                    item.selectedFilterValues = JSON.parse(item.selectedFilterValues);
+                });
             });
 
-            this.vm.classFilterFeeList = value[6];
-            this.vm.busStopFilterFeeList = value[7];
-            this.vm.studentFeeList = value[8];
-            this.vm.subFeeReceiptList = value[9];
-            this.vm.subDiscountList = value[10];
+            this.vm.studentFeeList = value[6];
+            this.vm.subFeeReceiptList = value[7];
+            this.vm.subDiscountList = value[8];
+
+            this.vm.newCustomFilterFeeList = value[9].map( (studentParameter) => ({
+                ...studentParameter,
+                filterValues: JSON.parse(studentParameter.filterValues).map((x2) => ({ value: x2, selected: false })),
+            }));
+            this.vm.studentParameterValueList = value[10];
+
             if (value[11].length == 1) { this.vm.lockFees = value[11][0].sessionLocked; }
 
             this.vm.isLoading = false;
@@ -140,14 +161,14 @@ export class SetSchoolFeesServiceAdapter {
         }
 
         if (!this.vm.newSchoolFeeRule.name || this.vm.newSchoolFeeRule.name == '') {
-            alert('Rule Name should be populated');
+            alert('Group Name should be populated');
             return;
         }
 
         if (this.vm.schoolFeeRuleList.filter(schoolFeeRule => {
             return schoolFeeRule.parentFeeType == this.vm.selectedFeeType.id;
         }).map(a => a.name).includes(this.vm.newSchoolFeeRule.name)) {
-            alert('Rule Name already exists');
+            alert('Group Name already exists');
             return;
         }
         // -------------------- Confirming the number of students affected starts -----------------------
@@ -161,6 +182,49 @@ export class SetSchoolFeesServiceAdapter {
         let school_fee_rule_data = CommonFunctions.getInstance().copyObject(this.vm.newSchoolFeeRule);
 
         school_fee_rule_data['parentFeeType'] = this.vm.selectedFeeType.id;
+
+        // Starts :- Validate School Fee Rule Data
+        let invalid = false;
+        INSTALLMENT_LIST.every(month => {
+
+            // Starts :- Last Date should only be present when amount is present.
+            // Late Fees should only be present when last date is present.
+            // Maximum Late Fees should only be present when late fees is present.
+            if (
+                (school_fee_rule_data[month + 'LastDate'] && !school_fee_rule_data[month + 'Amount']) ||
+                (school_fee_rule_data[month + 'LateFee'] && !school_fee_rule_data[month + 'LastDate']) ||
+                (school_fee_rule_data[month + 'MaximumLateFee'] && !school_fee_rule_data[month + 'LateFee'])
+            ) {
+                invalid = true;
+                return false;
+            }
+            // Ends :- Last Date should only be present when amount is present.
+            // Late Fees should only be present when last date is present.
+            // Maximum Late Fees should only be present when late fees is present.
+
+            // Starts :- No Installment other than april should be present when is annually is true.
+            if (
+                school_fee_rule_data.isAnnually &&
+                month != 'april' &&
+                (
+                    school_fee_rule_data[month + 'Amount'] ||
+                    school_fee_rule_data[month + 'LastDate'] ||
+                    school_fee_rule_data[month + 'LateFee'] ||
+                    school_fee_rule_data[month + 'MaximumLateFee']
+                )
+            ) {
+                invalid = true;
+                return false;
+            }
+            // Ends :- No Installment other than april should be present when is annually is true.
+
+            return true;
+        });
+        if (invalid) {
+            alert('Invalid Data!!!');
+            return;
+        }
+        // Ends :- Validate School Fee Rule Data
 
         let class_filter_fee_list = [];
         if (this.vm.newSchoolFeeRule.isClassFilter) {
@@ -176,6 +240,19 @@ export class SetSchoolFeesServiceAdapter {
             });
         }
 
+        let custom_filter_fee_list = [];
+        this.vm.newCustomFilterFeeList.forEach(newCustomFilterFee => {
+            let selectedFilterValues = newCustomFilterFee.filterValues.filter(filterValue => {
+                return filterValue.selected;
+            }).map(x => x.value);
+            if (selectedFilterValues.length > 0) {
+                custom_filter_fee_list.push({
+                    parentStudentParameter: newCustomFilterFee.id,
+                    selectedFilterValues: JSON.stringify(selectedFilterValues),
+                });
+            }
+        });
+
         let student_fee_list = [];
 
         this.vm.getExpectedStudentList().forEach(student => {
@@ -185,7 +262,6 @@ export class SetSchoolFeesServiceAdapter {
                 'parentFeeType': school_fee_rule_data['parentFeeType'],
                 'parentSession': school_fee_rule_data['parentSession'],
                 'isAnnually': school_fee_rule_data['isAnnually'],
-                'cleared': false,
             };
             this.vm.installmentList.forEach(installment => {
                 // --- Starts : not updating other months if isannually is true --
@@ -197,7 +273,6 @@ export class SetSchoolFeesServiceAdapter {
                 tempObject[installment + 'LastDate'] = school_fee_rule_data[installment + 'LastDate'];
                 tempObject[installment + 'LateFee'] = school_fee_rule_data[installment + 'LateFee'];
                 tempObject[installment + 'MaximumLateFee'] = school_fee_rule_data[installment + 'MaximumLateFee'];
-                tempObject[installment + 'ClearanceDate'] = null;
             });
             student_fee_list.push(tempObject);
         });
@@ -218,6 +293,11 @@ export class SetSchoolFeesServiceAdapter {
             });
             service_list.push(this.vm.feeService.createObjectList(this.vm.feeService.bus_stop_filter_fees, bus_stop_filter_fee_list));
 
+            custom_filter_fee_list.forEach(custom_filter_fee => {
+                custom_filter_fee['parentSchoolFeeRule'] = value.id;
+            });
+            service_list.push(this.vm.genericService.createObjectList({fees_third_app: 'CustomFilterFee'}, custom_filter_fee_list));
+
             student_fee_list.forEach(student_fee => {
                 student_fee['parentSchoolFeeRule'] = value.id;
             });
@@ -225,12 +305,8 @@ export class SetSchoolFeesServiceAdapter {
 
             Promise.all(service_list).then(value2 => {
 
-                console.log(value2);
-
-                this.addToSchoolFeeRuleList(value);
-                this.addToClassFilterFeeList(value2[0]);
-                this.addToBusStopFilterFeeList(value2[1]);
-                this.addToStudentFeeList(value2[2]);
+                this.addToSchoolFeeRuleList(value, value2[0], value2[1], value2[2]);
+                this.addToStudentFeeList(value2[3]);
 
                 this.vm.initializeNewSchoolFeeRule();
 
@@ -242,19 +318,17 @@ export class SetSchoolFeesServiceAdapter {
 
     }
 
-    addToSchoolFeeRuleList(schoolFeeRule: any): void {
+    addToSchoolFeeRuleList(schoolFeeRule: any, classfilterfee: any, busstopfilterfee: any, customfilterfee: any): void {
         this.vm.schoolFeeRuleList.push(schoolFeeRule);
+        schoolFeeRule['classfilterfee'] = classfilterfee;
+        schoolFeeRule['busstopfilterfee'] = busstopfilterfee.sort((a, b) => { return a.parentBusStop - b.parentBusStop; });
+        schoolFeeRule['customfilterfee'] = customfilterfee.sort((a, b) => { return a.parentStudentParameter - b.parentStudentParameter; });
+        schoolFeeRule.customfilterfee.forEach(item => {
+            item.selectedFilterValues = JSON.parse(item.selectedFilterValues);
+        });
         this.vm.schoolFeeRuleList = this.vm.schoolFeeRuleList.sort((a, b) => {
             return a.ruleNumber - b.ruleNumber;
         });
-    }
-
-    addToClassFilterFeeList(classFilterFeeList: any): void {
-        this.vm.classFilterFeeList = this.vm.classFilterFeeList.concat(classFilterFeeList);
-    }
-
-    addToBusStopFilterFeeList(busStopFilterFeeList: any): void {
-        this.vm.busStopFilterFeeList = this.vm.busStopFilterFeeList.concat(busStopFilterFeeList);
     }
 
     addToStudentFeeList(studentFeeList: any): void {
@@ -268,64 +342,17 @@ export class SetSchoolFeesServiceAdapter {
             id: schoolFeeRule.id,
         };
 
-        /*let class_filter_fee_list;
-        if (schoolFeeRule.isClassFilter) {
-            class_filter_fee_list = {
-                id: this.vm.classFilterFeeList.filter(class_filter_fee => {
-                    return class_filter_fee.parentSchoolFeeRule == schoolFeeRule.id;
-                }).map(a => a.id).join(','),
-            };
-        }
-
-        let bus_stop_filter_fee_list;
-        if (schoolFeeRule.isBusStopFilter) {
-            bus_stop_filter_fee_list = {
-                id: this.vm.busStopFilterFeeList.filter(bus_stop_filter_fee => {
-                    return bus_stop_filter_fee.parentSchoolFeeRule == schoolFeeRule.id;
-                }).map(a => a.id).join(','),
-            };
-        }
-
-        let student_fee_list = {
-            id: this.vm.studentFeeList.filter(studentFee => {
-                return studentFee.parentSchoolFeeRule == schoolFeeRule.id;
-            }).map(a => a.id).join(','),
-        };*/
-
         let service_list = [];
 
         service_list.push(this.vm.feeService.deleteObject(this.vm.feeService.school_fee_rules, school_fee_rule_data));
-        /*if (class_filter_fee_list) {
-            service_list.push(this.vm.feeService.deleteList(this.vm.feeService.class_filter_fees, class_filter_fee_list));
-        }
-        if (bus_stop_filter_fee_list) {
-            service_list.push(this.vm.feeService.deleteList(this.vm.feeService.bus_stop_filter_fees, bus_stop_filter_fee_list));
-        }
-        if (student_fee_list['id'] != '') {
-            service_list.push(this.vm.feeService.deleteList(this.vm.feeService.student_fees, student_fee_list));
-        }*/
 
         this.vm.isLoading = true;
 
         Promise.all(service_list).then(value => {
 
-            console.log(value);
             this.deleteFromSchoolFeeRuleList(schoolFeeRule.id);
 
-            this.deleteFromClassFilterFeeListBySchoolFeeRuleId(schoolFeeRule.id);
-            this.deleteFromBusStopFilterFeeListBySchoolFeeRuleId(schoolFeeRule.id);
             this.deleteFromStudentFeeListBySchoolFeeRuleId(schoolFeeRule.id);
-            /*if (class_filter_fee_list) {
-                this.deleteFromClassFilterFeeListBySchoolFeeRuleId(schoolFeeRule.id);
-            }
-
-            if (bus_stop_filter_fee_list) {
-                this.deleteFromBusStopFilterFeeListBySchoolFeeRuleId(schoolFeeRule.id);
-            }
-
-            if (student_fee_list['id'] != '') {
-                this.deleteFromStudentFeeListBySchoolFeeRuleId(schoolFeeRule.id);
-            }*/
 
             this.vm.isLoading = false;
 
@@ -338,18 +365,6 @@ export class SetSchoolFeesServiceAdapter {
     deleteFromSchoolFeeRuleList(schoolFeeRuleId: any): void {
         this.vm.schoolFeeRuleList = this.vm.schoolFeeRuleList.filter(item => {
             return item.id != schoolFeeRuleId;
-        });
-    }
-
-    deleteFromClassFilterFeeListBySchoolFeeRuleId(schoolFeeRuleId: any): void {
-        this.vm.classFilterFeeList = this.vm.classFilterFeeList.filter(item => {
-            return item.parentSchoolFeeRule != schoolFeeRuleId;
-        });
-    }
-
-    deleteFromBusStopFilterFeeListBySchoolFeeRuleId(schoolFeeRuleId: any): void {
-        this.vm.busStopFilterFeeList = this.vm.busStopFilterFeeList.filter(item => {
-            return item.parentSchoolFeeRule != schoolFeeRuleId;
         });
     }
 

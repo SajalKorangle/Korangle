@@ -93,6 +93,14 @@ const routes: Routes = [
                 loadChildren: 'app/modules/salary/salary.module#SalaryModule',
             },
             {
+                path: 'salary2',
+                loadChildren: 'app/modules/salary2/salary2.module#Salary2Module',
+            },
+            {
+                path: 'leaves',
+                loadChildren: 'app/modules/leaves/leaves.module#LeavesModule',
+            },
+            {
                 path: 'expenses',
                 loadChildren: 'app/modules/expenses/expense.module#ExpenseModule',
             },
@@ -122,6 +130,10 @@ const routes: Routes = [
                 loadChildren: 'app/modules/class/class.module#ClassModule',
             },
             {
+                path: 'library',
+                loadChildren: 'app/modules/library/library.module#LibraryModule',
+            },
+            {
                 path: 'school',
                 loadChildren: 'app/modules/school/school.module#SchoolModule',
             },
@@ -144,7 +156,15 @@ const routes: Routes = [
             {
                 path: 'deprecated',
                 loadChildren: 'app/modules/deprecated/deprecated.module#DeprecatedModule',
-            }
+            },
+            {
+                path: 'website',
+                loadChildren: 'app/modules/website/website.module#WebsiteModule',
+            },
+            {
+                path: 'bill',
+                loadChildren: 'app/modules/bill/bill.module#BillModule',
+            },
         ]
     },
     // ----- Routes For inside User DashBoard Ends -------
@@ -155,6 +175,7 @@ const routes: Routes = [
         outlet: 'print',
         children: [
             { path: 'students', loadChildren: 'app/modules/students/student.module#StudentModule' },
+            { path: 'library', loadChildren: 'app/modules/library/library.module#LibraryModule'},
             { path: 'fees', loadChildren: 'app/modules/fees/fee.module#FeeModule' },
             { path: 'attendance', loadChildren: 'app/modules/attendance/attendance.module#AttendanceModule' },
             { path: 'employees', loadChildren: 'app/modules/employee/employee.module#EmployeeModule' },

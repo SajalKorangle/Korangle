@@ -63,6 +63,10 @@ export class DashBoardComponent implements OnInit {
         return '';
     }
 
+    getWarningStatement(): any {
+        return this.user.activeSchool.showPageHeaderWarning ? 'Your bill is due, please make the payment asap for uninterrupted services' : '';
+    }
+
     formatDate(date): any {
         var d = new Date(date),
             month = '' + (d.getMonth() + 1),

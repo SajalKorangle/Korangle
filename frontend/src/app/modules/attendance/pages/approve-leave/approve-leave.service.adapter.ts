@@ -11,7 +11,7 @@ export class ApproveLeaveServiceAdapter {
 
     initializeData() {
         this.vm.isLoading = true;
-        this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}).then((session) => {
+        this.vm.genericService.getObjectList({school_app: 'Session'}, {}).then((session) => {
             this.vm.sessionList = session;
             this.vm.selectedSession = this.vm.sessionList.find((item) => item.id == this.vm.user.activeSchool.currentSessionDbId);
             this.vm.serviceAdapter.getEmployeeLeaveDetails();
@@ -45,7 +45,6 @@ export class ApproveLeaveServiceAdapter {
                 };
                 this.vm.attenendanceService.getEmployeeAppliedLeaveList(data, this.vm.user.jwt).then(
                     (employeeAppliedLeaveList) => {
-                        console.log(employeeAppliedLeaveList);
                         this.prepareEmployeeLeaveDetails(employeeAppliedLeaveList);
                         this.vm.isLoading = false;
                     },

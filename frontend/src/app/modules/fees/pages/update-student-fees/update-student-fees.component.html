@@ -77,22 +77,12 @@
                                         />
                                     </td>
                                     <td>
-                                        <day-date-old
-                                            *ngIf="!disableNewStudentFeeMonthLastDate(installment)"
-                                            [initialValue]="selectedStudentFee[installment + 'LastDate']"
-                                            [acceptNull]="true"
+                                        <day-date
                                             [formattedDateOutput]="true"
-                                            (onDateSelected)="newStudentFee[installment + 'LastDate'] = $event"
-                                        >
-                                        </day-date-old>
-                                        <day-date-old
-                                            *ngIf="disableNewStudentFeeMonthLastDate(installment)"
-                                            [acceptNull]="true"
                                             [initialValue]="newStudentFee[installment + 'LastDate']"
-                                            [disableDatePicker]="true"
-                                        >
-                                        </day-date-old>
-                                    </td>
+                                            (onDateSelected)="newStudentFee[installment + 'LastDate'] = $event">
+                                        </day-date>
+                                     </td>
                                     <td>
                                         <input
                                             type="number"
@@ -112,14 +102,14 @@
                                     <td>
                                         <input
                                             type="number"
-                                            *ngIf="disableNewStudentFeeMonthLateFee(installment)"
+                                            *ngIf="disableNewStudentFeeMonthMaximumLateFee(installment)"
                                             [ngModel]="newStudentFee[installment + 'MaximumLateFee']"
                                             [disabled]="true"
                                             (keypress)="policeAmountInput($event)"
                                         />
                                         <input
                                             type="number"
-                                            *ngIf="!disableNewStudentFeeMonthLateFee(installment)"
+                                            *ngIf="!disableNewStudentFeeMonthMaximumLateFee(installment)"
                                             [ngModel]="selectedStudentFee[installment + 'MaximumLateFee']"
                                             (ngModelChange)="newStudentFee[installment + 'MaximumLateFee'] = $event"
                                             (keypress)="policeAmountInput($event)"
@@ -177,21 +167,12 @@
                                     />
                                 </td>
                                 <td>
-                                    <day-date-old
-                                        *ngIf="!disableNewStudentFeeMonthLastDate('april')"
-                                        [initialValue]="selectedStudentFee['aprilLastDate']"
-                                        [acceptNull]="true"
+                                    <day-date
                                         [formattedDateOutput]="true"
-                                        (onDateSelected)="newStudentFee['aprilLastDate'] = $event"
-                                    >
-                                    </day-date-old>
-                                    <day-date-old
-                                        *ngIf="disableNewStudentFeeMonthLastDate('april')"
-                                        [acceptNull]="true"
+                                        [placeHolder]="'Start Date'"
                                         [initialValue]="newStudentFee['aprilLastDate']"
-                                        [disableDatePicker]="true"
-                                    >
-                                    </day-date-old>
+                                        (onDateSelected)="newStudentFee['aprilLastDate'] = $event">
+                                    </day-date>
                                 </td>
                                 <td>
                                     <input
@@ -212,14 +193,14 @@
                                 <td>
                                     <input
                                         type="number"
-                                        *ngIf="disableNewStudentFeeMonthLateFee('april')"
+                                        *ngIf="disableNewStudentFeeMonthMaximumLateFee('april')"
                                         [ngModel]="newStudentFee['aprilMaximumLateFee']"
                                         [disabled]="true"
                                         (keypress)="policeAmountInput($event)"
                                     />
                                     <input
                                         type="number"
-                                        *ngIf="!disableNewStudentFeeMonthLateFee('april')"
+                                        *ngIf="!disableNewStudentFeeMonthMaximumLateFee('april')"
                                         [ngModel]="selectedStudentFee['aprilMaximumLateFee']"
                                         (ngModelChange)="newStudentFee['aprilMaximumLateFee'] = $event"
                                         (keypress)="policeAmountInput($event)"
@@ -288,6 +269,30 @@
                                         "
                                     >
                                         {{ i + 1 }}. {{ getBusStopName(busStopFilterFee.parentBusStop) }}<br />
+                                    </ng-container>
+                                    <br />
+                                </div>
+
+                                <!-- Custom Filter -->
+                                <div class="col-md-6" *ngIf="schoolFeeRule.customfilterfee.length > 0">
+                                    Custom Filters :-
+                                    <br/>
+                                    <ng-container
+                                        *ngFor="
+                                            let customFilterFee of schoolFeeRule.customfilterfee;
+                                            let i = index
+                                        "
+                                    >
+                                        {{ i + 1 }}. {{ getStudentParameterName(customFilterFee.parentStudentParameter) }}<br />
+                                            <ul class="custom-filter-values"
+                                            *ngFor="
+                                                let value of customFilterFee.selectedFilterValues;
+                                            "
+                                        >
+                                            <li>
+                                                {{ value }}
+                                            </li>
+                                        </ul>
                                     </ng-container>
                                     <br />
                                 </div>

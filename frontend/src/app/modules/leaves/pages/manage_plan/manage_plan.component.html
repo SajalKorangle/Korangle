@@ -1,0 +1,275 @@
+<div class="flexContainer" *ngIf="!isLoading">
+    <!-- starts :- Title bar -->
+    <div class="navBar" style="height: fit-content">
+        <div class="title">Leave Plans -</div>
+        <div *ngIf="isLeavePlanOpen" class="navBtn" (click)="resetComponent()">Go back</div>
+    </div>
+    <!-- ends :- Title bar -->
+
+    <!-- starts :- Create leave plan (and display the list of leave plans) -->
+    <div class="Row" style="flex-grow: 1; overflow-y: scroll" *ngIf="!isLeavePlanOpen">
+        <!-- starts :- list of leave plans -->
+        <mat-card *ngFor="let leavePlan of leavePlanList" style="margin-top: 10px">
+            <mat-card-content
+                ><span class="matCardContentModifiedFlex" (click)="setPlan(leavePlan)" style="cursor: pointer">
+                    <span>{{ leavePlan.leavePlanName }}</span> <span class="material-icons-outlined"> navigate_next </span>
+                </span></mat-card-content
+            >
+        </mat-card>
+        <mat-card *ngIf="!leavePlanList.length && !isAddNewOpen" style="margin-top: 10px">
+            <mat-card-content (click)="isAddNewOpen = true" style="cursor: pointer"
+                ><span class="matCardContentModifiedFlex">
+                    <span>No Leave Plan Available</span> <span class="material-icons-outlined"> navigate_next </span>
+                </span></mat-card-content
+            >
+        </mat-card>
+        <!-- ends :- list of leave plans -->
+
+        <!-- starts :- Create leave plan -->
+        <mat-card *ngIf="isAddNewOpen" style="margin-top: 10px">
+            <mat-card-content
+                ><span class="matCardContentAddNew">
+                    <span style="flex-grow: 1"
+                        ><input
+                            style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.25)"
+                            placeholder="Enter leave plan name"
+                            [(ngModel)]="leavePlanName"
+                        />
+                    </span>
+                    <span
+                        class="material-icons-outlined"
+                        style="width: fit; padding: 8px; cursor: pointer; color: green"
+                        (click)="serviceAdapter.savePlan({ leavePlanName: leavePlanName })"
+                        >check</span
+                    >
+                    <span class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: red" (click)="resetComponent()">clear</span>
+                </span></mat-card-content
+            >
+        </mat-card>
+        <div style="padding-top: 20px">
+            <button (click)="isAddNewOpen = true" class="contentButton" [disabled]="isAddNewOpen">
+                <span class="material-icons" style="font-size: large">add</span><span style="margin-left: 8px">Add Plan</span>
+            </button>
+        </div>
+        <!-- ends :- Create leave plan -->
+    </div>
+    <!-- ends :- Create / Update leave plan -->
+
+    <!-- starts :- Update / delete leave plan-->
+    <div class="Row" style="flex-grow: 1" *ngIf="isLeavePlanOpen">
+        <mat-card style="margin-top: 10px" style="height: 100%"
+            ><mat-card-content style="height: 100%">
+                <div style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-evenly">
+                    <!-- starts :- update leave plan name / delete leave plan -->
+                    <div class="contentRow" style="justify-content: space-between">
+                        <div class="contentColItem" style="flex-grow: 1">
+                            <div class="contentRowItem" style="justify-content: flex-start">
+                                <div class="contentTitle">Plan Name</div>
+                                <div style="margin-left: 10px; flex-grow: 1; max-width: 500px">
+                                    <input class="contentInput" placeholder="Enter plan name" [(ngModel)]="currentLeavePlan.leavePlanName" />
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            style="width: fit-content; justify-content: center"
+                            class="contentColItem"
+                            (click)="serviceAdapter.handleDelete()"
+                            style="cursor: pointer"
+                        >
+                            <div class="contentRowItem" style="color: red">
+                                <div class="material-icons-outlined">delete_forever</div>
+                                <div class="responsiveText" style="text-decoration: underline; padding: 2px">Delete Plan</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ends :- update leave plan name / delete leave plan -->
+
+                    <!-- starts :- list of leave type currently in selected leave plan -->
+                    <div class="contentRow" style="height: 250px; overflow-y: auto">
+                        <div class="contentColItem" style="flex-grow: 1; justify-content: flex-start">
+                            <div class="contentRowItem" style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px">
+                                <span class="contentColItem" style="width: 30%"><span style="width: 100%; color: #fc9701">Name</span></span>
+                                <span class="contentColItem" style="width: 30%"><span style="width: 100%; color: #fc9701">Leave Type</span></span>
+                                <span class="contentColItem" style="width: 20%"><span style="width: 100%; color: #fc9701">Colour</span></span>
+                                <span class="contentColItem" style="width: 20%"></span>
+                            </div>
+                            <div
+                                class="contentRowItem"
+                                *ngFor="let LeaveTypeChoice of appliedLeaveTypeChoiceList"
+                                style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px"
+                            >
+                                <span class="contentColItem" style="width: 30%"
+                                    ><span style="width: 100%">{{ LeaveTypeChoice.leaveTypeName }}</span></span
+                                >
+                                <span class="contentColItem" style="width: 30%"
+                                    ><span style="width: 100%">{{ LeaveTypeChoice.leaveType }}</span></span
+                                >
+                                <span class="contentColItem" style="width: 20%">
+                                    <span
+                                        [ngStyle]="{ backgroundColor: LeaveTypeChoice.color }"
+                                        style="height: 25px; width: 25px; border-radius: 5px; border: 1px solid rgba(0, 0, 0, 0.25)"
+                                    ></span>
+                                </span>
+                                <span class="contentColItem material-icons" style="width: 20%">
+                                    <span
+                                        class="material-icons-outlined"
+                                        (click)="removeLeaveTypeChoice(LeaveTypeChoice)"
+                                        style="color: rgba(255, 0, 0, 0.5); cursor: pointer; width: fit-content"
+                                        >delete_forever</span
+                                    >
+                                </span>
+                            </div>
+                            <div
+                                class="contentRowItem"
+                                *ngIf="appliedLeaveTypeChoiceList.length === 0"
+                                style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px"
+                            >
+                                <span class="contentColItem" style="flex-grow: 1">No Leave Type Available Currently</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ends :- list of leave type currently in selected leave plan -->
+
+                    <!-- starts :- select and add/remove leave types from selected leave plan -->
+                    <div class="contentRow">
+                        <div class="contentColItem" style="width: 100%">
+                            <div *ngIf="!isSelectLeavePlanToLeaveTypeVisible" class="contentRowItem">
+                                <button class="contentButton" style="padding: 5px" (click)="enableAddPlanToLeaveType()">
+                                    <div class="contentColItem material-icons"><span class="contentRowItem"> add </span></div>
+                                    <div class="contentColItem"><span class="contentRowItem"> Add LeaveType </span></div>
+                                </button>
+                            </div>
+                            <div class="contentRowItem" style="width: 100%" *ngIf="isSelectLeavePlanToLeaveTypeVisible">
+                                <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 500px">
+                                    <mat-label>Select Leave Type</mat-label>
+                                    <mat-select [(ngModel)]="currentLeaveTypeChoiceList" multiple [disabled]="leaveTypeChoiceList.length === 0">
+                                        <mat-option *ngFor="let leaveTypeChoice of leaveTypeChoiceList" [value]="leaveTypeChoice"
+                                            >{{ leaveTypeChoice.leaveTypeName }} - {{ leaveTypeChoice.leaveType }}</mat-option
+                                        >
+                                    </mat-select>
+                                </mat-form-field>
+                                <span
+                                    class="material-icons-outlined"
+                                    style="width: fit; padding: 8px; cursor: pointer; color: green"
+                                    (click)="leaveTypeChoiceList.length !== 0 ? savePlanToLeaveType(currentLeaveTypeChoiceList) : 1"
+                                    >check</span
+                                >
+                                <span
+                                    class="material-icons-outlined"
+                                    style="width: fit; padding: 8px; cursor: pointer; color: red"
+                                    (click)="savePlanToLeaveType([])"
+                                    >clear</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ends :- select and add/remove leave types -->
+
+                    <!-- starts :- add / remove employees from selected plan -->
+
+                    <!-- starts :- selection field for employees -->
+                    <div class="contentRow">
+                        <div class="contentColItem" style="width: 100%">
+                            <div class="contentRowItem" style="width: 100%">
+                                <mat-form-field appearance="fill" style="flex-grow: 1; max-width: 500px">
+                                    <mat-label>Select Employee/s</mat-label>
+                                    <mat-select
+                                        (selectionChange)="updateEmployeeChoiceList()"
+                                        [(ngModel)]="currentEmployeeChoiceList"
+                                        multiple="true"
+                                        [disabled]="employeeChoiceList.length === 0"
+                                    >
+                                        <div style="width: 100%; padding: 5px; position: sticky; top: 0; z-index: 1; background: white">
+                                            <mat-form-field appearance="outline" style="width: 100%">
+                                                <mat-label>Search Employee</mat-label>
+                                                <input [(ngModel)]="filter" (keydown)="$event.stopPropagation()" (keyup)="updateEmployeeChoiceList()" matInput placeholder="Enter Employee Name" />
+                                            </mat-form-field>
+                                        </div>
+                                        <mat-option *ngFor="let employee of filteredEmployeeChoiceList" [value]="employee" [ngStyle]="{'display': getEmployeeOptionVisibility(employee)}">
+                                            {{ employee.name }}
+                                        </mat-option>
+                                        <mat-option value="null" style="display: none;" aria-disabled="true"></mat-option>
+                                        <div *ngIf="isSearchEmpty() && availableEmployeeChoiceList.length != 0" style="text-align: center; width: 100%; padding: 10px" id="noEmployeeMessage"> No Employee found. </div>
+                                        <div *ngIf="availableEmployeeChoiceList.length == 0" style="text-align: center; width: 100%; padding: 10px" id="noEmployeeMessage"> All Employees are assigned with a Leave Plan. </div>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!-- starts :- accept or reject the changes for employees. -->
+                                <span *ngIf="employeeChoiceList.length !== 0 && currentEmployeeChoiceList !== appliedEmployeeChoiceList"
+                                    class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: green"
+                                    (click)="addEmployee()"
+                                >
+                                    check
+                                </span>
+                                <span *ngIf="employeeChoiceList.length !== 0 && currentEmployeeChoiceList !== appliedEmployeeChoiceList"
+                                    class="material-icons-outlined" style="width: fit; padding: 8px; cursor: pointer; color: red"
+                                    (click)="currentEmployeeChoiceList = appliedEmployeeChoiceList; filter = ''; updateEmployeeChoiceList()"
+                                >
+                                    clear
+                                </span>
+                                <!-- ends :- accept or reject the changes for employees -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ends :- selection field for employees -->
+
+                    <!-- starts :- list of selected employees -->
+                    <div class="contentRow" style="flex-grow: 1; overflow-y: auto; height: 250px">
+                        <div class="contentColItem" style="flex-grow: 1; justify-content: flex-start">
+                            <div class="contentRowItem" style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px">
+                                <span class="contentColItem" style="width: 40%"
+                                    ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: #fc9701">Name</span></span
+                                >
+                                <span class="contentColItem" style="width: 20%"></span>
+                            </div>
+                            <div
+                                class="contentRowItem"
+                                *ngFor="let employee of appliedEmployeeChoiceList"
+                                style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px"
+                            >
+                                <span class="contentColItem" style="width: 40%"
+                                    ><span style="width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis">{{ employee.name }}</span></span
+                                >
+                                <span class="contentColItem material-icons" style="width: 20%">
+                                    <span
+                                        class="material-icons-outlined"
+                                        (click)="removeEmployee(employee)"
+                                        style="color: rgba(255, 0, 0, 0.5); cursor: pointer"
+                                        >delete_forever</span
+                                    >
+                                </span>
+                            </div>
+                            <div
+                                class="contentRowItem"
+                                *ngIf="appliedEmployeeChoiceList.length === 0"
+                                style="justify-content: flex-start; border-bottom: 1px solid rgba(0, 0, 0, 0.25); padding: 5px"
+                            >
+                                <span class="contentColItem" style="flex-grow: 1">No Employee/s associated to this leave plan</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ends :- list of selected employees -->
+
+                    <!-- ends :- add / remove employees -->
+
+                    <!-- starts :- Save leave plan -->
+                    <div class="contentRow">
+                        <div class="contentColItem" style="flex-grow: 1">
+                            <div class="contentRowItem" style="justify-content: flex-end">
+                                <button class="contentButton" (click)="serviceAdapter.savePlan(currentLeavePlan)">Save</button>
+                                <button class="contentButtonHollow" (click)="resetComponent()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ends :- Save leave plan -->
+                </div>
+            </mat-card-content></mat-card
+        >
+    </div>
+    <!-- ends :- Update / delete leave plan -->
+</div>
+
+<!-- starts :- spinner (to be displayed while data is loading) -->
+<ng-container *ngIf="isLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- ends :- spinner (to be displayed while data is loading) -->

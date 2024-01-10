@@ -35,8 +35,8 @@ export class ViewBalanceServiceAdapter {
 
         const value = await Promise.all([
             this.vm.accountsService.getObjectList(this.vm.accountsService.accounts, request_account_data),  // 0
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 1
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_data), // 2
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 1
+            this.vm.genericService.getObjectList({employee_app: 'Employee'}, {filter: employee_data}), // 2
             this.vm.accountsService.getObjectList(this.vm.accountsService.lock_accounts, lock_accounts_data),   // 3
             this.vm.accountsService.getObjectList(this.vm.accountsService.account_session, request_account_session_data), // 4
         ]);
@@ -228,7 +228,6 @@ export class ViewBalanceServiceAdapter {
                     tempData.accounts.push(temp_data);
                 }
             }
-            // console.log("type: ", ledgerAccountType);
             tempData.balance = lastAccountBalance;
             if (ledgerAccountType == 'DEBIT') {
                 lastAccountBalance = lastAccountBalance - ledgerAccountAmount;

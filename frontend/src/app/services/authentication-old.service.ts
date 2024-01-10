@@ -5,8 +5,6 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Constants } from '../classes/constants';
 import { environment } from '../../environments/environment';
 
-import { DataStorage } from '../classes/data-storage';
-
 import { checkTokenRevokedStatus } from '@services/revokedTokenHandling';
 
 @Injectable()
@@ -66,7 +64,7 @@ export class AuthenticationOldService {
             .toPromise()
             .then(
                 (response) => {
-                    //  Handling revoked rokens here
+                    //  Handling revoked tokens here
                     if ( checkTokenRevokedStatus(response)) {
                         return null;
                     }
@@ -83,8 +81,4 @@ export class AuthenticationOldService {
         return Promise.reject(error.message || error);
     }
 
-    private handleError(error: any): Promise<any> {
-        console.error('An error occurred', error); // for demo purposes only
-        return Promise.reject(error.message || error);
-    }
 }

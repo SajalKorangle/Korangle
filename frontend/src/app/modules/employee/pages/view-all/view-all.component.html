@@ -58,6 +58,10 @@
                     Qualification </mat-checkbox>
             </mat-option>
             <mat-option>
+                <mat-checkbox [(ngModel)]="columnFilter.showBankIFSCCode" (click)="$event.stopPropagation()">
+                    Bank IFSC Code </mat-checkbox>
+            </mat-option>
+            <mat-option>
                 <mat-checkbox [(ngModel)]="columnFilter.showCurrentPost" (click)="$event.stopPropagation()"> Post
                 </mat-checkbox>
             </mat-option>
@@ -243,6 +247,7 @@
                     <th [class.hidden]="!columnFilter.showAddress">Address</th>
                     <th [class.hidden]="!columnFilter.showBankName">Bank Name</th>
                     <th [class.hidden]="!columnFilter.showBankAccountNumber">Bank Acc. No.</th>
+                    <th [class.hidden]="!columnFilter.showBankIFSCCode">Bank IFSC Code</th>
                     <th [class.hidden]="!columnFilter.showEpfAccountNumber">EPF Acc. No.</th>
                     <th [class.hidden]="!columnFilter.showMonthlySalary">Monthly Salary</th>
                     <th [class.hidden]="!columnFilter.showPranNumber">PRAN Number</th>
@@ -288,6 +293,7 @@
                             <td [class.hidden]="!columnFilter.showAddress">{{employee.address}}</td>
                             <td [class.hidden]="!columnFilter.showBankName">{{employee.bankName}}</td>
                             <td [class.hidden]="!columnFilter.showBankAccountNumber">{{employee.bankAccountNumber}}</td>
+                            <td [class.hidden]="!columnFilter.showBankIFSCCode">{{employee.bankIfscCode}}</td>
                             <td [class.hidden]="!columnFilter.showEpfAccountNumber">{{employee.epfAccountNumber}}</td>
                             <td [class.hidden]="!columnFilter.showMonthlySalary">{{employee.monthlySalary}}</td>
                             <td [class.hidden]="!columnFilter.showPranNumber">{{employee.pranNumber}}</td>

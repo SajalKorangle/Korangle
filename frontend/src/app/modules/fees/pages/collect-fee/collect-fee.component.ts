@@ -10,9 +10,6 @@ import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-
 import { DiscountColumnFilter, INSTALLMENT_LIST, MODE_OF_PAYMENT_LIST, ReceiptColumnFilter } from '../../classes/constants';
 import { FeeType } from '../../../../services/modules/fees/models/fee-type';
 import { SchoolFeeRule } from '../../../../services/modules/fees/models/school-fee-rule';
-import { ClassService } from '../../../../services/modules/class/class.service';
-import { StudentService } from '../../../../services/modules/student/student.service';
-import { EmployeeService } from '../../../../services/modules/employee/employee.service';
 import { CommonFunctions } from '../../../../classes/common-functions';
 import { PrintService } from '../../../../print/print-service';
 import { PRINT_FULL_FEE_RECIEPT_LIST } from '../../print/print-routes.constants';
@@ -27,7 +24,6 @@ import { SmsService } from '@services/modules/sms/sms.service';
 import { SmsOldService } from '@services/modules/sms/sms-old.service';
 import { NotificationService } from '../../../../services/modules/notification/notification.service';
 import { UserService } from '@services/modules/user/user.service';
-import { TCService } from '@services/modules/tc/tc.service';
 import { MessageService } from '@services/message-service';
 import { GenericService } from '@services/generic/generic-service';
 
@@ -37,8 +33,17 @@ declare const $: any;
     selector: 'collect-fee',
     templateUrl: './collect-fee.component.html',
     styleUrls: ['./collect-fee.component.css'],
-    providers: [GenericService, FeeService, StudentService, VehicleOldService, ClassService, EmployeeService,
-        SchoolService, AccountsService, SmsService, NotificationService, SmsOldService, UserService, TCService],
+    providers: [
+        GenericService,
+        FeeService,
+        VehicleOldService,
+        SchoolService,
+        AccountsService,
+        SmsService,
+        NotificationService,
+        SmsOldService,
+        UserService,
+    ],
 })
 export class CollectFeeComponent implements OnInit {
     user;
@@ -61,6 +66,7 @@ export class CollectFeeComponent implements OnInit {
     busStopList = [];
     employeeList = [];
     boardList = [];
+    feeReceiptBookList = [];
 
     //accounting
     feeSettings: FeeSettings;
@@ -81,6 +87,7 @@ export class CollectFeeComponent implements OnInit {
     newRemark = null;
     newModeOfPayment = MODE_OF_PAYMENT_LIST[0];
     newChequeNumber = null;
+    selectedFeeReceiptBook = null;
 
     studentFeeDetailsVisibleList = [];
 
@@ -112,17 +119,13 @@ export class CollectFeeComponent implements OnInit {
     constructor(
         public genericService: GenericService,
         public feeService: FeeService,
-        public studentService: StudentService,
         public vehicleService: VehicleOldService,
-        public classService: ClassService,
-        public employeeService: EmployeeService,
         public schoolService: SchoolService,
         public accountsService: AccountsService,
         public smsService: SmsService,
         public smsOldService: SmsOldService,
         public notificationService: NotificationService,
         public userService: UserService,
-        public tcService: TCService,
         private cdRef: ChangeDetectorRef,
         private printService: PrintService
     ) { }
@@ -185,6 +188,10 @@ export class CollectFeeComponent implements OnInit {
         this.selectedStudentList = selectedList[0];
         this.serviceAdapter.getStudentFeeProfile();
         this.showDetails = true;
+    }
+
+    handleStudentFilterSelection() : void {
+        this.showDetails = false;
     }
 
     handleStudentFeeProfile(): void {
@@ -320,6 +327,7 @@ export class CollectFeeComponent implements OnInit {
             employeeList: this.employeeList,
             boardList: this.boardList,
             sessionList: this.sessionList,
+            feeReceiptBookList: this.feeReceiptBookList,
             printSingleReceipt: this.printSingleReceipt
         };
 
@@ -459,26 +467,6 @@ export class CollectFeeComponent implements OnInit {
         return amount;
     }
 
-    getStudentClearanceDate(student: any): any {
-        let clearanceDate = new Date('1000-01-01');
-        let result = null;
-        this.getFilteredSessionListByStudent(student).every((session) => {
-            let sessionClearanceDate = this.getSessionClearanceDate(student, session);
-            if (sessionClearanceDate) {
-                if (new Date(sessionClearanceDate).getTime() > clearanceDate.getTime()) {
-                    clearanceDate = new Date(sessionClearanceDate);
-                    result = sessionClearanceDate;
-                }
-            } else {
-                clearanceDate = null;
-                result = null;
-                return false;
-            }
-            return true;
-        });
-        return result;
-    }
-
     getStudentFeesDueTillMonth(student: any, includeNewSubFeeReceipt = true): number {
         let amount = 0;
         this.getFilteredSessionListByStudent(student).forEach((session) => {
@@ -588,7 +576,7 @@ export class CollectFeeComponent implements OnInit {
                 return this.getSessionFeesDue(student, session, false) + this.getSessionLateFeesDue(student, session, false) > 0;
             })
             .sort((a, b) => {
-                return a.id - b.id;
+                return a.orderNumber - b.orderNumber;
             });
     }
 
@@ -622,26 +610,6 @@ export class CollectFeeComponent implements OnInit {
             amount += this.getStudentFeeLateFeeTotal(studentFee);
         });
         return amount;
-    }
-
-    getSessionClearanceDate(student: any, session: any): any {
-        let clearanceDate = new Date('1000-01-01');
-        let result = null;
-        this.getFilteredStudentFeeListBySession(student, session).every((studentFee) => {
-            let studentFeeClearanceDate = this.getStudentFeeClearanceDate(studentFee);
-            if (studentFeeClearanceDate) {
-                if (new Date(studentFeeClearanceDate).getTime() > clearanceDate.getTime()) {
-                    clearanceDate = new Date(studentFeeClearanceDate);
-                    result = studentFeeClearanceDate;
-                }
-            } else {
-                clearanceDate = null;
-                result = null;
-                return false;
-            }
-            return true;
-        });
-        return result;
     }
 
     getSessionFeesDueTillMonth(student: any, session: any, includeNewSubFeeReceipt = true): number {
@@ -795,26 +763,6 @@ export class CollectFeeComponent implements OnInit {
             amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
         });
         return amount;
-    }
-
-    getStudentFeeClearanceDate(studentFee: any): any {
-        let clearanceDate = new Date('1000-01-01');
-        let result = null;
-        this.getFilteredInstallmentListByStudentFee(studentFee).every((installment) => {
-            let studentFeeInstallmentClearanceDate = this.getStudentFeeInstallmentClearanceDate(studentFee, installment);
-            if (studentFeeInstallmentClearanceDate) {
-                if (new Date(studentFeeInstallmentClearanceDate).getTime() > clearanceDate.getTime()) {
-                    clearanceDate = new Date(studentFeeInstallmentClearanceDate);
-                    result = studentFeeInstallmentClearanceDate;
-                }
-            } else {
-                clearanceDate = null;
-                result = null;
-                return false;
-            }
-            return true;
-        });
-        return result;
     }
 
     getStudentFeeFeesDueTillMonth(studentFee: any, includeNewSubFeeReceipt = true): number {
@@ -1002,10 +950,6 @@ export class CollectFeeComponent implements OnInit {
         return amount;
     }
 
-    getStudentFeeInstallmentClearanceDate(studentFee: any, installment: string): any {
-        return studentFee[installment + 'ClearanceDate'];
-    }
-
     getStudentFeeInstallmentPayment(studentFee: any, installment: string): number {
         let subFeeReceipt = this.newSubFeeReceiptList.find((subFeeReceipt) => {
             return subFeeReceipt.parentStudentFee == studentFee.id;
@@ -1040,23 +984,11 @@ export class CollectFeeComponent implements OnInit {
 
         if (subFeeReceipt) {
             subFeeReceipt[installment + 'Amount'] = payment;
-            if (payment == studentFeeInstallmentFeesDue) {
-                studentFee[installment + 'ClearanceDate'] = this.formatDate(null);
-            } else {
-                studentFee[installment + 'ClearanceDate'] = null;
-            }
-
             if (payment == 0) {
                 this.checkAndDeleteNewSubFeeReceipt(subFeeReceipt, studentFee);
             }
         } else if (payment > 0) {
             this.createNewSubFeeReceipt(studentFee, installment + 'Amount', payment);
-
-            if (payment == studentFeeInstallmentFeesDue) {
-                studentFee[installment + 'ClearanceDate'] = this.formatDate(null);
-            } else {
-                studentFee[installment + 'ClearanceDate'] = null;
-            }
         }
     }
 

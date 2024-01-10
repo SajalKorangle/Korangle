@@ -179,7 +179,6 @@ export class UpdateViaExcelServiceAdapter {
                             studentFee['parentFeeType'] = feeTypeId;
                             studentFee['parentSession'] = this.vm.user.activeSchool.currentSessionDbId;
                             studentFee['isAnnually'] = false;
-                            studentFee['cleared'] = false;
                             studentFee[feeColumn[0].split("-")[1] + "Amount"] = this.vm.excelDataFromUser[rowIndex + 1][feeColumn[1]];
                             studentFeeListToBeUploaded.push(studentFee);
                             if (

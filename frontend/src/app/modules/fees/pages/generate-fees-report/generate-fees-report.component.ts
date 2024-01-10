@@ -1,17 +1,16 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { GenerateFeesReportServiceAdapter } from './generate-fees-report.service.adapter';
-import { FeeService } from '../../../../services/modules/fees/fee.service';
 import { INSTALLMENT_LIST } from '../../classes/constants';
-import { StudentService } from '../../../../services/modules/student/student.service';
-import { ClassService } from '../../../../services/modules/class/class.service';
 import { DataStorage } from '../../../../classes/data-storage';
-import { SchoolService } from './../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 
 @Component({
     selector: 'generate-fees-report',
     templateUrl: './generate-fees-report.component.html',
     styleUrls: ['./generate-fees-report.component.css'],
-    providers: [FeeService, StudentService, ClassService, SchoolService],
+    providers: [
+        GenericService,
+    ],
 })
 export class GenerateFeesReportComponent implements OnInit {
     installmentList = INSTALLMENT_LIST;
@@ -30,9 +29,6 @@ export class GenerateFeesReportComponent implements OnInit {
 
     parentList = [];
 
-    // d1 = new Date();
-    // d2 = new Date();
-
     installmentNumber = 0;
 
     currentSession: any;
@@ -45,10 +41,7 @@ export class GenerateFeesReportComponent implements OnInit {
     isLoading = false;
 
     constructor(
-        public schoolService: SchoolService,
-        public feeService: FeeService,
-        public studentService: StudentService,
-        public classService: ClassService,
+        public genericService: GenericService,
         private cdRef: ChangeDetectorRef
     ) {}
 
@@ -113,41 +106,6 @@ export class GenerateFeesReportComponent implements OnInit {
                     }) != undefined
                 );
             });
-
-            /*student['feesDueTillMonth'] = filteredStudentFeeList.reduce((total, studentFee) => {
-                return total + this.installmentList.slice(0,this.installmentNumber+1).reduce((installmentAmount, installment) => {
-                    let lateFeeAmount = 0;
-                    if (studentFee[installment+'LastDate'] && studentFee[installment+'LateFee'] && studentFee[installment+'LateFee'] > 0) {
-                        let lastDate = new Date(studentFee[installment+'LastDate']);
-                        let clearanceDate = new Date();
-                        if (studentFee[installment+'ClearanceDate']) {
-                            clearanceDate = new Date(studentFee[installment+'ClearanceDate']);
-                        }
-                        let numberOfLateDays = Math.floor((clearanceDate.getTime()-lastDate.getTime())/(1000*60*60*24));
-                        if (numberOfLateDays > 0) {
-                            lateFeeAmount = (studentFee[installment+'LateFee']?studentFee[installment+'LateFee']:0)*numberOfLateDays;
-                            if (studentFee[installment+'MaximumLateFee'] && studentFee[installment+'MaximumLateFee'] < lateFeeAmount) {
-                                lateFeeAmount = studentFee[installment+'MaximumLateFee'];
-                            }
-                        }
-                    }
-                    return installmentAmount
-                        + (studentFee[installment+'Amount']?studentFee[installment+'Amount']:0)
-                        + lateFeeAmount;
-                }, 0);
-            }, 0) - filteredSubFeeReceiptList.reduce((total, subFeeReceipt) => {
-                return total + this.installmentList.slice(0,this.installmentNumber+1).reduce((installmentAmount, installment) => {
-                    return installmentAmount
-                        + (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0)
-                        + (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
-                }, 0);
-            }, 0) - filteredSubDiscountList.reduce((total, subDiscount) => {
-                return total + this.installmentList.slice(0,this.installmentNumber+1).reduce((installmentAmount, installment) => {
-                    return installmentAmount
-                        + (subDiscount[installment+'Amount']?subDiscount[installment+'Amount']:0)
-                        + (subDiscount[installment+'LateFee']?subDiscount[installment+'LateFee']:0);
-                }, 0);
-            }, 0);*/
 
             student['feesDueTillMonth'] =
                 filteredStudentFeeList.reduce((total, studentFee) => {

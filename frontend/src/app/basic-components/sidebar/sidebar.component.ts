@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import { Component, OnInit, Input, HostListener, AfterViewChecked } from '@angular/core';
 
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, ActivationStart } from '@angular/router';
 
@@ -6,13 +6,14 @@ import { EmitterService } from '../../services/emitter.service';
 
 import { User } from '../../classes/user';
 import { style, state, trigger, animate, transition } from '@angular/animations';
-import { SchoolService } from '../../services/modules/school/school.service';
 import { environment } from '../../../environments/environment';
 import { Constants } from '../../classes/constants';
 import { CommonFunctions } from './../../classes/common-functions';
 import { NotificationService } from '../../services/modules/notification/notification.service';
 import { unregisterForNotification } from '../../classes/common.js';
 import { Query } from '@services/generic/query';
+import { MatDialog } from '@angular/material/dialog';
+import { BillDueWarningModalComponent } from '@basic-components/bill-due-warning-modal/bill-due-warning-modal.component';
 
 declare const $: any;
 
@@ -20,7 +21,9 @@ declare const $: any;
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css'],
-    providers: [NotificationService, SchoolService],
+    providers: [
+        NotificationService,
+    ],
     animations: [
         trigger('rotate', [
             state('true', style({ transform: 'rotate(0deg)' })),
@@ -36,14 +39,18 @@ declare const $: any;
         ]),
     ],
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, AfterViewChecked {
     @Input() user: User;
 
     green = 'green';
     warning = 'warning';
-    session_list = [];
+    scrolled: boolean = false;
 
-    constructor(private router: Router, private notificationService: NotificationService, private schoolService: SchoolService) {
+    constructor(
+        private router: Router,
+        private notificationService: NotificationService,
+        private dialog: MatDialog,
+    ) {
         // We are using this routeReuseStrategy because the DashBoard Component should not re-render when changing pages.
         this.router.routeReuseStrategy.shouldReuseRoute = function (future: any, curr: any) {
             return (curr.routeConfig === future.routeConfig) || future.data.reuse;
@@ -75,20 +82,44 @@ export class SidebarComponent implements OnInit {
                 CommonFunctions.scrollToTop();
             }
         });
-        this.schoolService.getObjectList(this.schoolService.session, {}).then((value) => {
-            this.session_list = value;
-        });
+
+        // Change route if any unobserved event exist
+        if (this.user.newRoute !== null) {
+
+            this.openBillDueWarningModal();
+
+            this.router.navigateByUrl('/', { skipLocationChange: false }).then(() => {
+                this.router.navigateByUrl(
+                    this.router.createUrlTree([Constants.dashBoardRoute + '/' + this.user.section.route + '/' + this.user.section.subRoute],
+                        { queryParams: this.user.newRoute.queryParams })
+                );
+            }).then(() => this.user.newRoute = null);
+        }
         EmitterService.get('initialize-router').subscribe((value) => {
+
+            this.openBillDueWarningModal();
+
             // Navigating To '/' before any other route - because :
             // We have used routeReuseStrategy so if the url is same the page won't reload,
             // To overcome that case we are navigating to '/' first and then the corresponding route.
-            this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+            this.router.navigateByUrl('/', { skipLocationChange: false }).then(() => {
                 this.router.navigateByUrl(
                     this.router.createUrlTree([Constants.dashBoardRoute + '/' + this.user.section.route + '/' + this.user.section.subRoute],
-                        {queryParams: value.queryParams})
+                        { queryParams: value.queryParams })
                 );
             });
         });
+    }
+
+    ngAfterViewChecked(): void {
+        // Scroll to the active button on page reload
+        if (!this.scrolled) {
+            let activeElement = document.querySelector('.active');
+            if (activeElement) {
+                this.scrolled = true;
+                activeElement.scrollIntoView();
+            }
+        }
     }
 
     isMobileMenu() {
@@ -153,4 +184,24 @@ export class SidebarComponent implements OnInit {
         this.user.emptyUserDetails();
         this.router.navigate(['login']);
     }
+
+    getCurrentSession(): any {
+        return this.user.session_list.find(session => {
+            return session.id == this.user.activeSchool.currentSessionDbId;
+        });
+    }
+
+    openBillDueWarningModal(): any {
+        if (this.user.activeSchool && this.user.activeSchool.showModalWarning) {
+            this.user.activeSchool.showModalWarning = false;
+            this.dialog.open(BillDueWarningModalComponent, {
+                //height: '80vh',
+                //width: '80vw',
+                data: {
+                    videoUrl: '',
+                },
+            });
+        }
+    }
+
 }

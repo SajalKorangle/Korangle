@@ -13,25 +13,35 @@ import { registerForNotification } from './classes/common';
 import { MatDialog } from '@angular/material/dialog';
 import { AppHtmlRenderer } from './app.html.renderer';
 import { PaymentResponseDialogComponent } from '@basic-components/payment-response-dialog/payment-response-dialog.component';
+import { FeatureFlagService } from '@services/feature-flag.service';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    providers: [AuthenticationOldService, AuthenticationService, VersionCheckService, NotificationService],
+    providers: [AuthenticationOldService, AuthenticationService, VersionCheckService, NotificationService, FeatureFlagService],
 })
 export class AppComponent implements OnInit {
     isLoading = false;
     public user = new User();
+
+    featureFlagListIsFetched = false;
 
     htmlRenderer: AppHtmlRenderer;
 
     constructor(
         private authenticationService: AuthenticationOldService,
         private versionCheckService: VersionCheckService,
+        private featureFlagService: FeatureFlagService,
         private dialog: MatDialog) { }
 
     ngOnInit() {
+
+        this.featureFlagService.getFeatureFlagList().then(value => {
+            DataStorage.getInstance().setFeatureFlagList(value);
+            this.featureFlagListIsFetched = true;
+        });
+
         DataStorage.getInstance().setUser(this.user);
         if (this.user.checkAuthentication()) {
             this.authenticationService.getUserDetails(this.user.jwt).then((data) => {

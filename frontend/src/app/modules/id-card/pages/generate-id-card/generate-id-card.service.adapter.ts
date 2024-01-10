@@ -32,14 +32,14 @@ export class GenerateIdCardServiceAdapter {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
         };
         Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-            this.vm.classService.getObjectList(this.vm.classService.division, {}),
-            this.vm.studentService.getObjectList(this.vm.studentService.student, fetch_student_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, fetch_student_section_data),
-            this.vm.idCardService.getObjectList(this.vm.idCardService.id_card_layout, fetch_layouts_data),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, student_parameter_data),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, student_parameter_value_data),
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 0
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 1
+            this.vm.genericService.getObjectList({student_app: 'Student'}, {filter: fetch_student_data}), // 2
+            this.vm.genericService.getObjectList({student_app: 'StudentSection'}, {filter: fetch_student_section_data}), // 3
+            this.vm.idCardService.getObjectList(this.vm.idCardService.id_card_layout, fetch_layouts_data), // 4
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 5
+            this.vm.genericService.getObjectList({student_app: 'StudentParameter'}, {filter: student_parameter_data}), // 6
+            this.vm.genericService.getObjectList({student_app: 'StudentParameterValue'}, {filter: student_parameter_value_data}), // 7
         ]).then(
             (data) => {
                 this.vm.classList = data[0];

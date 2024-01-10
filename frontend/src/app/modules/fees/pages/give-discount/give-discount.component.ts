@@ -9,19 +9,14 @@ import { FeeReceipt } from '../../../../services/modules/fees/models/fee-receipt
 import { SubFeeReceipt } from '../../../../services/modules/fees/models/sub-fee-receipt';
 import { Discount } from '../../../../services/modules/fees/models/discount';
 import { SubDiscount } from '../../../../services/modules/fees/models/sub-discount';
-import { StudentService } from '../../../../services/modules/student/student.service';
 import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-old.service';
-import { ClassService } from '../../../../services/modules/class/class.service';
-import { EmployeeService } from '../../../../services/modules/employee/employee.service';
 import { CommonFunctions } from '../../../../classes/common-functions';
 import { DataStorage } from '../../../../classes/data-storage';
-import { SchoolService } from '../../../../services/modules/school/school.service';
 import { SmsService } from '../../../../services/modules/sms/sms.service';
 import { NotificationService } from '../../../../services/modules/notification/notification.service';
 import { SmsOldService } from '../../../../services/modules/sms/sms-old.service';
 import { UserService } from '@services/modules/user/user.service';
 import { MessageService } from '@services/message-service';
-import { TCService } from '@services/modules/tc/tc.service';
 import { GenericService } from '@services/generic/generic-service';
 
 declare const $: any;
@@ -30,8 +25,15 @@ declare const $: any;
     selector: 'give-discount',
     templateUrl: './give-discount.component.html',
     styleUrls: ['./give-discount.component.css'],
-    providers: [GenericService, FeeService, StudentService, VehicleOldService, ClassService, EmployeeService,
-        SchoolService, SmsService, NotificationService, SmsOldService, UserService, TCService],
+    providers: [
+        GenericService,
+        FeeService,
+        VehicleOldService,
+        SmsService,
+        NotificationService,
+        SmsOldService,
+        UserService,
+    ],
 })
 export class GiveDiscountComponent implements OnInit {
     user;
@@ -52,6 +54,7 @@ export class GiveDiscountComponent implements OnInit {
     subDiscountList: SubDiscount[];
     busStopList = [];
     employeeList = [];
+    feeReceiptBookList = [];
 
     // Data from Parent Student Filter
     classList = [];
@@ -92,18 +95,13 @@ export class GiveDiscountComponent implements OnInit {
 
     constructor(
         public genericService: GenericService,
-        public schoolService: SchoolService,
         public feeService: FeeService,
-        public studentService: StudentService,
         public vehicleService: VehicleOldService,
-        public classService: ClassService,
-        public employeeService: EmployeeService,
         private cdRef: ChangeDetectorRef,
         public smsService: SmsService,
         public notificationService: NotificationService,
         public smsOldService: SmsOldService,
         public userService: UserService,
-        public tcService: TCService,
     ) {}
 
     ngOnInit(): void {
@@ -406,26 +404,6 @@ export class GiveDiscountComponent implements OnInit {
         return amount;
     }
 
-    getStudentClearanceDate(student: any): any {
-        let clearanceDate = new Date('1000-01-01');
-        let result = null;
-        this.getFilteredSessionListByStudent(student).every((session) => {
-            let sessionClearanceDate = this.getSessionClearanceDate(student, session);
-            if (sessionClearanceDate) {
-                if (new Date(sessionClearanceDate).getTime() > clearanceDate.getTime()) {
-                    clearanceDate = new Date(sessionClearanceDate);
-                    result = sessionClearanceDate;
-                }
-            } else {
-                clearanceDate = null;
-                result = null;
-                return false;
-            }
-            return true;
-        });
-        return result;
-    }
-
     getStudentFeesDueTillMonth(student: any, includeNewSubFeeReceipt = true): number {
         let amount = 0;
         this.getFilteredSessionListByStudent(student).forEach((session) => {
@@ -535,7 +513,7 @@ export class GiveDiscountComponent implements OnInit {
                 return this.getSessionFeesDue(student, session, false) + this.getSessionLateFeesDue(student, session, false) > 0;
             })
             .sort((a, b) => {
-                return a.id - b.id;
+                return a.orderNumber - b.orderNumber;
             });
     }
 
@@ -569,26 +547,6 @@ export class GiveDiscountComponent implements OnInit {
             amount += this.getStudentFeeLateFeeTotal(studentFee);
         });
         return amount;
-    }
-
-    getSessionClearanceDate(student: any, session: any): any {
-        let clearanceDate = new Date('1000-01-01');
-        let result = null;
-        this.getFilteredStudentFeeListBySession(student, session).every((studentFee) => {
-            let studentFeeClearanceDate = this.getStudentFeeClearanceDate(studentFee);
-            if (studentFeeClearanceDate) {
-                if (new Date(studentFeeClearanceDate).getTime() > clearanceDate.getTime()) {
-                    clearanceDate = new Date(studentFeeClearanceDate);
-                    result = studentFeeClearanceDate;
-                }
-            } else {
-                clearanceDate = null;
-                result = null;
-                return false;
-            }
-            return true;
-        });
-        return result;
     }
 
     getSessionFeesDueTillMonth(student: any, session: any, includeNewSubFeeReceipt = true): number {
@@ -730,26 +688,6 @@ export class GiveDiscountComponent implements OnInit {
             amount += this.getStudentFeeInstallmentLateFeeTotal(studentFee, installment);
         });
         return amount;
-    }
-
-    getStudentFeeClearanceDate(studentFee: any): any {
-        let clearanceDate = new Date('1000-01-01');
-        let result = null;
-        this.getFilteredInstallmentListByStudentFee(studentFee).every((installment) => {
-            let studentFeeInstallmentClearanceDate = this.getStudentFeeInstallmentClearanceDate(studentFee, installment);
-            if (studentFeeInstallmentClearanceDate) {
-                if (new Date(studentFeeInstallmentClearanceDate).getTime() > clearanceDate.getTime()) {
-                    clearanceDate = new Date(studentFeeInstallmentClearanceDate);
-                    result = studentFeeInstallmentClearanceDate;
-                }
-            } else {
-                clearanceDate = null;
-                result = null;
-                return false;
-            }
-            return true;
-        });
-        return result;
     }
 
     getStudentFeeFeesDueTillMonth(studentFee: any, includeNewSubFeeReceipt = true): number {
@@ -925,10 +863,6 @@ export class GiveDiscountComponent implements OnInit {
         return amount;
     }
 
-    getStudentFeeInstallmentClearanceDate(studentFee: any, installment: string): any {
-        return studentFee[installment + 'ClearanceDate'];
-    }
-
     getStudentFeeInstallmentPayment(studentFee: any, installment: string): number {
         let subDiscount = this.newSubDiscountList.find((subDiscount) => {
             return subDiscount.parentStudentFee == studentFee.id;
@@ -963,23 +897,11 @@ export class GiveDiscountComponent implements OnInit {
 
         if (subDiscount) {
             subDiscount[installment + 'Amount'] = payment;
-            if (payment == studentFeeInstallmentFeesDue) {
-                studentFee[installment + 'ClearanceDate'] = this.formatDate(null);
-            } else {
-                studentFee[installment + 'ClearanceDate'] = null;
-            }
-
             if (payment == 0) {
                 this.checkAndDeleteNewSubDiscount(subDiscount, studentFee);
             }
         } else if (payment > 0) {
             this.createNewSubDiscount(studentFee, installment + 'Amount', payment);
-
-            if (payment == studentFeeInstallmentFeesDue) {
-                studentFee[installment + 'ClearanceDate'] = this.formatDate(null);
-            } else {
-                studentFee[installment + 'ClearanceDate'] = null;
-            }
         }
     }
 
@@ -1038,33 +960,6 @@ export class GiveDiscountComponent implements OnInit {
         });
         return filteredSubFeeReceiptList;
     }
-
-    /*createNewSubFeeReceipt(studentFee: any, installment: any, payment: any): void {
-
-        let subFeeReceipt = new SubFeeReceipt();
-        subFeeReceipt.parentStudentFee = studentFee.id;
-        subFeeReceipt.parentFeeType = studentFee.parentFeeType;
-        subFeeReceipt.parentSession = studentFee.parentSession;
-        subFeeReceipt.isAnnually = studentFee.isAnnually;
-        subFeeReceipt[installment] = payment;
-        this.newSubFeeReceiptList.push(subFeeReceipt);
-
-        this.checkAndCreateNewFeeReceipt(studentFee);
-
-    }*/
-
-    /*checkAndDeleteNewSubFeeReceipt(subFeeReceipt: any, studentFee: any): void {
-        if (this.installmentList.reduce((total, installment) => {
-            return total
-                + (subFeeReceipt[installment+'Amount']?subFeeReceipt[installment+'Amount']:0)
-                + (subFeeReceipt[installment+'LateFee']?subFeeReceipt[installment+'LateFee']:0);
-        }, 0) == 0) {
-            this.newSubFeeReceiptList = this.newSubFeeReceiptList.filter(subFeeReceipt => {
-                return subFeeReceipt.parentStudentFee != studentFee.id;
-            });
-            this.checkAndDeleteNewFeeReceipt(studentFee);
-        }
-    }*/
 
     // Sub Discount
     getFilteredSubDiscountListByStudentFee(studentFee: any, includeNewSubDiscount = true): any {

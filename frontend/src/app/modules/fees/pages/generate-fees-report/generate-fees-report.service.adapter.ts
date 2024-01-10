@@ -12,81 +12,11 @@ export class GenerateFeesReportServiceAdapter {
     }
 
     //initialize data
-    /*initializeData(): void {
-
-        this.vm.d1 = new Date();
-
-        this.vm.isLoading = true;
-
-        let student_section_list = {
-            'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
-            'parentSession': this.vm.user.activeSchool.currentSessionDbId,
-            'parentStudent__parentTransferCertificate': 'null__korangle',
-        };
-
-        let student_list = {
-            'parentSchool': this.vm.user.activeSchool.dbId,
-            'parentTransferCertificate': 'null__korangle',
-        };
-
-        let student_fee_list = {
-            'parentSession__or': this.vm.user.activeSchool.currentSessionDbId,
-            'cleared': 'false__boolean',
-            'parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
-            'parentStudent__parentTransferCertificate': 'null__korangle',
-        };
-
-        let sub_fee_receipt_list = {
-            'parentStudentFee__parentSession__or': this.vm.user.activeSchool.currentSessionDbId,
-            'parentStudentFee__cleared': 'false__boolean',
-            'parentStudentFee__parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
-            'parentStudentFee__parentStudent__parentTransferCertificate': 'null__korangle',
-            'parentFeeReceipt__cancelled': 'false__boolean',
-        };
-
-        let sub_discount_list = {
-            'parentStudentFee__parentSession__or': this.vm.user.activeSchool.currentSessionDbId,
-            'parentStudentFee__cleared': 'false__boolean',
-            'parentStudentFee__parentStudent__parentSchool': this.vm.user.activeSchool.dbId,
-            'parentStudentFee__parentStudent__parentTransferCertificate': 'null__korangle',
-            'parentDiscount__cancelled': 'false__boolean',
-        };
-
-        Promise.all([
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list),
-            this.vm.studentService.getObjectList(this.vm.studentService.student, student_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),
-        ]).then( value => {
-
-            console.log(value);
-
-            this.vm.studentSectionList = value[0];
-
-            let tempStudentIdList = this.vm.studentSectionList.map(a => a.parentStudent);
-
-            this.vm.studentList = this.populateStudentList(value[1], tempStudentIdList);
-            this.vm.studentFeeList = this.populateStudentFeeList(value[2], tempStudentIdList);
-            this.vm.subFeeReceiptList = this.populateSubFeeReceiptList(value[3], tempStudentIdList);
-            this.vm.subDiscountList = this.populateSubDiscountList(value[4], tempStudentIdList);
-
-            this.vm.isLoading = false;
-
-            this.vm.d2 = new Date();
-
-        }, error => {
-            this.vm.isLoading = false;
-        })
-
-    }*/
-
     initializeData(): void {
-        // this.vm.d1 = new Date();
 
         this.vm.isLoading = true;
 
-        this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}).then((session) => {
+        this.vm.genericService.getObjectList({school_app: 'Session'}, {}).then((session) => {
             this.vm.sessionList = session;
             let todaysDate = new Date();
             this.vm.currentSession = this.vm.sessionList.find((session) => {
@@ -99,18 +29,18 @@ export class GenerateFeesReportServiceAdapter {
             let student_section_list = {
                 parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
-                parentStudent__parentTransferCertificate: 'null__korangle',
+                parentStudent__parentTransferCertificate: null,
             };
 
             let fee_receipt_list = {
                 parentSchool: this.vm.user.activeSchool.dbId,
-                cancelled: 'false__boolean',
+                cancelled: false,
                 generationDateTime__gte: this.vm.getSession().startDate + ' 00:00:00+05:30',
             };
 
             Promise.all([
-                this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_section_list),
-                this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
+                this.vm.genericService.getObjectList({student_app: 'StudentSection'}, {filter: student_section_list}), // 0
+                this.vm.genericService.getObjectList({fees_third_app: 'FeeReceipt'}, {filter: fee_receipt_list}), // 1
             ]).then(
                 (valueList) => {
                     this.vm.studentSectionList = valueList[0];
@@ -118,27 +48,33 @@ export class GenerateFeesReportServiceAdapter {
                     let tempStudentIdList = valueList[0].map((a) => a.parentStudent);
 
                     let student_list = {
-                        id__in: tempStudentIdList.join(),
+                        id__in: tempStudentIdList,
                     };
 
                     let student_fee_list = {
-                        parentSession__or: this.vm.user.activeSchool.currentSessionDbId,
-                        cleared: 'false__boolean',
-                        parentStudent__in: tempStudentIdList.join(),
+                        __or__ : [
+                            { parentSession: this.vm.user.activeSchool.currentSessionDbId },
+                            { cleared: false },
+                        ],
+                        parentStudent__in: tempStudentIdList,
                     };
 
                     let sub_fee_receipt_list = {
-                        parentStudentFee__parentSession__or: this.vm.user.activeSchool.currentSessionDbId,
-                        parentStudentFee__cleared: 'false__boolean',
-                        parentStudentFee__parentStudent__in: tempStudentIdList.join(),
-                        parentFeeReceipt__cancelled: 'false__boolean',
+                        __or__ : [
+                            { parentStudentFee__parentSession: this.vm.user.activeSchool.currentSessionDbId },
+                            { parentStudentFee__cleared: false },
+                        ],
+                        parentStudentFee__parentStudent__in: tempStudentIdList,
+                        parentFeeReceipt__cancelled: false,
                     };
 
                     let sub_discount_list = {
-                        parentStudentFee__parentSession__or: this.vm.user.activeSchool.currentSessionDbId,
-                        parentStudentFee__cleared: 'false__boolean',
-                        parentStudentFee__parentStudent__in: tempStudentIdList.join(),
-                        parentDiscount__cancelled: 'false__boolean',
+                        __or__ : [
+                            { parentStudentFee__parentSession: this.vm.user.activeSchool.currentSessionDbId },
+                            { parentStudentFee__cleared: false },
+                        ],
+                        parentStudentFee__parentStudent__in: tempStudentIdList,
+                        parentDiscount__cancelled: false,
                     };
 
                     let second_sub_fee_receipt_list = {
@@ -146,13 +82,13 @@ export class GenerateFeesReportServiceAdapter {
                     };
 
                     Promise.all([
-                        this.vm.studentService.getObjectList(this.vm.studentService.student, student_list),
-                        this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list),
-                        this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
-                        this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),
-                        this.vm.classService.getObjectList(this.vm.classService.classs, {}),
-                        this.vm.classService.getObjectList(this.vm.classService.division, {}),
-                        this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, second_sub_fee_receipt_list),
+                        this.vm.genericService.getObjectList({student_app: 'Student'}, {filter: student_list}), // 0
+                        this.vm.genericService.getObjectList({fees_third_app: 'StudentFee'}, {filter: student_fee_list}), // 1
+                        this.vm.genericService.getObjectList({fees_third_app: 'SubFeeReceipt'}, {filter: sub_fee_receipt_list}), // 2
+                        this.vm.genericService.getObjectList({fees_third_app: 'SubDiscount'}, {filter: sub_discount_list}), // 3
+                        this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 4
+                        this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 5
+                        this.vm.genericService.getObjectList({fees_third_app: 'SubFeeReceipt'}, {filter: second_sub_fee_receipt_list}), // 6
                     ]).then(
                         (value) => {
                             this.vm.studentList = value[0];

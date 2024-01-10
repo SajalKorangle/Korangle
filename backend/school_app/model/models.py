@@ -35,6 +35,7 @@ class Board(models.Model):
 
     class Meta:
         db_table = 'board'
+        ordering = ['id']
 
 
 class Session(models.Model):
@@ -53,6 +54,7 @@ class Session(models.Model):
 
     class Meta:
         db_table = 'session'
+        ordering = ['orderNumber']
 
 
 def get_user():
@@ -128,6 +130,10 @@ class School(models.Model):
 
     def __str__(self):
         return str(self.pk) + ' - ' + self.printName
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['id']
+        RelationsToStudent = []
 
     class Meta:
         db_table = 'school'

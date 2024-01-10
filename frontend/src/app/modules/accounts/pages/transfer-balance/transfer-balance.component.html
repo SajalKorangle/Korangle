@@ -4,7 +4,14 @@
     </div>
     <div *ngIf="nextSession != undefined">
         <mat-slide-toggle [(ngModel)]="splitView"  style="margin-top:20px;margin-bottom:30px;" ><b>Split View</b></mat-slide-toggle>
-        <button *ngIf="splitView && !isMobile()" class="custom-button" style="margin-top: 20px;margin-right:22px;float: right;background:rgba(255, 152, 0, 1); color: white; border:rgba(255, 152, 0, 1)" (click)="serviceAdapter.transferAccounts()"><span>Transfer</span></button>
+        <button *ngIf="!splitView || (splitView && !isMobile())"
+            class="btn btn-{{ user.activeSchool.secondaryThemeColor }}"
+            style="margin-top: 20px;margin-right:22px;float: right;"
+            (click)="serviceAdapter.transferAccounts()"
+            [disabled]="countSelectedGroups() + countSelectedAccounts() == 0"
+        >
+            <span>Transfer</span>
+        </button>
         
         <div *ngIf="!splitView">
             <div class="row col-md-12">
@@ -12,8 +19,6 @@
                 <button class="nav-item" style="box-shadow:  0px 2px 20px 2px grey;margin-right: 10px;" (click)="selectedSession = currentSession" *ngIf="selectedSession != currentSession"><span>From : {{currentSession.name}}</span></button>
                 <button class="nav-item" style="box-shadow:  0px 2px 20px 2px grey;margin-right: 10px;  color: rgba(255, 152, 0, 1); border:2px solid rgba(255, 152, 0, 1)" *ngIf="selectedSession == nextSession"><span>To : {{nextSession.name}}</span></button>
                 <button class="nav-item" style="box-shadow:  0px 2px 20px 2px grey;margin-right: 20px;" (click)="selectedSession = nextSession" *ngIf="selectedSession != nextSession"><span>To : {{nextSession.name}}</span></button>
-                <!-- <mat-checkbox style="font-size: 13px;">Split View</mat-checkbox> -->
-                <button class="custom-button" style="float: right;background:rgba(255, 152, 0, 1); color: white; border:rgba(255, 152, 0, 1)" (click)="serviceAdapter.transferAccounts()"><span>Transfer</span></button>
             </div>
         </div>
 

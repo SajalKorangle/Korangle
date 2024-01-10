@@ -35,16 +35,18 @@ export class GiveDiscountServiceAdapter {
         };
 
         Promise.all([
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list),
-            this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt),
-            this.vm.employeeService.getObjectList(this.vm.employeeService.employees, employee_list),
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}),
+            this.vm.feeService.getObjectList(this.vm.feeService.fee_type, fee_type_list), // 0
+            this.vm.vehicleService.getBusStopList(bus_stop_list, this.vm.user.jwt), // 1
+            this.vm.genericService.getObjectList({employee_app: 'Employee'}, {filter: employee_list}), // 2
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 3
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceiptBook'}, {filter: {parentSchool: schoolId}, order_by: ['id']}), // 4
         ]).then(
             (value) => {
                 this.vm.feeTypeList = value[0];
                 this.vm.busStopList = value[1];
                 this.vm.employeeList = value[2];
                 this.vm.sessionList = value[3];
+                this.vm.feeReceiptBookList = value[4];
 
                 this.vm.isLoading = false;
             },
@@ -58,8 +60,8 @@ export class GiveDiscountServiceAdapter {
         };
 
         const value = await Promise.all([
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), //0
-            this.vm.classService.getObjectList(this.vm.classService.division, {}), //1
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 0
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 1
             this.vm.smsOldService.getSMSCount(sms_count_request_data, this.vm.user.jwt), //2
             this.vm.smsService.getObjectList(this.vm.smsService.sms_event,
                 { id__in: this.vm.GIVE_DISCOUNT_EVENT_DBID}), //3
@@ -87,7 +89,7 @@ export class GiveDiscountServiceAdapter {
 
     // Get Student Fee Profile
     getStudentFeeProfile(): void {
-        let studentListId = this.vm.selectedStudentList.map((a) => a.id).join();
+        let studentListId = this.vm.selectedStudentList.map((a) => a.id);
 
         let student_fee_list = {
             parentStudent__in: studentListId,
@@ -95,22 +97,22 @@ export class GiveDiscountServiceAdapter {
 
         let fee_receipt_list = {
             parentStudent__in: studentListId,
-            cancelled: 'false__boolean',
+            cancelled: false,
         };
 
         let sub_fee_receipt_list = {
             parentStudentFee__parentStudent__in: studentListId,
-            parentFeeReceipt__cancelled: 'false__boolean',
+            parentFeeReceipt__cancelled: false,
         };
 
         let discount_list = {
             parentStudent__in: studentListId,
-            cancelled: 'false__boolean',
+            cancelled: false,
         };
 
         let sub_discount_list = {
             parentStudentFee__parentStudent__in: studentListId,
-            parentDiscount__cancelled: 'false__boolean',
+            parentDiscount__cancelled: false,
         };
 
         let student_section_list = {
@@ -120,12 +122,12 @@ export class GiveDiscountServiceAdapter {
         this.vm.isLoading = true;
 
         Promise.all([
-            this.vm.feeService.getObjectList(this.vm.feeService.student_fees, student_fee_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.fee_receipts, fee_receipt_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_fee_receipts, sub_fee_receipt_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.discounts, discount_list),
-            this.vm.feeService.getObjectList(this.vm.feeService.sub_discounts, sub_discount_list),
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, student_fee_list),
+            this.vm.genericService.getObjectList({fees_third_app: 'StudentFee'}, {filter: student_fee_list}), // 0
+            this.vm.genericService.getObjectList({fees_third_app: 'FeeReceipt'}, {filter: fee_receipt_list}), // 1
+            this.vm.genericService.getObjectList({fees_third_app: 'SubFeeReceipt'}, {filter: sub_fee_receipt_list}), // 2
+            this.vm.genericService.getObjectList({fees_third_app: 'Discount'}, {filter: discount_list}), // 3
+            this.vm.genericService.getObjectList({fees_third_app: 'SubDiscount'}, {filter: sub_discount_list}), // 4
+            this.vm.genericService.getObjectList({student_app: 'StudentSection'}, {filter: student_section_list}), // 5
         ]).then(
             (value) => {
                 this.populateStudentFeeList(value[0]);
@@ -134,7 +136,6 @@ export class GiveDiscountServiceAdapter {
                 this.populateDiscountList(value[3]);
                 this.vm.subDiscountList = value[4];
                 this.vm.selectedStudentSectionList = value[5];
-                // this.populateSelectedStudentSectionList(value[5]);
 
                 this.vm.handleStudentFeeProfile();
 
@@ -148,15 +149,13 @@ export class GiveDiscountServiceAdapter {
 
     populateStudentFeeList(studentFeeList: any): void {
         this.vm.studentFeeList = studentFeeList.sort((a, b) => {
-            let first = this.vm.getFeeTypeByStudentFee(a);
-            let second = this.vm.getFeeTypeByStudentFee(b);
             return a.orderNumber - b.orderNumber;
         });
     }
 
     populateFeeReceiptList(feeReceiptList: any): void {
         this.vm.feeReceiptList = feeReceiptList.sort((a, b) => {
-            return b.receiptNumber - a.receiptNumber;
+            return (new Date(b.generationDateTime).getTime()) - (new Date(a.generationDateTime).getTime());
         });
     }
 
@@ -175,7 +174,6 @@ export class GiveDiscountServiceAdapter {
         });
 
         let discount_list = this.vm.newDiscountList.map((discount) => {
-            // return CommonFunctions.getInstance().copyObject(feeReceipt);
             discount = CommonFunctions.getInstance().deepCopy(discount);
             if (discount['remark'] == '') {
                 discount['remark'] = null;
@@ -198,6 +196,21 @@ export class GiveDiscountServiceAdapter {
             delete discount.subDiscountList;
             return discount;
         });
+
+        // Starts :- We are re-fetching student fee so that we have correct clearance date,
+        // which is calculated in backend
+        let studentFeeIdList = subDiscountList.map(a => a.parentStudentFee);
+        let studentFeeListQuery = { id__in: studentFeeIdList };
+        let studentFeeListResponse = await this.vm.genericService.getObjectList(
+            { fees_third_app: 'StudentFee' },
+            { filter: studentFeeListQuery }
+        );
+        this.vm.studentFeeList = this.vm.studentFeeList.filter(item => !studentFeeIdList.includes(item.id));
+        this.vm.studentFeeList.push(...studentFeeListResponse);
+        this.populateStudentFeeList(this.vm.studentFeeList);
+        // Ends :- We are re-fetching student fee so that we have correct clearance date,
+        // which is calculated in backend
+
         this.addToDiscountList(newDiscountList);
         this.vm.subDiscountList = this.vm.subDiscountList.concat(subDiscountList);
 

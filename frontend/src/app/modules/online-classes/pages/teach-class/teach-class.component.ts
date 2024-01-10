@@ -12,6 +12,7 @@ import { SubjectService } from '@services/modules/subject/subject.service';
 import { OnlineClassService } from '@services/modules/online-class/online-class.service';
 import { ClassService } from '@services/modules/class/class.service';
 import { SchoolService } from '@services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 
 import { Time, WEEKDAY_KEYS_MAPPED_BY_DISPLAY_NAME, ZOOM_BASE_URL, ColorPaletteHandle, TimeComparator } from '@modules/online-classes/class/constants';
 
@@ -23,7 +24,7 @@ import { CommonFunctions } from '@classes/common-functions';
     selector: 'classroom',
     templateUrl: './teach-class.component.html',
     styleUrls: ['./teach-class.component.css'],
-    providers: [SubjectService, OnlineClassService, ClassService, SchoolService],
+    providers: [SubjectService, OnlineClassService, ClassService, SchoolService, GenericService],
 })
 
 export class TeachClassComponent implements OnInit, OnDestroy {
@@ -55,6 +56,7 @@ export class TeachClassComponent implements OnInit, OnDestroy {
         public onlineClassService: OnlineClassService,
         public classService: ClassService,
         public schoolService: SchoolService,
+        public genericService: GenericService,
         public snackBar: MatSnackBar,
     ) { }
 

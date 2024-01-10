@@ -1,0 +1,57 @@
+/* Start: Fixing the size of page card instead of infinite scroll */
+.card-content {
+    display: block;
+    max-height: 88vh;
+    overflow: scroll;
+}
+/* End: Fixing the size of page card instead of infinite scroll */
+
+/* START: select all and clear all buttons in select class dropdown */
+.select-all {
+    display: flex;
+    justify-content: left;
+    padding-left: 16px;
+}
+/* END: select all and clear all buttons in select class dropdown */
+
+/* START: No class is selected message CSS  */
+.noClassSelectedMsg{
+    width: 100%;
+    margin-top: 2rem;
+    font-size: 2rem;
+}
+/* END: No class is selected message CSS  */
+
+/* START: highlight student row */
+.highlightStudentRow {
+    background-color: #ffffea;
+}
+.highlightStudentRow:hover {
+    background-color: #ffffea;
+}
+/* END: highlight student row */
+
+/* Start: Footer Section */
+.footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    color: white;
+    text-align: left;
+    padding-left: 10px;
+    border-top: 1px solid black;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    /*box-shadow: 0px 10px 5px #888, 0px -10px 5px #888;*/
+}
+/* End: Footer Section */
+
+/* Start: Floating Button in mobile Menu */
+.sticky {
+    position: fixed;
+    right: 15px;
+    bottom: 30px;
+}
+/* End: Floating Button in mobile Menu */

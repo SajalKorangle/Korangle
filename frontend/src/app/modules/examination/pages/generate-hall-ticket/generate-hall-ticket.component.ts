@@ -5,6 +5,7 @@ import { ExaminationService } from '../../../../services/modules/examination/exa
 import { StudentOldService } from '../../../../services/modules/student/student-old.service';
 import { SubjectOldService } from '../../../../services/modules/subject/subject-old.service';
 import { ClassService } from '../../../../services/modules/class/class.service';
+import { GenericService } from '@services/generic/generic-service';
 
 import { GenerateHallTicketServiceAdapter } from './generate-hall-ticket.service.adapter';
 import { PrintService } from '../../../../print/print-service';
@@ -16,7 +17,7 @@ import { SchoolService } from '../../../../services/modules/school/school.servic
     selector: 'generate-hall-ticket',
     templateUrl: './generate-hall-ticket.component.html',
     styleUrls: ['./generate-hall-ticket.component.css'],
-    providers: [ExaminationOldService, SubjectOldService, StudentOldService, ClassService, SchoolService, ExaminationService],
+    providers: [ExaminationOldService, SubjectOldService, StudentOldService, ClassService, SchoolService, ExaminationService, GenericService],
 })
 export class GenerateHallTicketComponent implements OnInit {
     user;
@@ -25,6 +26,8 @@ export class GenerateHallTicketComponent implements OnInit {
 
     examinationList = [];
     showPrincipalSignature = true;
+
+    sessionList: any;
 
     boardList: any;
 
@@ -39,6 +42,7 @@ export class GenerateHallTicketComponent implements OnInit {
         public subjectService: SubjectOldService,
         public schoolService: SchoolService,
         public classService: ClassService,
+        public genericService: GenericService,
         private printService: PrintService
     ) {}
 
@@ -56,6 +60,7 @@ export class GenerateHallTicketComponent implements OnInit {
             examination: this.selectedExamination,
             boardList: this.boardList,
             showPrincipalSignature: this.showPrincipalSignature,
+            sessionList: this.sessionList,
         };
         this.printService.navigateToPrintRoute(PRINT_HALL_TICKET, { user: this.user, value: data });
         alert('This may take a while');

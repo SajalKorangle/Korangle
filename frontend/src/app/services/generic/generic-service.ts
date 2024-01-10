@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { RestApiGateway } from './rest-api-gateway';
-import { CONSTANTS } from './constants';
 
 // const JSON_OBJECT_RESPONSE_PARSER = (responseData) => {
 //     if (responseData) { // json parse if key ends with JSON
@@ -43,82 +42,83 @@ export class GenericService extends RestApiGateway {
         return Object.entries(config)[0];
     }
 
+    isAppConstant(app_name: string, model_name: string) {
+        if (app_name in APP_CONSTANTS && model_name in APP_CONSTANTS[app_name]) {
+            return true;
+        }
+        return false;
+    }
+
     getObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if (app_name in CONSTANTS) {
-            if (model_name in CONSTANTS[app_name]) {
-                return Promise.resolve(null);
-            }
+        if (this.isAppConstant(app_name, model_name)) {
+            return Promise.resolve(null);
         }
         return super.getData(this.getBaseUrl(), { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
-    getObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
+    async getObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if (app_name in CONSTANTS) {
-            if (model_name in CONSTANTS[app_name]) {
-                return Promise.resolve(CONSTANTS[app_name][model_name]);
+
+        let url = this.getBaseUrl() + 'batch' + JSON.stringify({ app_name, model_name, __query__: JSON.stringify(query) });
+        if (app_name in APP_CONSTANTS
+            && model_name in APP_CONSTANTS[app_name]) {
+            if (url in APP_CONSTANTS[app_name][model_name]) {
+                return Promise.resolve(APP_CONSTANTS[app_name][model_name][url]);
+            } else {
+                APP_CONSTANTS[app_name][model_name][url] =
+                    await super.getData(this.getBaseUrl() + 'batch', { app_name, model_name, __query__: JSON.stringify(query) });
+                return Promise.resolve(APP_CONSTANTS[app_name][model_name][url]);
             }
         }
+
         return super.getData(this.getBaseUrl() + 'batch', { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
     createObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if (app_name in CONSTANTS) {
-            if (model_name in CONSTANTS[app_name]) {
-                return Promise.resolve(null);
-            }
+        if (this.isAppConstant(app_name, model_name)) {
+            return Promise.resolve(null);
         }
         return super.postData(data, this.getBaseUrl(), { app_name, model_name });
     }
 
     createObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if (app_name in CONSTANTS) {
-            if (model_name in CONSTANTS[app_name]) {
-                return Promise.resolve(null);
-            }
+        if (this.isAppConstant(app_name, model_name)) {
+            return Promise.resolve(null);
         }
         return super.postData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
     updateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if (app_name in CONSTANTS) {
-            if (model_name in CONSTANTS[app_name]) {
-                return Promise.resolve(null);
-            }
+        if (this.isAppConstant(app_name, model_name)) {
+            return Promise.resolve(null);
         }
         return super.putData(data, this.getBaseUrl(), { app_name, model_name });
     }
 
     updateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if (app_name in CONSTANTS) {
-            if (model_name in CONSTANTS[app_name]) {
-                return Promise.resolve(null);
-            }
+        if (this.isAppConstant(app_name, model_name)) {
+            return Promise.resolve(null);
         }
         return super.putData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
 
     partiallyUpdateObject(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if (app_name in CONSTANTS) {
-            if (model_name in CONSTANTS[app_name]) {
-                return Promise.resolve(null);
-            }
+        if (this.isAppConstant(app_name, model_name)) {
+            return Promise.resolve(null);
         }
         return super.patchData(data, this.getBaseUrl(), { app_name, model_name });
     }
 
     partiallyUpdateObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, data: any): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if (app_name in CONSTANTS) {
-            if (model_name in CONSTANTS[app_name]) {
-                return Promise.resolve(null);
-            }
+        if (this.isAppConstant(app_name, model_name)) {
+            return Promise.resolve(null);
         }
         return super.patchData(data, this.getBaseUrl() + 'batch', { app_name, model_name });
     }
@@ -135,27 +135,28 @@ export class GenericService extends RestApiGateway {
 
     deleteObjectList(config: Partial<APP_MODEL_STRUCTURE_INTERFACE>, query: QUERY_INTERFACE): Promise<any> {
         const [app_name, model_name] = this.parseConfig(config);
-        if (app_name in CONSTANTS) {
-            if (model_name in CONSTANTS[app_name]) {
-                return Promise.resolve(null);
-            }
+        if (this.isAppConstant(app_name, model_name)) {
+            return Promise.resolve(null);
         }
         return super.deleteData(this.getBaseUrl() + 'batch', { app_name, model_name, __query__: JSON.stringify(query) });
     }
 
 }
-
 export interface APP_MODEL_STRUCTURE_INTERFACE {
-    fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder' | 'StudentFee' | 'FeeSchoolSettings';
+    leaves_app: 'SchoolLeaveType' | 'SchoolLeavePlan' | 'SchoolLeavePlanToSchoolLeaveType' | 'SchoolLeaveTypeMonth' | 'SchoolLeavePlanToEmployee' | 'EmployeeLeaveType';
+    fees_third_app: 'FeeReceipt' | 'SubFeeReceipt' | 'Discount' | 'SubDiscount' | 'FeeReceiptOrder' | 'StudentFee' | 'FeeSchoolSettings' | 'ViewDefaulterPermissions' | 'CustomFilterFee' | 'FeeType' | 'SchoolFeeRule' | 'FeeReceiptBook';
     accounts_app: 'Transaction' | 'TransactionAccountDetails';
-    payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport';
+    payment_app: 'SchoolMerchantAccount' | 'SchoolBankAccountUpdationPermissionCount' | 'Order' | 'CashfreeDailyJobsReport'
+        | 'PaymentGateway' | 'ModeOfPayment' | 'ModeOfPaymentCharges';
+    bill_app: 'Bill';
     activity_record_app: 'ActivityRecord';
     student_app: 'Student' | 'StudentSection' | 'StudentParameter' | 'StudentParameterValue' | 'CountAllTable';
+    library_app: 'Book' | 'BookParameter' | 'BookIssueRecord' | 'SchoolLibrarySettings';
     class_app: 'Class' | 'Division';
-    school_app: 'Session' | 'BusStop';
+    school_app: 'Session' | 'BusStop' | 'School';
     tc_app: 'TransferCertificateNew';
-    subject_app: 'StudentSubject';
-    examination_app: 'StudentTest' | 'StudentExtraSubField' | 'CCEMarks';
+    subject_app: 'StudentSubject' | 'SubjectSecond';
+    examination_app: 'Examination' | 'StudentTest' | 'StudentExtraSubField' | 'CCEMarks';
     sms_app: 'SMSId' | 'SMSIdSchool' | 'SMSTemplate' | 'SMSEventSettings';
     complaints_app: 'SchoolComplaintType' | 'SchoolComplaintStatus' | 'StatusComplaintType' | 'Complaint' | 'Comment' | 'EmployeeComplaintType' | 'EmployeeComplaint' | 'CountAllComplaints';
     employee_app: 'Employee' | 'EmployeePermission' | 'EmployeeParameter';
@@ -163,7 +164,21 @@ export interface APP_MODEL_STRUCTURE_INTERFACE {
     authentication_app: 'DeviceList';
     notification_app: 'Notification';
     user_app: 'User';
+    attendance_app: 'AttendancePermission' | 'StudentAttendance';
+    enquiry_app: 'Enquiry' | 'ViewEnquiryInPagePermissions';
 }
+
+
+export const APP_CONSTANTS = {
+    class_app: {
+        Class: {},
+        Division: {},
+    },
+    school_app: {
+        Session: {},
+        Board: {},
+    }
+};
 
 // APP_MODEL_STRUCTURE_INTERFACE
 
@@ -181,6 +196,7 @@ export interface QUERY_INTERFACE {
             field: string,
             function: string,
             filter?: FILTER_TYPE,
+            exclude?: FILTER_TYPE,
         };
     };
     order_by?: Array<string>;

@@ -2,8 +2,7 @@
     <mat-dialog-content>
 
 
-        <ng-container *ngIf="isTransactionSuccessful() else Pending">
-            <!--Check Svg and Animation-->
+        <ng-container *ngIf="isTransactionSuccessful()">
             <div style="margin-bottom: 16px;">
                 <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
                     <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
@@ -13,12 +12,19 @@
             <div style="text-align: center;">Transaction Successfull</div>
         </ng-container>
 
-        <ng-template #Pending>
+        <ng-container *ngIf="isTransactionFailed()">
+            <div style="text-align: center;">
+                <i class="material-icons" style="font-size: 100px; color: red;">cancel</i>
+            </div>
+            <div style="text-align: center;">Transaction Failed</div>
+        </ng-container>
+
+        <ng-container *ngIf="isTransactionPending()">
             <div style="text-align: center;">
                 <i class="material-icons" style="font-size: 100px; color: red;">pending</i>
             </div>
             <div style="text-align: center;">Pending Verification</div>
-        </ng-template>
+        </ng-container>
 
 
     </mat-dialog-content>

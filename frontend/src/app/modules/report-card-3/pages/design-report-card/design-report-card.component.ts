@@ -6,11 +6,11 @@ import { FONT_FAMILY_LIST } from '@modules/report-card-3/class/font';
 import { DesignReportCardServiceAdapter } from './design-report-card.service.adapter';
 
 import { ReportCardService } from '@services/modules/report-card/report-card.service';
-import { StudentService } from '@services/modules/student/student.service';
 import { ClassService } from '@services/modules/class/class.service';
 import { ExaminationService } from '@services/modules/examination/examination.service';
 import { SubjectService } from '@services/modules/subject/subject.service';
 import { SchoolService } from '@services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { AttendanceService } from '@services/modules/attendance/attendance.service';
 import { GradeService } from '@services/modules/grade/grade.service';
 
@@ -25,11 +25,11 @@ import { Layer, DATA_SOUCE_TYPE } from './../../class/constants_3';
     styleUrls: ['./design-report-card.component.css'],
     providers: [
         ReportCardService,
-        StudentService,
         ClassService,
         ExaminationService,
         SubjectService,
         SchoolService,
+        GenericService,
         AttendanceService,
         GradeService,
         MatDialog,
@@ -116,11 +116,11 @@ export class DesignReportCardComponent implements OnInit, OnDestroy {
 
     constructor(
         public reportCardService: ReportCardService,
-        public studentService: StudentService,
         public classService: ClassService,
         public examinationService: ExaminationService,
         public subjectService: SubjectService,
         public schoolService: SchoolService,
+        public genericService: GenericService,
         public attendanceService: AttendanceService,
         public gradeService: GradeService,
         public dialog: MatDialog

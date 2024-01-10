@@ -21,7 +21,6 @@ export class DesignTCServiceAdapter {
         const request_student_section_data = {
             parentStudent__parentSchool: this.vm.user.activeSchool.dbId,
             parentSession: this.vm.user.activeSchool.currentSessionDbId,
-            korangle__count: '0,1',
         };
         const request_student_parameter_data = {
             parentSchool: this.vm.user.activeSchool.dbId,
@@ -44,19 +43,26 @@ export class DesignTCServiceAdapter {
         this.vm.htmlAdapter.isLoading = true;
         Promise.all([
             this.vm.tcService.getObjectList(this.vm.tcService.tc_layout, tc_layouts_data), // 0
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data), // 1
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter, request_student_parameter_data), // 2
-            this.vm.classService.getObjectList(this.vm.classService.classs, {}), // 3
-            this.vm.classService.getObjectList(this.vm.classService.division, {}), // 4
+            this.vm.genericService.getObjectList({student_app: 'StudentSection'}, {
+                filter: request_student_section_data,
+                pagination: {
+                    start: 0,
+                    end: 1,
+                },
+            }), // 1
+            this.vm.genericService.getObjectList({ student_app: 'StudentParameter' }, {
+                filter: request_student_parameter_data,
+            }), // 2
+            this.vm.genericService.getObjectList({class_app: 'Class'}, {}), // 3
+            this.vm.genericService.getObjectList({class_app: 'Division'}, {}), // 4
             this.vm.subjectService.getObjectList(this.vm.subjectService.subject, {}), // 5
-            this.vm.schoolService.getObjectList(this.vm.schoolService.session, {}), // 6
-            this.vm.tcService.getObjectList(this.vm.tcService.tc_layout, public_layouts_data), //11
+            this.vm.genericService.getObjectList({school_app: 'Session'}, {}), // 6
+            this.vm.tcService.getObjectList(this.vm.tcService.tc_layout, public_layouts_data), // 7
             this.vm.classService.getObjectList(this.vm.classService.class_teacher_signature, request_class_signature_data), //8
             this.vm.tcService.getObjectList(this.vm.tcService.tc_layout_sharing, shared_layout_list_data), //9
             this.vm.tcService.getObject(this.vm.tcService.tc_settings, request_tc_settings), // 10
         ])
             .then((data) => {
-                // console.log(data);
                 this.vm.tcLayoutList = data[0];
                 this.vm.DATA.data.studentSectionList = data[1];
                 this.vm.DATA.data.studentParameterList = data[2];
@@ -67,12 +73,11 @@ export class DesignTCServiceAdapter {
                 this.vm.publicLayoutList = data[7];
                 this.vm.DATA.data.classSectionSignatureList = data[8];
                 this.vm.DATA.certificateNumber = data[10] ? data[10].nextCertificateNumber : 1;
-                // console.log('DATA: ', this.vm.DATA);
                 const request_student_data = {
-                    id__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
+                    id__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent),
                 };
                 const request_student_parameter_value_data = {
-                    parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
+                    parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent),
                 };
                 const request_attendance_data = {
                     parentStudent__in: this.vm.DATA.data.studentSectionList.map((item) => item.parentStudent).join(','),
@@ -81,13 +86,13 @@ export class DesignTCServiceAdapter {
                             this.vm.DATA.data.sessionList.find((session) => {
                                 return session.id === this.vm.user.activeSchool.currentSessionDbId;
                             }).startDate
-                        ).getFullYear() + '-01-01',
+                        ).getFullYear() + '-01-01', // We are getting the attendance of whole first year just to be safe
                     dateOfAttendance__lte:
                         new Date(
                             this.vm.DATA.data.sessionList.find((session) => {
                                 return session.id === this.vm.user.activeSchool.currentSessionDbId;
                             }).endDate
-                        ).getFullYear() + '-12-31',
+                        ).getFullYear() + '-12-31', // We are getting the attendance of whole second year just to be safe
                 };
 
                 const request_layout_sharing_data = {
@@ -99,17 +104,13 @@ export class DesignTCServiceAdapter {
                 };
 
                 Promise.all([
-                    this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 0
-                    this.vm.studentService.getObjectList(
-                        this.vm.studentService.student_parameter_value,
-                        request_student_parameter_value_data
-                    ), // 1
+                    this.vm.genericService.getObjectList({student_app: 'Student'}, {filter: request_student_data}), // 0
+                    this.vm.genericService.getObjectList({student_app: 'StudentParameterValue'}, {filter: request_student_parameter_value_data}), // 1
                     this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 2
                     this.vm.tcService.getObjectList(this.vm.tcService.tc_layout_sharing, request_layout_sharing_data), //3
                     this.vm.tcService.getObjectList(this.vm.tcService.tc_layout, shared_layout_data), //4
                 ]).then(
                     (value) => {
-                        // console.log(value);
                         this.vm.DATA.data.studentList = value[0];
                         this.vm.DATA.data.studentParameterValueList = value[1];
                         this.vm.DATA.data.attendanceList = value[2];
@@ -164,13 +165,12 @@ export class DesignTCServiceAdapter {
         };
 
         Promise.all([
-            this.vm.studentService.getObjectList(this.vm.studentService.student_section, request_student_section_data), // 0
-            this.vm.studentService.getObjectList(this.vm.studentService.student, request_student_data), // 1
-            this.vm.studentService.getObjectList(this.vm.studentService.student_parameter_value, request_student_parameter_value_data), // 2
+            this.vm.genericService.getObjectList({student_app: 'StudentSection'}, {filter: request_student_section_data}), // 0
+            this.vm.genericService.getObjectList({student_app: 'Student'}, {filter: request_student_data}), // 1
+            this.vm.genericService.getObjectList({student_app: 'StudentParameterValue'}, {filter: request_student_parameter_value_data}), // 2
             this.vm.attendanceService.getObjectList(this.vm.attendanceService.student_attendance, request_attendance_data), // 3
         ]).then((value) => {
             // check here, getObjectList to getObject
-            // console.log(value);
             this.vm.DATA.data.studentSectionList.push(...value[0]);
             this.vm.DATA.data.studentList.push(...value[1]);
             this.vm.DATA.data.studentParameterValueList.push(...value[2]);
@@ -198,7 +198,6 @@ export class DesignTCServiceAdapter {
         } else {
             delete layoutToUpload.thumbnail;
         }
-        console.log('layout to uplaod: ', layoutToUpload);
         const form_data = new FormData();
         Object.entries(layoutToUpload).forEach(([key, value]) => {
             if (!value) return;
@@ -257,7 +256,6 @@ export class DesignTCServiceAdapter {
     shareCurrentLayoutWithSchool(schoolKID: number) {
         if (schoolKID != this.vm.user.activeSchool.dbId) {
             const layoutSharingData = { parentSchool: schoolKID, parentLayout: this.vm.currentLayout.id };
-            // console.log(layoutSharingData);
             return this.vm.tcService.createObject(this.vm.tcService.tc_layout_sharing, layoutSharingData);
         }
     }

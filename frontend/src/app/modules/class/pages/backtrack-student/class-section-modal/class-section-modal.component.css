@@ -1,0 +1,53 @@
+/* Starts: Modal Container */
+.class-section-modal-container {
+    height: 70vh;
+    min-width: 50vw;
+    width: fit-content;
+    justify-content: center;
+}
+/* Ends: Modal Container */
+
+/* Starts: header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #C4C4C4;   /* Light Gray */
+}
+
+.title {
+    font-weight: 500;
+}
+
+.close-btn {
+    color: red;
+    cursor: pointer;
+}
+/* Ends: header */
+
+/* Starts: body */
+
+.table-container {
+    overflow-y: scroll;
+}
+
+.remove {
+    position: absolute;
+    left: -1.3rem;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+/* Ends: body */
+
+/* Starts: Media Query */
+@media only screen and (max-width: 992px) {
+    /* Starts: Modal Container */
+    .class-section-modal-container {
+        margin: 0;
+        padding: 0;
+    }
+    /* Ends: Modal Container */
+}
+/* Ends: Media Query */

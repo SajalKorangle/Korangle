@@ -7,13 +7,14 @@ import { UpdateProfileServiceAdapter } from './update-profile.service.adapter';
 import { EmployeeService } from 'app/services/modules/employee/employee.service';
 import { CommonFunctions } from 'app/classes/common-functions';
 import { MultipleFileDialogComponent } from 'app/components/multiple-file-dialog/multiple-file-dialog.component';
+import { BankService } from '@services/bank.service';
 declare const $: any;
 
 @Component({
     selector: 'update-profile',
     templateUrl: './update-profile.component.html',
     styleUrls: ['./update-profile.component.css'],
-    providers: [EmployeeService]
+    providers: [EmployeeService, BankService]
 })
 export class UpdateProfileComponent implements OnInit {
     user;
@@ -50,7 +51,9 @@ export class UpdateProfileComponent implements OnInit {
 
 
     constructor(public employeeService: EmployeeService,
-        public dialog: MatDialog) { }
+        public dialog: MatDialog,
+        public bankService: BankService,
+    ) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -78,6 +81,17 @@ export class UpdateProfileComponent implements OnInit {
         let height = Math.ceil(text.offsetHeight) + 100;
         fileNameElement.removeChild(text);
         return height;
+    }
+
+    getBankName() {
+        if (this.currentEmployeeProfile.bankIfscCode.length != 11) {
+            return;
+        } else {
+            this.bankService.getDetailsFromIFSCCode(this.currentEmployeeProfile.bankIfscCode.toString()).then((value) => {
+                this.selectedEmployeeProfile.bankName = value;
+                this.currentEmployeeProfile.bankName = value;
+            });
+        }
     }
 
     checkToolTip(parameter) {
@@ -585,4 +599,7 @@ export class UpdateProfileComponent implements OnInit {
         });
     }
 
+    canAddDateOfLeaving() {
+        return this.currentEmployeeProfile.issuedBooks == 0;
+    }
 }

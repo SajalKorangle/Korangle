@@ -304,22 +304,6 @@ export class GenerateGoshwaraComponent implements OnInit {
         );
     }
 
-    getSessionName(sessionId: any): any {
-        let result = '';
-        switch (sessionId) {
-            case 1:
-                result = 'Session 2017-18';
-                break;
-            case 2:
-                result = 'Session 2018-19';
-                break;
-            case 3:
-                result = 'Session 2019-20';
-                break;
-        }
-        return result;
-    }
-
     getNextStep(student: any): any {
         let result = '';
         switch (student.className) {

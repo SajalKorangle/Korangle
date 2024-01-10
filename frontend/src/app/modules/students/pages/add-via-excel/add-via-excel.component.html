@@ -1,0 +1,115 @@
+<!-- Starts: For Mobile & Tablet Devices -->
+<div *ngIf="htmlAdapter.isMobileDevice()" class="card-content table-responsive">
+    This page is not availble on mobile / Tablets
+</div>
+<!-- Ends: For Mobile & Tablet Devices -->
+
+<!-- Starts: For Desktop -->
+<div *ngIf="!isLoading && !uploadSheetAdapter.isFileLoading && !htmlAdapter.isMobileDevice()" class="card-content table-responsive">
+
+    <!-- Starts: Note & Current Session Name -->
+    <div class="display-flex-section">
+
+        <!-- Starts: Note -->
+        <div style="flex-basis: 70%;">
+            <p>
+                <span (click)="uploadSheetAdapter.openGuidelines()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline; font-weight: 300; cursor: pointer;">View Guidelines</span> <span style="font-weight: 800;"> | </span>
+                <span (click)="uploadSheetAdapter.openFilePreviewImage()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline; font-weight: 300; cursor: pointer;">View Sample File</span> <span style="font-weight: 800;"> | </span>
+                <span (click)="uploadSheetAdapter.downloadSheetTemplate()" class="text-{{ user.activeSchool.secondaryThemeColor }}" style="text-decoration: underline; font-weight: 300; cursor: pointer;">Download Template</span>
+            </p>
+        </div>
+        <!-- Ends: Note -->
+
+        <!-- Starts: Current Session -->
+        <div class="current-session-section" align="end">
+            <p style="font-size: 14px; color: rgba(0, 0, 0, 0.6); margin: 0px;">Uploading for Current Session</p>
+            <b>{{ uploadSheetAdapter.currentSessionName }}</b>
+        </div>
+        <!-- Ends: Current Session -->
+
+    </div>
+    <!-- Ends: Note & Current Session -->
+    
+    <!-- Starts: Upload Excel file & Download-Template -->
+    <div class="display-flex-section">
+
+        <!-- Starts: Excel file -->
+        <div style="display: flex; align-items: center;">
+
+            <!-- Starts: Upload Button and Chosen file name -->
+            <button class="btn btn-indigo"
+                style="padding: 4px 7px;"
+                (click)="uploadSheetAdapter.clickInputFileButton()">
+                Choose File (xlsx)
+            </button>
+            <span style="margin-left: 5px;">{{uploadSheetAdapter.chosenFileName}}</span>
+            <!-- Ends: Upload Button and Chosen file name -->
+
+            <!-- Starts: Hidden Input Element -->
+            <input type="file" id="input-file-button" style="display: none;" (change)="uploadSheetAdapter.uploadSheet($event)" multiple="false" accept=".xlsx" />
+            <!-- Ends: Hidden Input Element -->
+
+        </div>
+        <!-- Ends: Excel file -->
+
+        <!-- TODO: Implement download table data in excel button -->
+        <!-- Starts: Download-Template -->
+        <!-- div>
+            <button
+                type="button"
+                class="btn btn-indigo"
+                style="padding: 4px 7px; margin-left: auto"
+                matTooltip="Download Template"
+                tooltip-position="left"
+                (click)="uploadSheetAdapter.downloadSheetTemplate()"
+            >
+                Download Template
+            </button>
+        </div -->
+        <!-- Ends: Download-Template -->
+
+    </div><br />
+    <!-- Ends: Upload Excel file & Download-Template -->
+
+    <!-- Starts: Student Data in table view -->
+    <cdk-virtual-scroll-viewport *ngIf="tableAdapter.tableData.length > 0" itemSize="0" class="example-viewport">
+        <table class="table table-hover">
+            <thead class="text-{{ user.activeSchool.secondaryThemeColor }}">
+                <tr>
+                    <th *ngFor="let columnHeader of tableAdapter.tableData[0]"
+                        [class.red]="columnHeader.softwareColumnHeader==undefined">
+                        {{columnHeader.excelHeaderName}}
+                        <br/>
+                        <mat-form-field style="width: 100%">
+                            <mat-select
+                                [(ngModel)]="columnHeader.softwareColumnHeader"
+                            >
+                                <mat-option [value]="0">Ignore</mat-option>
+                                <mat-option *ngFor="let softwareColumnHeader of tableAdapter.getFilteredSoftwareColumnHeaderList(columnHeader)"
+                                    [value]="softwareColumnHeader">
+                                    {{ softwareColumnHeader.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *cdkVirtualFor="let studentRow of tableAdapter.tableData.slice(1)">
+                    <tr>
+                        <td *ngFor="let column of studentRow">{{column}}</td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </cdk-virtual-scroll-viewport>
+    <!-- Ends: Student Data in table view -->
+
+</div>
+<!-- Ends: For Desktop -->
+
+<!-- Start: Loader -->
+<ng-container *ngIf="isLoading || uploadSheetAdapter.isFileLoading">
+    <app-loading-spinner [user]="user"></app-loading-spinner>
+</ng-container>
+<!-- Ends: Loader -->

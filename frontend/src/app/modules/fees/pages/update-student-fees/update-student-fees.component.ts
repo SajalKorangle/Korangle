@@ -12,39 +12,29 @@ import { FeeType } from '../../../../services/modules/fees/models/fee-type';
 import { CommonFunctions } from '../../../../classes/common-functions';
 import { ClassService } from '../../../../services/modules/class/class.service';
 import { VehicleOldService } from '../../../../services/modules/vehicle/vehicle-old.service';
+import { GenericService } from '@services/generic/generic-service';
 import { DataStorage } from '../../../../classes/data-storage';
+import { INSTALLMENT_LIST } from '@modules/fees/classes/constants';
 
 @Component({
     selector: 'update-student-fees',
     templateUrl: './update-student-fees.component.html',
     styleUrls: ['./update-student-fees.component.css'],
-    providers: [FeeService, ClassService, VehicleOldService],
+    providers: [FeeService, ClassService, VehicleOldService, GenericService ],
 })
 export class UpdateStudentFeesComponent implements OnInit {
-    installmentList = [
-        'april',
-        'may',
-        'june',
-        'july',
-        'august',
-        'september',
-        'october',
-        'november',
-        'december',
-        'january',
-        'february',
-        'march',
-    ];
+    installmentList = INSTALLMENT_LIST;
 
     user;
 
     feeTypeList: any;
-    schoolFeeRuleList: SchoolFeeRule[];
+    schoolFeeRuleList: any;
     classFilterFeeList: ClassFilterFee[];
     busStopFilterFeeList: BusStopFilterFee[];
     classList: any;
     sectionList: any;
     busStopList: any;
+    studentParameterList: any;
 
     studentFeeList: StudentFee[];
     subFeeReceiptList: SubFeeReceipt[];
@@ -70,6 +60,7 @@ export class UpdateStudentFeesComponent implements OnInit {
         public feeService: FeeService,
         public classService: ClassService,
         public vehicleService: VehicleOldService,
+        public genericService: GenericService,
         private cdRef: ChangeDetectorRef
     ) {}
 
@@ -172,17 +163,6 @@ export class UpdateStudentFeesComponent implements OnInit {
 
     handleNewStudentFeeAmountChange(installment: any, value: any): void {
         this.newStudentFee[installment + 'Amount'] = value;
-        if (value == null || value == 0) {
-            this.newStudentFee[installment + 'LastDate'] = null;
-            this.newStudentFee[installment + 'LateFee'] = null;
-        }
-    }
-
-    disableNewStudentFeeMonthLastDate(installment: any): boolean {
-        if (this.newStudentFee[installment + 'Amount'] == null || this.newStudentFee[installment + 'Amount'] == 0) {
-            return true;
-        }
-        return false;
     }
 
     disableNewStudentFeeMonthLateFee(installment: any): boolean {
@@ -191,6 +171,18 @@ export class UpdateStudentFeesComponent implements OnInit {
             this.newStudentFee[installment + 'Amount'] == 0 ||
             this.newStudentFee[installment + 'LastDate'] == null
         ) {
+            this.newStudentFee[installment + 'LateFee'] = null;
+            return true;
+        }
+        return false;
+    }
+
+    disableNewStudentFeeMonthMaximumLateFee(installment: any): boolean {
+        if (
+            this.newStudentFee[installment + 'LateFee'] == null ||
+            this.newStudentFee[installment + 'LateFee'] == 0
+        ) {
+            this.newStudentFee[installment + 'MaximumLateFee'] = null;
             return true;
         }
         return false;
@@ -297,4 +289,11 @@ export class UpdateStudentFeesComponent implements OnInit {
         }
         return amount;
     }
+
+    getStudentParameterName(parameterId: number): string {
+        return this.studentParameterList.find((parameter) => {
+            return parameter.id == parameterId;
+        }).name;
+    }
+
 }

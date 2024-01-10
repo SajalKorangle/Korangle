@@ -8,7 +8,7 @@ import { AddGroupDialogComponent } from './add-group-dialog/add-group-dialog.com
 import { ManageAccountsServiceAdapter } from './manage-accounts.service.adapter';
 import { ManageAccountsBackendData } from './manage-accounts.backend.data';
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
-import { SchoolService } from './../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { HEADS_LIST } from '@services/modules/accounts/models/head';
 import { customAccount, customGroupStructure } from './../../classes/constants';
 
@@ -18,7 +18,7 @@ import { customAccount, customGroupStructure } from './../../classes/constants';
     styleUrls: ['./manage-accounts.component.css'],
     providers: [
         AccountsService,
-        SchoolService,
+        GenericService,
     ]
 })
 
@@ -62,7 +62,7 @@ export class ManageAccountsComponent {
     constructor(
         public dialog: MatDialog,
         public accountsService: AccountsService,
-        public schoolService: SchoolService,
+        public genericService: GenericService,
     ) { }
     // Server Handling - Initial
     ngOnInit(): void {

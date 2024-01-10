@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DataStorage } from "../../../../classes/data-storage";
 import { MatDialog } from '@angular/material';
 import { AccountsService } from './../../../../services/modules/accounts/accounts.service';
-import { SchoolService } from './../../../../services/modules/school/school.service';
+import { GenericService } from '@services/generic/generic-service';
 import { ViewBalanceServiceAdapter } from './view-balance.service.adapter';
-import { EmployeeService } from './../../../../services/modules/employee/employee.service';
 import { UpdateTransactionDialogComponent } from './../../components/update-transaction-dialog/update-transaction-dialog.component';
 import { ImagePreviewDialogComponent } from './../../components/image-preview-dialog/image-preview-dialog.component';
 import { PrintService } from '../../../../print/print-service';
@@ -20,8 +19,7 @@ import xlsx = require('xlsx');
   styleUrls: ['./view-balance.component.css'],
   providers: [
     AccountsService,
-    SchoolService,
-    EmployeeService,
+    GenericService,
   ]
 })
 
@@ -162,8 +160,7 @@ export class ViewBalanceComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     public accountsService: AccountsService,
-    public schoolService: SchoolService,
-    public employeeService: EmployeeService,
+    public genericService: GenericService,
     public printService: PrintService,
   ) { }
 

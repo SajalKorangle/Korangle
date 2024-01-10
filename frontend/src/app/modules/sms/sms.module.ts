@@ -5,10 +5,6 @@ import { ComponentsModule } from '../../components/components.module';
 
 import { SmsComponent } from './sms.component';
 
-import { SendSmsComponent } from './pages/send-sms/send-sms.component';
-import { ViewSentComponent } from './pages/view-sent/view-sent.component';
-import { ViewPurchasesComponent } from './pages/view-purchases/view-purchases.component';
-
 import { SmsRoutingModule } from './sms.routing';
 
 import { SmsOldService } from '../../services/modules/sms/sms-old.service';
