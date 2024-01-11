@@ -17,6 +17,10 @@ export class CountAllStudentAttendanceServiceAdapter{
                 parentStudent__parentSchool : this.vm.user.activeSchool.dbId,
                 parentSession: this.vm.user.activeSchool.currentSessionDbId,
             })
+            .addParentQuery(
+                'parentStudent',
+                new Query().setFields('name', 'fathersName', 'mobileNumber', 'secondMobileNumber')
+            )
             .getObjectList({student_app: 'StudentSection'});
 
         const divisionQuery = new Query()
@@ -106,11 +110,11 @@ export class CountAllStudentAttendanceServiceAdapter{
         });
 
         this.vm.overallSchoolAttendance = {
-            'PRESENT' : 0,
-            'ABSENT' : 0,
-            'HOLIDAY' : 0,
-            'NOT_RECORDED' : 0,
-            'TOTAL' : 0,
+            'PRESENT' : {'count': 0, 'studentSectionList': []},
+            'ABSENT' : {'count': 0, 'studentSectionList': []},
+            'HOLIDAY' : {'count': 0, 'studentSectionList': []},
+            'NOT_RECORDED' : {'count': 0, 'studentSectionList': []},
+            'TOTAL' : {'count': 0, 'studentSectionList': []},
         };
 
         for (let i = 0; i < this.vm.studentSectionList.length; ++i) {
@@ -136,35 +140,41 @@ export class CountAllStudentAttendanceServiceAdapter{
 
             if (attendanceList[classNo]) {
                 if (attendanceList[classNo][division]) {
-                        ++attendanceList[classNo][division][attendanceStatus];
+                    ++attendanceList[classNo][division][attendanceStatus]['count'];
+                    attendanceList[classNo][division][attendanceStatus]['studentSectionList'].push(this.vm.studentSectionList[i]);
                 } else {
                     attendanceList[classNo][division] = {
-                        'PRESENT' : 0,
-                        'ABSENT' : 0,
-                        'HOLIDAY' : 0,
-                        'NOT_RECORDED' : 0,
-                        'TOTAL' : 0,
+                        'PRESENT' : {'count': 0, 'studentSectionList': []},
+                        'ABSENT' : {'count': 0, 'studentSectionList': []},
+                        'HOLIDAY' : {'count': 0, 'studentSectionList': []},
+                        'NOT_RECORDED' : {'count': 0, 'studentSectionList': []},
+                        'TOTAL' : {'count': 0, 'studentSectionList': []},
                     };
-                    attendanceList[classNo][division][attendanceStatus] = 1;
+                    ++attendanceList[classNo][division][attendanceStatus]['count'];
+                    attendanceList[classNo][division][attendanceStatus]['studentSectionList'].push(this.vm.studentSectionList[i]);
                 }
             } else {
                 attendanceList[classNo] = {
                     "name": classs,
                 };
                 attendanceList[classNo][division] = {
-                    'PRESENT' : 0,
-                    'ABSENT' : 0,
-                    'HOLIDAY' : 0,
-                    'NOT_RECORDED' : 0,
-                    'TOTAL' : 0,
+                    'PRESENT' : {'count': 0, 'studentSectionList': []},
+                    'ABSENT' : {'count': 0, 'studentSectionList': []},
+                    'HOLIDAY' : {'count': 0, 'studentSectionList': []},
+                    'NOT_RECORDED' : {'count': 0, 'studentSectionList': []},
+                    'TOTAL' : {'count': 0, 'studentSectionList': []},
                 };
-                attendanceList[classNo][division][attendanceStatus] = 1;
+                ++attendanceList[classNo][division][attendanceStatus]['count'];
+                attendanceList[classNo][division][attendanceStatus]['studentSectionList'].push(this.vm.studentSectionList[i]);
             }
 
-            ++attendanceList[classNo][division]['TOTAL'];
+            ++attendanceList[classNo][division]['TOTAL']['count'];
+            attendanceList[classNo][division]['TOTAL']['studentSectionList'].push(this.vm.studentSectionList[i]);
 
-            ++this.vm.overallSchoolAttendance[attendanceStatus];
-            ++this.vm.overallSchoolAttendance['TOTAL'];
+            ++this.vm.overallSchoolAttendance[attendanceStatus]['count'];
+            this.vm.overallSchoolAttendance[attendanceStatus]['studentSectionList'].push(this.vm.studentSectionList[i]);
+            ++this.vm.overallSchoolAttendance['TOTAL']['count'];
+            this.vm.overallSchoolAttendance['TOTAL']['studentSectionList'].push(this.vm.studentSectionList[i]);
         }
         this.vm.isLoading = false;
         this.vm.showStudentList = true;
