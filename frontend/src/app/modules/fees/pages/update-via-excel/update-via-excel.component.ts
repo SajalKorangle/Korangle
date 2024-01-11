@@ -480,7 +480,7 @@ export class UpdateViaExcelComponent implements OnInit {
                     this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId]
                 ) {
 
-                    //checking if a previously unused installment is being added 
+                    //checking if a previously unused installment is being added
                     let studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId];
                     if (!studentFee[feeColumn[0].split("-")[1] + "Amount"]) {
                         if (uploadedRow[feeColumn[1]]) {
