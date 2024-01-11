@@ -1,0 +1,49 @@
+<mat-dialog-content class="show-student-list-modal-container">
+    <!-- Starts: Header -->
+    <div class="header">
+        <div class="title">{{headerValue}}</div>
+        <div><i class="material-icons close-btn" (click)="closeClicked()">highlight_off</i></div>
+    </div>
+    <br />
+    <!-- Ends: Header -->
+
+    <div>
+        <div class="column-detail text-{{ user.activeSchool.secondaryThemeColor }}" style="margin-bottom: 2rem;">
+            <div class="student-name">
+                S. No.
+            </div>
+            <div class="student-name">
+                Student Name
+            </div>
+            <div class="student-name">
+                Father's Name
+            </div>
+            <div class="student-class">
+                Mobile No.
+            </div>
+            <div class="student-section">
+                Alt. Mobile No.
+            </div>
+        </div>
+
+        <ng-container *ngFor="let student of studentList; let i = index;">
+            <div class="column-detail" style="font-size: 12px;">
+                <div class="student-name">
+                    {{ i + 1 }}.
+                </div>
+                <div class="student-name">
+                    {{ student.parentStudentInstance.name }}
+                </div>
+                <div class="student-name">
+                    {{ student.parentStudentInstance.fathersName }}
+                </div>
+                <div class="student-class">
+                    {{ student.parentStudentInstance.mobileNumber }}
+                </div>
+                <div class="student-section">
+                    {{ student.parentStudentInstance.secondMobileNumber }}
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</mat-dialog-content>

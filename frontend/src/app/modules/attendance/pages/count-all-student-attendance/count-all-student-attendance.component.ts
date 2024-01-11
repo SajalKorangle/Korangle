@@ -5,6 +5,8 @@ import {isMobile} from "../../../../classes/common";
 import { PrintService } from 'app/print/print-service';
 import { ExcelService } from 'app/excel/excel-service';
 import { PRINT_STUDENT_ATTENDANCE_COUNT } from 'app/print/print-routes.constants';
+import { ShowStudentListModalComponent } from './component/show-student-list-modal/show-student-list-modal.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
     selector: 'count-all-student-attendance',
@@ -22,11 +24,11 @@ export class CountAllStudentAttendanceComponent implements OnInit {
     showStudentList = false;
     attendanceList: any;
     overallSchoolAttendance = {
-        'PRESENT' : 0,
-        'ABSENT' : 0,
-        'HOLIDAY' : 0,
-        'NOT_RECORDED' : 0,
-        'TOTAL' : 0,
+        'PRESENT' : {'count': 0, 'studentSectionList': []},
+        'ABSENT' : {'count': 0, 'studentSectionList': []},
+        'HOLIDAY' : {'count': 0, 'studentSectionList': []},
+        'NOT_RECORDED' : {'count': 0, 'studentSectionList': []},
+        'TOTAL' : {'count': 0, 'studentSectionList': []},
     };
     initialDate: Date;
     selectedDate: Date;
@@ -36,6 +38,7 @@ export class CountAllStudentAttendanceComponent implements OnInit {
     constructor(
         private printService: PrintService,
         private excelService: ExcelService,
+        public dialog: MatDialog,
     ) { }
 
     ngOnInit() {
@@ -54,6 +57,16 @@ export class CountAllStudentAttendanceComponent implements OnInit {
     checkMobile() {
         return isMobile();
     }
+
+    /* Open Table Format Name Dialog */
+    openShowStudentListDialog(classSection, attendanceStatus, studentSectionList: any): void {
+        const dialogRef = this.dialog.open(ShowStudentListModalComponent, {
+            data: {
+                studentList: studentSectionList,
+                headerValue: classSection + " >> " + attendanceStatus
+            }
+        });
+    }  // Ends: openShowStudentListDialog()
 
     getHeaderValues() {
         let headerValues = [];
