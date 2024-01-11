@@ -912,3 +912,22 @@ def FeeAmountRefundHandler(sender, instance, **kwargs):
             response = initiateRefund(instance.orderId, splitDetails, refundAmount)
             instance.refundId = response['refundId']
             instance.status = 'Refund Initiated'
+
+
+class FeesViewAllReport(models.Model):
+
+    name = models.CharField(max_length=50)
+    parentSchool = models.ForeignKey(School, on_delete=models.CASCADE, default=0, related_name="feesViewAllTableList")
+    studentListFilter = models.JSONField(null=True)    # It will store all the rows of the table in JSON format.
+    columnListFilter = models.JSONField(null=True)    # It will store all the columns of the table in JSON format.
+    searchText = models.TextField(null=True, blank=True)
+    searchParameter = models.TextField(null=True)
+
+    def __str__(self):
+        return self.formatName
+
+    class Permissions(BasePermission):
+        RelationsToSchool = ['parentSchool__id']
+
+    class Meta:
+        db_table = 'fees_view_all_report'

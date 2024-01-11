@@ -1,0 +1,51 @@
+/* Starts: Modal Container */
+.name-report-dialog-container {
+    height: 30vh;
+    width: 30vw;
+}
+/* Ends: Modal Container */
+
+/* Bottom Btns */
+.bottom-btns {
+    float: right;
+}
+
+.delete-btn {
+    color: #FF1717;    /* Red */
+    background-color: white;
+    outline: none;
+    border: none;
+    text-decoration: underline;
+    box-shadow: none;
+}
+
+.bottom-btns .btn {
+    font-weight: 500;
+    font-size: 12px;
+}
+
+.save-btn {
+    text-transform: capitalize !important;
+    padding: 7px 17px;
+}
+/* Ends: Bottom Btns */
+
+/* Starts: Media Query */
+@media only screen and (max-width: 992px) {
+    /* Starts: Modal Container */
+    .name-report-dialog-container {
+        height: 30vh;
+        width: 100%;
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+    }
+    /* Ends: Modal Container */
+
+    /* Starts: Name Section */
+    .inputField {
+        width: 40%;
+    }
+    /* Ends: Name Section */
+}
+/* Ends: Media Query */
