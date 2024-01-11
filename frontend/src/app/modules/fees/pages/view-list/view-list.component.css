@@ -1,0 +1,48 @@
+
+i {
+  cursor: pointer;
+}
+table {
+  width: 100%;
+}
+
+.example-viewport {
+    height: 60vh;
+    width: 100%;
+    border-top: 1px solid #909090;
+}
+
+.minWidth {
+    min-width: 100px;
+    max-width: 400px;
+    line-height: 18px;
+    word-wrap: break-word;
+}
+
+.menu-icon {
+    font-size: 12px !important;
+    color: black !important;
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 50%;
+}
+
+.menu-icon:hover {
+    background-color: #C4C4C4;
+}
+
+.custom-button {
+    font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    border:2px solid #ff9800;
+    color:white;
+    background: #ff9800;
+    padding: 0px 6px;
+}
+
+.custom-button:hover {
+    box-shadow: 0 0 11px rgba(33,33,33,.2); 
+}

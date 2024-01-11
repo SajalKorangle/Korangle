@@ -51,21 +51,21 @@
                 <tbody>
                     <tr style="font-weight: bold;">
                         <td >Overall</td>
-                        <td align="center" >{{overallSchoolAttendance.PRESENT}}</td>
-                        <td align="center" >{{overallSchoolAttendance.ABSENT}}</td>
-                        <td align="center" >{{overallSchoolAttendance.HOLIDAY}}</td>
-                        <td align="center" >{{overallSchoolAttendance.NOT_RECORDED}}</td>
-                        <td align="center" >{{overallSchoolAttendance.TOTAL}}</td>
+                        <td align="center" (click)="openShowStudentListDialog('Total', 'PRESENT', overallSchoolAttendance.PRESENT.studentSectionList)">{{overallSchoolAttendance.PRESENT.count}}</td>
+                        <td align="center" (click)="openShowStudentListDialog('Total', 'ABSENT', overallSchoolAttendance.ABSENT.studentSectionList)">{{overallSchoolAttendance.ABSENT.count}}</td>
+                        <td align="center" (click)="openShowStudentListDialog('Total', 'HOLIDAY', overallSchoolAttendance.HOLIDAY.studentSectionList)">{{overallSchoolAttendance.HOLIDAY.count}}</td>
+                        <td align="center" (click)="openShowStudentListDialog('Total', 'NOT_RECORDED', overallSchoolAttendance.NOT_RECORDED.studentSectionList)">{{overallSchoolAttendance.NOT_RECORDED.count}}</td>
+                        <td align="center" (click)="openShowStudentListDialog('Total', 'TOTAL', overallSchoolAttendance.TOTAL.studentSectionList)">{{overallSchoolAttendance.TOTAL.count}}</td>
                     </tr>
                     <ng-container *ngFor="let class of attendanceList; let i = index">
                         <ng-container *ngFor="let section of class | keyvalue;">
                             <tr *ngIf="section.key !== 'name'">
                                 <td >{{class.name}} - {{section.key}}</td>
-                                <td align="center" >{{section.value.PRESENT}}</td>
-                                <td align="center" >{{section.value.ABSENT}}</td>
-                                <td align="center" >{{section.value.HOLIDAY}}</td>
-                                <td align="center" >{{section.value.NOT_RECORDED}}</td>
-                                <td align="center" >{{section.value.TOTAL}}</td>
+                                <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(class.name + ' - ' + section.key, 'PRESENT', section.value.PRESENT.studentSectionList)">{{section.value.PRESENT.count}}</td>
+                                <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(class.name + ' - ' + section.key, 'ABSENT', section.value.ABSENT.studentSectionList)">{{section.value.ABSENT.count}}</td>
+                                <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(class.name + ' - ' + section.key, 'HOLIDAY', section.value.HOLIDAY.studentSectionList)">{{section.value.HOLIDAY.count}}</td>
+                                <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(class.name + ' - ' + section.key, 'NOT_RECORDED', section.value.NOT_RECORDED.studentSectionList)">{{section.value.NOT_RECORDED.count}}</td>
+                                <td align="center" style="cursor: pointer" (click)="openShowStudentListDialog(class.name + ' - ' + section.key, 'TOTAL', section.value.TOTAL.studentSectionList)">{{section.value.TOTAL.count}}</td>
                             </tr>
                         </ng-container>
                     </ng-container>

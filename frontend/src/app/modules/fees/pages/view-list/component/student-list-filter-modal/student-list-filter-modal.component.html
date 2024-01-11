@@ -1,0 +1,236 @@
+<mat-dialog-content class="filter-modal-container">
+
+    <!-- Starts: Class-Section Drop Down -->
+    <br/><br/><b>Class, Section</b><br/>
+    <mat-form-field style="margin-right: 15px">
+        <mat-select placeholder="Select Class" id="select-class" style="width: 100%">
+
+            <mat-option>
+                <button class="btn" style="padding: 4px 7px" id="select-all-classes" (click)="selectAllClasses(); $event.stopPropagation()">
+                    Select All
+                </button>
+                <button class="btn" style="padding: 4px 7px" (click)="unselectAllClasses(); $event.stopPropagation()">
+                    Clear All
+                </button>
+            </mat-option>
+
+            <ng-container *ngFor="let class of classSectionList">
+                <ng-container *ngFor="let section of class.sectionList">
+                    <mat-option style="width: 100%">
+                        <mat-checkbox
+                            class="checkbox-label"
+                            [(ngModel)]="section.selected"
+                            (click)="$event.stopPropagation()"
+                        >
+                            {{ class.name }}<span *ngIf="class.sectionList.length > 1">, {{ section.name }}</span>
+                        </mat-checkbox>
+                    </mat-option>
+                </ng-container>
+            </ng-container>
+
+        </mat-select>
+    </mat-form-field>
+    <!-- Ends: Class-Section Drop Down -->
+
+    <!-- Starts: List of Filters -->
+    <br />
+    <ng-container>
+
+        <!-- Starts : Default Filters -->
+        <ng-container>
+
+            <!-- Starts: Age -->
+            <br /><b>Age</b><br />
+            <input type="number" style="width: 70px; margin-right: 5px" [(ngModel)]="minAge" />
+            <span style="margin-right: 5px">&lt;= Age &lt;=</span>
+            <input type="number" style="width: 70px" [(ngModel)]="maxAge" />
+            <br *ngIf="checkWidth() || checkMobile()" />
+            <br *ngIf="checkWidth() || checkMobile()" />
+            <span *ngIf="!checkWidth() || !checkMobile()">&nbsp; &nbsp;</span>as on date &nbsp;&nbsp;
+            <mat-form-field style="width: 130px">
+                <input matInput type="date" placeholder="Choose a date" (keydown)="handleOnKeyDown($event)" [(ngModel)]="asOnDate" />
+            </mat-form-field>
+            <!-- Ends: Age -->
+
+            <!-- Starts: Category -->
+            <br /><br /><b>Category</b><br />
+            <mat-checkbox
+                [(ngModel)]="scSelected"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >SC
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="stSelected"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >ST
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="obcSelected"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >OBC
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="generalSelected"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >Gen.
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="noneCategory"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >None
+            </mat-checkbox>
+            <!-- Starts: Ends: Category -->
+
+            <!-- Starts: Gender -->
+            <br /><br /><b>Gender</b><br />
+            <mat-checkbox
+                [(ngModel)]="maleSelected"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >M
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="femaleSelected"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >F
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="otherGenderSelected"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >Other
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="noneGender"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >None
+            </mat-checkbox>
+            <!-- Ends: Gender -->
+
+            <!-- Starts: Admission -->
+            <br /><br /><b>Admission</b><br />
+            <mat-checkbox
+                [(ngModel)]="newAdmission"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >New
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="oldAdmission"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >Old
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="noneAdmission"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >None
+            </mat-checkbox>
+            <!-- Ends: Admission -->
+
+            <!-- Starts: RTE -->
+            <br /><br /><b>RTE</b><br />
+            <mat-checkbox
+                [(ngModel)]="yesRTE"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >Yes
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="noRTE"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >No
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="noneRTE"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >None
+            </mat-checkbox>
+            <!-- Ends: RTE -->
+
+            <!-- Starts: TC -->
+            <br /><br /><b>Transfer Certificate</b><br />
+            <mat-checkbox
+                [(ngModel)]="generatedTC"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >Generated
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="issuedTC"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >Issued
+            </mat-checkbox>
+            <mat-checkbox
+                [(ngModel)]="noneTC"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()"
+                >None
+            </mat-checkbox>
+            <!-- Ends: TC -->
+
+        </ng-container>
+        <!-- Ends : Default Filters -->
+
+        <!-- Starts: Custom Filters -->
+        <br />
+        <hr />
+        <h5>Custom Filters</h5>
+        <ng-container *ngFor="let customFilter of studentCustomFilterList">
+            <mat-form-field>
+                <mat-label>{{ customFilter.name }}</mat-label>
+                <input matInput type="text"
+                    [ngModel]="customFilter.userFilterText$.getValue()"
+                    (ngModelChange)="customFilter.userFilterText$.next($event)" />
+            </mat-form-field>
+            <br />
+            <mat-checkbox
+                [(ngModel)]="customFilter.noneSelected"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()">
+                None
+            </mat-checkbox>
+            <mat-checkbox
+                *ngFor="let filter of customFilter.filteredFilterValues"
+                [(ngModel)]="filter.selected"
+                style="margin-right: 5px"
+                (click)="$event.stopPropagation()">
+                {{ filter.name }}
+            </mat-checkbox>
+            <br />
+        </ng-container>
+        <!-- Ends: Custom Filters -->
+
+    </ng-container>
+    <!-- End of Filters -->
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <!-- Starts: Bottom Buttons -->
+    <button mat-button mat-dialog-close>Cancel</button>
+    <div class="bottom-btns">
+        <button
+            type="button"
+            class="btn btn-warning"
+            style="padding: 7px 17px;"
+            matTooltip="Apply Filter"
+            tooltip-position="left"
+            (click) = "applyClick()"
+        >
+            Apply
+        </button>
+    </div>
+    <!-- Ends: Bottom Buttons -->
+</mat-dialog-actions>

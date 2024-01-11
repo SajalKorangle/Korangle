@@ -37,6 +37,12 @@ const routes: Routes = [
     },
 
     {
+        path: 'view_list',
+        loadChildren: 'app/modules/fees/pages/view-list/view-list.module#ViewListModule',
+        data: { moduleName: 'fees' },
+    },
+
+    {
         path: 'generate_fees_certificate',
         loadChildren: 'app/modules/fees/pages/generate-fees-certificate/generate-fees-certificate.module#GenerateFeesCertificateModule',
         data: { moduleName: 'fees' },
