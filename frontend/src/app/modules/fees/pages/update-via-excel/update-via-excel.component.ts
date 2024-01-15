@@ -321,6 +321,7 @@ export class UpdateViaExcelComponent implements OnInit {
             let file = event.target.files[0];
             this.reader.readAsBinaryString(file);
         }
+        event.target.value = '';
     }
 
     headersSanityCheck(): void {
@@ -337,10 +338,11 @@ export class UpdateViaExcelComponent implements OnInit {
         this.feeTypeList.forEach((feeType) => feeTypeHeaders.push(feeType.name));
         const len = headers.length;
         for (let i = this.basicHeadersList.length; i < len; i += 1) {
-            if (!feeTypeHeaders.includes(headers[i].split("-")[0])) {
+            let lastIndex = headers[i].lastIndexOf("-");
+            if (!feeTypeHeaders.includes(headers[i].substring(0, lastIndex))) {
                 this.newErrorCell(0, i, 'Header should be in FeeType-Installment format');
             }
-            if (this.monthList.findIndex( value => { return value.month == headers[i].split("-")[1]; }) == -1) {
+            if (this.monthList.findIndex( value => { return value.month == headers[i].substring(lastIndex + 1); }) == -1) {
                 this.newErrorCell(0, i, 'Invalid Installment name');
             }
             if (headers.indexOf(headers[i]) != i) {
