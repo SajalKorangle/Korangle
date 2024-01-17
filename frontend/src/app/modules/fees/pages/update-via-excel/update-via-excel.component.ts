@@ -475,7 +475,7 @@ export class UpdateViaExcelComponent implements OnInit {
 
             excelFeeColumnList.forEach((feeColumn) => {
                 let feeTypeName = feeColumn[0].substring(0, feeColumn[0].lastIndexOf("-"));
-                let installmentName = feeColumn[0].substring(feeColumn[0].lastIndexOf("-")+1);
+                let installmentName = feeColumn[0].substring(feeColumn[0].lastIndexOf("-") + 1);
                 let feeTypeId = this.feeTypeIdMappedByFeeTypeName[feeTypeName];
 
                 //checking if student_id and feeTypeId already exists
