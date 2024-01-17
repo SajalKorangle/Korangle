@@ -474,7 +474,9 @@ export class UpdateViaExcelComponent implements OnInit {
             let [student_id] = uploadedRow;
 
             excelFeeColumnList.forEach((feeColumn) => {
-                let feeTypeId = this.feeTypeIdMappedByFeeTypeName[feeColumn[0].split("-")[0]];
+                let feeTypeName = feeColumn[0].substring(0, feeColumn[0].lastIndexOf("-"));
+                let installmentName = feeColumn[0].substring(feeColumn[0].lastIndexOf("-")+1);
+                let feeTypeId = this.feeTypeIdMappedByFeeTypeName[feeTypeName];
 
                 //checking if student_id and feeTypeId already exists
                 if (
@@ -484,7 +486,7 @@ export class UpdateViaExcelComponent implements OnInit {
 
                     //checking if a previously unused installment is being added
                     let studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId];
-                    if (!studentFee[feeColumn[0].split("-")[1] + "Amount"]) {
+                    if (!studentFee[installmentName + "Amount"]) {
                         if (uploadedRow[feeColumn[1]]) {
                             this.newErrorCell(row + 1, feeColumn[1], 'Fees already exists for this fee type of the student');
                         }
@@ -492,7 +494,7 @@ export class UpdateViaExcelComponent implements OnInit {
                     }
 
                     //checking if a uploaded fee is equal to previously added fee
-                    let currentFee = studentFee[feeColumn[0].split("-")[1] + "Amount"];
+                    let currentFee = studentFee[installmentName + "Amount"];
                     if (parseInt(uploadedRow[feeColumn[1]]) != currentFee) {
                         // What happens if parseInt gives error: It will not give error, handled in previous sanity check
                         this.newErrorCell(row + 1, feeColumn[1], 'Student Fee inconsistent with previous student fee');
