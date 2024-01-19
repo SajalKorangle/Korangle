@@ -148,14 +148,19 @@ export class UpdateViaExcelServiceAdapter {
                 this.vm.excelDataFromUser.slice(1).forEach((uploadedRow, rowIndex) => {
                     let student_id = uploadedRow[0];
                     excelFeeColumnList.forEach((feeColumn) => {
-                        let feeTypeId = this.vm.feeTypeIdMappedByFeeTypeName[feeColumn[0].split("-")[0]];
+
+                        let lastIndex = feeColumn[0].lastIndexOf("-");
+                        let feeTypeName = feeColumn[0].substring(0, lastIndex);
+                        let month = feeColumn[0].substring(lastIndex + 1);
+
+                        let feeTypeId = this.vm.feeTypeIdMappedByFeeTypeName[feeTypeName];
 
                         //checking if student_id, feeTypeId, Installment type is not present, because if it is present we dont have to upload it
                         if (
                             !(
                                 this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id] &&
                                 this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId] &&
-                                this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId][feeColumn[0].split("-")[1] + "Amount"]
+                                this.vm.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId][month + "Amount"]
                             ) &&
                             this.vm.excelDataFromUser[rowIndex + 1][feeColumn[1]] != 0 //checking if fee amount is not empty
                         ) {
@@ -165,7 +170,7 @@ export class UpdateViaExcelServiceAdapter {
                             studentFee = studentFeeListToBeUploaded.find(e => e.parentStudent == student_id && e.parentFeeType == feeTypeId);
                             if (studentFee) {
                                 //add installment to feeType that has already been added to studentFeeListToBeUploaded
-                                studentFee[feeColumn[0].split("-")[1] + "Amount"] = this.vm.excelDataFromUser[rowIndex + 1][feeColumn[1]];
+                                studentFee[month + "Amount"] = this.vm.excelDataFromUser[rowIndex + 1][feeColumn[1]];
                                 return;
                             }
                             else {
@@ -179,7 +184,7 @@ export class UpdateViaExcelServiceAdapter {
                             studentFee['parentFeeType'] = feeTypeId;
                             studentFee['parentSession'] = this.vm.user.activeSchool.currentSessionDbId;
                             studentFee['isAnnually'] = false;
-                            studentFee[feeColumn[0].split("-")[1] + "Amount"] = this.vm.excelDataFromUser[rowIndex + 1][feeColumn[1]];
+                            studentFee[month + "Amount"] = this.vm.excelDataFromUser[rowIndex + 1][feeColumn[1]];
                             studentFeeListToBeUploaded.push(studentFee);
                             if (
                                 schoolFeeRuleListToBeUploaded.find((schoolFeeRule) => {
