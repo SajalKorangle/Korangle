@@ -93,6 +93,12 @@ export class UpdateViaExcelComponent implements OnInit {
             this.clearExcelData(); // clear previous data if any
             this.excelDataFromUser = xlsx.utils.sheet_to_json(ws, { header: 1 });
 
+            if (this.excelDataFromUser.length == 0) {
+                alert('Trying to upload empty file');
+                this.isLoading = false;
+                return;
+            }
+
             //Removing empty rows from bottom
             while (!this.excelDataFromUser[this.excelDataFromUser.length - 1].reduce((prevResult, cell) => prevResult || cell, false)) {
                 this.excelDataFromUser.pop();
@@ -338,9 +344,13 @@ export class UpdateViaExcelComponent implements OnInit {
         this.feeTypeList.forEach((feeType) => feeTypeHeaders.push(feeType.name));
         const len = headers.length;
         for (let i = this.basicHeadersList.length; i < len; i += 1) {
+            if (!headers[i] || headers[i] == '') {
+                this.newErrorCell(0, i, 'Header should not be empty.');
+                continue;
+            }
             let lastIndex = headers[i].lastIndexOf("-");
             if (!feeTypeHeaders.includes(headers[i].substring(0, lastIndex))) {
-                this.newErrorCell(0, i, 'Header should be in FeeType-Installment format');
+                this.newErrorCell(0, i, 'Header should be in FeeType-Installment format, with correct fee type name.');
             }
             if (this.monthList.findIndex( value => { return value.month == headers[i].substring(lastIndex + 1); }) == -1) {
                 this.newErrorCell(0, i, 'Invalid Installment name');
@@ -349,7 +359,6 @@ export class UpdateViaExcelComponent implements OnInit {
                 this.newErrorCell(0, i, 'Duplicate Header');
             }
         }
-
     }
 
     removingEmptyOrAllZeroFeeTypeColumns(): void {
