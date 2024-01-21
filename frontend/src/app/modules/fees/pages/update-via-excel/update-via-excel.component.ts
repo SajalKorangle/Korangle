@@ -10,6 +10,18 @@ import { FeeService } from './../../../../services/modules/fees/fee.service';
 import { INSTALLMENT_LIST } from '../../classes/constants';
 import { isMobile } from '../../../../classes/common';
 
+interface month {
+    month: string;
+    checked: boolean;
+}
+
+interface feeType {
+    id: number;
+    name: string;
+    orderNumber: number;
+    parentSchool: number;
+    checked: boolean;
+}
 
 @Component({
     selector: 'app-update-via-excel',
@@ -24,9 +36,8 @@ export class UpdateViaExcelComponent implements OnInit {
 
     classList = [];
     divisionList = [];
-    feeTypeList = [];
-    feeTypeExcelColumnIndexMappedByFeeTypeId = {};
-    feeTypeIdMappedByFeeTypeExcelColumnIndex = {};
+    feeTypeList: Array<feeType> = [];
+    feeTypeIdMappedByFeeTypeName: {[feeTypeName: string]: number} = {}; //structure: {feeTypeName: feeType,...}
     studentSectionList = []; // student data available in student session with key 'student'
 
     studentListMappedByClassIdDivisionId = {}; // structure: {classsid: {divisionId: [student1,...], ...}, ...}
@@ -55,6 +66,10 @@ export class UpdateViaExcelComponent implements OnInit {
 
     serviceAdapter: UpdateViaExcelServiceAdapter;
 
+    monthList: Array<month> = [];
+
+    basicHeadersList = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
+
     constructor(public studentService: StudentService, public classService: ClassService, public feeService: FeeService) {}
 
     ngOnInit() {
@@ -62,6 +77,7 @@ export class UpdateViaExcelComponent implements OnInit {
         this.serviceAdapter = new UpdateViaExcelServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+        this.initializeMonthList();
 
         this.reader.onload = (e: any) => {
             this.isLoading = true;
@@ -76,6 +92,12 @@ export class UpdateViaExcelComponent implements OnInit {
             /* save data */
             this.clearExcelData(); // clear previous data if any
             this.excelDataFromUser = xlsx.utils.sheet_to_json(ws, { header: 1 });
+
+            if (this.excelDataFromUser.length == 0) {
+                alert('Trying to upload empty file');
+                this.isLoading = false;
+                return;
+            }
 
             //Removing empty rows from bottom
             while (!this.excelDataFromUser[this.excelDataFromUser.length - 1].reduce((prevResult, cell) => prevResult || cell, false)) {
@@ -185,13 +207,76 @@ export class UpdateViaExcelComponent implements OnInit {
         return isMobile();
     }
 
+    //Counts how many months are selected to use in feeType headercell index formula
+    getSelectedMonthCount(): number {
+        let count = 0;
+        this.monthList.forEach((item) => {
+            if (item.checked) {
+                count += 1;
+            }
+        });
+        return count;
+    }
+
     downloadSheetTemplate(): void {
+        let monthSelected = false;
+        let classSectionSelected = false;
+        let feeTypeSelected = false;
+
+        //Start Month selected check
+        this.monthList.some((item) => {
+            if (item.checked) {
+                monthSelected = true;
+                return true;
+            }
+        });
+        //Month selected check ends
+
+        //Start ClassSection selected check
+        this.classList.forEach((Class) => {
+            this.divisionList.forEach((Division) => {
+                if (this.classDivisionSelectionMappedByClassIdDivisionId[Class.id][Division.id])
+                    classSectionSelected = true;
+            });
+        });
+        //End ClassSection selected check
+
+        //Start feeType selected check
+        this.feeTypeList.forEach((item) => {
+            if (item.checked) {
+                feeTypeSelected = true;
+                return;
+            }
+        });
+        //End feeType selected check
+
+        if (!classSectionSelected) {
+            alert("Please Select a Class");
+            return;
+        } else if (!monthSelected) {
+            alert("Please Select a Installment type");
+            return;
+        } else if (!feeTypeSelected) {
+            alert("Please Select a Fee Type.");
+            return;
+        }
         let headerRowPlusStudentListToBeDownloaded = []; // to be downloaded
-
-        let headersRow = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
-        this.feeTypeList.forEach((feeType) => headersRow.push(feeType.name));
+        //Start Populating Excel sheet headers
+        let selectedMonthCount = this.getSelectedMonthCount(); // used in feeType cell formula
+        let headersRow = [...this.basicHeadersList];
+        this.feeTypeList.forEach((feeType) => {
+                if (feeType.checked) {
+                    this.monthList.forEach((item) => {
+                        if (item.checked) {
+                            headersRow.push(feeType.name + '-' + item.month);
+                        }
+                    });
+                }
+        });
         headerRowPlusStudentListToBeDownloaded.push(headersRow);
+        //End Populating Excel sheet headers
 
+        //Start Populating Excel sheet data
         this.classList.forEach((Class) => {
             this.divisionList.forEach((Division) => {
                 if (this.classDivisionSelectionMappedByClassIdDivisionId[Class.id][Division.id]) {
@@ -203,22 +288,25 @@ export class UpdateViaExcelComponent implements OnInit {
                             student.fathersName,
                             `${Class.name} ${this.showSection(Class) ? ',' + Division.name : ''}`,
                         ];
-
+                        let feeTypeExcelColumnIndex = 5;
                         this.feeTypeList.forEach((feeType) => {
-                            let studentFee;
-                            if (this.studentFeeListMappedByStudentIdFeeTypeId[student.id]) {
-                                studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student.id][feeType.id];
-                            }
-                            if (studentFee) {
-                                let feeTypeExcelColumnIndex = this.feeTypeExcelColumnIndexMappedByFeeTypeId[studentFee.parentFeeType];
-                                if (studentFee.isAnnually) {
-                                    row[feeTypeExcelColumnIndex] = studentFee.aprilAmount;
-                                } else {
-                                    //   if not annually compute total
-                                    row[feeTypeExcelColumnIndex] = INSTALLMENT_LIST.reduce((total, month) => {
-                                        return total + studentFee[month + 'Amount'];
-                                    }, 0);
+                            if (feeType.checked) {
+                                let studentFee;
+                                if (this.studentFeeListMappedByStudentIdFeeTypeId[student.id]) {
+                                    studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student.id][feeType.id];
                                 }
+                                if (studentFee) {
+                                    let index = 0;
+                                    this.monthList.forEach((item) => {
+                                        if (item.checked) {
+                                            //formula to decide where to put studentFee because of Installment filter and feetype filter
+                                            row[index + this.NUM_OF_COLUMNS_FOR_STUDENT_INFO + (selectedMonthCount) *
+                                                (feeTypeExcelColumnIndex - this.NUM_OF_COLUMNS_FOR_STUDENT_INFO)] = studentFee[item.month + 'Amount'];
+                                            index += 1;
+                                        }
+                                    });
+                                }
+                                feeTypeExcelColumnIndex++;
                             }
                         });
                         headerRowPlusStudentListToBeDownloaded.push(row);
@@ -226,6 +314,7 @@ export class UpdateViaExcelComponent implements OnInit {
                 }
             });
         });
+        //End Populating Excel sheet data
 
         let ws = xlsx.utils.aoa_to_sheet(headerRowPlusStudentListToBeDownloaded);
         let wb = xlsx.utils.book_new();
@@ -238,16 +327,36 @@ export class UpdateViaExcelComponent implements OnInit {
             let file = event.target.files[0];
             this.reader.readAsBinaryString(file);
         }
+        event.target.value = '';
     }
 
     headersSanityCheck(): void {
         const headers = this.excelDataFromUser[0];
-        let actualHeader = ['Software ID', 'Scholar No.', 'Name', 'Father’s Name', 'Class'];
-        this.feeTypeList.forEach((feeType) => actualHeader.push(feeType.name));
-        const len = actualHeader.length;
-        for (let i = 0; i < len; i += 1) {
-            if (headers[i] !== actualHeader[i]) {
-                this.newErrorCell(0, i, `Header Mismatch: Expected ${actualHeader[i]}`);
+        //Checking if basicHeaders are present at correct position
+        for (let i = 0; i < this.basicHeadersList.length; i += 1) {
+            if (headers[i] !== this.basicHeadersList[i]) {
+                this.newErrorCell(0, i, `Header Mismatch: Expected ${this.basicHeadersList[i]}`);
+            }
+        }
+
+        //Checking if feeType Headers are in correct format and Installment types are correct
+        let feeTypeHeaders = [];
+        this.feeTypeList.forEach((feeType) => feeTypeHeaders.push(feeType.name));
+        const len = headers.length;
+        for (let i = this.basicHeadersList.length; i < len; i += 1) {
+            if (!headers[i] || headers[i] == '') {
+                this.newErrorCell(0, i, 'Header should not be empty.');
+                continue;
+            }
+            let lastIndex = headers[i].lastIndexOf("-");
+            if (!feeTypeHeaders.includes(headers[i].substring(0, lastIndex))) {
+                this.newErrorCell(0, i, 'Header should be in FeeType-Installment format, with correct fee type name.');
+            }
+            if (this.monthList.findIndex( value => { return value.month == headers[i].substring(lastIndex + 1); }) == -1) {
+                this.newErrorCell(0, i, 'Invalid Installment name');
+            }
+            if (headers.indexOf(headers[i]) != i) {
+                this.newErrorCell(0, i, 'Duplicate Header');
             }
         }
     }
@@ -366,32 +475,59 @@ export class UpdateViaExcelComponent implements OnInit {
     }
 
     studentPreviousFeeSanityCheck(): void {
-        let excelFeeColumnList = this.excelDataFromUser[0].map((_, i) => i).slice(this.NUM_OF_COLUMNS_FOR_STUDENT_INFO);
+        //create list of usefulFeeTypes in the form (feeName-month, index)
+        let excelFeeColumnList = this.usefulFeeTypeExcelColumnIndexList.map((value) => [this.excelDataFromUser[0][value], value]);
+
+        //traversing row of  uploaded data
         this.excelDataFromUser.slice(1).forEach((uploadedRow, row) => {
             let [student_id] = uploadedRow;
-            excelFeeColumnList.forEach((colIndex) => {
-                let studentFee;
+
+            excelFeeColumnList.forEach((feeColumn) => {
+                let feeTypeName = feeColumn[0].substring(0, feeColumn[0].lastIndexOf("-"));
+                let installmentName = feeColumn[0].substring(feeColumn[0].lastIndexOf("-") + 1);
+                let feeTypeId = this.feeTypeIdMappedByFeeTypeName[feeTypeName];
+
+                //checking if student_id and feeTypeId already exists
                 if (
                     this.studentFeeListMappedByStudentIdFeeTypeId[student_id] &&
-                    this.studentFeeListMappedByStudentIdFeeTypeId[student_id][this.feeTypeIdMappedByFeeTypeExcelColumnIndex[colIndex]]
+                    this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId]
                 ) {
-                    studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][
-                        this.feeTypeIdMappedByFeeTypeExcelColumnIndex[colIndex]
-                    ];
-                    let annual_total;
-                    if (studentFee.isAnnually) {
-                        annual_total = studentFee.aprilAmount;
-                    } else {
-                        annual_total = INSTALLMENT_LIST.reduce((total, month) => {
-                            return total + studentFee[month + 'Amount'];
-                        }, 0);
+
+                    //checking if a previously unused installment is being added
+                    let studentFee = this.studentFeeListMappedByStudentIdFeeTypeId[student_id][feeTypeId];
+                    if (!studentFee[installmentName + "Amount"]) {
+                        if (uploadedRow[feeColumn[1]]) {
+                            this.newErrorCell(row + 1, feeColumn[1], 'Fees already exists for this fee type of the student');
+                        }
+                        return;
                     }
-                    if (parseInt(uploadedRow[colIndex]) != annual_total) {
+
+                    //checking if a uploaded fee is equal to previously added fee
+                    let currentFee = studentFee[installmentName + "Amount"];
+                    if (parseInt(uploadedRow[feeColumn[1]]) != currentFee) {
                         // What happens if parseInt gives error: It will not give error, handled in previous sanity check
-                        this.newErrorCell(row + 1, colIndex, 'Student Fee inconsistent with previous student fee');
+                        this.newErrorCell(row + 1, feeColumn[1], 'Student Fee inconsistent with previous student fee');
                     }
                 }
             });
+        });
+    }
+
+    initializeMonthList(): void {
+        INSTALLMENT_LIST.forEach((month) => {
+            this.monthList.push({"month": month, "checked": false});
+        });
+    }
+
+    updateMonthSelection(selectionStatus: boolean): void {
+        this.monthList.forEach((item) => {
+            item.checked = selectionStatus;
+        });
+    }
+
+    updateFeeTypeSelection(selectionStatus: boolean): void {
+        this.feeTypeList.forEach((item) => {
+            item.checked = selectionStatus;
         });
     }
 }
