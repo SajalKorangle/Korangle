@@ -36,6 +36,7 @@ export class GenerateFeesReportServiceAdapter {
                 parentSchool: this.vm.user.activeSchool.dbId,
                 cancelled: false,
                 generationDateTime__gte: this.vm.getSession().startDate + ' 00:00:00+05:30',
+                generationDateTime__lte: this.vm.getSession().endDate + ' 23:59:59+05:30',
             };
 
             Promise.all([
