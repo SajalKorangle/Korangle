@@ -187,13 +187,17 @@ export class DesignReportCardServiceAdapter {
         const request_attendance_data = {
             parentStudent: this.vm.selectedStudent.id,
             dateOfAttendance__gte:
-                this.vm.DATA.data.sessionList.find((session) => {
-                    return session.id === this.vm.user.activeSchool.currentSessionDbId;
-                }).startDate,
+                new Date(
+                    this.vm.DATA.data.sessionList.find((session) => {
+                        return session.id === this.vm.user.activeSchool.currentSessionDbId;
+                    }).startDate
+                ).getFullYear() + '-01-01', // We are getting the attendance of whole first year just to be safe
             dateOfAttendance__lte:
-                this.vm.DATA.data.sessionList.find((session) => {
-                    return session.id === this.vm.user.activeSchool.currentSessionDbId;
-                }).endDate,
+                new Date(
+                    this.vm.DATA.data.sessionList.find((session) => {
+                        return session.id === this.vm.user.activeSchool.currentSessionDbId;
+                    }).endDate
+                ).getFullYear() + '-12-31', // We are getting the attendance of whole second year just to be safe
         };
         const request_student_sub_grade_data = {
             parentStudent: this.vm.selectedStudent.id,
