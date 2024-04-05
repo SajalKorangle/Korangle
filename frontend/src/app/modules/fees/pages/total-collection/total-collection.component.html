@@ -6,6 +6,7 @@
                     [formattedDateOutput]="true"
                     [placeHolder]="'Start Date'"
                     [minDate]="minDate"
+                    [nullButtonDisabled]="true"
                     (onDateSelected)="startDate = $event">
                 </day-date>
             </div>
@@ -14,6 +15,7 @@
                     [formattedDateOutput]="true"
                     [placeHolder]="'End Date'" 
                     [minDate]="minDate"
+                    [nullButtonDisabled]="true"
                     (onDateSelected)="endDate = $event">
                 </day-date>
             </div>
