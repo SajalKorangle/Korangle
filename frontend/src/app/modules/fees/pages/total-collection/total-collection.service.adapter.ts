@@ -49,8 +49,12 @@ export class TotalCollectionServiceAdapter {
                 this.vm.sectionList = value[3];
                 this.vm.boardList = value[4];
                 this.vm.sessionList = value[5];
-                if (value[6].configJSON['numberOfDays'] != null) {
-                    let numberOfDays = value[6].configJSON['numberOfDays'];
+                let numberOfDaysEmployeePermissionDict = {};
+                if (value[6]) {
+                    numberOfDaysEmployeePermissionDict = JSON.parse(value[6].configJSON);
+                }
+                if (numberOfDaysEmployeePermissionDict['numberOfDays'] != null) {
+                    let numberOfDays = numberOfDaysEmployeePermissionDict['numberOfDays'];
                     if (!isNaN(numberOfDays) && numberOfDays >= 1) {
                         const currentDate = new Date();
                         this.vm.minDate = new Date(currentDate);
