@@ -32,11 +32,6 @@ export class UpdateProfileHtmlRenderer {
         if (!item && old_item) {
             return true;
         }
-        if (old_item) {
-            if (old_item.value === this.vm.NULL_CONSTANT) {
-                return item && (!old_item || item.document_value != old_item.document_value);
-            }
-        }
         return item && (!old_item || item.value !== old_item.value || item.document_value != old_item.document_value);
     }
 

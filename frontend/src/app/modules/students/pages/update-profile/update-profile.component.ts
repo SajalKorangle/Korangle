@@ -246,6 +246,7 @@ export class UpdateProfileComponent implements OnInit {
             if (item) {
                 if (old_item) {
                     item.id = old_item.id;
+                    item.value = old_item.value;
                     item.document_value = old_item.document_value;
                     item.document_size = old_item.document_size;
                     item.document_name = old_item.document_name;
@@ -258,6 +259,7 @@ export class UpdateProfileComponent implements OnInit {
             } else if (old_item) {
                 item = {
                     id: old_item.id,
+                    value: old_item.value,
                     parentStudentParameter: parameter.id,
                     document_value: old_item.document_value,
                     document_name: old_item.document_name,
