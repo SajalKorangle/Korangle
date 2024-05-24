@@ -174,7 +174,6 @@ export class DesignTCServiceAdapter {
             this.vm.DATA.data.studentSectionList.push(...value[0]);
             this.vm.DATA.data.studentList.push(...value[1]);
             this.vm.DATA.data.studentParameterValueList.push(...value[2]);
-            console.log(value[3]);
             this.vm.DATA.data.attendanceList.push(...value[3]);
 
             this.vm.DATA.studentId = this.vm.selectedStudent.id;
