@@ -10,11 +10,8 @@ from school_app.model.models import School, Session, SchoolSession
 
 from student_app.models import StudentSection
 from fees_third_app.models import FeeReceipt
-from subject_app.models import ClassSubject
 from examination_app.models import StudentTest
 from employee_app.models import Employee
-from homework_app.models import HomeworkQuestion
-from tutorial_app.models import Tutorial
 from datetime import date
 from django.db.models import Q
 
@@ -45,14 +42,14 @@ class ActiveListFilter(admin.SimpleListFilter):
 class SchoolAdmin(admin.ModelAdmin):
     search_fields = ('printName', 'id')
     list_display = ('Name', 'Stud', 'Empl', 'Fee_Receipts', 'Stud_Marks',
-                    'Active', 'S_2022_23', 'S_2021_22')
+                    'Active', 'S_2023_24', 'S_2022_23')
     list_filter = (ActiveListFilter,)
 
     def Name(self, obj):
         return str(obj.pk) + ' - ' + obj.printName
 
     def Stud(self, obj):
-        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2023-24').count())
+        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2024-25').count())
 
     def Empl(self, obj):
         return str(Employee.objects.filter(parentSchool_id=obj.pk).count())
@@ -73,8 +70,8 @@ class SchoolAdmin(admin.ModelAdmin):
         else:
             return 'Yes'
 
+    def S_2023_24(self, obj):
+        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2023-24').count())
+
     def S_2022_23(self, obj):
         return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2022-23').count())
-
-    def S_2021_22(self, obj):
-        return str(StudentSection.objects.filter(parentStudent__parentSchool_id=obj.pk, parentSession__name='Session 2021-22').count())
