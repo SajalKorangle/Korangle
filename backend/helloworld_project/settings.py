@@ -253,3 +253,26 @@ else:
 ZOOM_API_KEY = 'GY5heSVqQIWo8YGY_Patrg'
 ZOOM_SECRET_KEY = 'trQY4s4DkL9GrB20JrInNY7A6ZmTJZ7G6fO0'
 ZOOM_EMAIL_ID = 'korangleplus@gmail.com'
+
+
+
+
+# Add the database configurations
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'master',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
+    'Due_Amount': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Due_Amount',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
+}
