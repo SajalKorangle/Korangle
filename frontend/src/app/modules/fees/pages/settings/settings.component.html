@@ -231,6 +231,37 @@
 
         <mat-divider style="margin: 20px 0px;"></mat-divider>
 
+
+
+        <!-- Due Amount Section  -->
+        <div style="display: flex; flex-direction: row; align-items: center;">
+            <mat-icon style="font-size: 30px">account_balance_wallet</mat-icon>
+            <h3 style="margin-left: 12px;">Due Amount</h3>
+        </div>
+        
+        <div style="display: flex; flex-direction: row; align-items: center;">
+            <span style="font-size: large;">Due Amount &nbsp;</span>
+            <mat-slide-toggle [checked]="this.dueAmount.showDueAmount" (change)="toggleDueAmount($event.checked)"></mat-slide-toggle>
+        </div>
+        
+        
+        <ng-container *ngIf="this.dueAmount.showDueAmount; else amountCleared">
+            <span style="font-size: 16px;">
+                (Due amount will be visible on receipt {{activeSession.name}})
+            </span>
+        </ng-container>
+        
+        <ng-template #amountCleared>
+            <span style="font-size: 16px;">
+                (Due amount will not be visible on receipt {{activeSession.name}})
+            </span>
+        </ng-template>        
+        <br />
+
+
+
+
+
         <!-- Single Fee Receipt Printing Toggle Settings Ends -->
 
         <div style="display: flex; flex-direction: row; align-items: center;">
@@ -254,9 +285,11 @@
             </span>
         </ng-template><br />
 
+
         <button style="margin: 40px 0;" class="btn btn-{{user.activeSchool.secondaryThemeColor}}"
             (click)="serviceAdapter.updatePaymentSettings()">Update</button>
     </ng-container>
+  
 
     <ng-container *ngIf="isLoading">
         <app-loading-spinner [user]="user"></app-loading-spinner>

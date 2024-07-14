@@ -124,7 +124,12 @@
                                     </span>
                                 </div>
                             </div>
-
+                            <div *ngIf="shouldShowDueAmount()" class="row">
+                                <div class="col-sm-2 col-xs-6">Due Amount:</div>
+                                <div class="col-sm-2 col-xs-6">
+                                    {{ getOverAllDue() | indianCurrency }}
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-sm-2 col-xs-6">Remark:</div>
                                 <div class="col-sm-2 col-xs-6">

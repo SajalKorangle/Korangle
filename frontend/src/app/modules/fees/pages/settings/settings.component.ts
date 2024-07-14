@@ -11,6 +11,7 @@ import { SettingsHtmlRenderer } from './settings.html.renderer';
 
 import {CommonFunctions} from '@classes/common-functions';
 import { GenericService } from '@services/generic/generic-service';
+import { DueAmountService } from '@services/dueAmount';
 
 @Component({
     selector: 'lock-fees',
@@ -49,7 +50,8 @@ export class SettingsComponent implements OnInit {
         public genericService: GenericService,
         public feeService: FeeService,
         public accountsService: AccountsService,
-        private cdRef: ChangeDetectorRef
+        private cdRef: ChangeDetectorRef,
+        private dueAmount: DueAmountService
     ) { }
 
     ngOnInit(): void {
@@ -60,6 +62,8 @@ export class SettingsComponent implements OnInit {
         this.serviceAdapter = new SettingsServiceAdapter();
         this.serviceAdapter.initializeAdapter(this);
         this.serviceAdapter.initializeData();
+        const storedState = localStorage.getItem('isDueAmount');
+        this.dueAmount.showDueAmount = storedState ? JSON.parse(storedState) : false;
     }
 
     detectChanges(): void { // what is this?
@@ -125,6 +129,13 @@ export class SettingsComponent implements OnInit {
         }
         return dataValid;
     }
+
+    toggleDueAmount(status: boolean) : void{
+        this.dueAmount.showDueAmount=status;
+        localStorage.setItem('isDueAmount', JSON.stringify(this.dueAmount.showDueAmount));
+    }
+
+
 }
 
 interface CustomAccountSession extends AccountSession {

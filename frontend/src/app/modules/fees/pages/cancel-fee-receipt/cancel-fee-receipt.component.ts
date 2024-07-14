@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { isMobile } from '../../../../classes/common.js';
 
 import { AccountsService } from '@services/modules/accounts/accounts.service';
+import { DueAmountService } from '@services/dueAmount';
 
 @Component({
     selector: 'cancel-fee-receipt',
@@ -61,7 +62,8 @@ export class CancelFeeReceiptComponent implements OnInit {
         public employeeService: EmployeeService,
         public accountsService: AccountsService,
         private cdRef: ChangeDetectorRef,
-        private dialog: MatDialog) { }
+        private dialog: MatDialog,
+        private dueAmount: DueAmountService) { }
 
     ngOnInit(): void {
         this.user = DataStorage.getInstance().getUser();
@@ -208,5 +210,12 @@ export class CancelFeeReceiptComponent implements OnInit {
         return this.feeReceiptBookList.find(feeReceiptBook => {
             return feeReceiptBook.id == feeReceipt.parentFeeReceiptBook;
         }).active;
+    }
+    shouldShowDueAmount(): boolean {
+        return this.dueAmount.showDueAmount;
+    }
+
+    getOverAllDue():number{
+        return this.dueAmount.overAllDueAmount;
     }
 }

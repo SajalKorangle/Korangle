@@ -26,6 +26,7 @@ import { NotificationService } from '../../../../services/modules/notification/n
 import { UserService } from '@services/modules/user/user.service';
 import { MessageService } from '@services/message-service';
 import { GenericService } from '@services/generic/generic-service';
+import { DueAmountService } from '@services/dueAmount';
 
 declare const $: any;
 
@@ -127,7 +128,8 @@ export class CollectFeeComponent implements OnInit {
         public notificationService: NotificationService,
         public userService: UserService,
         private cdRef: ChangeDetectorRef,
-        private printService: PrintService
+        private printService: PrintService,
+        private dueAmountService: DueAmountService
     ) { }
 
     ngOnInit(): void {
@@ -161,6 +163,10 @@ export class CollectFeeComponent implements OnInit {
         }
 
         this.messageService = new MessageService(this.notificationService, this.userService, this.smsService);
+    }
+
+    setDueAmount(): void{
+        this.dueAmountService.overAllDueAmount=this.getOverallFeesDue();
     }
 
     detectChanges(): void {

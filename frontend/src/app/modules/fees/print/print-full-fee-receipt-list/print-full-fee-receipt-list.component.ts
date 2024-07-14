@@ -3,6 +3,7 @@ import { Component, OnInit, AfterViewChecked } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { INSTALLMENT_LIST } from '../../classes/constants';
 import { PrintService } from '../../../../print/print-service';
+import { DueAmountService } from '../../../../services/dueAmount'
 
 @Component({
     templateUrl: './print-full-fee-receipt-list.component.html',
@@ -13,7 +14,7 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
     sessionList = [];
 
     user: any;
-
+    overallFeesDue: number;
     feeTypeList: any;
     feeReceiptList: any;
     subFeeReceiptList: any;
@@ -30,7 +31,7 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
     // this variable is used to determine whether to print single receipt or double receipt.
     printSingleReceipt = false;
 
-    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService) { }
+    constructor(private cdRef: ChangeDetectorRef, private printService: PrintService, private dueAmount: DueAmountService) { }
 
     ngOnInit(): void {
         // this.feeReceipt = new TempFee();
@@ -164,5 +165,14 @@ export class PrintFullFeeReceiptListComponent implements OnInit, AfterViewChecke
             return feeReceiptBook.id == feeReceipt.parentFeeReceiptBook;
         }).receiptNumberPrefix + feeReceipt.receiptNumber;
     }
+
+    shouldShowDueAmount(): boolean {
+        return this.dueAmount.showDueAmount;
+    }
+
+    getOverAllDue():number{
+        return this.dueAmount.overAllDueAmount;
+    }
+
 
 }

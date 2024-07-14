@@ -200,7 +200,7 @@ export class CollectFeeServiceAdapter {
 
     // Generate Fee Receipt/s
     async generateFeeReceipts() {
-
+        
         this.vm.isLoading = true;
 
         let sub_fee_receipt_list = this.vm.newSubFeeReceiptList.map((subFeeReceipt) => {

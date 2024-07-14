@@ -204,6 +204,12 @@
                             </div>
                         </div>
 
+                        <div *ngIf="shouldShowDueAmount()" class="row" style="font-size: 10px !important; line-height: normal !important">
+                            <div class="col-xs-12">
+                                Due Amount: <i style="font-weight: 400">{{ getOverAllDue() | indianCurrency }}</i>
+                            </div>
+                        </div>
+
                         <div class="row" style="font-size: 10px !important; line-height: normal !important"
                             *ngIf="feeReceipt.remark && feeReceipt.remark != ''">
                             <div class="col-xs-12">
@@ -429,6 +435,12 @@
                             </div>
                         </div>
 
+                        <div *ngIf="shouldShowDueAmount()" class="row" style="font-size: 10px !important; line-height: normal !important">
+                            <div class="col-xs-12">
+                                Due Amount: <i style="font-weight: 400">{{ getOverAllDue() | indianCurrency }}</i>
+                            </div>
+                        </div>
+                        
                         <div class="row" style="font-size: 10px !important; line-height: normal !important"
                             *ngIf="feeReceipt.remark && feeReceipt.remark != ''">
                             <div class="col-xs-12">
